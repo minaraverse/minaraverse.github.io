@@ -2,7 +2,7 @@ import base64, pathlib
 R = pathlib.Path(__file__).resolve().parent
 band = ""
 css = (R / "src/style.css").read_text()
-js = "\n".join((R / f"src/{n}.js").read_text() for n in ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "core", "art", "home", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "admin", "app", "course", "drill"] if (R / f"src/{n}.js").exists())
+js = "\n".join((R / f"src/{n}.js").read_text() for n in ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "core", "art", "home", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "admin", "app", "course", "drill", "people"] if (R / f"src/{n}.js").exists())
 js = js.replace("__BAND__", band)
 fonts = ("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100"
          "&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IM+Fell+English:ital@0;1&family=Special+Elite&family=Great+Vibes&family=Nunito:wght@500;600;700;800;900&family=Condiment&display=swap")

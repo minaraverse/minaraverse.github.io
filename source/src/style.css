@@ -1946,3 +1946,19 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .sm-list li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
 .sm-list span{font-size:24px;color:var(--line)}.sm-list li.on span{color:#FFD45A}.sm-list b{font:700 15.5px var(--bf)}.sm-list em{font-style:normal;color:var(--ok);font-weight:900}
 @media (max-width:400px){.dr-pix{width:92px}.dr-ch{width:86px}}
+/* topic characters */
+.ps{overflow:visible}.ps .pp{animation:propw 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 90%}
+.ps .arm-w{transform-box:view-box;transform-origin:78px 80px;animation:wavearm 1.6s ease-in-out infinite}@keyframes wavearm{50%{transform:rotate(18deg)}}
+.ps-kick .pp{animation:kick 1.6s ease-in-out infinite}
+.ps .ey{transform-box:fill-box;transform-origin:center;animation:blink 4.2s infinite}
+.pose-sleep .dr-ch svg{transform:rotate(-80deg) translate(-18px,4px)}
+.dr-pix .dr-ch{width:112px}.dr-nm{font:800 11.5px var(--bf);color:var(--mut);margin-top:-4px}
+.dr-unit.locked .dr-nm{opacity:.5}
+.ap-pix.is-p i{display:none}
+.av-row{grid-template-columns:repeat(4,1fr)!important;max-height:300px;overflow:auto;padding:2px}.av-row button{padding:6px!important}.av-row button svg{width:64px!important;height:74px}
+.av-row button small{font-size:10.5px;line-height:1.1;text-align:center}
+.lg-av svg.ps{width:150%;height:150%;margin-top:42%}
+.ap-av svg.ps{width:150%;height:150%;margin-top:36%;border-radius:0}.ap-av.has{overflow:hidden}
+.av-prev svg.ps{max-height:190px}
+.sm-card .sm-ch{width:110px}
+.dx-pix:has(.is-p),.dx-pix:has(.is-p) .ap-pix{width:96px}

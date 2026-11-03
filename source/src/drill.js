@@ -180,7 +180,7 @@ VIEWS.drill = root => {
   const ui = mJ ? +mJ[1] : mL ? +mL[1] : 0, li = mL ? +mL[2] : 0;
   if (!mode || (mode === "lesson" && (!UNITS[ui] || !unitOpen(ui) || li > uDone(ui) || li >= LPU)) || (mode === "jump" && (!UNITS[ui] || unitOpen(ui)))) { Router.go("app-learn"); return {}; }
   if (mode === "lesson" && hearts() <= 0) { noHearts(root); return {}; }
-  const U = UNITS[ui]; apTheme(mode === "lesson" || mode === "jump" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
+  const U = UNITS[ui]; LESSON_CHAR = "p" + (mode === "lesson" ? ui : (Math.random() * PEOPLE.length) | 0); apTheme(mode === "lesson" || mode === "jump" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
   const pool = mode === "practice" ? (done.length ? done : [UNITS[curUnit()]]) : mode === "jump" ? UNITS.slice(Math.max(0, ui - 3), ui) : [U];
   pool.forEach(u => u.ctx = {});
   const pi = mode === "lesson" ? (li < uDone(ui) ? (Math.random() * partsOf(li)) | 0 : partDone(ui, li)) : 0;
@@ -299,7 +299,7 @@ VIEWS.drill = root => {
     if (!st.wasToday && playedToday()) streakScreen(root, showDone); else showDone();
   }
   render(); setBar();
-  return { unmount() { removeEventListener("keydown", onKey); document.querySelectorAll(".dr-ov").forEach(o => o.remove()); window.__dx = null; } };
+  return { unmount() { LESSON_CHAR = null; removeEventListener("keydown", onKey); document.querySelectorAll(".dr-ov").forEach(o => o.remove()); window.__dx = null; } };
 };
 
 function countUp(el, to, ms = 900) { if (REDUCED) { el.textContent = to; return; } const t0 = performance.now(); const f = t => { const p = Math.min(1, (t - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
@@ -429,6 +429,7 @@ const SKINS = ["#F6D2B4", "#EAB98F", "#C98E62", "#9C6440", "#6B4127"];
 const AVC = ["#E07020", "#FF6FB5", "#6FFF00", "#7CF6FF", "#C77DFF", "#F5B971"];
 let CHID = 0;
 function charSVG(k, o = {}) {
+  if (/^p\d+$/.test(k)) return personSVG(PEOPLE[+k.slice(1)] || PEOPLE[0], o);
   const id = "c" + (++CHID), s = o.skin || SKINS[1], a = o.acc || (k === "ronin" ? "#E07020" : k === "nova" ? "#FF6FB5" : "#6FFF00"), dark = "#120b07";
   const shadow = `<ellipse cx="60" cy="113" rx="30" ry="5" fill="rgba(0,0,0,.28)"/>`;
   const eyes = (y, r = 4.2, c = "#1b1410") => `<g class="ey"><ellipse cx="49" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><ellipse cx="71" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><circle cx="50.5" cy="${y - 1.6}" r="1.4" fill="#fff"/><circle cx="72.5" cy="${y - 1.6}" r="1.4" fill="#fff"/></g>`;
@@ -462,21 +463,22 @@ function charSVG(k, o = {}) {
     <path class="mo" d="M53 59 Q60 64 67 59" stroke="${a}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
     <circle cx="24" cy="48" r="5" fill="#cfd8ef"/><circle cx="96" cy="48" r="5" fill="#cfd8ef"/></svg>`;
 }
-const themeChar = () => CHARS[+(document.documentElement.dataset.th || 0)] || "ronin";
+let LESSON_CHAR = null;
+const themeChar = () => LESSON_CHAR || CHARS[+(document.documentElement.dataset.th || 0)] || "ronin";
 const myAvatar = () => lsGet("mv-avatar", null);
-const avatarSVG = () => { const v = myAvatar(); return v ? charSVG(v.k, { skin: SKINS[v.s], acc: AVC[v.c] }) : ""; };
+const avatarSVG = () => { const v = myAvatar(); return v ? charSVG(v.k, { skin: SKINS[v.s], acc: v.c == null ? undefined : AVC[v.c] }) : ""; };
 function avatarSheet() {
-  const cur = Object.assign({ k: themeChar(), s: 1, c: 0 }, myAvatar() || {});
+  const cur = Object.assign({ k: themeChar(), s: 1, c: null }, myAvatar() || {});
   const ov = document.createElement("div"); ov.className = "dr-ov dr-guide av-sheet";
   const draw = () => { ov.innerHTML = `<div class="dr-sheet2"><button class="dr-close" aria-label="Close">✕</button><small>${L("apProfile")}</small><h2>${L("avTitle")}</h2>
-    <div class="av-prev">${charSVG(cur.k, { skin: SKINS[cur.s], acc: AVC[cur.c] })}</div>
-    <h3>${L("avChar")}</h3><div class="av-row">${CHARS.map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k, { skin: SKINS[cur.s], acc: AVC[cur.c] })}<small>${k[0].toUpperCase() + k.slice(1)}</small></button>`).join("")}</div>
+    <div class="av-prev">${charSVG(cur.k, { skin: SKINS[cur.s], acc: cur.c == null ? undefined : AVC[cur.c] })}</div>
+    <h3>${L("avChar")}</h3><div class="av-row">${[...CHARS, ...PEOPLE.map((_, i) => "p" + i)].map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k, { skin: SKINS[cur.s] })}<small>${esc(/^p/.test(k) ? PEOPLE[+k.slice(1)].n : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
     <h3>${L("avSkin")}</h3><div class="av-sw">${SKINS.map((c, i) => `<button data-s="${i}" class="${i === cur.s ? "on" : ""}" style="background:${c}" aria-label="skin ${i + 1}"></button>`).join("")}</div>
     <h3>${L("avColor")}</h3><div class="av-sw">${AVC.map((c, i) => `<button data-c="${i}" class="${i === cur.c ? "on" : ""}" style="background:${c}" aria-label="colour ${i + 1}"></button>`).join("")}</div>
     <button class="ap-cta av-save">${L("avSave")}</button></div>`; };
   draw(); document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add("in"));
   ov.onclick = e => { const t = e.target.closest("button"); if (e.target === ov || (t && t.classList.contains("dr-close"))) { ov.classList.remove("in"); setTimeout(() => ov.remove(), 300); return; }
-    if (!t) return; if (t.dataset.k) cur.k = t.dataset.k; if (t.dataset.s) cur.s = +t.dataset.s; if (t.dataset.c) cur.c = +t.dataset.c;
+    if (!t) return; if (t.dataset.k) cur.k = t.dataset.k; if (t.dataset.s) cur.s = +t.dataset.s; if (t.dataset.c) cur.c = cur.c === +t.dataset.c ? null : +t.dataset.c;
     if (t.classList.contains("av-save")) { lsSet("mv-avatar", cur); sfx("unlock"); ov.remove(); Router.remount(); return; }
     sfx("tap"); draw(); requestAnimationFrame(() => ov.classList.add("in")); };
 }
@@ -539,8 +541,8 @@ function trophySVG(t, cls = "") { const [a, b] = LG_C[t];
     <path d="M20 16 Q22 12 27 13" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>${t === 9 ? `<circle cx="58" cy="10" r="2.2" fill="#fff" class="spark"/><circle cx="20" cy="40" r="1.6" fill="#fff" class="spark"/>` : ""}</svg>`; }
 const uid = () => { let u = lsGet("mv-uid", null); if (!u) { u = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, "0")).join(""); lsSet("mv-uid", u); } return u; };
 const weekXpNow = () => { const x = XP(), d = new Date(); const dow = (d.getDay() + 6) % 7; let s = 0; for (let k = 0; k <= dow; k++) { const t = new Date(d); t.setDate(d.getDate() - k); s += x.days[dayStr(t)] || 0; } return s; };
-const avStr = () => { const v = myAvatar(); return v ? `${v.k},${v.s},${v.c}` : ""; };
-const avOf = (s, name) => { const [k, sk, c] = String(s || "").split(","); return CHARS.includes(k) ? charSVG(k, { skin: SKINS[+sk] || SKINS[1], acc: AVC[+c] || AVC[0] }) : `<b class="lg-let">${esc((name || "?")[0].toUpperCase())}</b>`; };
+const avStr = () => { const v = myAvatar(); return v ? `${v.k},${v.s},${v.c == null ? "" : v.c}` : ""; };
+const avOf = (s, name) => { const [k, sk, c] = String(s || "").split(","); return CHARS.includes(k) || /^p\d+$/.test(k) ? charSVG(k, { skin: SKINS[+sk] || SKINS[1], acc: c === "" || c == null ? undefined : AVC[+c] }) : `<b class="lg-let">${esc((name || "?")[0].toUpperCase())}</b>`; };
 async function lgSync(name) {
   if (typeof ADMIN_API === "undefined" || !ADMIN_API || /claude\.ai|claudeusercontent/.test(location.host)) throw new Error("off");
   const q = new URLSearchParams({ a: "lg", id: uid(), name: name || lsGet("mv-lgname", "") || "", av: avStr(), xp: weekXpNow() });
@@ -602,18 +604,18 @@ const SIDE = [["👋", "wave"], ["👥", "wave"], ["😊", "bounce"], ["🎒", "
   ["⚽", "kick"], ["📺", "sit"], ["🎁", "bounce"], ["💤", "sleep"], ["🗺️", "wave"], ["🎸", "paint"], ["📞", "sip"], ["🛍️", "shop"], ["📷", "wave"], ["🛍️", "shop"], ["🏆", "bounce"], ["🔮", "pet"], ["🌍", "pet"], ["💛", "bounce"]];
 const unitStars = u => { const p = DP(); return [!!p["pf" + u], !!p["cb" + u], uDone(u) >= LPU]; };
 function sideHTML(U, open) {
-  const [prop, pose] = SIDE[U.n % SIDE.length], k = CHARS[(U.sec + U.n) % 3], st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
+  const P = PEOPLE[U.n % PEOPLE.length], pose = P.pose, st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
   return `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-${pose}" data-side="${U.n}" aria-label="★ ${st.filter(Boolean).length}/3">
-    <span class="dr-ch">${charSVG(k)}<i class="dr-prop">${prop}</i>${pose === "sleep" ? `<i class="dr-z">z</i><i class="dr-z z2">z</i>` : ""}</span>
+    <span class="dr-ch">${personSVG(P)}${pose === "sleep" ? `<i class="dr-z">z</i><i class="dr-z z2">z</i>` : ""}</span><small class="dr-nm">${esc(P.n)}</small>
     <span class="dr-st3">${st.map((s, i) => `<i class="${s ? "on" : ""} ${s && i >= seen ? "new" : ""}" style="--k:${i}">★</i>`).join("")}</span></button>`;
 }
 Object.assign(UI.en, { smT: "Side missions", smP: "Complete all three to fill the stars.", sm1: "Finish one part with no mistakes", sm2: "Get 5 answers in a row", sm3: "Complete every level of this unit" });
 Object.assign(UI.az, { smT: "Əlavə missiyalar", smP: "Üç ulduzu doldurmaq üçün hamısını tamamla.", sm1: "Bir hissəni səhvsiz bitir", sm2: "5 ardıcıl düzgün cavab ver", sm3: "Bu bölmənin bütün səviyyələrini bitir" });
 Object.assign(UI.ru, { smT: "Доп. задания", smP: "Выполни все три, чтобы зажечь звёзды.", sm1: "Пройди одну часть без ошибок", sm2: "Дай 5 правильных ответов подряд", sm3: "Пройди все уровни этого раздела" });
 function sideSheet(U) {
-  const st = unitStars(U.n), k = CHARS[(U.sec + U.n) % 3], [prop] = SIDE[U.n % SIDE.length];
+  const st = unitStars(U.n), P = PEOPLE[U.n % PEOPLE.length];
   const ov = document.createElement("div"); ov.className = "dr-ov"; ov.style.setProperty("--uc", U.c);
-  ov.innerHTML = `<div class="dr-card sm-card"><div class="sm-ch">${charSVG(k)}<i>${prop}</i></div><h2>${L("smT")}</h2><p>${U.e} ${esc(T3(U.t))} · ${L("smP")}</p>
+  ov.innerHTML = `<div class="dr-card sm-card"><div class="sm-ch">${personSVG(P)}</div><h2>${esc(P.n)} · ${L("smT")}</h2><p>${U.e} ${esc(T3(U.t))} · ${L("smP")}</p>
     <ul class="sm-list">${["sm1", "sm2", "sm3"].map((m, i) => `<li class="${st[i] ? "on" : ""}"><span>★</span><b>${L(m)}</b><em>${st[i] ? "✓" : ""}</em></li>`).join("")}</ul>
     <a class="ap-cta" href="#drill-${U.n}-${Math.min(uDone(U.n), LPU - 1)}">${L("dCont")}</a></div>`;
   if (!unitOpen(U.n)) ov.querySelector(".ap-cta").remove();

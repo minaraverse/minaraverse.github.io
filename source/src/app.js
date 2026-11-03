@@ -166,7 +166,7 @@ function lessonDone(k, i) {
 
 /* ---------- mascot: Pixel the cat ---------- */
 function mascot(say, k) {
-  return `<span class="ap-pix ch-${k || themeChar()}">${charSVG(k || themeChar())}<i>${say}</i></span>`;
+  return `<span class="ap-pix ch-${k || themeChar()} ${/^p/.test(k || themeChar()) ? "is-p" : ""}">${charSVG(k || themeChar())}<i>${say}</i></span>`;
 }
 
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
