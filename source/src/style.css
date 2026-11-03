@@ -2043,6 +2043,7 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .sv-form{display:grid;gap:12px;width:100%;max-width:420px;text-align:left}
 .sv-form label{display:grid;gap:6px;font:700 14px var(--bf);color:var(--mut)}
 .sv-form input:not([type=checkbox]){padding:14px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:700 17px var(--bf);outline:none}.sv-form input:focus{border-color:var(--acc)}
+.sv-form .sv-hint{margin:-8px 2px 2px;font:600 12.5px var(--bf);color:var(--mut);opacity:.9}.sv-form .dr-link+.dr-link{margin-top:-6px}
 .sv-age{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sv-age button{padding:14px 8px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:800 15px var(--bf);cursor:pointer}
 .sv-age button.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 16%,transparent)}
 .sv-chk{display:flex!important;grid-template-columns:none;align-items:center;gap:10px!important;color:var(--ink)!important}.sv-chk input{width:22px;height:22px;accent-color:var(--acc)}

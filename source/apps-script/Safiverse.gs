@@ -3,7 +3,8 @@
  * Nothing to edit except ADMIN_EMAIL. Paste, save, Deploy → New deployment → Web app →
  * Execute as: Me, Who has access: Anyone → Deploy, and send the /exec link.
  * Sheets are created automatically: "Tələbələr" (students) and "Liqa" (weekly leagues).
- * Students sign in with a 6-digit code sent to their email. Only hashes of codes/tokens are stored.
+ * Sign-up: a 6-digit code goes to the email once; the student also picks a username and a personal code (4–6 digits).
+ * Later sign-in: username + personal code on any phone (email code stays as "forgot my code"). Only hashes are stored.
  */
 const ADMIN_EMAIL = "nurlan_kerimov@hotmail.com";
 const KIDS_MAX_AGE = 14;
@@ -19,8 +20,14 @@ function ss_() {
 }
 /* Run once from the editor (▶ setup) to create/check the sheet and grant permissions. */
 function setup() { const s = ss_(); students_(); lgSheet_(); Logger.log(s.getUrl()); }
-const SH = ["email", "name", "age", "avatar", "created", "last", "xp", "streak", "lessons", "unit", "token", "progress", "parent_ok"];
-function students_() { let sh = ss_().getSheetByName("Tələbələr"); if (!sh) { sh = ss_().insertSheet("Tələbələr"); sh.appendRow(SH); sh.setFrozenRows(1); } return sh; }
+const SH = ["email", "name", "age", "avatar", "created", "last", "xp", "streak", "lessons", "unit", "token", "progress", "parent_ok", "username", "pin"];
+function students_() { let sh = ss_().getSheetByName("Tələbələr"); if (!sh) { sh = ss_().insertSheet("Tələbələr"); sh.appendRow(SH); sh.setFrozenRows(1); }
+  else if (sh.getLastColumn() < SH.length) sh.getRange(1, 1, 1, SH.length).setValues([SH]); return sh; }
+function findUser_(sh, u) { const v = sh.getDataRange().getValues(); for (let i = 1; i < v.length; i++) if (String(v[i][13] || "").toLowerCase() === u) return { row: i + 1, v: v[i] }; return null; }
+const normUser = u => String(u || "").trim().toLowerCase();
+const okUser = u => /^[a-z0-9._]{3,20}$/.test(u);
+const okPin = c => /^\d{4,6}$/.test(String(c || ""));
+const pinHash = (u, c) => hash_("pin|" + u + "|" + c);
 function find_(sh, email) { const v = sh.getDataRange().getValues(); for (let i = 1; i < v.length; i++) if (String(v[i][0]).toLowerCase() === email) return { row: i + 1, v: v[i] }; return null; }
 const okEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
 const clean = (s, n) => String(s || "").replace(/[<>"]/g, "").trim().slice(0, n);
@@ -41,14 +48,37 @@ function verify_(p) {
   if (hash_(String(p.code || "")) !== o.h) { o.tries++; P.setProperty(k, JSON.stringify(o)); return { ok: false, err: "code" }; }
   P.deleteProperty(k);
   const sh = students_(), f = find_(sh, email), token = Utilities.getUuid().replace(/-/g, "") + Utilities.getUuid().replace(/-/g, "");
+  const user = normUser(p.user), withCred = okUser(user) && okPin(p.pin), other = withCred ? findUser_(sh, user) : null;
   if (f) { sh.getRange(f.row, 6).setValue(new Date()); sh.getRange(f.row, 11).setValue(hash_(token));
-    return { ok: true, token: token, student: { name: f.v[1], age: f.v[2], avatar: f.v[3] }, progress: f.v[11] ? JSON.parse(f.v[11]) : null }; }
+    let u = String(f.v[13] || "");
+    if (!u && withCred && (!other || other.row === f.row)) { sh.getRange(f.row, 14, 1, 2).setValues([[user, pinHash(user, p.pin)]]); u = user; }
+    return { ok: true, token: token, email: email, student: { name: f.v[1], age: f.v[2], avatar: f.v[3], user: u }, progress: f.v[11] ? JSON.parse(f.v[11]) : null }; }
   const name = clean(p.name, 30); if (!name) return { ok: false, err: "name" };
-  sh.appendRow([email, name, clean(p.age, 10), clean(p.av, 30), new Date(), new Date(), 0, 0, 0, "", hash_(token), "", p.parent ? "yes" : ""]);
-  return { ok: true, token: token, student: { name: name, age: clean(p.age, 10), avatar: clean(p.av, 30) }, progress: null };
+  if (withCred && other) return { ok: false, err: "taken" };
+  sh.appendRow([email, name, clean(p.age, 10), clean(p.av, 30), new Date(), new Date(), 0, 0, 0, "", hash_(token), "", p.parent ? "yes" : "", withCred ? user : "", withCred ? pinHash(user, p.pin) : ""]);
+  return { ok: true, token: token, email: email, student: { name: name, age: clean(p.age, 10), avatar: clean(p.av, 30), user: withCred ? user : "" }, progress: null };
 }
 function auth_(p) { const email = String(p.email || "").trim().toLowerCase(), sh = students_(), f = find_(sh, email);
   if (!f || !p.token || hash_(String(p.token)) !== f.v[10]) return null; return { sh: sh, f: f, email: email }; }
+
+/* ---------- username + personal code ---------- */
+function ucheck_(p) { const u = normUser(p.user); if (!okUser(u)) return { ok: false, err: "user" }; return { ok: true, free: !findUser_(students_(), u) }; }
+function login_(p) {
+  const u = normUser(p.user), lk = "lt_" + hash_(u), lt = JSON.parse(P.getProperty(lk) || "{}");
+  if (lt.n >= 5 && Date.now() - lt.at < 900000) return { ok: false, err: "locked" };
+  const sh = students_(), f = okUser(u) && okPin(p.pin) ? findUser_(sh, u) : null;
+  if (!f || pinHash(u, p.pin) !== String(f.v[14])) { P.setProperty(lk, JSON.stringify({ n: (lt.n >= 5 ? 0 : lt.n || 0) + 1, at: Date.now() })); return { ok: false, err: "bad" }; }
+  P.deleteProperty(lk);
+  const token = Utilities.getUuid().replace(/-/g, "") + Utilities.getUuid().replace(/-/g, "");
+  sh.getRange(f.row, 6).setValue(new Date()); sh.getRange(f.row, 11).setValue(hash_(token));
+  return { ok: true, token: token, email: String(f.v[0]).toLowerCase(), student: { name: f.v[1], age: f.v[2], avatar: f.v[3], user: u }, progress: f.v[11] ? JSON.parse(f.v[11]) : null };
+}
+function setcred_(p) {
+  const a = auth_(p); if (!a) return { ok: false, err: "auth" };
+  const u = normUser(p.user); if (!okUser(u)) return { ok: false, err: "user" }; if (!okPin(p.pin)) return { ok: false, err: "pin" };
+  const other = findUser_(a.sh, u); if (other && other.row !== a.f.row) return { ok: false, err: "taken" };
+  a.sh.getRange(a.f.row, 14, 1, 2).setValues([[u, pinHash(u, p.pin)]]); return { ok: true, user: u };
+}
 
 /* ---------- progress sync (the copy with more XP wins) ---------- */
 function sync_(p) {
@@ -113,6 +143,9 @@ function handle_(p) {
   try {
     if (p.a === "send") return send_(p);
     if (p.a === "verify") return verify_(p);
+    if (p.a === "login") return login_(p);
+    if (p.a === "ucheck") return ucheck_(p);
+    if (p.a === "setcred") return setcred_(p);
     if (p.a === "sync") return sync_(p);
     if (p.a === "lg") return league_(p);
     if (String(p.a || "").indexOf("ad_") === 0) return admin_(p);
