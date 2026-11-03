@@ -8146,7 +8146,7 @@ const anyMove = (pos, c) => Object.keys(pos).some(s => pos[s][0] === c && legal(
 const mated = (pos, c) => inCheck(pos, c) && !anyMove(pos, c);
 const GLYPH = { K: "♚", Q: "♛", R: "♜", B: "♝", N: "♞", P: "♟" };
 const PIDX = { K: 0, Q: 1, R: 2, B: 3, N: 4, P: 5 };
-function boardHTML(pos, opt = {}) { let h = ""; for (let y = 7; y >= 0; y--) for (let x = 0; x < 8; x++) { const s = FL[x] + (y + 1), p = pos[s];
+function skBoardHTML(pos, opt = {}) { let h = ""; for (let y = 7; y >= 0; y--) for (let x = 0; x < 8; x++) { const s = FL[x] + (y + 1), p = pos[s];
     h += `<button class="sk-sq ${(x + y) % 2 ? "l" : "d"} ${opt.mark === s ? "mk" : ""}" data-sq="${s}">${p ? `<i class="pc ${p[0]}">${GLYPH[p[1]]}︎</i>` : ""}${x === 0 ? `<em class="rk">${y + 1}</em>` : ""}${y === 0 ? `<em class="fl">${FL[x]}</em>` : ""}</button>`; }
   return `<div class="sk-board">${h}</div>`; }
 const rsq = () => FL[rnd(0, 7)] + rnd(1, 8);
@@ -8236,7 +8236,7 @@ VIEWS.sk = root => {
     let body = `<div class="sk-prompt">${x.p}</div>`;
     if (x.k === "opt") body += `<div class="dx-opts sk-opts ${x.o.length === 2 ? "two" : ""}">${x.o.map((o, i) => `<button class="dx-opt" data-i="${i}"><span class="dx-n">${i + 1}</span><b>${esc(o)}</b></button>`).join("")}</div>`;
     if (x.k === "key" || x.k === "seq") body += `${x.k === "seq" ? `<div class="sk-seq">${x.seq.map(() => "<i></i>").join("")}</div>` : ""}${pianoHTML(x.labels)}`;
-    if (x.k === "sq" || x.k === "mv") body += boardHTML(x.pos, { mark: x.mark });
+    if (x.k === "sq" || x.k === "mv") body += skBoardHTML(x.pos, { mark: x.mark });
     box.classList.remove("in"); box.innerHTML = body; void box.offsetWidth; box.classList.add("in");
     if (x.play) setTimeout(() => playSeq(x.play, x.gap || .5), 400);
   }
