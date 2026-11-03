@@ -32,7 +32,7 @@ function send_(p) {
   if (old.at && Date.now() - old.at < 60000) return { ok: false, err: "wait" };
   const code = String(Math.floor(100000 + Math.random() * 900000));
   P.setProperty(k, JSON.stringify({ h: hash_(code), at: Date.now(), tries: 0 }));
-  MailApp.sendEmail(email, "Safiverse: " + code, "Your Safiverse code / Safiverse kodun / Твой код Safiverse: " + code + "\n\nValid for 10 minutes. 10 dəqiqə etibarlıdır. Действует 10 минут.\n\nIf you did not ask for it, ignore this email.");
+  MailApp.sendEmail({ to: email, name: "Safiverse", subject: "Safiverse: " + code, body: "Your Safiverse code / Safiverse kodun / Твой код Safiverse: " + code + "\n\nValid for 10 minutes. 10 dəqiqə etibarlıdır. Действует 10 минут.\n\nIf you did not ask for it, ignore this email." });
   return { ok: true };
 }
 function verify_(p) {
@@ -97,7 +97,7 @@ function admin_(p) {
   if (p.a === "ad_status") return { ok: true, hasCode: !!P.getProperty("KEY"), email: ADMIN_EMAIL.replace(/^(.).*(@.*)$/, "$1***$2") };
   if (p.a === "ad_send") { const last = Number(P.getProperty("AOTP_AT") || 0); if (Date.now() - last < 60000) return { ok: false, err: "wait" };
     const otp = String(Math.floor(100000 + Math.random() * 900000)); P.setProperties({ AOTP: hash_(otp), AOTP_AT: String(Date.now()), AOTP_TRIES: "0" });
-    MailApp.sendEmail(ADMIN_EMAIL, "Safiverse admin code: " + otp, "Your Safiverse admin confirmation code is: " + otp + "\n\nValid for 10 minutes."); return { ok: true }; }
+    MailApp.sendEmail({ to: ADMIN_EMAIL, name: "Safiverse", subject: "Safiverse admin code: " + otp, body: "Your Safiverse admin confirmation code is: " + otp + "\n\nValid for 10 minutes." }); return { ok: true }; }
   if (p.a === "ad_set") { const at = Number(P.getProperty("AOTP_AT") || 0), tries = Number(P.getProperty("AOTP_TRIES") || 0);
     if (!P.getProperty("AOTP") || Date.now() - at > 600000 || tries >= 5) return { ok: false, err: "expired" };
     if (hash_(String(p.otp || "")) !== P.getProperty("AOTP")) { P.setProperty("AOTP_TRIES", String(tries + 1)); return { ok: false, err: "otp" }; }
