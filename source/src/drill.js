@@ -426,12 +426,18 @@ function apReveal(root) {
 
 /* ---------- characters (drawn in code): Ronin (A1) · Nova (A2) · Orbi (B1) — mascot + student avatars ---------- */
 const CHARS = ["ronin", "nova", "orbi"];
+/* family avatars (Pixar-style, made from family photos) — only shown after the family code is entered */
+const KIDS = ["https://d8j0ntlcm91z4.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/hf_20261103_165900_2c9ce45a-a1c4-42e7-ad3c-a9d530194acc.png",
+  "https://d8j0ntlcm91z4.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/hf_20261103_165904_fd0992e8-d2e4-47fe-9a9c-aa09dff7e9ea.png",
+  "https://d8j0ntlcm91z4.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/hf_20261103_165904_652ab5c3-4684-4ada-834c-e70054a703b9.png"];
+const FAMILY_CODE = "minara2026";
 const SKINS = ["#F6D2B4", "#EAB98F", "#C98E62", "#9C6440", "#6B4127"];
-const AVC = ["#E07020", "#FF6FB5", "#6FFF00", "#7CF6FF", "#C77DFF", "#F5B971"];
+const AVC = ["#E07020", "#D7262E", "#6FFF00", "#7CF6FF", "#C77DFF", "#F5B971"];
 let CHID = 0;
 function charSVG(k, o = {}) {
   if (/^p\d+$/.test(k)) return personSVG(PEOPLE[+k.slice(1)] || PEOPLE[0], o);
   if (/^r\d+$/.test(k)) return personSVG(RACERS[+k.slice(1)] || RACERS[0], o);
+  if (/^k\d+$/.test(k)) return `<img class="kid-av" src="${KIDS[+k.slice(1)] || KIDS[0]}" alt="" loading="lazy">`;
   const id = "c" + (++CHID), s = o.skin || SKINS[1], a = o.acc || (k === "ronin" ? "#6FCF8E" : k === "nova" ? "#FF6FB5" : "#6FFF00"), dark = "#120b07";
   const shadow = `<ellipse cx="60" cy="113" rx="30" ry="5" fill="rgba(0,0,0,.28)"/>`;
   const eyes = (y, r = 4.2, c = "#1b1410") => `<g class="ey"><ellipse cx="49" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><ellipse cx="71" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><circle cx="50.5" cy="${y - 1.6}" r="1.4" fill="#fff"/><circle cx="72.5" cy="${y - 1.6}" r="1.4" fill="#fff"/></g>`;
@@ -474,19 +480,20 @@ function avatarSheet() {
   const ov = document.createElement("div"); ov.className = "dr-ov dr-guide av-sheet";
   const draw = () => { ov.innerHTML = `<div class="dr-sheet2"><button class="dr-close" aria-label="Close">✕</button><small>${L("apProfile")}</small><h2>${L("avTitle")}</h2>
     <div class="av-prev">${charSVG(cur.k, { skin: cur.s == null ? undefined : SKINS[cur.s], acc: cur.c == null ? undefined : AVC[cur.c] })}</div>
-    <h3>${L("avChar")}</h3><div class="av-tabs"><button data-g="0" class="${(cur.g || 0) === 0 ? "on" : ""}">🌟 ${L("avAll")}</button><button data-g="1" class="${cur.g === 1 ? "on" : ""}">🏎️ ${L("avRace")}</button></div><div class="av-row">${(cur.g === 1 ? RACERS.map((_, i) => "r" + i) : [...CHARS, ...PEOPLE.map((_, i) => "p" + i)]).map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k)}<small>${esc(/^p\d/.test(k) ? PEOPLE[+k.slice(1)].n : /^r\d/.test(k) ? RACERS[+k.slice(1)].n : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
+    <h3>${L("avChar")}</h3><div class="av-tabs"><button data-g="0" class="${(cur.g || 0) === 0 ? "on" : ""}">🌟 ${L("avAll")}</button><button data-g="1" class="${cur.g === 1 ? "on" : ""}">🏎️ ${L("avRace")}</button>${lsGet("mv-family", false) ? `<button data-g="2" class="${cur.g === 2 ? "on" : ""}">👨‍👩‍👧 ${L("avFam")}</button>` : ""}</div><div class="av-row">${(cur.g === 2 ? KIDS.map((_, i) => "k" + i) : cur.g === 1 ? RACERS.map((_, i) => "r" + i) : [...CHARS, ...PEOPLE.map((_, i) => "p" + i)]).map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k)}<small>${esc(/^p\d/.test(k) ? PEOPLE[+k.slice(1)].n : /^r\d/.test(k) ? RACERS[+k.slice(1)].n : /^k\d/.test(k) ? L("avFam") + " " + (+k.slice(1) + 1) : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
     <h3>${L("avSkin")}</h3><div class="av-sw">${SKINS.map((c, i) => `<button data-s="${i}" class="${i === cur.s ? "on" : ""}" style="background:${c}" aria-label="skin ${i + 1}"></button>`).join("")}</div>
     <h3>${L("avColor")}</h3><div class="av-sw">${AVC.map((c, i) => `<button data-c="${i}" class="${i === cur.c ? "on" : ""}" style="background:${c}" aria-label="colour ${i + 1}"></button>`).join("")}</div>
-    <button class="ap-cta av-save">${L("avSave")}</button></div>`; };
+    <button class="ap-cta av-save">${L("avSave")}</button>${lsGet("mv-family", false) ? "" : `<button class="dr-link av-code">🔑 ${L("avCode")}</button>`}</div>`; };
   draw(); document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add("in"));
   ov.onclick = e => { const t = e.target.closest("button"); if (e.target === ov || (t && t.classList.contains("dr-close"))) { ov.classList.remove("in"); setTimeout(() => ov.remove(), 300); return; }
-    if (!t) return; if (t.dataset.k) cur.k = t.dataset.k; if (t.dataset.g) cur.g = +t.dataset.g; if (t.dataset.s) cur.s = cur.s === +t.dataset.s ? null : +t.dataset.s; if (t.dataset.c) cur.c = cur.c === +t.dataset.c ? null : +t.dataset.c;
+    if (!t) return; if (t.classList.contains("av-code")) { const c = prompt(L("avCode")); if (c && c.trim().toLowerCase() === FAMILY_CODE) { lsSet("mv-family", true); cur.g = 2; sfx("unlock"); draw(); requestAnimationFrame(() => ov.classList.add("in")); } else if (c) { sfx("miss"); } return; }
+    if (t.dataset.k) cur.k = t.dataset.k; if (t.dataset.g) cur.g = +t.dataset.g; if (t.dataset.s) cur.s = cur.s === +t.dataset.s ? null : +t.dataset.s; if (t.dataset.c) cur.c = cur.c === +t.dataset.c ? null : +t.dataset.c;
     if (t.classList.contains("av-save")) { delete cur.g; lsSet("mv-avatar", cur); sfx("unlock"); ov.remove(); Router.remount(); return; }
     sfx("tap"); draw(); requestAnimationFrame(() => ov.classList.add("in")); };
 }
-Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar", avAll: "Characters", avRace: "Racers", rcCheer: ["Full speed ahead!", "Keep going, champion!", "You're in pole position!"] });
-Object.assign(UI.az, { avTitle: "Avatarın", avChar: "Personaj", avSkin: "Dəri tonu", avColor: "Rəng", avSave: "Yadda saxla", avEdit: "Avatarı dəyiş", avAll: "Personajlar", avRace: "Yarışçılar", rcCheer: ["Tam sürətlə irəli!", "Davam et, çempion!", "Sən birinci startdasan!"] });
-Object.assign(UI.ru, { avTitle: "Твой аватар", avChar: "Персонаж", avSkin: "Тон кожи", avColor: "Цвет", avSave: "Сохранить", avEdit: "Изменить аватар", avAll: "Персонажи", avRace: "Гонщики", rcCheer: ["Полный вперёд!", "Так держать, чемпион!", "Ты на поул-позиции!"] });
+Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar", avAll: "Characters", avRace: "Racers", avFam: "Family", avCode: "Family code", rcCheer: ["Full speed ahead!", "Keep going, champion!", "You're in pole position!"] });
+Object.assign(UI.az, { avTitle: "Avatarın", avChar: "Personaj", avSkin: "Dəri tonu", avColor: "Rəng", avSave: "Yadda saxla", avEdit: "Avatarı dəyiş", avAll: "Personajlar", avRace: "Yarışçılar", avFam: "Ailə", avCode: "Ailə kodu", rcCheer: ["Tam sürətlə irəli!", "Davam et, çempion!", "Sən birinci startdasan!"] });
+Object.assign(UI.ru, { avTitle: "Твой аватар", avChar: "Персонаж", avSkin: "Тон кожи", avColor: "Цвет", avSave: "Сохранить", avEdit: "Изменить аватар", avAll: "Персонажи", avRace: "Гонщики", avFam: "Семья", avCode: "Семейный код", rcCheer: ["Полный вперёд!", "Так держать, чемпион!", "Ты на поул-позиции!"] });
 
 /* ---------- quests: 3 daily (with chests) + monthly ---------- */
 Object.assign(UI.en, { qTitle: "Quests", qDaily: "Daily quests", qMonth: "Monthly quest", qMonthT: "Complete 20 daily quests", qLeft: "h left", qDays: "days left", qClaim: "Open", qGot: "Reward: +10 XP",
@@ -544,7 +551,7 @@ function trophySVG(t, cls = "") { const [a, b] = LG_C[t];
 const uid = () => { let u = lsGet("mv-uid", null); if (!u) { u = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, "0")).join(""); lsSet("mv-uid", u); } return u; };
 const weekXpNow = () => { const x = XP(), d = new Date(); const dow = (d.getDay() + 6) % 7; let s = 0; for (let k = 0; k <= dow; k++) { const t = new Date(d); t.setDate(d.getDate() - k); s += x.days[dayStr(t)] || 0; } return s; };
 const avStr = () => { const v = myAvatar(); return v ? `${v.k},${v.s == null ? "" : v.s},${v.c == null ? "" : v.c}` : ""; };
-const avOf = (s, name) => { const [k, sk, c] = String(s || "").split(","); return CHARS.includes(k) || /^[pr]\d+$/.test(k) ? charSVG(k, { skin: sk === "" || sk == null ? undefined : SKINS[+sk], acc: c === "" || c == null ? undefined : AVC[+c] }) : `<b class="lg-let">${esc((name || "?")[0].toUpperCase())}</b>`; };
+const avOf = (s, name) => { const [k, sk, c] = String(s || "").split(","); return CHARS.includes(k) || /^[prk]\d+$/.test(k) ? charSVG(k, { skin: sk === "" || sk == null ? undefined : SKINS[+sk], acc: c === "" || c == null ? undefined : AVC[+c] }) : `<b class="lg-let">${esc((name || "?")[0].toUpperCase())}</b>`; };
 async function lgSync(name) {
   if (typeof ADMIN_API === "undefined" || !ADMIN_API || /claude\.ai|claudeusercontent/.test(location.host)) throw new Error("off");
   const q = new URLSearchParams({ a: "lg", id: uid(), name: name || lsGet("mv-lgname", "") || "", av: avStr(), xp: weekXpNow() });
