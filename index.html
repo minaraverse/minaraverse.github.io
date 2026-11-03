@@ -1435,6 +1435,8 @@ body[data-view="admin"]{background:#121218}
 .ad-empty{text-align:center;color:#9a97a8;padding:30px}
 @media (max-width:800px){.ad-row{grid-template-columns:1fr 1fr}.ad-stats{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:480px){.ad-row{grid-template-columns:1fr}.ad-stats{grid-template-columns:repeat(2,1fr)}}
+.ad-link{border:0;background:transparent;color:#9DB0FF;font:600 14px "Bricolage Grotesque";text-decoration:underline;padding:6px}
+.ad-login [data-set]{display:grid;gap:10px;width:100%}.ad-login [data-send]{background:#ffcf5a;border-color:#ffcf5a;color:#2a2008;justify-self:stretch}
 
 </style>
 <div id="view"></div>
@@ -5553,13 +5555,13 @@ function confetti(box) { if (REDUCED) return; const cols = ["#ffcf5a", "#ff9fb0"
 /* Paste the Apps Script web-app URL here after deployment. The secret code is NOT stored in the site. */
 const ADMIN_API = "";
 
-Object.assign(UI.en, { adK: "Admin", adH: "Minaraverse admin", adCode: "Admin code", adLogin: "Log in", adWrong: "Wrong code or the connection is not set up yet.", adSetup: "The admin page is not connected to the Google Sheet yet.",
+Object.assign(UI.en, { adK: "Admin", adH: "Minaraverse admin", adCode: "Admin code", adLogin: "Log in", adChange: "Set / change code", adSend: "Send a 6-digit code to", adSent: "Code sent. Check the inbox (and spam).", adOtp: "6-digit code from the email", adNewCode: "New admin code (min. 6 characters)", adNewCode2: "Repeat the new code", adSave: "Save new code", adSaved: "Saved! Log in with your new code.", adWait: "Please wait a minute before sending again.", adBadOtp: "The 6-digit code is wrong.", adExpired: "The code expired. Send a new one.", adMismatch: "The two codes are different.", adShort: "Use at least 6 characters.", adBack: "Back to login", adWrong: "Wrong code or the connection is not set up yet.", adSetup: "The admin page is not connected to the Google Sheet yet.",
   adAll: "All", adLeads: "Lesson requests", adLevels: "Level tests", adChapters: "Chapters", adSearch: "Search by name, phone, email…", adTotal: "Total", adToday: "Today", adWeek: "This week",
   adLogout: "Log out", adCsv: "Download CSV", adRefresh: "Refresh", adEmpty: "No entries yet.", adWa: "WhatsApp", adDate: "Date", adWho: "Student", adInfo: "Details", adContact: "Contact", adNew: "new" });
-Object.assign(UI.az, { adK: "Admin", adH: "Minaraverse admin paneli", adCode: "Admin kodu", adLogin: "Daxil ol", adWrong: "Kod səhvdir və ya bağlantı hələ qurulmayıb.", adSetup: "Admin səhifəsi hələ Google Cədvələ qoşulmayıb.",
+Object.assign(UI.az, { adK: "Admin", adH: "Minaraverse admin paneli", adCode: "Admin kodu", adLogin: "Daxil ol", adChange: "Kodu təyin et / dəyiş", adSend: "6 rəqəmli kodu göndər:", adSent: "Kod göndərildi. Poçtu (və spam qovluğunu) yoxla.", adOtp: "Emaildəki 6 rəqəmli kod", adNewCode: "Yeni admin kodu (ən azı 6 simvol)", adNewCode2: "Yeni kodu təkrar yaz", adSave: "Yeni kodu saxla", adSaved: "Saxlanıldı! Yeni kodla daxil ol.", adWait: "Yenidən göndərmək üçün bir dəqiqə gözlə.", adBadOtp: "6 rəqəmli kod səhvdir.", adExpired: "Kodun vaxtı bitib. Yenisini göndər.", adMismatch: "İki kod eyni deyil.", adShort: "Ən azı 6 simvol yaz.", adBack: "Girişə qayıt", adWrong: "Kod səhvdir və ya bağlantı hələ qurulmayıb.", adSetup: "Admin səhifəsi hələ Google Cədvələ qoşulmayıb.",
   adAll: "Hamısı", adLeads: "Dərs müraciətləri", adLevels: "Səviyyə testləri", adChapters: "Fəsillər", adSearch: "Ad, telefon, email üzrə axtar…", adTotal: "Cəmi", adToday: "Bu gün", adWeek: "Bu həftə",
   adLogout: "Çıxış", adCsv: "CSV yüklə", adRefresh: "Yenilə", adEmpty: "Hələ heç nə yoxdur.", adWa: "WhatsApp", adDate: "Tarix", adWho: "Tələbə", adInfo: "Məlumat", adContact: "Əlaqə", adNew: "yeni" });
-Object.assign(UI.ru, { adK: "Админ", adH: "Админ-панель Minaraverse", adCode: "Код админа", adLogin: "Войти", adWrong: "Неверный код или подключение ещё не настроено.", adSetup: "Админ-страница ещё не подключена к Google Таблице.",
+Object.assign(UI.ru, { adK: "Админ", adH: "Админ-панель Minaraverse", adCode: "Код админа", adLogin: "Войти", adChange: "Задать / сменить код", adSend: "Отправить 6-значный код на", adSent: "Код отправлен. Проверь почту (и спам).", adOtp: "6-значный код из письма", adNewCode: "Новый код админа (мин. 6 символов)", adNewCode2: "Повтори новый код", adSave: "Сохранить новый код", adSaved: "Сохранено! Войди с новым кодом.", adWait: "Подожди минуту перед повторной отправкой.", adBadOtp: "6-значный код неверный.", adExpired: "Срок кода истёк. Отправь новый.", adMismatch: "Коды не совпадают.", adShort: "Минимум 6 символов.", adBack: "Назад ко входу", adWrong: "Неверный код или подключение ещё не настроено.", adSetup: "Админ-страница ещё не подключена к Google Таблице.",
   adAll: "Все", adLeads: "Заявки на уроки", adLevels: "Тесты уровня", adChapters: "Главы", adSearch: "Поиск по имени, телефону, email…", adTotal: "Всего", adToday: "Сегодня", adWeek: "За неделю",
   adLogout: "Выйти", adCsv: "Скачать CSV", adRefresh: "Обновить", adEmpty: "Пока ничего нет.", adWa: "WhatsApp", adDate: "Дата", adWho: "Ученик", adInfo: "Данные", adContact: "Связь", adNew: "новое" });
 
@@ -5569,7 +5571,7 @@ const adGet = async q => { const r = await fetch(ADMIN_API + (ADMIN_API.includes
 let BOARD_P = null;
 function loadBoard() {
   if (!ADMIN_API || /claude\.ai|claudeusercontent/.test(location.host)) return;
-  BOARD_P = BOARD_P || adGet("board=1").then(d => { if (d && d.ok && d.board) Object.assign(BOARD, d.board); return true; }).catch(() => false);
+  BOARD_P = BOARD_P || adGet("a=board").then(d => { if (d && d.ok && d.board) Object.assign(BOARD, d.board); return true; }).catch(() => false);
   BOARD_P.then(ok => { const s = document.getElementById("h-board"); if (!ok || !s) return; const t = document.createElement("div"); t.innerHTML = boardHTML(); const n = t.firstElementChild; s.replaceWith(n); revealHome(n); });
 }
 
@@ -5578,11 +5580,29 @@ VIEWS.admin = root => {
   const key = () => { try { return sessionStorage.getItem("mv-admin") || ""; } catch (e) { return ""; } };
   const login = () => {
     root.innerHTML = `<div class="ad">${topBar()}<main class="ad-main"><div class="ad-login"><span class="ad-lock">🔐</span><h1>${L("adH")}</h1>
-      ${ADMIN_API ? `<form data-login><input type="password" autocomplete="current-password" placeholder="${L("adCode")}" required><button class="qz-btn">${L("adLogin")} →</button></form><p class="ad-err" role="alert"></p>` : `<p class="ad-err">${L("adSetup")}</p>`}</div></main></div>`;
+      ${ADMIN_API ? `<form data-login><input type="password" autocomplete="current-password" placeholder="${L("adCode")}" required><button class="qz-btn">${L("adLogin")} →</button></form><p class="ad-err" role="alert"></p><button type="button" class="ad-link" data-reset>🔑 ${L("adChange")}</button>` : `<p class="ad-err">${L("adSetup")}</p>`}</div></main></div>`;
     const f = root.querySelector("[data-login]"); if (!f) return;
+    root.querySelector("[data-reset]").onclick = reset;
     f.onsubmit = async e => { e.preventDefault(); const k = f.querySelector("input").value.trim(), er = root.querySelector(".ad-err"); er.textContent = "…";
-      try { const d = await adGet("key=" + encodeURIComponent(k)); if (!d.ok) throw 0; try { sessionStorage.setItem("mv-admin", k); } catch (x) {} rows = d.rows || []; panel(); }
+      try { const d = await adGet("a=rows&key=" + encodeURIComponent(k)); if (!d.ok) throw 0; try { sessionStorage.setItem("mv-admin", k); } catch (x) {} rows = d.rows || []; panel(); }
       catch (x) { er.textContent = L("adWrong"); } };
+  };
+  const reset = async () => {
+    let mail = "";
+    try { const d = await adGet("a=status"); mail = d.email || ""; } catch (e) {}
+    root.innerHTML = `<div class="ad">${topBar()}<main class="ad-main"><div class="ad-login"><span class="ad-lock">🔑</span><h1>${L("adChange")}</h1>
+      <button type="button" class="qz-btn" data-send>✉ ${L("adSend")} ${esc(mail)}</button>
+      <form data-set><input name="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="${L("adOtp")}" required>
+        <input name="k1" type="password" autocomplete="new-password" placeholder="${L("adNewCode")}" required><input name="k2" type="password" autocomplete="new-password" placeholder="${L("adNewCode2")}" required>
+        <button class="qz-btn">${L("adSave")}</button></form><p class="ad-err" role="alert"></p><button type="button" class="ad-link" data-back>← ${L("adBack")}</button></div></main></div>`;
+    const er = root.querySelector(".ad-err"), say2 = (t, ok) => { er.textContent = t; er.style.color = ok ? "#9ff0c0" : ""; };
+    root.querySelector("[data-back]").onclick = login;
+    root.querySelector("[data-send]").onclick = async e => { const b = e.currentTarget; b.disabled = true; say2("…");
+      try { const d = await adGet("a=send"); say2(d.ok ? L("adSent") : d.err === "wait" ? L("adWait") : L("adWrong"), d.ok); } catch (x) { say2(L("adWrong")); } setTimeout(() => b.disabled = false, 60000); };
+    root.querySelector("[data-set]").onsubmit = async e => { e.preventDefault(); const fd = new FormData(e.target), k1 = fd.get("k1"), k2 = fd.get("k2");
+      if (k1 !== k2) return say2(L("adMismatch")); if (k1.length < 6) return say2(L("adShort")); say2("…");
+      try { const d = await adGet("a=set&otp=" + encodeURIComponent(fd.get("otp")) + "&key=" + encodeURIComponent(k1));
+        if (d.ok) { say2(L("adSaved"), true); setTimeout(login, 1800); } else say2(d.err === "otp" ? L("adBadOtp") : d.err === "expired" ? L("adExpired") : d.err === "short" ? L("adShort") : L("adWrong")); } catch (x) { say2(L("adWrong")); } };
   };
   const norm2 = r => ({ t: String(r._time || ""), type: r.type || "", name: r.name || "", surname: r.surname || "", age: r.age || "", email: r.email || "", wa: String(r.whatsapp || ""), format: r.format || "",
     level: r.level || "", story: r.story || "", chapter: r.chapter || "", score: r.score || "", message: r.message || "", answers: r.answers || "", lang: r.language || r.lang || "" });
@@ -5608,13 +5628,13 @@ VIEWS.admin = root => {
     root.querySelector(".ad-main").onclick = async e => {
       const t = e.target.closest("[data-tab]"); if (t) { tab = t.dataset.tab; panel(); return; }
       if (e.target.closest("[data-out]")) { try { sessionStorage.removeItem("mv-admin"); } catch (x) {} rows = []; login(); return; }
-      if (e.target.closest("[data-rf]")) { try { const d = await adGet("key=" + encodeURIComponent(key())); if (d.ok) { rows = d.rows || []; panel(); } } catch (x) {} return; }
+      if (e.target.closest("[data-rf]")) { try { const d = await adGet("a=rows&key=" + encodeURIComponent(key())); if (d.ok) { rows = d.rows || []; panel(); } } catch (x) {} return; }
       if (e.target.closest("[data-csv]")) { const cols = ["t", "type", "name", "surname", "age", "wa", "email", "format", "level", "story", "chapter", "score", "message"];
         const csv = [cols.join(","), ...list.map(r => cols.map(c => `"${String(r[c]).replace(/"/g, '""')}"`).join(","))].join("\n");
         const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv" })); a.download = `minaraverse-${today}.csv`; a.click(); }
     };
   };
-  if (key() && ADMIN_API) adGet("key=" + encodeURIComponent(key())).then(d => { if (d.ok) { rows = d.rows || []; panel(); } else login(); }).catch(login); else login();
+  if (key() && ADMIN_API) adGet("a=rows&key=" + encodeURIComponent(key())).then(d => { if (d.ok) { rows = d.rows || []; panel(); } else login(); }).catch(login); else login();
   return {};
 };
 

@@ -1429,3 +1429,5 @@ body[data-view="admin"]{background:#121218}
 .ad-empty{text-align:center;color:#9a97a8;padding:30px}
 @media (max-width:800px){.ad-row{grid-template-columns:1fr 1fr}.ad-stats{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:480px){.ad-row{grid-template-columns:1fr}.ad-stats{grid-template-columns:repeat(2,1fr)}}
+.ad-link{border:0;background:transparent;color:#9DB0FF;font:600 14px "Bricolage Grotesque";text-decoration:underline;padding:6px}
+.ad-login [data-set]{display:grid;gap:10px;width:100%}.ad-login [data-send]{background:#ffcf5a;border-color:#ffcf5a;color:#2a2008;justify-self:stretch}
