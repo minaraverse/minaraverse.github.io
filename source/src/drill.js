@@ -288,6 +288,7 @@ VIEWS.drill = root => {
     if (mode === "lesson" && li >= (p["u" + ui] || 0)) { const pp = (p["p" + ui] || 0) + 1;
       if (pp >= partsOf(li)) { p["u" + ui] = li + 1; p["p" + ui] = 0; sessionStorage.setItem("mv-dnew", li + 1 >= LPU ? ui + 1 : ui); } else { p["p" + ui] = pp; sessionStorage.setItem("mv-dpart", 1); } }
     if (mode === "jump") { p.jump = Math.max(p.jump || 0, ui); for (let k = 0; k < ui; k++) p["u" + k] = LPU; sessionStorage.setItem("mv-dnew", ui); }
+    if (mode === "lesson") { if (st.miss === 0) p["pf" + ui] = 1; if (st.maxCombo >= 5) p["cb" + ui] = 1; }
     lsSet("mv-drill", p);
     if (mode === "practice") setHearts(hearts() + 1);
     qAdd(q => { q.les++; if (st.miss === 0) q.per++; q.sec += sec; q.cmb = Math.max(q.cmb, st.maxCombo); q.lis += st.lisOk || 0; });
@@ -347,7 +348,7 @@ function drillPathHTML() {
         + (j === 2 ? `<div class="dr-nw" style="--x:${-offs[2] * .9}px;--i:2.5"><button class="dr-chest ${d >= 3 ? "ready" : ""} ${(DP().chest || []).includes(U.n) ? "open" : ""}" data-chest="${U.n}" aria-label="Chest">${(DP().chest || []).includes(U.n) ? "📭" : "🎁"}</button></div>` : ""); }).join("");
     return `<section class="dr-unit ${open ? "" : "locked"}" style="--uc:${U.c}" id="u${U.n}" data-u="${U.n}">
       <button class="dr-div" data-guide="${U.n}"><i></i><b>${U.e} ${esc(T3(U.t))}</b><i></i></button>
-      <div class="dr-path">${nodes}<div class="dr-pix ${U.n % 2 ? "l" : "r"}">${mascot(["👋", "📚", "🎧", "✨", "💪", "🌟"][U.n % 6])}${open ? "" : `<div class="dr-pstars">★★★</div>`}</div></div></section>`;
+      <div class="dr-path">${nodes}${sideHTML(U, open)}</div></section>`;
   }).join("") + `</div>`).join("") + `<button class="dr-tocur" aria-label="Current lesson">↑</button>`;
 }
 function wireDrillPath(root) {
@@ -371,6 +372,7 @@ function wireDrillPath(root) {
     if (e.target.closest("[data-go='course']")) { Router.go("app-course"); return; }
     const n = e.target.closest(".dr-node"), g = e.target.closest("[data-guide]"), c = e.target.closest("[data-chest]");
     if (g) { guideSheet(UNITS[+g.dataset.guide]); return; }
+    const sd = e.target.closest("[data-side]"); if (sd) { sideSheet(UNITS[+sd.dataset.side]); return; }
     if (c) { const u = +c.dataset.chest, p = DP(); p.chest = p.chest || [];
       if (p.chest.includes(u)) return; if (uDone(u) < 3) { flash(c, "shake"); sfx("miss"); toast("🔒 " + L("dLocked")); return; }
       p.chest.push(u); lsSet("mv-drill", p); sfx("chest"); c.classList.add("opening"); setTimeout(() => { c.textContent = "📭"; c.classList.add("open"); }, 500); addXp(10); toast("🎁 " + L("dChestP"), "gold"); return; }
@@ -383,6 +385,9 @@ function wireDrillPath(root) {
       : n.classList.contains("jump") ? `<b>${L("dJump")}</b><small>${L("dJumpP")}</small><a class="dr-pgo" href="#drill-j-${u}">⏩ ${L("dJumpGo")}</a>` : `<b>${esc(L("dNode")[l])}</b><small>${L("dLocked")}</small>`;
     n.parentNode.appendChild(pop); if (!can && !n.classList.contains("jump")) flash(n, "shake");
   };
+  const newStars = root.querySelectorAll(".dr-st3 i.new");
+  if (newStars.length) { const p = DP(); root.querySelectorAll("[data-side]").forEach(b => { p["ss" + b.dataset.side] = b.querySelectorAll("i.on").length; }); lsSet("mv-drill", p);
+    setTimeout(() => { newStars.forEach((s, i) => setTimeout(() => sfx("pop"), i * 160)); }, 900); }
   const nu = sessionStorage.getItem("mv-dnew"), np = sessionStorage.getItem("mv-dpart"); sessionStorage.removeItem("mv-dnew"); sessionStorage.removeItem("mv-dpart");
   setTimeout(() => { const c = cur(); if (c) { c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" });
     if (nu != null) { c.classList.add("born"); setTimeout(() => sfx("unlock"), 450); }
@@ -590,4 +595,28 @@ async function lgAfterLesson(root) {
   sfx(up || i === 0 ? "combo" : "pop"); if (up) buzz([30, 40, 30]);
   if (up && !REDUCED) { const me2 = root.querySelector(".lg-row.me"); me2 && me2.animate([{ transform: "translateY(64px)" }, { transform: "none" }], { duration: 800, easing: "cubic-bezier(.2,1.2,.3,1)" }); }
   return true;
+}
+
+/* ---------- side characters with 3 mini-missions (stars) ---------- */
+const SIDE = [["👋", "wave"], ["👥", "wave"], ["😊", "bounce"], ["🎒", "wave"], ["🐱", "pet"], ["🎨", "paint"], ["🔢", "bounce"], ["👶", "pet"], ["☕", "sip"], ["🌸", "bounce"],
+  ["⚽", "kick"], ["📺", "sit"], ["🎁", "bounce"], ["💤", "sleep"], ["🗺️", "wave"], ["🎸", "paint"], ["📞", "sip"], ["🛍️", "shop"], ["📷", "wave"], ["🛍️", "shop"], ["🏆", "bounce"], ["🔮", "pet"], ["🌍", "pet"], ["💛", "bounce"]];
+const unitStars = u => { const p = DP(); return [!!p["pf" + u], !!p["cb" + u], uDone(u) >= LPU]; };
+function sideHTML(U, open) {
+  const [prop, pose] = SIDE[U.n % SIDE.length], k = CHARS[(U.sec + U.n) % 3], st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
+  return `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-${pose}" data-side="${U.n}" aria-label="★ ${st.filter(Boolean).length}/3">
+    <span class="dr-ch">${charSVG(k)}<i class="dr-prop">${prop}</i>${pose === "sleep" ? `<i class="dr-z">z</i><i class="dr-z z2">z</i>` : ""}</span>
+    <span class="dr-st3">${st.map((s, i) => `<i class="${s ? "on" : ""} ${s && i >= seen ? "new" : ""}" style="--k:${i}">★</i>`).join("")}</span></button>`;
+}
+Object.assign(UI.en, { smT: "Side missions", smP: "Complete all three to fill the stars.", sm1: "Finish one part with no mistakes", sm2: "Get 5 answers in a row", sm3: "Complete every level of this unit" });
+Object.assign(UI.az, { smT: "Əlavə missiyalar", smP: "Üç ulduzu doldurmaq üçün hamısını tamamla.", sm1: "Bir hissəni səhvsiz bitir", sm2: "5 ardıcıl düzgün cavab ver", sm3: "Bu bölmənin bütün səviyyələrini bitir" });
+Object.assign(UI.ru, { smT: "Доп. задания", smP: "Выполни все три, чтобы зажечь звёзды.", sm1: "Пройди одну часть без ошибок", sm2: "Дай 5 правильных ответов подряд", sm3: "Пройди все уровни этого раздела" });
+function sideSheet(U) {
+  const st = unitStars(U.n), k = CHARS[(U.sec + U.n) % 3], [prop] = SIDE[U.n % SIDE.length];
+  const ov = document.createElement("div"); ov.className = "dr-ov"; ov.style.setProperty("--uc", U.c);
+  ov.innerHTML = `<div class="dr-card sm-card"><div class="sm-ch">${charSVG(k)}<i>${prop}</i></div><h2>${L("smT")}</h2><p>${U.e} ${esc(T3(U.t))} · ${L("smP")}</p>
+    <ul class="sm-list">${["sm1", "sm2", "sm3"].map((m, i) => `<li class="${st[i] ? "on" : ""}"><span>★</span><b>${L(m)}</b><em>${st[i] ? "✓" : ""}</em></li>`).join("")}</ul>
+    <a class="ap-cta" href="#drill-${U.n}-${Math.min(uDone(U.n), LPU - 1)}">${L("dCont")}</a></div>`;
+  if (!unitOpen(U.n)) ov.querySelector(".ap-cta").remove();
+  document.body.appendChild(ov); sfx("pop"); ov.onclick = e => { if (e.target === ov) ov.remove(); };
+  addEventListener("hashchange", () => ov.remove(), { once: true });
 }
