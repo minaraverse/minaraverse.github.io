@@ -6423,7 +6423,7 @@ function hudHTML() { const g = goal(), t = xpToday(), p = Math.min(1, t / g);
   return `<div class="ap-hud">${apBack()}${brandHTML()}<span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
     <span class="ap-ring" title="${L("apGoal")}"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="bg"/><circle cx="18" cy="18" r="15" class="fg" style="stroke-dasharray:${(p * 94.2).toFixed(1)} 100"/></svg><b>${t}</b></span></div>`; }
 /* one Safiverse app: the top-left button looks the same whether opened on its own or from Minaraverse */
-const apBack = () => `<a class="ap-back" href="${SAFI ? "https://minaraverse.github.io" : "#"}"${SAFI ? ' target="_blank" rel="noopener"' : ""} aria-label="Minaraverse"><span>👩‍🏫</span><b>minara<i>verse</i></b></a>`;
+const apBack = () => `<a class="ap-back" href="${SAFI ? "https://minaraverse.github.io" : "#"}"${SAFI ? ' target="_blank" rel="noopener"' : ""} aria-label="Minaraverse"><span>←</span><b>minara<i>verse</i></b></a>`;
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
 /* ---------- course choice ---------- */
