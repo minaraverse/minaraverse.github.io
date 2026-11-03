@@ -469,7 +469,7 @@ const monthDone = () => { const m = lsGet("mv-qmonth", {}); return m.k === month
 function questsHTML() {
   const q = QS(), now = new Date(), mid = new Date(now); mid.setHours(24, 0, 0, 0); const hl = Math.ceil((mid - now) / 36e5);
   const end = new Date(now.getFullYear(), now.getMonth() + 1, 1), dl = Math.ceil((end - now) / 864e5), md = monthDone();
-  const month = now.toLocaleDateString(LANG === "az" ? "az-Latn-AZ" : LANG === "ru" ? "ru-RU" : "en-GB", { month: "long" });
+  const month = (LANG === "az" ? "Yanvar Fevral Mart Aprel May İyun İyul Avqust Sentyabr Oktyabr Noyabr Dekabr" : LANG === "ru" ? "Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь" : "January February March April May June July August September October November December").split(" ")[now.getMonth()];
   return `<div class="q-hero"><div><h1 class="ap-h">${esc(month)} · ${L("qMonth")}</h1><small>⏱ ${dl} ${L("qDays")}</small></div>${mascot("🎯")}</div>
   <div class="q-card"><b>${L("qMonthT")}</b><div class="q-bar"><i style="width:${Math.min(100, md / 20 * 100)}%"></i><span>${md} / 20</span></div></div>
   <div class="q-head"><span>${L("qDaily")}</span><small>⏱ ${hl} ${L("qLeft")}</small></div>
