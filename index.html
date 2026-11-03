@@ -2013,6 +2013,19 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .av-pin input{width:42px;height:52px;border-radius:12px;border:2px solid var(--line);background:var(--card2);color:var(--ink);text-align:center;font:900 22px var(--bf);outline:none}
 .av-pin input:focus{border-color:var(--acc)}.av-err{margin:0;color:var(--no);font-weight:700;min-height:1em}
 .ap-brand.sv{letter-spacing:-.01em}.ap-brand.sv i{font-family:"Condiment",cursive;font-size:1.15em;margin-left:1px}
+/* progress ring: centred exactly on the node face (face 66px + 8px depth) */
+.dr-ring{top:33px!important;left:50%!important;transform:translate(-50%,-50%) rotate(-90deg)!important}
+.dr-node.trophy~.dr-ring,.dr-nw:has(.trophy) .dr-ring{top:37px!important}
+.dr-node.now{animation:none!important}
+.dr-nw:has(.dr-node.now) .dr-ring circle.on{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--uc) 60%,transparent))}
+/* business English card */
+.hx-biz .hx-art{background:linear-gradient(160deg,#14304f,#0b1a2e);position:relative;display:grid;place-items:center}
+.hx-doc{position:relative;width:46%;aspect-ratio:3/4;background:#f4efe4;border-radius:8px;transform:rotate(-6deg);display:grid;align-content:start;gap:8%;padding:12% 10%;box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.hx-doc i{height:6px;border-radius:3px;background:#9aa7b8}.hx-doc i:nth-child(2){width:80%}.hx-doc i:nth-child(4){width:60%}
+.hx-doc b{position:absolute;right:-14%;bottom:14%;transform:rotate(-16deg);border:3px solid #e0245e;color:#e0245e;font:400 15px "Special Elite",monospace;padding:2px 8px;border-radius:6px;animation:stamp 2.6s ease-in-out infinite}
+@keyframes stamp{0%,60%{transform:rotate(-16deg) scale(1)}70%{transform:rotate(-16deg) scale(1.25)}80%{transform:rotate(-16deg) scale(.95)}}
+.hx-clock{position:absolute;top:10px;right:12px;font:700 13px "Special Elite",monospace;color:#f2c14e;background:rgba(0,0,0,.35);padding:3px 8px;border-radius:8px}
+.gw-contract{background:linear-gradient(180deg,#14304f,#0b1a2e)}.gw-contract .gw-k{color:#8fc0ff}.gw-contract .gw-cta{background:#8fc0ff;color:#0b1a2e}.gw-contract .gw-bar i{background:#8fc0ff}
 
 </style>
 <div id="view"></div>
@@ -3778,6 +3791,71 @@ const EXAM_ADV = {
   ]
 };
 
+/* ===== The Missing Contract (B1–C1, Business English mystery) ===== */
+/* question format: [text, options (correct first), explanation] */
+STORIES.contract = { title: "The Missing Contract", level: "B1–C1", unit: "Chapter",
+units: [
+{ id: "brief", name: "The Morning Briefing", az: "Səhər brifinqi", ru: "Утренняя планёрка", emoji: "☕",
+  note: "8:45 a.m., Caspian Tower, 21st floor. Nigar, the managing director of BlueSail Trading, opens the weekly briefing. “Good morning, everyone. Let's get down to business. Today at 5 p.m. we sign the biggest deal in our history with Caspian Logistics. The deadline is tight, but we are on track.” She looks at the empty folder on the table. “There is one small problem. The original contract has disappeared. Without it, nothing can be signed off. I need each of you to retrace your steps since yesterday evening. Elvin, you were the last person to work on it, weren't you?” Elvin turns pale. “I left it on my desk at 7 p.m. I'm sure of it.”",
+  qs: [
+["What is happening at 5 p.m.?", ["BlueSail is signing a big deal with Caspian Logistics.", "Nigar is leaving the company.", "The weekly briefing starts."], "Nigar says: “Today at 5 p.m. we sign the biggest deal in our history with Caspian Logistics.”"],
+["“Let's get down to business” means…", ["let's start talking about the main topic", "let's go downstairs to the office", "let's buy a new business"], "To get down to business = to stop small talk and start the serious work."],
+["“The deadline is tight” means…", ["there is very little time", "the deadline has been cancelled", "the contract is very long"], "A tight deadline leaves little time to finish the work."],
+["“We are on track” means…", ["things are going as planned", "we are travelling by train", "we are behind schedule"], "On track = progressing as planned. The opposite is “behind schedule”."],
+["“Nothing can be signed off” — to sign off on something means…", ["to give official approval", "to stop working for the day", "to write your name on a postcard"], "To sign off (on) = to approve something officially."],
+["Who worked on the contract last?", ["Elvin", "Nigar", "The client"], "Nigar says Elvin was the last person to work on it, and he says he left it on his desk at 7 p.m."]]},
+
+{ id: "inbox", name: "The Inbox", az: "Poçt qutusu", ru: "Входящие", emoji: "📧",
+  note: "You open Elvin's inbox to check his last messages. The first email is from Murad, the new intern: “Dear Elvin, I am writing to follow up on our conversation. Please find attached the final version of the price list. Could you let me know if any changes are needed? Kind regards, Murad.” The second one is from Lala in Finance, sent at 7:12 p.m.: “Hi Elvin, quick reminder: the contract needs two signed copies ASAP. I've cc'd Nigar. Looking forward to hearing from you.” Elvin frowns. “Two copies… I asked someone to make them. But who?”",
+  qs: [
+["Murad writes “I am writing to follow up on…”. Why?", ["to continue an earlier conversation", "to complain about a product", "to say goodbye"], "To follow up = to contact someone again about something discussed before."],
+["“Please find attached…” means…", ["a document is added to the email", "please come and find me", "the file was lost"], "We use “Please find attached” when we add a file to an email."],
+["“ASAP” stands for…", ["as soon as possible", "after signing a paper", "always say a password"], "ASAP = as soon as possible."],
+["“I've cc'd Nigar” means Lala…", ["sent a copy of the email to Nigar", "called Nigar on the phone", "deleted Nigar's email"], "To cc someone = to send them a copy of an email."],
+["Which is the most formal ending for an email?", ["Kind regards,", "See ya!", "Bye-bye,"], "“Kind regards” is a polite, formal way to end a business email."],
+["What new clue do we get?", ["Elvin asked someone to make two copies of the contract.", "Murad took the contract home.", "Lala signed the contract alone."], "Lala reminds him about two signed copies, and Elvin remembers he asked someone to make them."]]},
+
+{ id: "meeting", name: "The Meeting Room", az: "İclas otağı", ru: "Переговорная", emoji: "🗂️",
+  note: "Nigar calls a quick meeting. “Let's keep this short. First item on the agenda: who made the copies?” Lala raises her hand. “Could I just add something? I saw Murad near the printer at about 7:30.” Rashad from Sales disagrees: “I'm not sure I agree. Murad left at seven. I saw him at the lift.” Nigar turns to Rashad. “Could you elaborate on that?” “Well, he came back for his phone, maybe.” Nigar nods. “All right. Let's not jump to conclusions. Lala, please take the minutes. We'll postpone the sales update until tomorrow.”",
+  qs: [
+["“The first item on the agenda” is…", ["the first topic on the meeting's list", "the first person to arrive", "the first coffee of the day"], "An agenda is the list of topics for a meeting."],
+["“Could I just add something?” is a polite way to…", ["join the discussion", "leave the meeting", "end the meeting"], "We use it to politely interrupt and give our opinion."],
+["“I'm not sure I agree” is…", ["a polite way to disagree", "a strong agreement", "a question about the time"], "Saying “I'm not sure I agree” sounds softer than “You're wrong.”"],
+["“Could you elaborate on that?” means…", ["Could you give more details?", "Could you stop talking?", "Could you repeat it louder?"], "To elaborate = to explain in more detail."],
+["“Take the minutes” means…", ["write down what is said in the meeting", "wait for a few minutes", "take a short break"], "Minutes = the written record of a meeting."],
+["“We'll postpone the sales update” means they will…", ["do it later", "cancel it forever", "do it right now"], "To postpone = to move something to a later time."]]},
+
+{ id: "phone", name: "On the Phone", az: "Telefonda", ru: "По телефону", emoji: "📞",
+  note: "You call the print shop downstairs. “Good morning, PrintPoint, Samir speaking.” “Hello, this is BlueSail on the 21st floor. Could you put me through to the manager, please?” “Hold the line, please… I'm afraid she's in a meeting. Can I take a message?” “Yes. Did anyone from BlueSail bring documents to copy last night?” “Let me check… Yes! A young man came at 7:40 with a blue folder. He was in a hurry and said he'd come back. I'll get back to you in five minutes.” Ten minutes later your phone rings: “Sorry to keep you waiting. The folder is still here, in our safe.”",
+  qs: [
+["“Samir speaking” means…", ["This is Samir on the phone.", "Samir is giving a speech.", "Please speak to Samir later."], "On the phone we say “[name] speaking” to say who we are."],
+["“Could you put me through to the manager?” means…", ["Could you connect my call to the manager?", "Could you send the manager outside?", "Could you put the manager on the list?"], "To put someone through = to connect a phone call."],
+["“Hold the line, please” means…", ["please wait, don't hang up", "please hold the phone tighter", "please call again tomorrow"], "Hold the line = wait on the phone."],
+["“Can I take a message?” means…", ["Can I write down what you want to tell her?", "Can I read your messages?", "Can I send you an SMS?"], "To take a message = to note information for someone who is not available."],
+["“I'll get back to you” means…", ["I'll contact you again later", "I'll return your folder", "I'll come back to the office"], "To get back to someone = to reply or call them later."],
+["What did the print shop find?", ["A blue folder left by a young man at 7:40", "Nothing at all", "A broken printer"], "Samir says a young man brought a blue folder at 7:40 and it is still in their safe."]]},
+
+{ id: "numbers", name: "Numbers Don't Lie", az: "Rəqəmlər yalan demir", ru: "Цифры не лгут", emoji: "📈",
+  note: "Before the signing, Nigar checks the figures in the contract. “Our revenue rose by 18% last quarter, and our costs fell slightly. Caspian Logistics will pay an advance of 40,000 manat, and the rest on receipt of the invoice.” Rashad looks worried: “The budget for transport is 15% higher than last year.” “That's fine,” Nigar answers. “The new route will cut delivery time by half. It's a win-win.” Then she notices something. “Wait — page 4 says 14%, page 9 says 15%. We need to correct this before we sign.”",
+  qs: [
+["“Revenue rose by 18%” means…", ["the income increased by 18%", "the income fell by 18%", "the company has 18 employees"], "Revenue = money a company earns. To rise by = to increase by."],
+["“Costs fell slightly” means they…", ["went down a little", "went up a lot", "stayed exactly the same"], "To fall = to go down. Slightly = a little."],
+["A “quarter” in business is…", ["a period of three months", "25 kilometres", "a quarter of an hour"], "Companies report results by quarter: Q1, Q2, Q3, Q4."],
+["An “invoice” is…", ["a document asking for payment", "a thank-you letter", "a job application"], "An invoice lists goods or services and how much must be paid."],
+["“A win-win” situation is good for…", ["both sides", "nobody", "only one side"], "Win-win = a result that benefits everyone involved."],
+["What problem does Nigar notice?", ["Two different numbers for the same figure (14% and 15%)", "The contract is in the wrong language", "The client's name is missing"], "Page 4 says 14% and page 9 says 15%, so they must correct it before signing."]]},
+
+{ id: "signing", name: "The Signing", az: "İmza", ru: "Подписание", emoji: "🤝",
+  note: "4:30 p.m. Murad walks in with the blue folder and a red face. “I'm so sorry. I took it to PrintPoint for the two copies and forgot it when my phone rang. My fault.” Nigar smiles. “Mistakes happen. Thank you for owning up to it.” At 5 p.m. the guests from Caspian Logistics arrive. Their director wants a lower price. Nigar replies: “We can meet you halfway: a 5% discount if you sign for three years.” He thinks for a moment. “The ball is in our court, then… Deal!” They shake hands. The contract is signed, and the team finally breathes again.",
+  qs: [
+["Who had the contract?", ["Murad, the intern", "Lala from Finance", "The client's director"], "Murad took the folder to the print shop for copies and forgot it there."],
+["“Thank you for owning up to it” means…", ["Thank you for admitting your mistake", "Thank you for buying it", "Thank you for hiding it"], "To own up (to something) = to admit you did something wrong."],
+["“We can meet you halfway” means…", ["we can compromise", "we can meet in the middle of the street", "we refuse to change anything"], "To meet someone halfway = to accept part of what they want."],
+["“The ball is in our court” means…", ["now it is our turn to decide", "we are playing tennis", "we have lost the game"], "The ball is in someone's court = it is their turn to act or decide."],
+["“Deal!” at the end of a negotiation means…", ["We agree!", "Let's play cards!", "No, thank you."], "Saying “Deal!” means you accept the agreement."],
+["What did Caspian Logistics get?", ["A 5% discount for a three-year contract", "A free office", "Murad as a new employee"], "Nigar offered a 5% discount if they signed for three years, and they agreed."]]}
+]};
+
 /* ===== CORE: language, progress, router, shared quiz ===== */
 const UI = {
 en:{home:"Minaraverse",back:"Back",locked:"Locked",lockedMsg:"Finish the previous chapter and solve its riddle to open this one.",q:"Question",of:"of",right:"Correct!",wrong:"Not quite.",next:"Next",finish:"See my score",again:"Try again",copy:"Copy my result",copied:"Copied!",share:"Share it with @minaraverse",done:"done",chapters:"chapters",questions:"questions",start:"Start the story",cont:"Continue",complete:"Completed",
@@ -4634,7 +4712,7 @@ VIEWS.home = root => {
   <div class="h-wrap">
   <header class="h-top">
     <a class="h-logo" href="#">minara<i>verse</i></a>
-    <nav class="h-nav" aria-label="Menu"><a href="#" data-jump="h-level">🎯 ${L("levelK")}</a><a href="#" data-jump="h-about">${L("bioK")}</a><a href="#" data-jump="h-stories">${L("storiesK")}</a><a href="#" data-jump="h-board">🏆 ${L("bdK")}</a><a href="#club">☕ ${L("clubK")}</a><a href="#" data-jump="h-exam">${L("exam")}</a><a href="#" data-jump="h-lead" class="hn-cta">💬 ${L("leadK")}</a></nav>
+    <nav class="h-nav" aria-label="Menu"><a href="#" data-jump="h-level">🎯 ${L("levelK")}</a><a href="#" data-jump="h-about">${L("bioK")}</a><a href="#" data-jump="h-stories">${L("storiesK")}</a><a href="#" data-jump="h-board">🏆 ${L("bdK")}</a><a href="#club">☕ ${L("clubK")}</a><a href="#" data-jump="h-exam">💼 ${L("bizNav")}</a><a href="#" data-jump="h-lead" class="hn-cta">💬 ${L("leadK")}</a></nav>
     ${langPill()}
   </header>
   <section class="h-hero">
@@ -4642,7 +4720,7 @@ VIEWS.home = root => {
       <p class="h-eyebrow">${L("eyebrow")}</p>
       <h1 class="h-h1"><span class="ln">${letters(L("h1a"))}</span><span class="ln">${letters(L("h1b"))} <em>${letters(L("h1c"))}</em></span></h1>
       <p class="h-lead">${L("lead")}</p>
-      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><a class="h-cta2 h-app" href="#app">📱 ${L("apAppMode")}</a></div>
+      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><a class="h-cta2 h-app" href="https://safiverse.github.io" target="_blank" rel="noopener">📱 Safiverse ↗</a></div>
     </div>
     <div class="h-hero-r" aria-hidden="true">
       <svg class="h-badge" viewBox="0 0 200 200"><defs><path id="bc" d="M100 100 m-78 0 a78 78 0 1 1 156 0 a78 78 0 1 1 -156 0"/></defs><text font-family="Bricolage Grotesque,Arial,sans-serif" font-size="13.5" font-weight="600" letter-spacing="3.2"><textPath href="#bc">MINARAVERSE ✦ ENGLISH THROUGH STORIES ✦ A1–B2 ✦ </textPath></text><text x="100" y="112" text-anchor="middle" font-family="'Fraunces',Georgia,serif" font-size="40" font-style="italic">mv</text></svg>
@@ -4670,7 +4748,7 @@ VIEWS.home = root => {
   </section>
   <section class="h-formats"><p class="h-k">${L("formatsK")}</p><h2 class="h-h2">${L("formatsH")}</h2>
     <div class="hf-skills"><span class="hf-sk-k">${L("skillsK")}:</span>${["grammar", "vocab", "read", "listen", "speak", "write", "story"].map((k, i) => `<span class="hf-sk" style="--i:${i}">${["📐", "🧩", "📖", "🎧", "🗣", "✍️", "🎭"][i]} ${L("sk_" + k)}</span>`).join("")}</div>
-    <div class="hf-grid">${[["story", "📚", "#h-stories"], ["myst", "🔎", "#mystery"], ["club", "☕", "#club"], ["exam", "📝", "#h-exam"]].map(([k, e, h]) => `<a class="hf-card" href="${h}" ${h.startsWith("#h-") ? `data-jump="${h.slice(1)}"` : ""}><span>${e}</span><b>${L("fm_" + k)}</b><small>${L("fm_" + k + "P")}</small></a>`).join("")}</div>
+    <div class="hf-grid">${[["story", "📚", "#h-stories"], ["myst", "🔎", "#mystery"], ["club", "☕", "#club"], ["biz", "💼", "#contract"]].map(([k, e, h]) => `<a class="hf-card" href="${h}" ${h.startsWith("#h-") ? `data-jump="${h.slice(1)}"` : ""}><span>${e}</span><b>${L("fm_" + k)}</b><small>${L("fm_" + k + "P")}</small></a>`).join("")}</div>
     <div class="hf-aud"><a class="hf-a" href="#" data-jump="h-stories" data-aud="adults"><span>🧑‍💼</span><b>${L("adultsT")}</b><p>${L("adultsP")}</p><em>${L("cta")} →</em></a><a class="hf-a kid" href="#kids"><span>🧒</span><b>${L("kidsT")}</b><p>${L("kidsP")}</p><em>Little Explorers →</em></a></div>
     <ol class="h-path"><p class="h-k">${L("pathK")}</p>${[1, 2, 3, 4].map(k => `<li><span>0${k}</span><b>${L("path" + k)}</b><small>${L("path" + k + "p")}</small></li>`).join("")}</ol>
     <a class="hf-lessons" href="${DM}" target="_blank" rel="noopener"><span>💬</span><div><b>${L("lessonsT")}</b><small>${L("lessonsP")}</small></div><em>${L("writeMe")} ↗</em></a>
@@ -4691,9 +4769,9 @@ VIEWS.home = root => {
   <p class="h-next" aria-hidden="false"><span>${L("nx4")}</span><i>↓</i></p>
   ${STORIES.club ? (() => { const w = STORIES.club.units[clubIdx()]; return `<section class="h-club"><a class="hc-box" href="#club"><span class="hc-cup" aria-hidden="true">${w.emoji || "☕"}</span><div><p class="h-k">☕ ${L("clubK")} · ${L("clubNew")}</p><span class="hc-fmt">${esc(w.format)}</span><h2 class="h-h2">${esc(w.title)}</h2><p>${L("fm_clubP")}</p><em>${L("clubOpen")} →</em></div></a></section>`; })() : ""}
   <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
-  <section class="h-exam" id="h-exam"><div class="h-sh"><div><p class="h-k">${L("examK")}</p><h2 class="h-h2">${L("examH")}</h2></div></div>
-    <div class="hx-cards"><a class="hx-card hx-dim" href="#exam"><span class="hx-art" aria-hidden="true"><span class="hx-sheet">${Array.from({ length: 5 }, (_, r) => `<span>${r + 1}${"ABCD".split("").map((c, k) => `<i class="${(r * 3 + 1) % 4 === k ? "on" : ""}">${c}</i>`).join("")}</span>`).join("")}</span><b class="hx-score">${lsGet("mv-exam", null) ? lsGet("mv-exam").score : "100"}</b></span>
-      <span class="hx-t"><small>${L("exam")} · 3 ${{ en: "versions", az: "variant", ru: "варианта" }[LANG]} · A1–C2</small><b>${L("examT")}</b><span>${L("examD")}</span><em>${L("exStart")} →</em></span></a>
+  <section class="h-exam" id="h-exam"><div class="h-sh"><div><p class="h-k">${L("bizK")}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
+    <div class="hx-cards"><a class="hx-card hx-biz" href="#contract"><span class="hx-art" aria-hidden="true"><span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span></span>
+      <span class="hx-t"><small>Business English · ${STORIES.contract.units.length} ${{ en: "chapters", az: "fəsil", ru: "глав" }[LANG]} · ${STORIES.contract.level}</small><b>${esc(STORIES.contract.title)}</b><span>${L("contractD")}</span><em>${doneCount("contract") ? L("cont") : L("start")} →</em></span></a>
       <a class="hx-card hx-err" href="#errors"><span class="hx-art" aria-hidden="true"><span class="hx-target"><i></i><i></i><i></i></span><span class="hx-words"><s>a elephant</s><b>an elephant</b></span></span>
       <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
   <p class="h-next" aria-hidden="false"><span>${L("nx6")}</span><i>↓</i></p>
@@ -5874,7 +5952,7 @@ const WORLD_ORDER = ["kids", "tapes", "wild", "travel", "voyage", "mystery", "mo
 function planHTML(lvl) {
   const worlds = WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl));
   const games = errIdxFor(lvl).slice(0, 4);
-  const more = [["#daily", "🔤", L("dailyT")], STORIES.club ? ["#club", "☕", L("clubK")] : null, (lvl === "B1" || lvl === "B2" || lvl === "C1" || lvl === "C2") ? ["#exam", "📝", L("examT")] : null, ["#review", "🔁", L("reviewT")]].filter(Boolean);
+  const more = [["#daily", "🔤", L("dailyT")], STORIES.club ? ["#club", "☕", L("clubK")] : null, (lvl === "B1" || lvl === "B2" || lvl === "C1" || lvl === "C2") ? ["#contract", "💼", "Business English"] : null, ["#review", "🔁", L("reviewT")]].filter(Boolean);
   return `<div class="pl"><p class="pl-p">${L("planP")}</p>
     <p class="pl-k">${L("planWorlds")}</p><div class="pl-row">${worlds.map(k => `<a class="pl-w" href="#${k}"><b>${esc(STORIES[k].title)}</b><small>${STORIES[k].level} · ${doneCount(k)}/${STORIES[k].units.length}</small></a>`).join("")}</div>
     <p class="pl-k">${L("planGames")}</p><div class="pl-row">${games.map(([u, k]) => `<a class="pl-g" href="#errors-${k + 1}"><i>${esc(u.icon)}</i><b>${esc(u.full || u.name)}</b><small>${u.level}</small></a>`).join("")}</div>
@@ -5944,11 +6022,16 @@ VIEWS.club = root => {
   return {};
 };
 
+Object.assign(UI.en, { bizNav: "Business English", bizK: "Business English", bizH: "Talk business — through a mystery", fm_biz: "Business English", fm_bizP: "A mystery at a Baku company: emails, meetings, calls and the deal." });
+Object.assign(UI.az, { bizNav: "Business English", bizK: "Business English", bizH: "Biznes dilində danış — sirr hekayəsi ilə", fm_biz: "Business English", fm_bizP: "Bakı şirkətində sirr: məktublar, iclaslar, zənglər və sövdə." });
+Object.assign(UI.ru, { bizNav: "Business English", bizK: "Деловой английский", bizH: "Говори на языке бизнеса — через детектив", fm_biz: "Деловой английский", fm_bizP: "Загадка в бакинской компании: письма, встречи, звонки и сделка." });
+
 /* ===== v3: advanced worlds, exams and games for every level, lead form ===== */
 Object.assign(UI.en, {
   exV_basic: "Basic", exV_std: "Standard", exV_adv: "Advanced",
   cafeD: "Leyla opens a little café near Fountain Square. Order, chat and make plans in simple English.",
   businessD: "A Baku team builds a startup and pitches to investors in Dubai. Emails, meetings, numbers and the deal.",
+  contractD: "Five hours before a big signing, the contract disappears. Read the emails, run the meeting, make the calls and save the deal — Business English as a mystery.",
   debateD: "An international debate tournament in Baku. Argue, concede, rebut and win the final.",
   ieltsD: "Seven rooms of the IELTS Speaking test: Part 1, the cue card, Part 3 and a full mock with feedback.",
   heistD: "A medieval manuscript vanishes from the Shirvanshahs' Palace. Follow it from Baku to Venice and London.",
@@ -5965,6 +6048,7 @@ Object.assign(UI.az, {
   exV_basic: "Başlanğıc", exV_std: "Standart", exV_adv: "İrəli",
   cafeD: "Leyla Fəvvarələr meydanının yanında kiçik kafe açır. Sadə ingilis dilində sifariş ver, söhbət et, plan qur.",
   businessD: "Bakılı komanda startap qurur və Dubayda investorlara təqdim edir. Məktublar, görüşlər, rəqəmlər və müqavilə.",
+  contractD: "Böyük imzadan beş saat əvvəl müqavilə yoxa çıxır. Məktubları oxu, iclası apar, zəngləri et və sövdəni xilas et — sirr kimi Business English.",
   debateD: "Bakıda beynəlxalq debat turniri. Mübahisə et, razılaş, təkzib et və finalı qazan.",
   ieltsD: "IELTS danışıq imtahanının yeddi otağı: 1-ci hissə, kart, 3-cü hissə və rəylə tam sınaq.",
   heistD: "Şirvanşahlar sarayından orta əsr əlyazması yoxa çıxır. Onun izi ilə Bakıdan Venesiya və Londona get.",
@@ -5981,6 +6065,7 @@ Object.assign(UI.ru, {
   exV_basic: "Базовый", exV_std: "Стандарт", exV_adv: "Продвинутый",
   cafeD: "Лейла открывает маленькое кафе у Площади фонтанов. Заказывай, болтай и строй планы на простом английском.",
   businessD: "Команда из Баку создаёт стартап и презентует его инвесторам в Дубае. Письма, встречи, цифры и сделка.",
+  contractD: "За пять часов до подписания пропадает контракт. Прочитай письма, проведи встречу, сделай звонки и спаси сделку — деловой английский как детектив.",
   debateD: "Международный турнир по дебатам в Баку. Спорь, уступай, опровергай и выиграй финал.",
   ieltsD: "Семь комнат устной части IELTS: Part 1, карточка, Part 3 и полный пробный экзамен с разбором.",
   heistD: "Из Дворца Ширваншахов исчезает средневековая рукопись. Иди по её следу из Баку в Венецию и Лондон.",
@@ -6021,6 +6106,7 @@ Object.assign(WART, {
     <rect y="380" width="1200" height="30" fill="#6b4a33"/><rect y="410" width="1200" height="190" fill="#4a3324"/>
     ${[[260, "#f6efe3"], [520, "#c96a3a"], [800, "#f6efe3"]].map(([x, c]) => `<g transform="translate(${x} 330)"><path d="M-28 0H28L22 50H-22Z" fill="${c}"/><path d="M28 12Q50 14 46 32Q42 44 24 40" stroke="${c}" stroke-width="7" fill="none"/>${[0, 1, 2].map(s => `<path d="M${-10 + s * 10} -10Q${-18 + s * 10} -30 ${-8 + s * 10} -46" stroke="#f6efe3" stroke-width="3" fill="none" opacity=".5"/>`).join("")}</g>`).join("")}
     <g transform="translate(1000 300)"><path d="M-30 80L-24 -20Q0 -36 24 -20L30 80Z" fill="#b4542f"/><path d="M-24 -20Q0 -6 24 -20" fill="none" stroke="#7a2e15" stroke-width="4"/><ellipse cy="-24" rx="26" ry="8" fill="#7a2e15"/></g></svg>`,
+  contract: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><defs><linearGradient id="ctg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d2238"/><stop offset="1" stop-color="#14304f"/></linearGradient></defs><rect width="1200" height="600" fill="url(#ctg)"/>${Array.from({ length: 9 }, (_, k) => `<rect x="${60 + k * 125}" y="${250 - (k * 53) % 140}" width="90" height="${350 + (k * 53) % 140}" fill="#0a1a2b"/>${Array.from({ length: 6 }, (_, r) => `<rect x="${72 + k * 125 + (r % 2) * 40}" y="${280 - (k * 53) % 140 + r * 45}" width="22" height="14" fill="${(k + r) % 3 ? "#1d3a5c" : "#f2c14e"}" opacity=".8"/>`).join("")}`).join("")}<g transform="translate(600 330) rotate(-6)"><rect x="-150" y="-110" width="300" height="220" rx="10" fill="#f4efe4"/><path d="M-115 -70 h230 M-115 -40 h200 M-115 -10 h230 M-115 20 h160" stroke="#9aa7b8" stroke-width="8" stroke-linecap="round"/><g transform="translate(70 60) rotate(-14)"><rect x="-80" y="-26" width="160" height="52" rx="8" fill="none" stroke="#e0245e" stroke-width="7"/><text x="0" y="12" text-anchor="middle" font-family="Special Elite, monospace" font-size="30" fill="#e0245e">MISSING</text></g></g><circle cx="980" cy="110" r="46" fill="#f2c14e" opacity=".9"/></svg>`,
   business: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><defs><linearGradient id="bzS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1a2e"/><stop offset="1" stop-color="#25466b"/></linearGradient></defs>
     <rect width="1200" height="600" fill="url(#bzS)"/>${Array.from({ length: 22 }, (_, k) => { const h = 120 + ((k * 71) % 260), x = k * 56; return `<rect x="${x}" y="${600 - h}" width="50" height="${h}" fill="#0e2238"/>${Array.from({ length: Math.floor(h / 30) }, (_, r) => `<rect x="${x + 8 + (r % 2) * 18}" y="${612 - h + r * 30}" width="10" height="14" fill="#ffd27a" opacity="${(k + r) % 3 ? .15 : .7}"/>`).join("")}`; }).join("")}
     <g transform="translate(600 300)"><rect x="-300" y="-170" width="600" height="300" rx="16" fill="#f4f1ea" opacity=".96"/><path d="M-250 80L-150 30L-60 50L40 -40L140 -10L250 -110" stroke="#2b6cd4" stroke-width="10" fill="none" stroke-linecap="round"/>
@@ -6044,9 +6130,9 @@ Object.assign(WART, {
     <g transform="translate(600 160) rotate(-8)"><rect x="-120" y="-80" width="240" height="160" rx="6" fill="#d9c49a"/><rect x="-104" y="-64" width="208" height="128" fill="none" stroke="#8a6a3a" stroke-width="3"/>${[0, 1, 2, 3, 4].map(r => `<path d="M-84 ${-40 + r * 20}H84" stroke="#6b5230" stroke-width="3" stroke-dasharray="6 4"/>`).join("")}<circle cx="70" cy="40" r="18" fill="#8e1f22"/></g>
     <path d="M1200 0L760 600H1200Z" fill="url(#hsB)" opacity=".5"/></svg>`
 });
-const NEW_WORLDS = { cafe: "qz-cf", business: "qz-bz", debate: "qz-db", ielts: "qz-ie", heist: "qz-hs" };
+const NEW_WORLDS = { cafe: "qz-cf", business: "qz-bz", contract: "qz-bz", debate: "qz-db", ielts: "qz-ie", heist: "qz-hs" };
 Object.entries(NEW_WORLDS).forEach(([k, cls]) => { if (STORIES[k]) makeWorld(k, cls); });
-WORLD_ORDER.length = 0; ["kids", "cafe", "tapes", "wild", "travel", "voyage", "mystery", "movie", "business", "ielts", "debate", "heist"].forEach(k => STORIES[k] && WORLD_ORDER.push(k));
+WORLD_ORDER.length = 0; ["kids", "cafe", "tapes", "wild", "travel", "voyage", "mystery", "movie", "business", "contract", "ielts", "debate", "heist"].forEach(k => STORIES[k] && WORLD_ORDER.push(k));
 
 /* ---------- lead form (bottom of home) ---------- */
 function leadHTML() {
@@ -6354,7 +6440,7 @@ VIEWS.app = root => {
   if (sub === "practice") {
     const due = dueKeys().length;
     const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
-      ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#exam", "📝", L("apExam"), "DİM"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
+      ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#contract", "💼", "Business English", "B1–C1"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
     root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1><div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
     return {};
   }

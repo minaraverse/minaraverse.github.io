@@ -3,6 +3,7 @@ Object.assign(UI.en, {
   exV_basic: "Basic", exV_std: "Standard", exV_adv: "Advanced",
   cafeD: "Leyla opens a little café near Fountain Square. Order, chat and make plans in simple English.",
   businessD: "A Baku team builds a startup and pitches to investors in Dubai. Emails, meetings, numbers and the deal.",
+  contractD: "Five hours before a big signing, the contract disappears. Read the emails, run the meeting, make the calls and save the deal — Business English as a mystery.",
   debateD: "An international debate tournament in Baku. Argue, concede, rebut and win the final.",
   ieltsD: "Seven rooms of the IELTS Speaking test: Part 1, the cue card, Part 3 and a full mock with feedback.",
   heistD: "A medieval manuscript vanishes from the Shirvanshahs' Palace. Follow it from Baku to Venice and London.",
@@ -19,6 +20,7 @@ Object.assign(UI.az, {
   exV_basic: "Başlanğıc", exV_std: "Standart", exV_adv: "İrəli",
   cafeD: "Leyla Fəvvarələr meydanının yanında kiçik kafe açır. Sadə ingilis dilində sifariş ver, söhbət et, plan qur.",
   businessD: "Bakılı komanda startap qurur və Dubayda investorlara təqdim edir. Məktublar, görüşlər, rəqəmlər və müqavilə.",
+  contractD: "Böyük imzadan beş saat əvvəl müqavilə yoxa çıxır. Məktubları oxu, iclası apar, zəngləri et və sövdəni xilas et — sirr kimi Business English.",
   debateD: "Bakıda beynəlxalq debat turniri. Mübahisə et, razılaş, təkzib et və finalı qazan.",
   ieltsD: "IELTS danışıq imtahanının yeddi otağı: 1-ci hissə, kart, 3-cü hissə və rəylə tam sınaq.",
   heistD: "Şirvanşahlar sarayından orta əsr əlyazması yoxa çıxır. Onun izi ilə Bakıdan Venesiya və Londona get.",
@@ -35,6 +37,7 @@ Object.assign(UI.ru, {
   exV_basic: "Базовый", exV_std: "Стандарт", exV_adv: "Продвинутый",
   cafeD: "Лейла открывает маленькое кафе у Площади фонтанов. Заказывай, болтай и строй планы на простом английском.",
   businessD: "Команда из Баку создаёт стартап и презентует его инвесторам в Дубае. Письма, встречи, цифры и сделка.",
+  contractD: "За пять часов до подписания пропадает контракт. Прочитай письма, проведи встречу, сделай звонки и спаси сделку — деловой английский как детектив.",
   debateD: "Международный турнир по дебатам в Баку. Спорь, уступай, опровергай и выиграй финал.",
   ieltsD: "Семь комнат устной части IELTS: Part 1, карточка, Part 3 и полный пробный экзамен с разбором.",
   heistD: "Из Дворца Ширваншахов исчезает средневековая рукопись. Иди по её следу из Баку в Венецию и Лондон.",
@@ -75,6 +78,7 @@ Object.assign(WART, {
     <rect y="380" width="1200" height="30" fill="#6b4a33"/><rect y="410" width="1200" height="190" fill="#4a3324"/>
     ${[[260, "#f6efe3"], [520, "#c96a3a"], [800, "#f6efe3"]].map(([x, c]) => `<g transform="translate(${x} 330)"><path d="M-28 0H28L22 50H-22Z" fill="${c}"/><path d="M28 12Q50 14 46 32Q42 44 24 40" stroke="${c}" stroke-width="7" fill="none"/>${[0, 1, 2].map(s => `<path d="M${-10 + s * 10} -10Q${-18 + s * 10} -30 ${-8 + s * 10} -46" stroke="#f6efe3" stroke-width="3" fill="none" opacity=".5"/>`).join("")}</g>`).join("")}
     <g transform="translate(1000 300)"><path d="M-30 80L-24 -20Q0 -36 24 -20L30 80Z" fill="#b4542f"/><path d="M-24 -20Q0 -6 24 -20" fill="none" stroke="#7a2e15" stroke-width="4"/><ellipse cy="-24" rx="26" ry="8" fill="#7a2e15"/></g></svg>`,
+  contract: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><defs><linearGradient id="ctg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d2238"/><stop offset="1" stop-color="#14304f"/></linearGradient></defs><rect width="1200" height="600" fill="url(#ctg)"/>${Array.from({ length: 9 }, (_, k) => `<rect x="${60 + k * 125}" y="${250 - (k * 53) % 140}" width="90" height="${350 + (k * 53) % 140}" fill="#0a1a2b"/>${Array.from({ length: 6 }, (_, r) => `<rect x="${72 + k * 125 + (r % 2) * 40}" y="${280 - (k * 53) % 140 + r * 45}" width="22" height="14" fill="${(k + r) % 3 ? "#1d3a5c" : "#f2c14e"}" opacity=".8"/>`).join("")}`).join("")}<g transform="translate(600 330) rotate(-6)"><rect x="-150" y="-110" width="300" height="220" rx="10" fill="#f4efe4"/><path d="M-115 -70 h230 M-115 -40 h200 M-115 -10 h230 M-115 20 h160" stroke="#9aa7b8" stroke-width="8" stroke-linecap="round"/><g transform="translate(70 60) rotate(-14)"><rect x="-80" y="-26" width="160" height="52" rx="8" fill="none" stroke="#e0245e" stroke-width="7"/><text x="0" y="12" text-anchor="middle" font-family="Special Elite, monospace" font-size="30" fill="#e0245e">MISSING</text></g></g><circle cx="980" cy="110" r="46" fill="#f2c14e" opacity=".9"/></svg>`,
   business: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><defs><linearGradient id="bzS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1a2e"/><stop offset="1" stop-color="#25466b"/></linearGradient></defs>
     <rect width="1200" height="600" fill="url(#bzS)"/>${Array.from({ length: 22 }, (_, k) => { const h = 120 + ((k * 71) % 260), x = k * 56; return `<rect x="${x}" y="${600 - h}" width="50" height="${h}" fill="#0e2238"/>${Array.from({ length: Math.floor(h / 30) }, (_, r) => `<rect x="${x + 8 + (r % 2) * 18}" y="${612 - h + r * 30}" width="10" height="14" fill="#ffd27a" opacity="${(k + r) % 3 ? .15 : .7}"/>`).join("")}`; }).join("")}
     <g transform="translate(600 300)"><rect x="-300" y="-170" width="600" height="300" rx="16" fill="#f4f1ea" opacity=".96"/><path d="M-250 80L-150 30L-60 50L40 -40L140 -10L250 -110" stroke="#2b6cd4" stroke-width="10" fill="none" stroke-linecap="round"/>
@@ -98,9 +102,9 @@ Object.assign(WART, {
     <g transform="translate(600 160) rotate(-8)"><rect x="-120" y="-80" width="240" height="160" rx="6" fill="#d9c49a"/><rect x="-104" y="-64" width="208" height="128" fill="none" stroke="#8a6a3a" stroke-width="3"/>${[0, 1, 2, 3, 4].map(r => `<path d="M-84 ${-40 + r * 20}H84" stroke="#6b5230" stroke-width="3" stroke-dasharray="6 4"/>`).join("")}<circle cx="70" cy="40" r="18" fill="#8e1f22"/></g>
     <path d="M1200 0L760 600H1200Z" fill="url(#hsB)" opacity=".5"/></svg>`
 });
-const NEW_WORLDS = { cafe: "qz-cf", business: "qz-bz", debate: "qz-db", ielts: "qz-ie", heist: "qz-hs" };
+const NEW_WORLDS = { cafe: "qz-cf", business: "qz-bz", contract: "qz-bz", debate: "qz-db", ielts: "qz-ie", heist: "qz-hs" };
 Object.entries(NEW_WORLDS).forEach(([k, cls]) => { if (STORIES[k]) makeWorld(k, cls); });
-WORLD_ORDER.length = 0; ["kids", "cafe", "tapes", "wild", "travel", "voyage", "mystery", "movie", "business", "ielts", "debate", "heist"].forEach(k => STORIES[k] && WORLD_ORDER.push(k));
+WORLD_ORDER.length = 0; ["kids", "cafe", "tapes", "wild", "travel", "voyage", "mystery", "movie", "business", "contract", "ielts", "debate", "heist"].forEach(k => STORIES[k] && WORLD_ORDER.push(k));
 
 /* ---------- lead form (bottom of home) ---------- */
 function leadHTML() {

@@ -88,7 +88,7 @@ const WORLD_ORDER = ["kids", "tapes", "wild", "travel", "voyage", "mystery", "mo
 function planHTML(lvl) {
   const worlds = WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl));
   const games = errIdxFor(lvl).slice(0, 4);
-  const more = [["#daily", "🔤", L("dailyT")], STORIES.club ? ["#club", "☕", L("clubK")] : null, (lvl === "B1" || lvl === "B2" || lvl === "C1" || lvl === "C2") ? ["#exam", "📝", L("examT")] : null, ["#review", "🔁", L("reviewT")]].filter(Boolean);
+  const more = [["#daily", "🔤", L("dailyT")], STORIES.club ? ["#club", "☕", L("clubK")] : null, (lvl === "B1" || lvl === "B2" || lvl === "C1" || lvl === "C2") ? ["#contract", "💼", "Business English"] : null, ["#review", "🔁", L("reviewT")]].filter(Boolean);
   return `<div class="pl"><p class="pl-p">${L("planP")}</p>
     <p class="pl-k">${L("planWorlds")}</p><div class="pl-row">${worlds.map(k => `<a class="pl-w" href="#${k}"><b>${esc(STORIES[k].title)}</b><small>${STORIES[k].level} · ${doneCount(k)}/${STORIES[k].units.length}</small></a>`).join("")}</div>
     <p class="pl-k">${L("planGames")}</p><div class="pl-row">${games.map(([u, k]) => `<a class="pl-g" href="#errors-${k + 1}"><i>${esc(u.icon)}</i><b>${esc(u.full || u.name)}</b><small>${u.level}</small></a>`).join("")}</div>
@@ -157,3 +157,7 @@ VIEWS.club = root => {
   Quiz(root.querySelector(".cl-quiz"), { story: "club", idx: ci, cls: "qz-cl" });
   return {};
 };
+
+Object.assign(UI.en, { bizNav: "Business English", bizK: "Business English", bizH: "Talk business — through a mystery", fm_biz: "Business English", fm_bizP: "A mystery at a Baku company: emails, meetings, calls and the deal." });
+Object.assign(UI.az, { bizNav: "Business English", bizK: "Business English", bizH: "Biznes dilində danış — sirr hekayəsi ilə", fm_biz: "Business English", fm_bizP: "Bakı şirkətində sirr: məktublar, iclaslar, zənglər və sövdə." });
+Object.assign(UI.ru, { bizNav: "Business English", bizK: "Деловой английский", bizH: "Говори на языке бизнеса — через детектив", fm_biz: "Деловой английский", fm_bizP: "Загадка в бакинской компании: письма, встречи, звонки и сделка." });

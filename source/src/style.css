@@ -2007,3 +2007,16 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .av-pin input{width:42px;height:52px;border-radius:12px;border:2px solid var(--line);background:var(--card2);color:var(--ink);text-align:center;font:900 22px var(--bf);outline:none}
 .av-pin input:focus{border-color:var(--acc)}.av-err{margin:0;color:var(--no);font-weight:700;min-height:1em}
 .ap-brand.sv{letter-spacing:-.01em}.ap-brand.sv i{font-family:"Condiment",cursive;font-size:1.15em;margin-left:1px}
+/* progress ring: centred exactly on the node face (face 66px + 8px depth) */
+.dr-ring{top:33px!important;left:50%!important;transform:translate(-50%,-50%) rotate(-90deg)!important}
+.dr-node.trophy~.dr-ring,.dr-nw:has(.trophy) .dr-ring{top:37px!important}
+.dr-node.now{animation:none!important}
+.dr-nw:has(.dr-node.now) .dr-ring circle.on{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--uc) 60%,transparent))}
+/* business English card */
+.hx-biz .hx-art{background:linear-gradient(160deg,#14304f,#0b1a2e);position:relative;display:grid;place-items:center}
+.hx-doc{position:relative;width:46%;aspect-ratio:3/4;background:#f4efe4;border-radius:8px;transform:rotate(-6deg);display:grid;align-content:start;gap:8%;padding:12% 10%;box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.hx-doc i{height:6px;border-radius:3px;background:#9aa7b8}.hx-doc i:nth-child(2){width:80%}.hx-doc i:nth-child(4){width:60%}
+.hx-doc b{position:absolute;right:-14%;bottom:14%;transform:rotate(-16deg);border:3px solid #e0245e;color:#e0245e;font:400 15px "Special Elite",monospace;padding:2px 8px;border-radius:6px;animation:stamp 2.6s ease-in-out infinite}
+@keyframes stamp{0%,60%{transform:rotate(-16deg) scale(1)}70%{transform:rotate(-16deg) scale(1.25)}80%{transform:rotate(-16deg) scale(.95)}}
+.hx-clock{position:absolute;top:10px;right:12px;font:700 13px "Special Elite",monospace;color:#f2c14e;background:rgba(0,0,0,.35);padding:3px 8px;border-radius:8px}
+.gw-contract{background:linear-gradient(180deg,#14304f,#0b1a2e)}.gw-contract .gw-k{color:#8fc0ff}.gw-contract .gw-cta{background:#8fc0ff;color:#0b1a2e}.gw-contract .gw-bar i{background:#8fc0ff}
