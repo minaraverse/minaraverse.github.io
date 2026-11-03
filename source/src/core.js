@@ -105,7 +105,7 @@ document.addEventListener("click", e => {
 });
 /* home button shown in every world */
 const homeBtn = (cls = "") => `<a class="mv-home ${cls}" href="#" data-gohome><span aria-hidden="true">←</span> ${L("homeBtn")}</a>`;
-document.addEventListener("click", e => { const h = e.target.closest("[data-gohome]"); if (!h) return; e.preventDefault(); ACTIVE = null; Router.go(""); });
+document.addEventListener("click", e => { const h = e.target.closest("[data-gohome]"); if (!h) return; e.preventDefault(); ACTIVE = null; Router.go(typeof STANDALONE !== "undefined" && STANDALONE ? "app" : ""); });
 
 /* ---------- shared quiz ---------- */
 /* ACTIVE keeps an unfinished quiz alive across a language switch */
@@ -257,6 +257,7 @@ function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = nu
   const answer = (good, text, optIdx) => {
     const it = D[st.i]; ACTIVE = review ? null : st;
     st.picked = good ? 0 : (optIdx != null ? optIdx : -1);
+    if (typeof onQuizAnswer === "function") onQuizAnswer(good, it.warm || !!review);
     if (it.warm) { good ? revRight(it.key) : revWrong(it.key); }
     else { const k = st.i - nWarm; if (st.picks[k] == null) { st.picks[k] = st.picked; st.ans[k] = text; }
       if (!good && !(!noR && it.qi === n - 1)) revWrong(it.key); }
@@ -274,7 +275,7 @@ function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = nu
     if (ou && st.picked == null) { st.order.splice(+ou.dataset.out, 1); render(); return; }
     if (o && st.picked == null && !e.target.closest("[data-say]")) {
       const oi = +o.dataset.o, isR = !it.warm && !noR && it.qi === n - 1;
-      if (isR) { const k = st.i - nWarm; if (st.picks[k] == null) { st.picks[k] = oi; st.ans[k] = it.q[1][oi]; }
+      if (isR) { const k = st.i - nWarm; if (st.picks[k] == null) { st.picks[k] = oi; st.ans[k] = it.q[1][oi]; } if (typeof onQuizAnswer === "function") onQuizAnswer(oi === 0, false);
         if (oi !== 0) { if (!st.wrongR.includes(oi)) st.wrongR.push(oi); ACTIVE = st; render(); return; }
         st.r = true; st.picked = 0; ACTIVE = st; render(); return; }
       answer(oi === 0, it.q[1][oi], oi); return; }
@@ -284,7 +285,7 @@ function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = nu
     if (k === "hint") { st.hint = true; render(); }
     if (k === "ordercheck") { const tiles = tilesOf(it.q[1][0], it.key), txt = st.order.map(i => tiles.find(t => t.i === i).w).join(" "); answer(norm(txt) === norm(it.q[1][0]), txt); }
     if (k === "adv") { st.i++; st.picked = null; st.typed = ""; st.hint = false; st.retyped = false; st.order = [];
-      if (st.i >= D.length) { markDay(); if (!review) { const s = st.picks.filter(x => x === 0).length; if (noR) st.r = true; record(story, idx, s, st.r); onDone && onDone(s); if (NAME) sendResult(st.rec()).then(x => { st.sent = x; }); } ACTIVE = null; }
+      if (st.i >= D.length) { markDay(); if (!review) { const s = st.picks.filter(x => x === 0).length; if (noR) st.r = true; record(story, idx, s, st.r); if (typeof onLessonDone === "function") onLessonDone(story, idx, s, n); onDone && onDone(s); if (NAME) sendResult(st.rec()).then(x => { st.sent = x; }); } ACTIVE = null; }
       render(); const top = el.getBoundingClientRect().top; if (top < 0 || top > innerHeight * .6) el.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" }); }
     if (k === "again") { const keep = st.deck.filter(d => !d.warm); st.deck = keep; st.i = 0; st.picked = null; st.picks = []; st.ans = []; st.wrongR = []; st.r = false; Quiz(el, { story, idx, onDone, onNext, nextLabel, cls }); }
     if (k === "next") { ACTIVE = null; onNext && onNext(); }
