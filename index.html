@@ -1455,34 +1455,34 @@ body[data-view="admin"]{background:#121218}
 .ad-src{margin:0;color:#6f6c80;font-size:12px}
 @media (max-width:560px){.ad-hist li{grid-template-columns:1fr}.ad-pl{display:none}}
 
-/* ===== APP MODE (Duolingo-style) ===== */
-html.ap-mode,html.ap-mode body{background:#131420}
-body[data-view="app"],body[data-view="lesson"]{background:#131420}
-.v-app,.v-lesson{--lang-on:#F1EAD9;--lang-fg:#17161B;color:#F4F1EA;min-height:100vh}
-.ap{min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% -10%,#2a2c4a,#131420 55%)}
+/* ===== MILINGO (app mode, Minaraverse colours) ===== */
+html.ap-mode,html.ap-mode body{background:#17161B}
+body[data-view="app"],body[data-view="lesson"]{background:#17161B}
+.v-app,.v-lesson{--lang-on:#F1EAD9;--lang-fg:#17161B;color:#F1EAD9;min-height:100vh}
+.ap{min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% -10%,#26284a,#17161B 55%)}
 .ap-main{flex:1;width:100%;max-width:620px;margin:0 auto;padding:12px 16px 110px}
-.ap-hud{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:rgba(19,20,32,.9);backdrop-filter:blur(10px);border-bottom:1px solid #26283d;font:700 16px "Bricolage Grotesque"}
-.ap-flag{font-size:24px;cursor:pointer}.ap-st{color:#7d7f99}.ap-st.on{color:#ff9f43}.ap-xp{color:#ffcf5a}
+.ap-hud{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:rgba(19,20,32,.9);backdrop-filter:blur(10px);border-bottom:1px solid #34313A;font:700 16px "Bricolage Grotesque"}
+.ap-flag{font-size:24px;cursor:pointer}.ap-st{color:#8a8478}.ap-st.on{color:#ffb347}.ap-xp{color:#ffcf5a}
 .ap-ring{position:relative;width:38px;height:38px;display:grid;place-items:center}.ap-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
-.ap-ring circle{fill:none;stroke-width:4}.ap-ring .bg{stroke:#2b2d45}.ap-ring .fg{stroke:#58cc02;stroke-linecap:round;transition:stroke-dasharray .6s}.ap-ring b{font-size:11px}
-.ap-tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:#181a2a;border-top:2px solid #26283d}
-.ap-tabs a{display:grid;justify-items:center;gap:2px;padding:6px 0;border-radius:14px;color:#8d90ad;text-decoration:none;border:2px solid transparent}
+.ap-ring circle{fill:none;stroke-width:4}.ap-ring .bg{stroke:#34313A}.ap-ring .fg{stroke:#9DB0FF;stroke-linecap:round;transition:stroke-dasharray .6s}.ap-ring b{font-size:11px}
+.ap-tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:#1c1b22;border-top:2px solid #34313A}
+.ap-tabs a{display:grid;justify-items:center;gap:2px;padding:6px 0;border-radius:14px;color:#ABA393;text-decoration:none;border:2px solid transparent}
 .ap-tabs a span{font-size:24px;filter:grayscale(.6)}.ap-tabs a small{font:700 11px "Bricolage Grotesque";letter-spacing:.04em;text-transform:uppercase}
 .ap-tabs a.on{color:#9DB0FF;background:rgba(157,176,255,.1);border-color:rgba(157,176,255,.4)}.ap-tabs a.on span{filter:none}
 .ap-h{margin:14px 0;font:400 30px/1.1 "Fraunces",serif}.ap-h2{margin:22px 0 10px;font:400 22px "Fraunces",serif}
-.ap-unit{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border:0;border-radius:18px;background:#58cc02;color:#fff;box-shadow:0 5px 0 #46a302;text-align:left;margin:6px 0 26px}
-.ap-unit small{display:block;font:700 12px "Bricolage Grotesque";opacity:.85;letter-spacing:.08em;text-transform:uppercase}.ap-unit b{font:700 19px "Bricolage Grotesque"}.ap-unit i{font-style:normal;font-weight:700;padding:8px 12px;border-radius:12px;border:2px solid rgba(255,255,255,.5)}
+.ap-unit{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border:0;border-radius:18px;background:#9DB0FF;color:#17161B;box-shadow:0 5px 0 #6f80d6;text-align:left;margin:6px 0 26px}
+.ap-unit small{display:block;font:700 12px "Bricolage Grotesque";opacity:.85;letter-spacing:.08em;text-transform:uppercase}.ap-unit b{font:700 19px "Bricolage Grotesque"}.ap-unit i{font-style:normal;font-weight:700;padding:8px 12px;border-radius:12px;border:2px solid rgba(23,22,27,.35)}
 .ap-path{position:relative;display:grid;justify-items:center;gap:26px;padding:10px 0 40px}
 .ap-node-w{position:relative;display:grid;justify-items:center;transform:translateX(var(--x))}
-.ap-node{width:76px;height:70px;border-radius:50%;display:grid;place-items:center;font-size:30px;text-decoration:none;background:#37394f;box-shadow:0 7px 0 #24263a;transition:transform .1s}
-.ap-node:active{transform:translateY(5px);box-shadow:0 2px 0 #24263a}
-.ap-node.done{background:#ffc800;box-shadow:0 7px 0 #cc9f00}.ap-node.now{background:#58cc02;box-shadow:0 7px 0 #46a302;outline:6px solid rgba(88,204,2,.25);outline-offset:6px;animation:nodep 1.8s ease-in-out infinite}
+.ap-node{width:76px;height:70px;border-radius:50%;display:grid;place-items:center;font-size:30px;text-decoration:none;background:#2c2b36;box-shadow:0 7px 0 #1e1d26;transition:transform .1s}
+.ap-node:active{transform:translateY(5px);box-shadow:0 2px 0 #1e1d26}
+.ap-node.done{background:#E9B85A;box-shadow:0 7px 0 #a77d2c}.ap-node.now{background:#9DB0FF;box-shadow:0 7px 0 #6f80d6;outline:6px solid rgba(157,176,255,.28);outline-offset:6px;animation:nodep 1.8s ease-in-out infinite}
 .ap-node.lock{opacity:.6}
-@keyframes nodep{50%{outline-color:rgba(88,204,2,.05)}}
-.ap-start{position:absolute;top:-44px;padding:8px 14px;border-radius:12px;background:#fff;color:#58cc02;font:800 14px "Bricolage Grotesque";border:2px solid #2b2d45;animation:bob 1.4s ease-in-out infinite;white-space:nowrap}
-.ap-start::after{content:"";position:absolute;left:50%;bottom:-8px;width:12px;height:12px;background:#fff;transform:translateX(-50%) rotate(45deg);border-right:2px solid #2b2d45;border-bottom:2px solid #2b2d45}
+@keyframes nodep{50%{outline-color:rgba(157,176,255,.04)}}
+.ap-start{position:absolute;top:-44px;padding:8px 14px;border-radius:12px;background:#F1EAD9;color:#17161B;font:800 14px "Bricolage Grotesque";border:2px solid #34313A;animation:bob 1.4s ease-in-out infinite;white-space:nowrap}
+.ap-start::after{content:"";position:absolute;left:50%;bottom:-8px;width:12px;height:12px;background:#F1EAD9;transform:translateX(-50%) rotate(45deg);border-right:2px solid #34313A;border-bottom:2px solid #34313A}
 @keyframes bob{50%{transform:translateY(-5px)}}
-.ap-nl{margin-top:10px;max-width:140px;text-align:center;color:#a9acc6;font:600 12.5px "Bricolage Grotesque"}
+.ap-nl{margin-top:10px;max-width:140px;text-align:center;color:#c9c1b1;font:600 12.5px "Bricolage Grotesque"}
 .ap-mascot{display:grid;justify-items:center}.ap-mascot.side{position:absolute;right:0;top:120px;width:96px}
 .ap-pix{position:relative;display:block;width:110px}.ap-pix svg{width:100%;height:auto;animation:bob 2.4s ease-in-out infinite}
 .ap-pix i{position:absolute;top:-6px;right:-14px;font-style:normal;font-size:24px;animation:bob 1.6s ease-in-out infinite}
@@ -1490,65 +1490,80 @@ body[data-view="app"],body[data-view="lesson"]{background:#131420}
 .ap-pix .ey{animation:blink 4s infinite}@keyframes blink{96%{transform:scaleY(1)}98%{transform:scaleY(.1)}}
 .ap-pix .ey{transform-box:fill-box;transform-origin:center}
 .ap-courses{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ap-course{position:relative;display:grid;gap:4px;justify-items:start;text-align:left;padding:16px;border-radius:18px;border:2px solid #2b2d45;background:#1b1d2e;color:#F4F1EA;box-shadow:0 4px 0 #2b2d45}
-.ap-course span{font-size:30px}.ap-course b{font:700 15px "Bricolage Grotesque"}.ap-course small{color:#8d90ad}.ap-course i{position:absolute;top:10px;right:12px;font-style:normal;color:#ffc800}
-.ap-course.on{border-color:#58cc02;box-shadow:0 4px 0 #46a302}.ap-course.fit{background:#20243a}
+.ap-course{position:relative;display:grid;gap:4px;justify-items:start;text-align:left;padding:16px;border-radius:18px;border:2px solid #34313A;background:#201F25;color:#F1EAD9;box-shadow:0 4px 0 #34313A}
+.ap-course span{font-size:30px}.ap-course b{font:700 15px "Bricolage Grotesque"}.ap-course small{color:#ABA393}.ap-course i{position:absolute;top:10px;right:12px;font-style:normal;color:#E9B85A}
+.ap-course.on{border-color:#9DB0FF;box-shadow:0 4px 0 #6f80d6}.ap-course.fit{background:#1e1d26}
 .ap-list,.ap-set{display:grid;gap:10px}
-.ap-item{display:grid;grid-template-columns:auto 1fr auto;gap:2px 14px;align-items:center;padding:14px 16px;border-radius:18px;border:2px solid #2b2d45;background:#1b1d2e;color:#F4F1EA;text-decoration:none;box-shadow:0 4px 0 #2b2d45;text-align:left;width:100%;font:inherit}
-.ap-item>span{grid-row:span 2;font-size:28px}.ap-item b{font:700 16px "Bricolage Grotesque"}.ap-item small{color:#8d90ad;grid-column:2}.ap-item i{grid-row:1/span 2;grid-column:3;font-style:normal;font-size:24px;color:#6b6e8a}
+.ap-item{display:grid;grid-template-columns:auto 1fr auto;gap:2px 14px;align-items:center;padding:14px 16px;border-radius:18px;border:2px solid #34313A;background:#201F25;color:#F1EAD9;text-decoration:none;box-shadow:0 4px 0 #34313A;text-align:left;width:100%;font:inherit}
+.ap-item>span{grid-row:span 2;font-size:28px}.ap-item b{font:700 16px "Bricolage Grotesque"}.ap-item small{color:#ABA393;grid-column:2}.ap-item i{grid-row:1/span 2;grid-column:3;font-style:normal;font-size:24px;color:#6f6a60}
 .ap-item .lang{grid-row:1/span 2;grid-column:3}
-.ap-card{padding:18px;border-radius:20px;border:2px solid #2b2d45;background:#1b1d2e}.ap-k{margin:0;color:#8d90ad;font:700 12px "Bricolage Grotesque";letter-spacing:.1em;text-transform:uppercase}
-.ap-big{display:block;font:500 40px "Fraunces",serif;color:#ffc800}.ap-p{margin:10px 0 0;color:#a9acc6;font-size:14px;line-height:1.5}
+.ap-card{padding:18px;border-radius:20px;border:2px solid #34313A;background:#201F25}.ap-k{margin:0;color:#ABA393;font:700 12px "Bricolage Grotesque";letter-spacing:.1em;text-transform:uppercase}
+.ap-big{display:block;font:500 40px "Fraunces",serif;color:#E9B85A}.ap-p{margin:10px 0 0;color:#c9c1b1;font-size:14px;line-height:1.5}
 .ap-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;height:120px;align-items:end;margin-top:10px}
-.ap-chart div{height:100%;display:grid;align-content:end;justify-items:center;gap:4px}.ap-chart i{width:100%;min-height:4px;border-radius:8px 8px 3px 3px;background:linear-gradient(#ffc800,#ff9600)}.ap-chart small{color:#8d90ad;font-weight:700}
+.ap-chart div{height:100%;display:grid;align-content:end;justify-items:center;gap:4px}.ap-chart i{width:100%;min-height:4px;border-radius:8px 8px 3px 3px;background:linear-gradient(#E9B85A,#ff9fb0)}.ap-chart small{color:#ABA393;font-weight:700}
 .ap-board{margin-top:16px}.ap-board .h-board{margin:0;padding:18px}
-.ap-prof{display:flex;align-items:center;gap:16px;margin:10px 0 16px}.ap-av{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:#9DB0FF;color:#131420;font:600 34px "Fraunces",serif;flex:none}
-.ap-name{width:100%;padding:8px 0;border:0;border-bottom:2px solid #2b2d45;background:transparent;color:#F4F1EA;font:400 26px "Fraunces",serif}.ap-prof small{color:#8d90ad}
-.ap-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ap-stats div{padding:14px;border-radius:16px;border:2px solid #2b2d45;display:grid}.ap-stats b{font:700 20px "Bricolage Grotesque"}.ap-stats small{color:#8d90ad}
+.ap-prof{display:flex;align-items:center;gap:16px;margin:10px 0 16px}.ap-av{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:#9DB0FF;color:#17161B;font:600 34px "Fraunces",serif;flex:none}
+.ap-name{width:100%;padding:8px 0;border:0;border-bottom:2px solid #34313A;background:transparent;color:#F1EAD9;font:400 26px "Fraunces",serif}.ap-prof small{color:#ABA393}
+.ap-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ap-stats div{padding:14px;border-radius:16px;border:2px solid #34313A;display:grid}.ap-stats b{font:700 20px "Bricolage Grotesque"}.ap-stats small{color:#ABA393}
 .ap-badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
-.ap-badges div{display:grid;justify-items:center;gap:4px;padding:12px 6px;border-radius:16px;border:2px solid #2b2d45;text-align:center;filter:grayscale(1);opacity:.4}
-.ap-badges div.on{filter:none;opacity:1;border-color:#ffc800;background:rgba(255,200,0,.08)}.ap-badges span{font-size:30px}.ap-badges small{font-size:11px;color:#a9acc6;line-height:1.2}
+.ap-badges div{display:grid;justify-items:center;gap:4px;padding:12px 6px;border-radius:16px;border:2px solid #34313A;text-align:center;filter:grayscale(1);opacity:.4}
+.ap-badges div.on{filter:none;opacity:1;border-color:#E9B85A;background:rgba(255,200,0,.08)}.ap-badges span{font-size:30px}.ap-badges small{font-size:11px;color:#c9c1b1;line-height:1.2}
 .ap-set{margin-top:22px}
 .ap-onb .ap-main{display:grid;justify-items:center;text-align:center;padding-top:8vh}
 .ap-goals{display:grid;gap:10px;width:100%;margin:10px 0 24px}
-.ap-goals button{display:grid;grid-template-columns:1fr auto;gap:2px;text-align:left;padding:16px 18px;border-radius:18px;border:2px solid #2b2d45;background:#1b1d2e;color:#F4F1EA;box-shadow:0 4px 0 #2b2d45}
-.ap-goals b{font:700 17px "Bricolage Grotesque"}.ap-goals span{color:#8d90ad}.ap-goals i{grid-row:1/span 2;grid-column:2;align-self:center;font-style:normal;font-weight:800;color:#ffc800}
+.ap-goals button{display:grid;grid-template-columns:1fr auto;gap:2px;text-align:left;padding:16px 18px;border-radius:18px;border:2px solid #34313A;background:#201F25;color:#F1EAD9;box-shadow:0 4px 0 #34313A}
+.ap-goals b{font:700 17px "Bricolage Grotesque"}.ap-goals span{color:#ABA393}.ap-goals i{grid-row:1/span 2;grid-column:2;align-self:center;font-style:normal;font-weight:800;color:#E9B85A}
 .ap-goals button.on{border-color:#9DB0FF;background:rgba(157,176,255,.12);box-shadow:0 4px 0 #6f80d6}
-.ap-cta{display:block;width:100%;max-width:420px;padding:16px;border-radius:16px;background:#58cc02;color:#fff;text-align:center;text-decoration:none;font:800 16px "Bricolage Grotesque";letter-spacing:.06em;text-transform:uppercase;box-shadow:0 5px 0 #46a302}
-.ap-cta:active{transform:translateY(4px);box-shadow:0 1px 0 #46a302}
+.ap-cta{display:block;width:100%;max-width:420px;padding:16px;border-radius:16px;background:#9DB0FF;color:#17161B;text-align:center;text-decoration:none;font:800 16px "Bricolage Grotesque";letter-spacing:.06em;text-transform:uppercase;box-shadow:0 5px 0 #6f80d6}
+.ap-cta:active{transform:translateY(4px);box-shadow:0 1px 0 #6f80d6}
 /* lesson */
-.ap-lh{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;background:#131420}
-.ap-x{color:#8d90ad;text-decoration:none;font-size:22px;font-weight:700}
-.ap-lbar{flex:1;height:16px;border-radius:99px;background:#2b2d45;overflow:hidden}.ap-lbar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(#7ee03a,#58cc02);box-shadow:inset 0 4px 0 rgba(255,255,255,.25);transition:width .5s cubic-bezier(.2,.8,.2,1)}
-.ap-note{margin:6px 0 16px;padding:14px 16px;border-radius:16px;border:2px solid #2b2d45;background:#1b1d2e}
+.ap-lh{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;background:#17161B}
+.ap-x{color:#ABA393;text-decoration:none;font-size:22px;font-weight:700}
+.ap-lbar{flex:1;height:16px;border-radius:99px;background:#34313A;overflow:hidden}.ap-lbar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#9DB0FF,#ff9fb0);box-shadow:inset 0 4px 0 rgba(255,255,255,.25);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.ap-note{margin:6px 0 16px;padding:14px 16px;border-radius:16px;border:2px solid #34313A;background:#201F25}
 .ap-note summary{cursor:pointer;font:700 15px "Bricolage Grotesque";color:#9DB0FF}.ap-note p{margin:10px 0 0;line-height:1.65;font-size:16.5px}
-.qz-ap{--qa:#58cc02;--qline:#2b2d45;--qok:#7ee03a;--qno:#ff6b6b;--qokbg:rgba(88,204,2,.15);--qnobg:rgba(255,107,107,.13)}
+.qz-ap{--qa:#9DB0FF;--qline:#34313A;--qok:#c3ceff;--qno:#ff9a86;--qokbg:rgba(159,240,192,.14);--qnobg:rgba(255,107,107,.13)}
 .qz-ap .qz-q{font:700 21px/1.35 "Bricolage Grotesque"}
-.qz-ap .qz-opt{color:inherit;border-width:2px;border-radius:16px;padding:14px 16px;box-shadow:0 4px 0 #2b2d45;font:600 16px "Bricolage Grotesque"}
-.qz-ap .qz-opt:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #2b2d45}
-.qz-ap .qz-opt.right{box-shadow:0 4px 0 #46a302}.qz-ap .qz-opt.wrong{box-shadow:0 4px 0 #c94b4b}
-.qz-ap .qz-btn{border-radius:16px;padding:15px 22px;color:#fff;font:800 15px "Bricolage Grotesque";letter-spacing:.05em;text-transform:uppercase;box-shadow:0 5px 0 #46a302}
-.qz-ap .qz-btn.ghost{color:#F4F1EA;box-shadow:0 4px 0 #2b2d45}
+.qz-ap .qz-opt{color:inherit;border-width:2px;border-radius:16px;padding:14px 16px;box-shadow:0 4px 0 #34313A;font:600 16px "Bricolage Grotesque"}
+.qz-ap .qz-opt:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #34313A}
+.qz-ap .qz-opt.right{box-shadow:0 4px 0 #6f80d6}.qz-ap .qz-opt.wrong{box-shadow:0 4px 0 #b8564a}
+.qz-ap .qz-btn{border-radius:16px;padding:15px 22px;color:#17161B;font:800 15px "Bricolage Grotesque";letter-spacing:.05em;text-transform:uppercase;box-shadow:0 5px 0 #6f80d6}
+.qz-ap .qz-btn.ghost{color:#F1EAD9;box-shadow:0 4px 0 #34313A}
 .qz-ap [data-q="adv"]{width:100%}
-.qz-ap .qz-fb{border-radius:16px;background:#1b1d2e}.qz-ap .qz-fb p i{background:rgba(255,255,255,.1)}
-.qz-ap .qz-tile{border-radius:14px;border-width:2px;box-shadow:0 4px 0 #2b2d45}.qz-ap .qz-tile.in{color:#fff}
-.qz-ap .qz-name input{background:#1b1d2e;color:inherit}.qz-ap .qz-copy{background:#0f1019;color:inherit}
+.qz-ap .qz-fb{border-radius:16px;background:#201F25}.qz-ap .qz-fb p i{background:rgba(255,255,255,.1)}
+.qz-ap .qz-tile{border-radius:14px;border-width:2px;box-shadow:0 4px 0 #34313A}.qz-ap .qz-tile.in{color:#17161B}
+.qz-ap .qz-name input{background:#201F25;color:inherit}.qz-ap .qz-copy{background:#121117;color:inherit}
 .ap-sheet{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:16px 20px calc(18px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.8,.2,1);font:800 20px "Bricolage Grotesque";pointer-events:none}
-.ap-sheet.show{transform:none}.ap-sheet.ok{background:#1f3a12;color:#7ee03a}.ap-sheet.no{background:#3a1717;color:#ff8a8a}
+.ap-sheet.show{transform:none}.ap-sheet.ok{background:#183126;color:#c3ceff}.ap-sheet.no{background:#3a1d1a;color:#ffb3a6}
 .ap-les .ap-main{padding-bottom:90px}
-.ap-done{position:fixed;inset:0;z-index:80;display:grid;justify-items:center;align-content:center;gap:16px;padding:24px;text-align:center;background:#131420;animation:qzin .4s}
-.ap-done h1{margin:0;font:800 30px "Bricolage Grotesque";color:#ffc800}
+.ap-done{position:fixed;inset:0;z-index:80;display:grid;justify-items:center;align-content:center;gap:16px;padding:24px;text-align:center;background:#17161B;animation:qzin .4s}
+.ap-done h1{margin:0;font:800 30px "Bricolage Grotesque";color:#E9B85A}
 .ap-res{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:420px}
-.ap-res div{border-radius:16px;border:2px solid;overflow:hidden;display:grid}.ap-res small{padding:4px;font:800 11px "Bricolage Grotesque";text-transform:uppercase;color:#131420}.ap-res b{padding:12px 4px;font:800 18px "Bricolage Grotesque"}
-.ap-res .y{border-color:#ffc800}.ap-res .y small{background:#ffc800}.ap-res .g{border-color:#58cc02}.ap-res .g small{background:#58cc02}.ap-res .b{border-color:#9DB0FF}.ap-res .b small{background:#9DB0FF}
-.ap-goalbar{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;max-width:420px;font-weight:700}.ap-goalbar div{height:14px;border-radius:99px;background:#2b2d45;overflow:hidden}.ap-goalbar i{display:block;height:100%;background:#58cc02}
+.ap-res div{border-radius:16px;border:2px solid;overflow:hidden;display:grid}.ap-res small{padding:4px;font:800 11px "Bricolage Grotesque";text-transform:uppercase;color:#17161B}.ap-res b{padding:12px 4px;font:800 18px "Bricolage Grotesque"}
+.ap-res .y{border-color:#E9B85A}.ap-res .y small{background:#E9B85A}.ap-res .g{border-color:#9DB0FF}.ap-res .g small{background:#9DB0FF}.ap-res .b{border-color:#9DB0FF}.ap-res .b small{background:#9DB0FF}
+.ap-goalbar{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;max-width:420px;font-weight:700}.ap-goalbar div{height:14px;border-radius:99px;background:#34313A;overflow:hidden}.ap-goalbar i{display:block;height:100%;background:#9DB0FF}
 .ap-cf{position:fixed;inset:0;pointer-events:none;overflow:hidden}.ap-cf i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;background:var(--c);animation:cfall2 2.8s var(--d) ease-in forwards}
 @keyframes cfall2{to{transform:translateY(110vh) rotate(720deg)}}
-.ap-toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));z-index:90;transform:translateX(-50%);padding:12px 18px;border-radius:14px;background:#1b1d2e;border:2px solid #2b2d45;color:#F4F1EA;font:800 15px "Bricolage Grotesque";animation:qzin .3s;white-space:nowrap}
-.ap-toast.gold{border-color:#ffc800;color:#ffc800}
+.ap-toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));z-index:90;transform:translateX(-50%);padding:12px 18px;border-radius:14px;background:#201F25;border:2px solid #34313A;color:#F1EAD9;font:800 15px "Bricolage Grotesque";animation:qzin .3s;white-space:nowrap}
+.ap-toast.gold{border-color:#E9B85A;color:#E9B85A}
 html.ap-mode .mv-home{display:none}
-.h-app{border-color:#58cc02!important;color:#9ff0c0!important}
-@media (min-width:900px){.ap-tabs{left:50%;right:auto;width:620px;transform:translateX(-50%);border-radius:20px 20px 0 0;border:2px solid #26283d;border-bottom:0}}
+
+@media (min-width:900px){.ap-tabs{left:50%;right:auto;width:620px;transform:translateX(-50%);border-radius:20px 20px 0 0;border:2px solid #34313A;border-bottom:0}}
+
+/* Milingo brand + motion */
+.ap-brand{font:400 22px "Fraunces",serif;color:#F1EAD9;text-decoration:none;letter-spacing:-.01em;margin-right:auto}.ap-brand i{color:#9DB0FF;font-style:italic}
+.ap-hud{gap:14px}
+.ap{background:radial-gradient(ellipse 80% 50% at 15% -5%,rgba(157,176,255,.18),transparent 60%),radial-gradient(ellipse 70% 40% at 100% 30%,rgba(255,159,176,.08),transparent 60%),#17161B!important}
+.ap-node-w{animation:nodein .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 90ms)}
+@keyframes nodein{from{opacity:0;transform:translateX(var(--x)) translateY(30px) scale(.6)}to{opacity:1;transform:translateX(var(--x))}}
+.ap-node.done{background:linear-gradient(160deg,#f3d58a,#E9B85A)}
+.ap-node.now{background:linear-gradient(160deg,#c3ceff,#9DB0FF)}
+.ap-tabs a.on{color:#F1EAD9;background:linear-gradient(120deg,rgba(157,176,255,.18),rgba(255,159,176,.12))}
+.ap-h{font:400 32px/1.05 "Fraunces",serif}.ap-h .lw{white-space:nowrap}
+.ap-done h1{font:400 34px "Fraunces",serif;color:#E9B85A}
+.qz-ap .qz-q{font:400 22px/1.35 "Fraunces",serif}
+.h-app{border-color:#9DB0FF!important;color:#c3ceff!important;font-family:"Fraunces",serif!important;font-style:italic}
+@media (prefers-reduced-motion:reduce){.ap-node-w{animation:none}}
 
 </style>
 <div id="view"></div>
@@ -3421,7 +3436,7 @@ document.addEventListener("click", e => {
 });
 /* home button shown in every world */
 const homeBtn = (cls = "") => `<a class="mv-home ${cls}" href="#" data-gohome><span aria-hidden="true">←</span> ${L("homeBtn")}</a>`;
-document.addEventListener("click", e => { const h = e.target.closest("[data-gohome]"); if (!h) return; e.preventDefault(); ACTIVE = null; Router.go(typeof STANDALONE !== "undefined" && STANDALONE ? "app" : ""); });
+document.addEventListener("click", e => { const h = e.target.closest("[data-gohome]"); if (!h) return; e.preventDefault(); ACTIVE = null; Router.go(""); });
 
 /* ---------- shared quiz ---------- */
 /* ACTIVE keeps an unfinished quiz alive across a language switch */
@@ -5774,21 +5789,21 @@ Object.assign(UI.en, { apLearn: "Learn", apPractice: "Practice", apLeague: "Lead
   apNo: "Correct answer:", apDone: "Lesson complete!", apEarned: "XP earned", apAccuracy: "Accuracy", apTime: "Time", apBack: "Back to path", apPick: "Pick your daily goal",
   apCasual: "Casual", apRegular: "Regular", apSerious: "Serious", apIntense: "Intense", apMin: "min / day", apWeek: "This week", apTotal: "Total XP", apBadges: "Badges", apDays: "day streak",
   apReview: "Review mistakes", apReviewP: "Questions you got wrong come back", apDaily: "Daily word", apErrors: "Mistake Hunters", apExam: "Exam practice", apLevelT: "Level test",
-  apAppMode: "Open the app", apSite: "Website", apReadFirst: "Read first", apAllUnits: "All courses", apLeagueP: "Weekly XP on this device. Send your results to Minara to appear on the hall of fame.",
+  apAppMode: "Milingo", apSite: "Minaraverse", apReadFirst: "Read first", apAllUnits: "All courses", apLeagueP: "Weekly XP on this device. Send your results to Minara to appear on the hall of fame.",
   apSound: "Sound", apOn: "On", apOff: "Off", apName: "Your name", apLocked: "Finish the lesson before to unlock" });
 Object.assign(UI.az, { apLearn: "Öyrən", apPractice: "Məşq", apLeague: "Reytinq", apProfile: "Profil", apXp: "XP", apGoal: "Günlük hədəf", apGoalDone: "Günlük hədəf tamamlandı!",
   apStart: "BAŞLA", apCourse: "Kurs", apChange: "Dəyiş", apUnit: "Bölmə", apLesson: "Dərs", apContinue: "Davam et", apCheck: "Yoxla", apGreat: ["Əla!", "Mükəmməl!", "Çox yaxşı!", "Super!", "Düzdür!"],
   apNo: "Düzgün cavab:", apDone: "Dərs bitdi!", apEarned: "Qazanılan XP", apAccuracy: "Dəqiqlik", apTime: "Vaxt", apBack: "Yola qayıt", apPick: "Günlük hədəfini seç",
   apCasual: "Rahat", apRegular: "Adi", apSerious: "Ciddi", apIntense: "İntensiv", apMin: "dəq / gün", apWeek: "Bu həftə", apTotal: "Cəmi XP", apBadges: "Nişanlar", apDays: "gün ardıcıl",
   apReview: "Səhvləri təkrarla", apReviewP: "Səhv cavab verdiyin suallar geri qayıdır", apDaily: "Günün sözü", apErrors: "Səhv ovçuları", apExam: "İmtahan məşqi", apLevelT: "Səviyyə testi",
-  apAppMode: "Tətbiqi aç", apSite: "Sayt", apReadFirst: "Əvvəl oxu", apAllUnits: "Bütün kurslar", apLeagueP: "Bu cihazdakı həftəlik XP. Fəxri lövhəyə düşmək üçün nəticələrini Minaraya göndər.",
+  apAppMode: "Milingo", apSite: "Minaraverse", apReadFirst: "Əvvəl oxu", apAllUnits: "Bütün kurslar", apLeagueP: "Bu cihazdakı həftəlik XP. Fəxri lövhəyə düşmək üçün nəticələrini Minaraya göndər.",
   apSound: "Səs", apOn: "Açıq", apOff: "Bağlı", apName: "Adın", apLocked: "Açmaq üçün əvvəlki dərsi bitir" });
 Object.assign(UI.ru, { apLearn: "Учиться", apPractice: "Практика", apLeague: "Рейтинг", apProfile: "Профиль", apXp: "XP", apGoal: "Цель дня", apGoalDone: "Цель дня выполнена!",
   apStart: "СТАРТ", apCourse: "Курс", apChange: "Сменить", apUnit: "Раздел", apLesson: "Урок", apContinue: "Продолжить", apCheck: "Проверить", apGreat: ["Отлично!", "Превосходно!", "Молодец!", "Супер!", "Верно!"],
   apNo: "Правильный ответ:", apDone: "Урок пройден!", apEarned: "Получено XP", apAccuracy: "Точность", apTime: "Время", apBack: "К пути", apPick: "Выбери цель дня",
   apCasual: "Легко", apRegular: "Обычно", apSerious: "Серьёзно", apIntense: "Интенсивно", apMin: "мин / день", apWeek: "Эта неделя", apTotal: "Всего XP", apBadges: "Значки", apDays: "дней подряд",
   apReview: "Повторить ошибки", apReviewP: "Вопросы с ошибками возвращаются", apDaily: "Слово дня", apErrors: "Охота на ошибки", apExam: "Экзамен", apLevelT: "Тест уровня",
-  apAppMode: "Открыть приложение", apSite: "Сайт", apReadFirst: "Сначала прочитай", apAllUnits: "Все курсы", apLeagueP: "Недельный XP на этом устройстве. Отправь результаты Минаре, чтобы попасть на доску почёта.",
+  apAppMode: "Milingo", apSite: "Minaraverse", apReadFirst: "Сначала прочитай", apAllUnits: "Все курсы", apLeagueP: "Недельный XP на этом устройстве. Отправь результаты Минаре, чтобы попасть на доску почёта.",
   apSound: "Звук", apOn: "Вкл", apOff: "Выкл", apName: "Твоё имя", apLocked: "Пройди предыдущий урок, чтобы открыть" });
 
 /* ---------- XP, daily goal, sound ---------- */
@@ -5831,7 +5846,7 @@ function onLessonDone(story, idx, score, n) {
 
 /* ---------- HUD (top bar) ---------- */
 function hudHTML() { const g = goal(), t = xpToday(), p = Math.min(1, t / g);
-  return `<div class="ap-hud"><span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
+  return `<div class="ap-hud"><a class="ap-brand" href="#" aria-label="Minaraverse">mi<i>lingo</i></a><span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
     <span class="ap-ring" title="${L("apGoal")}"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="bg"/><circle cx="18" cy="18" r="15" class="fg" style="stroke-dasharray:${(p * 94.2).toFixed(1)} 100"/></svg><b>${t}</b></span></div>`; }
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
@@ -5848,6 +5863,7 @@ const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], 
 VIEWS.app = root => {
   document.documentElement.classList.add("ap-mode");
   const sub = (location.hash.match(/app-(\w+)/) || [])[1] || (lsGet("mv-goal", null) ? "learn" : "goal");
+  setTimeout(() => { riseLetters(root, ".ap-h .ch", { stagger: 28, dur: 800 }); root.querySelectorAll(".ap-item,.ap-course,.ap-badges>div,.ap-stats>div,.ap-card").forEach((el, k) => el.animate([{ transform: "translateY(24px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: REDUCED ? 1 : 600, delay: REDUCED ? 0 : 60 + k * 45, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" })); }, 0);
   const shell = (act, body) => `<div class="ap">${hudHTML()}<main class="ap-main">${body}</main>${tabbar(act)}</div>`;
   if (sub === "goal") {
     root.innerHTML = `<div class="ap ap-onb"><main class="ap-main"><div class="ap-mascot">${mascot("👋")}</div><h1 class="ap-h">${L("apPick")}</h1>
@@ -5858,7 +5874,7 @@ VIEWS.app = root => {
   }
   if (sub === "course") {
     const lv = myLevel();
-    root.innerHTML = shell("learn", `<h1 class="ap-h">${L("apAllUnits")}</h1><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
+    root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("apAllUnits"))}</h1><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
       return `<button class="ap-course ${k === curCourse() ? "on" : ""} ${lv && fitsLevel(S.level, lv) ? "fit" : ""}" data-course="${k}"><span>${courseEmoji(k)}</span><b>${esc(S.title)}</b><small>${S.level} · ${d}/${S.units.length}</small>${lv && fitsLevel(S.level, lv) ? `<i>★</i>` : ""}</button>`; }).join("")}</div>`);
     root.onclick = e => { const b = e.target.closest("[data-course]"); if (!b) return; lsSet("mv-course", b.dataset.course); Router.go("app-learn"); };
     return {};
@@ -5866,7 +5882,7 @@ VIEWS.app = root => {
   if (sub === "learn") {
     const k = curCourse(), S = STORIES[k], nx = nextIndex(k);
     const nodes = S.units.map((u, i) => { const open = isOpen(k, i), done = isDone(k, i), cur = i === nx && !solved(k, i), off = [0, 60, 90, 60, 0, -60, -90, -60][i % 8];
-      return `<div class="ap-node-w" style="--x:${off}px">${cur ? `<span class="ap-start">${L("apStart")}</span>` : ""}<a class="ap-node ${done ? "done" : ""} ${cur ? "now" : ""} ${open ? "" : "lock"}" href="${open ? `#lesson-${k}-${i}` : "#app-learn"}" aria-label="${esc(u.name)}">
+      return `<div class="ap-node-w" style="--x:${off}px;--i:${i}">${cur ? `<span class="ap-start">${L("apStart")}</span>` : ""}<a class="ap-node ${done ? "done" : ""} ${cur ? "now" : ""} ${open ? "" : "lock"}" href="${open ? `#lesson-${k}-${i}` : "#app-learn"}" aria-label="${esc(u.name)}">
         <span>${done ? (best(k, i) === u.qs.length ? "👑" : "✓") : open ? (u.emoji || courseEmoji(k)) : "🔒"}</span></a><small class="ap-nl">${esc(u.name)}</small></div>`; }).join("");
     root.innerHTML = shell("learn", `<button class="ap-unit" data-go="course"><span><small>${L("apCourse")} · ${S.level}</small><b>${courseEmoji(k)} ${esc(S.title)}</b></span><i>${L("apChange")} ▾</i></button>
       <div class="ap-path">${nodes}<div class="ap-mascot side">${mascot(doneCount(k) ? "💪" : "👋")}</div></div>`);
@@ -5878,12 +5894,12 @@ VIEWS.app = root => {
     const due = dueKeys().length;
     const items = [["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
       ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#exam", "📝", L("apExam"), "DİM"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
-    root.innerHTML = shell("practice", `<h1 class="ap-h">${L("apPractice")}</h1><div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
+    root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1><div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
     return {};
   }
   if (sub === "league") {
     const w = weekXp(), sum = w.reduce((a, x) => a + x.v, 0), max = Math.max(goal(), ...w.map(x => x.v));
-    root.innerHTML = shell("league", `<h1 class="ap-h">${L("apLeague")}</h1><div class="ap-card"><p class="ap-k">${L("apWeek")}</p><b class="ap-big">${sum} XP</b>
+    root.innerHTML = shell("league", `<h1 class="ap-h">${letters(L("apLeague"))}</h1><div class="ap-card"><p class="ap-k">${L("apWeek")}</p><b class="ap-big">${sum} XP</b>
       <div class="ap-chart">${w.map(x => `<div><i style="height:${x.v / max * 100}%"></i><small>${"SMTWTFS"[x.d.getDay()]}</small></div>`).join("")}</div><p class="ap-p">${L("apLeagueP")}</p></div>
       <div class="ap-board"></div>`);
     const bx = root.querySelector(".ap-board"); bx.innerHTML = boardHTML(); revealHome(bx); if (typeof loadBoard === "function") loadBoard();
@@ -5943,9 +5959,8 @@ function mascot(say) {
     <path class="tl" d="M90 98Q112 90 104 66" stroke="#3a3f47" stroke-width="8" stroke-linecap="round" fill="none"/></svg><i>${say}</i></span>`;
 }
 
-/* ---------- open app mode when launched from the home screen ---------- */
+/* ---------- Milingo opens only from its button ---------- */
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-if (STANDALONE && !location.hash) history.replaceState(null, "", "#app");
 addEventListener("hashchange", () => { if (!/^#(app|lesson)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
 
 document.documentElement.lang = LANG;

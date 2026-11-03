@@ -4,21 +4,21 @@ Object.assign(UI.en, { apLearn: "Learn", apPractice: "Practice", apLeague: "Lead
   apNo: "Correct answer:", apDone: "Lesson complete!", apEarned: "XP earned", apAccuracy: "Accuracy", apTime: "Time", apBack: "Back to path", apPick: "Pick your daily goal",
   apCasual: "Casual", apRegular: "Regular", apSerious: "Serious", apIntense: "Intense", apMin: "min / day", apWeek: "This week", apTotal: "Total XP", apBadges: "Badges", apDays: "day streak",
   apReview: "Review mistakes", apReviewP: "Questions you got wrong come back", apDaily: "Daily word", apErrors: "Mistake Hunters", apExam: "Exam practice", apLevelT: "Level test",
-  apAppMode: "Open the app", apSite: "Website", apReadFirst: "Read first", apAllUnits: "All courses", apLeagueP: "Weekly XP on this device. Send your results to Minara to appear on the hall of fame.",
+  apAppMode: "Milingo", apSite: "Minaraverse", apReadFirst: "Read first", apAllUnits: "All courses", apLeagueP: "Weekly XP on this device. Send your results to Minara to appear on the hall of fame.",
   apSound: "Sound", apOn: "On", apOff: "Off", apName: "Your name", apLocked: "Finish the lesson before to unlock" });
 Object.assign(UI.az, { apLearn: "Öyrən", apPractice: "Məşq", apLeague: "Reytinq", apProfile: "Profil", apXp: "XP", apGoal: "Günlük hədəf", apGoalDone: "Günlük hədəf tamamlandı!",
   apStart: "BAŞLA", apCourse: "Kurs", apChange: "Dəyiş", apUnit: "Bölmə", apLesson: "Dərs", apContinue: "Davam et", apCheck: "Yoxla", apGreat: ["Əla!", "Mükəmməl!", "Çox yaxşı!", "Super!", "Düzdür!"],
   apNo: "Düzgün cavab:", apDone: "Dərs bitdi!", apEarned: "Qazanılan XP", apAccuracy: "Dəqiqlik", apTime: "Vaxt", apBack: "Yola qayıt", apPick: "Günlük hədəfini seç",
   apCasual: "Rahat", apRegular: "Adi", apSerious: "Ciddi", apIntense: "İntensiv", apMin: "dəq / gün", apWeek: "Bu həftə", apTotal: "Cəmi XP", apBadges: "Nişanlar", apDays: "gün ardıcıl",
   apReview: "Səhvləri təkrarla", apReviewP: "Səhv cavab verdiyin suallar geri qayıdır", apDaily: "Günün sözü", apErrors: "Səhv ovçuları", apExam: "İmtahan məşqi", apLevelT: "Səviyyə testi",
-  apAppMode: "Tətbiqi aç", apSite: "Sayt", apReadFirst: "Əvvəl oxu", apAllUnits: "Bütün kurslar", apLeagueP: "Bu cihazdakı həftəlik XP. Fəxri lövhəyə düşmək üçün nəticələrini Minaraya göndər.",
+  apAppMode: "Milingo", apSite: "Minaraverse", apReadFirst: "Əvvəl oxu", apAllUnits: "Bütün kurslar", apLeagueP: "Bu cihazdakı həftəlik XP. Fəxri lövhəyə düşmək üçün nəticələrini Minaraya göndər.",
   apSound: "Səs", apOn: "Açıq", apOff: "Bağlı", apName: "Adın", apLocked: "Açmaq üçün əvvəlki dərsi bitir" });
 Object.assign(UI.ru, { apLearn: "Учиться", apPractice: "Практика", apLeague: "Рейтинг", apProfile: "Профиль", apXp: "XP", apGoal: "Цель дня", apGoalDone: "Цель дня выполнена!",
   apStart: "СТАРТ", apCourse: "Курс", apChange: "Сменить", apUnit: "Раздел", apLesson: "Урок", apContinue: "Продолжить", apCheck: "Проверить", apGreat: ["Отлично!", "Превосходно!", "Молодец!", "Супер!", "Верно!"],
   apNo: "Правильный ответ:", apDone: "Урок пройден!", apEarned: "Получено XP", apAccuracy: "Точность", apTime: "Время", apBack: "К пути", apPick: "Выбери цель дня",
   apCasual: "Легко", apRegular: "Обычно", apSerious: "Серьёзно", apIntense: "Интенсивно", apMin: "мин / день", apWeek: "Эта неделя", apTotal: "Всего XP", apBadges: "Значки", apDays: "дней подряд",
   apReview: "Повторить ошибки", apReviewP: "Вопросы с ошибками возвращаются", apDaily: "Слово дня", apErrors: "Охота на ошибки", apExam: "Экзамен", apLevelT: "Тест уровня",
-  apAppMode: "Открыть приложение", apSite: "Сайт", apReadFirst: "Сначала прочитай", apAllUnits: "Все курсы", apLeagueP: "Недельный XP на этом устройстве. Отправь результаты Минаре, чтобы попасть на доску почёта.",
+  apAppMode: "Milingo", apSite: "Minaraverse", apReadFirst: "Сначала прочитай", apAllUnits: "Все курсы", apLeagueP: "Недельный XP на этом устройстве. Отправь результаты Минаре, чтобы попасть на доску почёта.",
   apSound: "Звук", apOn: "Вкл", apOff: "Выкл", apName: "Твоё имя", apLocked: "Пройди предыдущий урок, чтобы открыть" });
 
 /* ---------- XP, daily goal, sound ---------- */
@@ -61,7 +61,7 @@ function onLessonDone(story, idx, score, n) {
 
 /* ---------- HUD (top bar) ---------- */
 function hudHTML() { const g = goal(), t = xpToday(), p = Math.min(1, t / g);
-  return `<div class="ap-hud"><span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
+  return `<div class="ap-hud"><a class="ap-brand" href="#" aria-label="Minaraverse">mi<i>lingo</i></a><span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
     <span class="ap-ring" title="${L("apGoal")}"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="bg"/><circle cx="18" cy="18" r="15" class="fg" style="stroke-dasharray:${(p * 94.2).toFixed(1)} 100"/></svg><b>${t}</b></span></div>`; }
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
@@ -78,6 +78,7 @@ const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], 
 VIEWS.app = root => {
   document.documentElement.classList.add("ap-mode");
   const sub = (location.hash.match(/app-(\w+)/) || [])[1] || (lsGet("mv-goal", null) ? "learn" : "goal");
+  setTimeout(() => { riseLetters(root, ".ap-h .ch", { stagger: 28, dur: 800 }); root.querySelectorAll(".ap-item,.ap-course,.ap-badges>div,.ap-stats>div,.ap-card").forEach((el, k) => el.animate([{ transform: "translateY(24px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: REDUCED ? 1 : 600, delay: REDUCED ? 0 : 60 + k * 45, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" })); }, 0);
   const shell = (act, body) => `<div class="ap">${hudHTML()}<main class="ap-main">${body}</main>${tabbar(act)}</div>`;
   if (sub === "goal") {
     root.innerHTML = `<div class="ap ap-onb"><main class="ap-main"><div class="ap-mascot">${mascot("👋")}</div><h1 class="ap-h">${L("apPick")}</h1>
@@ -88,7 +89,7 @@ VIEWS.app = root => {
   }
   if (sub === "course") {
     const lv = myLevel();
-    root.innerHTML = shell("learn", `<h1 class="ap-h">${L("apAllUnits")}</h1><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
+    root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("apAllUnits"))}</h1><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
       return `<button class="ap-course ${k === curCourse() ? "on" : ""} ${lv && fitsLevel(S.level, lv) ? "fit" : ""}" data-course="${k}"><span>${courseEmoji(k)}</span><b>${esc(S.title)}</b><small>${S.level} · ${d}/${S.units.length}</small>${lv && fitsLevel(S.level, lv) ? `<i>★</i>` : ""}</button>`; }).join("")}</div>`);
     root.onclick = e => { const b = e.target.closest("[data-course]"); if (!b) return; lsSet("mv-course", b.dataset.course); Router.go("app-learn"); };
     return {};
@@ -96,7 +97,7 @@ VIEWS.app = root => {
   if (sub === "learn") {
     const k = curCourse(), S = STORIES[k], nx = nextIndex(k);
     const nodes = S.units.map((u, i) => { const open = isOpen(k, i), done = isDone(k, i), cur = i === nx && !solved(k, i), off = [0, 60, 90, 60, 0, -60, -90, -60][i % 8];
-      return `<div class="ap-node-w" style="--x:${off}px">${cur ? `<span class="ap-start">${L("apStart")}</span>` : ""}<a class="ap-node ${done ? "done" : ""} ${cur ? "now" : ""} ${open ? "" : "lock"}" href="${open ? `#lesson-${k}-${i}` : "#app-learn"}" aria-label="${esc(u.name)}">
+      return `<div class="ap-node-w" style="--x:${off}px;--i:${i}">${cur ? `<span class="ap-start">${L("apStart")}</span>` : ""}<a class="ap-node ${done ? "done" : ""} ${cur ? "now" : ""} ${open ? "" : "lock"}" href="${open ? `#lesson-${k}-${i}` : "#app-learn"}" aria-label="${esc(u.name)}">
         <span>${done ? (best(k, i) === u.qs.length ? "👑" : "✓") : open ? (u.emoji || courseEmoji(k)) : "🔒"}</span></a><small class="ap-nl">${esc(u.name)}</small></div>`; }).join("");
     root.innerHTML = shell("learn", `<button class="ap-unit" data-go="course"><span><small>${L("apCourse")} · ${S.level}</small><b>${courseEmoji(k)} ${esc(S.title)}</b></span><i>${L("apChange")} ▾</i></button>
       <div class="ap-path">${nodes}<div class="ap-mascot side">${mascot(doneCount(k) ? "💪" : "👋")}</div></div>`);
@@ -108,12 +109,12 @@ VIEWS.app = root => {
     const due = dueKeys().length;
     const items = [["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
       ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#exam", "📝", L("apExam"), "DİM"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
-    root.innerHTML = shell("practice", `<h1 class="ap-h">${L("apPractice")}</h1><div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
+    root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1><div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
     return {};
   }
   if (sub === "league") {
     const w = weekXp(), sum = w.reduce((a, x) => a + x.v, 0), max = Math.max(goal(), ...w.map(x => x.v));
-    root.innerHTML = shell("league", `<h1 class="ap-h">${L("apLeague")}</h1><div class="ap-card"><p class="ap-k">${L("apWeek")}</p><b class="ap-big">${sum} XP</b>
+    root.innerHTML = shell("league", `<h1 class="ap-h">${letters(L("apLeague"))}</h1><div class="ap-card"><p class="ap-k">${L("apWeek")}</p><b class="ap-big">${sum} XP</b>
       <div class="ap-chart">${w.map(x => `<div><i style="height:${x.v / max * 100}%"></i><small>${"SMTWTFS"[x.d.getDay()]}</small></div>`).join("")}</div><p class="ap-p">${L("apLeagueP")}</p></div>
       <div class="ap-board"></div>`);
     const bx = root.querySelector(".ap-board"); bx.innerHTML = boardHTML(); revealHome(bx); if (typeof loadBoard === "function") loadBoard();
@@ -173,7 +174,6 @@ function mascot(say) {
     <path class="tl" d="M90 98Q112 90 104 66" stroke="#3a3f47" stroke-width="8" stroke-linecap="round" fill="none"/></svg><i>${say}</i></span>`;
 }
 
-/* ---------- open app mode when launched from the home screen ---------- */
+/* ---------- Milingo opens only from its button ---------- */
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-if (STANDALONE && !location.hash) history.replaceState(null, "", "#app");
 addEventListener("hashchange", () => { if (!/^#(app|lesson)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });

@@ -105,7 +105,7 @@ document.addEventListener("click", e => {
 });
 /* home button shown in every world */
 const homeBtn = (cls = "") => `<a class="mv-home ${cls}" href="#" data-gohome><span aria-hidden="true">←</span> ${L("homeBtn")}</a>`;
-document.addEventListener("click", e => { const h = e.target.closest("[data-gohome]"); if (!h) return; e.preventDefault(); ACTIVE = null; Router.go(typeof STANDALONE !== "undefined" && STANDALONE ? "app" : ""); });
+document.addEventListener("click", e => { const h = e.target.closest("[data-gohome]"); if (!h) return; e.preventDefault(); ACTIVE = null; Router.go(""); });
 
 /* ---------- shared quiz ---------- */
 /* ACTIVE keeps an unfinished quiz alive across a language switch */
