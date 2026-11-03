@@ -2026,6 +2026,19 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 @keyframes stamp{0%,60%{transform:rotate(-16deg) scale(1)}70%{transform:rotate(-16deg) scale(1.25)}80%{transform:rotate(-16deg) scale(.95)}}
 .hx-clock{position:absolute;top:10px;right:12px;font:700 13px "Special Elite",monospace;color:#f2c14e;background:rgba(0,0,0,.35);padding:3px 8px;border-radius:8px}
 .gw-contract{background:linear-gradient(180deg,#14304f,#0b1a2e)}.gw-contract .gw-k{color:#8fc0ff}.gw-contract .gw-cta{background:#8fc0ff;color:#0b1a2e}.gw-contract .gw-bar i{background:#8fc0ff}
+/* cosmic leagues */
+.lg-pl{overflow:visible}.lg-pl .ray{transform-box:view-box;animation:none}
+.lg-tiers span.on .lg-pl{animation:plspin 9s linear infinite}@keyframes plspin{to{transform:rotate(360deg)}}
+.lg-tiers span.on{filter:drop-shadow(0 0 18px color-mix(in srgb,var(--acc) 55%,transparent))}
+.lg-pl .spin{transform-origin:40px 40px;animation:plspin 12s linear infinite}
+.lg-tiers span.lk{filter:grayscale(1) brightness(.35);opacity:.55}
+.lg-head .ap-h{font-size:30px}
+.lg-fly{position:relative;display:flex;align-items:center;justify-content:center;gap:18px;width:100%;height:120px}
+.lg-fly svg{width:70px}.lg-fly svg:last-child{width:100px;animation:endpix 1s .9s cubic-bezier(.2,1.5,.4,1) both}
+.lg-fly i{position:absolute;left:28%;top:40%;font-style:normal;font-size:34px;animation:rocket 1.4s .2s cubic-bezier(.5,0,.3,1) both}
+@keyframes rocket{0%{transform:translate(0,0) rotate(45deg) scale(.6);opacity:0}20%{opacity:1}100%{transform:translate(150px,-40px) rotate(45deg) scale(1.1);opacity:0}}
+.lg-let{display:grid!important;place-items:center;width:100%;height:100%}
+.lg-av.big svg:not(.ps){width:118%;height:118%;margin:4% 0 0 -9%}
 
 </style>
 <div id="view"></div>
@@ -7653,27 +7666,39 @@ function wireQuests(root) {
 }
 
 /* ---------- leagues: 10 tiers, real students, weekly promotion ---------- */
-const LG_N = { en: ["Bronze", "Silver", "Gold", "Sapphire", "Ruby", "Emerald", "Amethyst", "Pearl", "Obsidian", "Diamond"],
-  az: ["Bürünc", "Gümüş", "Qızıl", "Sapfir", "Yaqut", "Zümrüd", "Ametist", "Mirvari", "Obsidian", "Almaz"],
-  ru: ["Бронзовая", "Серебряная", "Золотая", "Сапфировая", "Рубиновая", "Изумрудная", "Аметистовая", "Жемчужная", "Обсидиановая", "Бриллиантовая"] };
+const LG_N = { en: ["Earth", "Moon", "Mars", "Venus", "Jupiter", "Saturn", "Neptune", "Sun", "Nebula", "Galaxy"],
+  az: ["Yer", "Ay", "Mars", "Venera", "Yupiter", "Saturn", "Neptun", "Günəş", "Dumanlıq", "Qalaktika"],
+  ru: ["Земля", "Луна", "Марс", "Венера", "Юпитер", "Сатурн", "Нептун", "Солнце", "Туманность", "Галактика"] };
+const LG_E = ["🌍", "🌙", "🔴", "🟡", "🟠", "🪐", "🔵", "☀️", "🌫️", "🌌"];
 const LG_C = [["#E39A5B", "#A4572A"], ["#DDE3EA", "#8C98A6"], ["#FFD45A", "#C98A12"], ["#5BA8FF", "#1F5FC4"], ["#FF5C7A", "#B0163A"], ["#4FE39A", "#14965A"], ["#C489FF", "#7A3BD1"], ["#F6EEE3", "#BCA98F"], ["#5B5370", "#231E30"], ["#9FF6FF", "#2BB7D6"]];
-Object.assign(UI.en, { lgName: t => LG_N.en[t] + " League", lgDays: "days left", lgUp: "PROMOTION ZONE", lgDown: "DEMOTION ZONE", lgJoin: "Join the league", lgJoinP: "Compete every week with other Minaraverse students. Only your first name and avatar are shown.",
+Object.assign(UI.en, { lgName: t => LG_E[t] + " " + LG_N.en[t] + " League", lgDays: "days left", lgUp: "PROMOTION ZONE", lgDown: "DEMOTION ZONE", lgJoin: "Join the league", lgJoinP: "Compete every week with other students. Only your first name and avatar are shown.",
   lgJoinB: "Join", lgName2: "Your first name", lgErr: "The league can't load right now. Your XP is saved — try again later.", lgRankUp: "You moved up!", lgRank: "You're in {n} place", lgChase: "but {name} is right behind you!",
-  lgLead: "You're leading the league!", lgRes: { up: "Promoted to {t}! 🎉", down: "Moved down to {t}. You'll come back!", stay: "You stayed in {t}." }, lgYou: "You", lgWeek: "Weekly XP" });
-Object.assign(UI.az, { lgName: t => LG_N.az[t] + " liqası", lgDays: "gün qalıb", lgUp: "YÜKSƏLMƏ ZONASI", lgDown: "DÜŞMƏ ZONASI", lgJoin: "Liqaya qoşul", lgJoinP: "Hər həftə digər Minaraverse tələbələri ilə yarış. Yalnız adın və avatarın görünür.",
+  lgLead: "You're leading the league!", lgRes: { up: "🚀 You flew up to {t}!", down: "Moved down to {t}. You'll come back!", stay: "You stayed in {t}." }, lgYou: "You", lgWeek: "Weekly XP" });
+Object.assign(UI.az, { lgName: t => LG_E[t] + " " + LG_N.az[t] + " liqası", lgDays: "gün qalıb", lgUp: "YÜKSƏLMƏ ZONASI", lgDown: "DÜŞMƏ ZONASI", lgJoin: "Liqaya qoşul", lgJoinP: "Hər həftə digər tələbələrlə yarış. Yalnız adın və avatarın görünür.",
   lgJoinB: "Qoşul", lgName2: "Adın", lgErr: "Reytinq hazırda yüklənmir. XP-n yadda qalıb — bir az sonra yenə yoxla.", lgRankUp: "Sıra atladın!", lgRank: "İndi {n} yerdəsən", lgChase: "amma {name} arxanca gəlir!",
-  lgLead: "Liqada birincisən!", lgRes: { up: "{t} liqasına yüksəldin! 🎉", down: "{t} liqasına düşdün. Geri qayıdacaqsan!", stay: "{t} liqasında qaldın." }, lgYou: "Sən", lgWeek: "Həftəlik XP" });
-Object.assign(UI.ru, { lgName: t => LG_N.ru[t] + " лига", lgDays: "дн. осталось", lgUp: "ЗОНА ПОВЫШЕНИЯ", lgDown: "ЗОНА ПОНИЖЕНИЯ", lgJoin: "Вступить в лигу", lgJoinP: "Соревнуйся каждую неделю с другими учениками Minaraverse. Видны только имя и аватар.",
+  lgLead: "Liqada birincisən!", lgRes: { up: "🚀 {t} liqasına uçdun!", down: "{t} liqasına düşdün. Geri qayıdacaqsan!", stay: "{t} liqasında qaldın." }, lgYou: "Sən", lgWeek: "Həftəlik XP" });
+Object.assign(UI.ru, { lgName: t => LG_E[t] + " Лига «" + LG_N.ru[t] + "»", lgDays: "дн. осталось", lgUp: "ЗОНА ПОВЫШЕНИЯ", lgDown: "ЗОНА ПОНИЖЕНИЯ", lgJoin: "Вступить в лигу", lgJoinP: "Соревнуйся каждую неделю с другими учениками. Видны только имя и аватар.",
   lgJoinB: "Вступить", lgName2: "Твоё имя", lgErr: "Рейтинг сейчас не загружается. XP сохранён — попробуй позже.", lgRankUp: "Ты поднялся!", lgRank: "Ты на {n} месте", lgChase: "но {name} уже догоняет!",
-  lgLead: "Ты лидер лиги!", lgRes: { up: "Повышение: {t}! 🎉", down: "Понижение: {t}. Ты вернёшься!", stay: "Ты остался в лиге: {t}." }, lgYou: "Ты", lgWeek: "XP за неделю" });
+  lgLead: "Ты лидер лиги!", lgRes: { up: "🚀 Ты долетел до лиги «{t}»!", down: "Понижение: {t}. Ты вернёшься!", stay: "Ты остался в лиге: {t}." }, lgYou: "Ты", lgWeek: "XP за неделю" });
 const ordAz = n => { const sfx2 = { 1: "ci", 2: "ci", 3: "cü", 4: "cü", 5: "ci", 6: "cı", 7: "ci", 8: "ci", 9: "cu", 0: "cu" }, t = { 10: "cu", 20: "ci", 30: "cu", 40: "cı", 50: "ci" };
   return n + "-" + (n % 10 ? sfx2[n % 10] : t[n] || "cü"); };
 const ordinal = n => LANG === "az" ? ordAz(n) : LANG === "ru" ? n + "-м" : n + (n % 10 === 1 && n % 100 !== 11 ? "st" : n % 10 === 2 && n % 100 !== 12 ? "nd" : n % 10 === 3 && n % 100 !== 13 ? "rd" : "th");
-function trophySVG(t, cls = "") { const [a, b] = LG_C[t];
-  return `<svg class="lg-tr ${cls}" viewBox="0 0 80 80" aria-hidden="true"><ellipse cx="40" cy="73" rx="17" ry="4.5" fill="rgba(0,0,0,.25)"/><rect x="27" y="62" width="26" height="8" rx="3" fill="${b}"/><rect x="31" y="58" width="18" height="6" rx="2" fill="${a}"/>
-    <path d="M36 46h8v13h-8z" fill="${b}"/><path d="M14 14 Q22 8 30 12 Q40 4 50 12 Q58 8 66 14 Q68 40 40 50 Q12 40 14 14Z" fill="${a}"/><path d="M40 6 Q50 12 50 12 Q58 8 66 14 Q68 40 40 50Z" fill="${b}" opacity=".35"/>
-    <path d="M24 18 L40 13 L56 18 L50 34 L40 40 L30 34Z" fill="#fff" opacity=".28"/><path d="M24 18 L40 13 L40 40 L30 34Z" fill="#fff" opacity=".22"/>${t >= 3 ? `<path d="M30 34 L40 26 L50 34 L40 40Z" fill="${b}" opacity=".35"/>` : ""}
-    <path d="M20 16 Q22 12 27 13" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>${t === 9 ? `<circle cx="58" cy="10" r="2.2" fill="#fff" class="spark"/><circle cx="20" cy="40" r="1.6" fill="#fff" class="spark"/>` : ""}</svg>`; }
+let PLID = 0;
+function trophySVG(t, cls = "") { const id = "pl" + (++PLID), sh = `<radialGradient id="${id}s" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient>`;
+  const ball = (fill, extra = "") => `<defs>${sh}<clipPath id="${id}c"><circle cx="40" cy="40" r="25"/></clipPath></defs><circle cx="40" cy="40" r="25" fill="${fill}"/><g clip-path="url(#${id}c)">${extra}</g><circle cx="40" cy="40" r="25" fill="url(#${id}s)"/>`;
+  const P = [
+    ball("#2f7fe0", `<path d="M22 30q6-8 14-4t4 10q-6 4-12 0t-6-6z M44 44q8-4 14 2t-2 12q-8 2-12-4t0-10z M30 52q4-2 6 2t-4 6q-4-2-2-8z" fill="#4fc46b"/><path d="M18 24q10-4 20 0 M40 30q10-4 22 2 M20 60q12 4 24-2" stroke="#fff" stroke-width="3" fill="none" opacity=".75" stroke-linecap="round"/>`),
+    ball("#c9ccd4", `<circle cx="32" cy="32" r="5" fill="#a5a9b3"/><circle cx="48" cy="46" r="7" fill="#a5a9b3"/><circle cx="30" cy="52" r="3.5" fill="#a5a9b3"/><circle cx="52" cy="28" r="3" fill="#a5a9b3"/>`),
+    ball("#d4572e", `<path d="M15 34q14 6 26-2t30 4v8q-14-4-28 4t-28-2z" fill="#a8391c" opacity=".7"/><ellipse cx="40" cy="16" rx="10" ry="4" fill="#fff" opacity=".85"/>`),
+    ball("#e8c46a", `<path d="M14 30q26-10 52 0 M14 42q26 8 52-2 M16 54q24-8 48 2" stroke="#f7e3a6" stroke-width="5" fill="none" opacity=".8" stroke-linecap="round"/>`),
+    ball("#d9a46c", `<rect x="10" y="24" width="60" height="5" fill="#a86b3c"/><rect x="10" y="34" width="60" height="7" fill="#f2d4a8"/><rect x="10" y="46" width="60" height="5" fill="#a86b3c"/><rect x="10" y="55" width="60" height="4" fill="#f2d4a8"/><ellipse cx="50" cy="48" rx="6" ry="4" fill="#c4442a"/>`),
+    `<defs>${sh}</defs><ellipse cx="40" cy="42" rx="37" ry="10" fill="none" stroke="#c9b27a" stroke-width="5" opacity=".7" transform="rotate(-14 40 42)"/><circle cx="40" cy="40" r="21" fill="#e2c88f"/><path d="M20 34h40M19 44h42" stroke="#c9a76a" stroke-width="4"/><circle cx="40" cy="40" r="21" fill="url(#${id}s)"/><path d="M3 50 A37 10 -14 0 0 77 33" fill="none" stroke="#efdcae" stroke-width="5" transform="rotate(0)"/>`,
+    ball("#2a4fd1", `<path d="M14 36q26-8 52 0" stroke="#6f9dff" stroke-width="6" fill="none" opacity=".7"/><ellipse cx="32" cy="48" rx="6" ry="3.5" fill="#132a7a"/>`),
+    `<defs><radialGradient id="${id}g"><stop offset=".55" stop-color="#ffd23f"/><stop offset="1" stop-color="#ff7a1a"/></radialGradient></defs>${Array.from({ length: 12 }, (_, k) => `<path d="M40 4 L44 16 L36 16Z" fill="#ffb02e" transform="rotate(${k * 30} 40 40)" class="ray"/>`).join("")}<circle cx="40" cy="40" r="22" fill="url(#${id}g)"/><circle cx="33" cy="33" r="6" fill="#fff6c2" opacity=".6"/>`,
+    `<defs><filter id="${id}b"><feGaussianBlur stdDeviation="4"/></filter></defs><g filter="url(#${id}b)"><ellipse cx="32" cy="38" rx="20" ry="13" fill="#c86bff" opacity=".85"/><ellipse cx="48" cy="44" rx="18" ry="12" fill="#ff6fb5" opacity=".75"/><ellipse cx="42" cy="30" rx="12" ry="9" fill="#7cf6ff" opacity=".6"/></g><g fill="#fff"><circle cx="24" cy="26" r="1.4"/><circle cx="56" cy="30" r="1.8"/><circle cx="40" cy="52" r="1.2"/><circle cx="60" cy="54" r="1.4"/></g>`,
+    `<g class="spin"><path d="M40 40 C40 20 64 18 66 34" stroke="#c9a7ff" stroke-width="6" fill="none" stroke-linecap="round" opacity=".9"/><path d="M40 40 C40 60 16 62 14 46" stroke="#c9a7ff" stroke-width="6" fill="none" stroke-linecap="round" opacity=".9"/><path d="M40 40 C58 40 60 64 46 66" stroke="#7cf6ff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/><path d="M40 40 C22 40 20 16 34 14" stroke="#7cf6ff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/></g><circle cx="40" cy="40" r="8" fill="#fff"/><circle cx="40" cy="40" r="14" fill="#fff" opacity=".25"/><g fill="#fff"><circle cx="16" cy="18" r="1.4"/><circle cx="66" cy="62" r="1.6"/><circle cx="64" cy="14" r="1.2"/></g>`];
+  return `<svg class="lg-tr lg-pl ${cls}" viewBox="0 0 80 80" aria-hidden="true">${P[t] || P[0]}</svg>`; }
+
 const uid = () => { let u = lsGet("mv-uid", null); if (!u) { u = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, "0")).join(""); lsSet("mv-uid", u); } return u; };
 const weekXpNow = () => { const x = XP(), d = new Date(); const dow = (d.getDay() + 6) % 7; let s = 0; for (let k = 0; k <= dow; k++) { const t = new Date(d); t.setDate(d.getDate() - k); s += x.days[dayStr(t)] || 0; } return s; };
 const avStr = () => { const v = myAvatar(); return v ? `${v.k},${v.s == null ? "" : v.s},${v.c == null ? "" : v.c}` : ""; };
@@ -7697,7 +7722,7 @@ function leagueView(root, shell) {
   const t0 = cached ? cached.tier : 0;
   if (!joined) {
     root.innerHTML = shell("league", head(0) + `<div class="ap-card lg-join"><b>${L("lgJoin")}</b><p class="ap-p">${L("lgJoinP")}</p>
-      <div class="lg-jr"><span class="lg-av big">${avOf(avStr(), NAME)}</span><input class="lg-in" maxlength="24" value="${esc(NAME || "")}" placeholder="${L("lgName2")}"></div><button class="ap-cta lg-go">${L("lgJoinB")}</button><p class="lg-msg"></p></div>`);
+      <div class="lg-jr"><span class="lg-av big">${avStr() ? avOf(avStr(), NAME) : charSVG(themeChar())}</span><input class="lg-in" maxlength="24" value="${esc(NAME || "")}" placeholder="${L("lgName2")}"></div><button class="ap-cta lg-go">${L("lgJoinB")}</button><p class="lg-msg"></p></div>`);
     const go = root.querySelector(".lg-go"), inp = root.querySelector(".lg-in"), msg = root.querySelector(".lg-msg");
     go.onclick = async () => { const nm = inp.value.trim(); if (nm.length < 2) { flash(inp, "shake"); return; } go.disabled = true; go.textContent = "…";
       try { await lgSync(nm); lsSet("mv-lgname", nm); if (!NAME) { NAME = nm; try { localStorage.setItem("mv-name", nm); } catch (e) {} } sfx("unlock"); Router.remount(); }
@@ -7713,7 +7738,7 @@ function leagueView(root, shell) {
 function lgResult(d) { /* once per week: show last week's promotion/demotion */
   if (!d.prev || lsGet("mv-lgres", "") === d.week) return; lsSet("mv-lgres", d.week);
   const nm = LG_N[LANG === "az" ? "az" : LANG === "ru" ? "ru" : "en"][d.prev.to];
-  const ov = document.createElement("div"); ov.className = "dr-ov"; ov.innerHTML = `<div class="dr-card lg-resc">${trophySVG(d.prev.to, "big")}<h2>${esc(L("lgRes")[d.prev.res].replace("{t}", nm))}</h2><p>#${d.prev.rank} · ${d.prev.xp} XP</p><button class="ap-cta">${L("dCont")}</button></div>`;
+  const ov = document.createElement("div"); ov.className = "dr-ov"; ov.innerHTML = `<div class="dr-card lg-resc">${d.prev.res === "up" ? `<div class="lg-fly">${trophySVG(d.prev.from)}<i>🚀</i>${trophySVG(d.prev.to)}</div>` : trophySVG(d.prev.to, "big")}<h2>${esc(L("lgRes")[d.prev.res].replace("{t}", nm))}</h2><p>#${d.prev.rank} · ${d.prev.xp} XP</p><button class="ap-cta">${L("dCont")}</button></div>`;
   document.body.appendChild(ov); sfx(d.prev.res === "up" ? "win" : d.prev.res === "down" ? "fail" : "pop"); ov.onclick = e => { if (e.target.closest(".ap-cta") || e.target === ov) ov.remove(); };
 }
 /* after a lesson: rank-change screen (like "you moved up, but X is chasing you") */
