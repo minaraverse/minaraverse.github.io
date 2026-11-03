@@ -31,6 +31,7 @@ const weekXp = () => { const x = XP(); return Array.from({ length: 7 }, (_, k) =
 const soundOn = () => lsGet("mv-sound", true);
 let AC = null;
 function beep(kind) {
+  if (typeof sfx === "function") return sfx(kind === "ok" ? "ok" : kind === "no" ? "no" : "win");
   if (!soundOn()) return; try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const t = AC.currentTime;
     const seq = kind === "ok" ? [[784, 0], [1047, .09]] : kind === "no" ? [[220, 0], [180, .12]] : [[523, 0], [659, .1], [784, .2], [1047, .32]];
     seq.forEach(([f, dt]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = kind === "no" ? "square" : "sine"; o.frequency.value = f;
@@ -67,17 +68,19 @@ const apBack = () => `<a class="ap-back" href="#" aria-label="Minaraverse"><span
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
 /* ---------- course choice ---------- */
-const COURSE_EMOJI = { kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", ielts: "🎙", debate: "⚖️", heist: "🗝" };
+const COURSE_EMOJI = { milingo: "🌱", kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", ielts: "🎙", debate: "⚖️", heist: "🗝" };
 const courseEmoji = k => COURSE_EMOJI[k] || "📘";
-const curCourse = () => { const c = lsGet("mv-course", null); if (c && STORIES[c]) return c; const l = myLevel(); return WORLD_ORDER.find(k => fitsLevel(STORIES[k].level, l)) || "tapes"; };
+if (!lsGet("mv-course2", null)) { lsSet("mv-course", "milingo"); lsSet("mv-course2", 1); }
+const curCourse = () => { const c = lsGet("mv-course", null); if (!c || c === "milingo") return "milingo"; if (STORIES[c]) return c; const l = myLevel(); return WORLD_ORDER.find(k => fitsLevel(STORIES[k].level, l)) || "tapes"; };
 const noteOf = u => u.note || u.notes || u.log || u.syn || u.statement || u.prompt || "";
 
 /* ---------- views ---------- */
-const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], ["practice", "💪", L("apPractice")], ["league", "🏆", L("apLeague")], ["profile", "👤", L("apProfile")]]
+const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], ["practice", "💪", L("apPractice")], ["quests", "🎯", L("qTitle")], ["league", "🏆", L("apLeague")], ["profile", "👤", L("apProfile")]]
   .map(([k, e, t]) => `<a href="#app-${k}" class="${k === act ? "on" : ""}"><span>${e}</span><small>${t}</small></a>`).join("")}</nav>`;
 
 VIEWS.app = root => {
   document.documentElement.classList.add("ap-mode");
+  if (typeof apTheme === "function") apTheme(myThemeSec());
   const sub = (location.hash.match(/app-(\w+)/) || [])[1] || (lsGet("mv-goal", null) ? "learn" : "goal");
   setTimeout(() => { riseLetters(root, ".ap-h .ch", { stagger: 28, dur: 800 }); root.querySelectorAll(".ap-item,.ap-course,.ap-badges>div,.ap-stats>div,.ap-card").forEach((el, k) => el.animate([{ transform: "translateY(24px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: REDUCED ? 1 : 600, delay: REDUCED ? 0 : 60 + k * 45, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" })); }, 0);
   const shell = (act, body) => `<div class="ap">${hudHTML()}<main class="ap-main">${body}</main>${tabbar(act)}</div>`;
@@ -90,11 +93,12 @@ VIEWS.app = root => {
   }
   if (sub === "course") {
     const lv = myLevel();
-    root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("apAllUnits"))}</h1><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
+    root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("apAllUnits"))}</h1><button class="ap-course dr-main-c ${curCourse() === "milingo" ? "on" : ""}" data-course="milingo"><span>🌱</span><b>${L("dCourseName")}</b><small>A1 → B1 · ${drillLessons()}/${UNITS.length * LPU}</small><i>★</i></button><h2 class="ap-h2">${L("dStories")}</h2><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
       return `<button class="ap-course ${k === curCourse() ? "on" : ""} ${lv && fitsLevel(S.level, lv) ? "fit" : ""}" data-course="${k}"><span>${courseEmoji(k)}</span><b>${esc(S.title)}</b><small>${S.level} · ${d}/${S.units.length}</small>${lv && fitsLevel(S.level, lv) ? `<i>★</i>` : ""}</button>`; }).join("")}</div>`);
     root.onclick = e => { const b = e.target.closest("[data-course]"); if (!b) return; lsSet("mv-course", b.dataset.course); Router.go("app-learn"); };
     return {};
   }
+  if (sub === "learn" && curCourse() === "milingo") { root.innerHTML = shell("learn", drillPathHTML()); wireDrillPath(root); return {}; }
   if (sub === "learn") {
     const k = curCourse(), S = STORIES[k], nx = nextIndex(k);
     const nodes = S.units.map((u, i) => { const open = isOpen(k, i), done = isDone(k, i), cur = i === nx && !solved(k, i), off = [0, 60, 90, 60, 0, -60, -90, -60][i % 8];
@@ -106,9 +110,10 @@ VIEWS.app = root => {
     setTimeout(() => { const c = root.querySelector(".ap-node.now"); c && c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" }); }, 200);
     return {};
   }
+  if (sub === "quests") { root.innerHTML = shell("quests", questsHTML()); wireQuests(root); return {}; }
   if (sub === "practice") {
     const due = dueKeys().length;
-    const items = [["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
+    const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
       ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#exam", "📝", L("apExam"), "DİM"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
     root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1><div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
     return {};
@@ -123,17 +128,18 @@ VIEWS.app = root => {
   }
   /* profile */
   const b = lsGet("mv-badges", {}), x = XP(), lv = myLevel();
-  const BADGES = [["first", "🌱", "First lesson"], ["perfect", "👑", "Perfect lesson"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],
+  const BADGES = [["first", "🌱", "First lesson"], ...SECTIONS.map((s, i) => ["sec" + i, ["🥉", "🥈", "🥇"][i], T3(s.t) + " · " + s.lv]), ["perfect", "👑", "Perfect lesson"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],
     ...WORLD_ORDER.map(k => ["w_" + k, courseEmoji(k), STORIES[k].title])];
-  root.innerHTML = shell("profile", `<div class="ap-prof"><span class="ap-av">${esc((NAME || "M")[0].toUpperCase())}</span><div><input class="ap-name" value="${esc(NAME)}" placeholder="${L("apName")}"><small>${lv ? lv + " · " + lvName(lv) : L("findLevel")}</small></div></div>
-    <div class="ap-stats"><div><b>🔥 ${streak()}</b><small>${L("apDays")}</small></div><div><b>⚡ ${x.total}</b><small>${L("apTotal")}</small></div><div><b>🎯 ${goal()}</b><small>${L("apGoal")}</small></div><div><b>📚 ${WORLD_ORDER.reduce((a, k) => a + doneCount(k), 0)}</b><small>${L("chapters")}</small></div></div>
+  root.innerHTML = shell("profile", `<div class="ap-prof"><button class="ap-av ${myAvatar() ? "has" : ""}" data-av aria-label="${L("avEdit")}">${myAvatar() ? avatarSVG() : esc((NAME || "M")[0].toUpperCase())}<em>✎</em></button><div><input class="ap-name" value="${esc(NAME)}" placeholder="${L("apName")}"><small>${lv ? lv + " · " + lvName(lv) : L("findLevel")}</small></div></div>
+    <div class="ap-stats"><div><b>🔥 ${streak()}</b><small>${L("apDays")}</small></div><div><b>⚡ ${x.total}</b><small>${L("apTotal")}</small></div><div><b>🎯 ${goal()}</b><small>${L("apGoal")}</small></div><div><b>📚 ${drillLessons() + WORLD_ORDER.reduce((a, k) => a + doneCount(k), 0)}</b><small>${L("chapters")}</small></div></div>
     <h2 class="ap-h2">${L("apBadges")}</h2><div class="ap-badges">${BADGES.map(([k, e, t]) => `<div class="${b[k] ? "on" : ""}"><span>${e}</span><small>${esc(t)}</small></div>`).join("")}</div>
-    <div class="ap-set"><a href="#app-goal" class="ap-item"><span>🎯</span><b>${L("apGoal")}</b><small>${goal()} XP</small><i>›</i></a>
+    <div class="ap-set"><div class="ap-item"><span>❤️</span><b>${L("dHearts")}</b><small>${hearts()} / 5${hearts() >= 5 ? " · " + L("dFull") : ""}</small></div><a href="#app-goal" class="ap-item"><span>🎯</span><b>${L("apGoal")}</b><small>${goal()} XP</small><i>›</i></a>
       <button class="ap-item" data-snd><span>🔊</span><b>${L("apSound")}</b><small>${soundOn() ? L("apOn") : L("apOff")}</small><i>›</i></button>
       <div class="ap-item"><span>🌐</span><b>EN · AZ · RU</b>${langPill()}</div>
       <a href="#" class="ap-item"><span>🌍</span><b>${L("apSite")}</b><small>minaraverse.github.io</small><i>›</i></a>
       <a href="#admin" class="ap-item"><span>🔐</span><b>Minaraverse giriş</b><small>Admin</small><i>›</i></a></div>`);
   root.querySelector(".ap-name").oninput = e => { NAME = e.target.value.trim(); try { localStorage.setItem("mv-name", NAME); } catch (er) {} };
+  root.querySelector("[data-av]").onclick = () => avatarSheet();
   root.querySelector("[data-snd]").onclick = () => { lsSet("mv-sound", !soundOn()); Router.remount(); };
   return {};
 };
@@ -166,16 +172,11 @@ function lessonDone(k, i) {
 }
 
 /* ---------- mascot: Pixel the cat ---------- */
-function mascot(say) {
-  return `<span class="ap-pix"><svg viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="112" rx="34" ry="6" fill="rgba(0,0,0,.25)"/>
-    <path d="M28 104Q24 60 60 58Q96 60 92 104Z" fill="#3a3f47"/><path d="M44 104Q60 76 76 104Z" fill="#f4f4f4"/>
-    <circle cx="60" cy="48" r="30" fill="#3a3f47"/><path d="M34 34L38 8L54 24Z M86 34L82 8L66 24Z" fill="#3a3f47"/><path d="M38 28L40 14L50 24Z M82 28L80 14L70 24Z" fill="#ffc9d1"/>
-    <ellipse cx="60" cy="60" rx="18" ry="13" fill="#f4f4f4"/><circle cx="49" cy="46" r="7" fill="#fff"/><circle cx="71" cy="46" r="7" fill="#fff"/><circle class="ey" cx="50" cy="47" r="4" fill="#17414b"/><circle class="ey" cx="72" cy="47" r="4" fill="#17414b"/>
-    <path d="M57 56L63 56L60 60Z" fill="#c4505f"/><path d="M60 60Q55 66 51 63M60 60Q65 66 69 63" stroke="#17414b" stroke-width="2" fill="none"/>
-    <path class="tl" d="M90 98Q112 90 104 66" stroke="#3a3f47" stroke-width="8" stroke-linecap="round" fill="none"/></svg><i>${say}</i></span>`;
+function mascot(say, k) {
+  return `<span class="ap-pix ch-${k || themeChar()}">${charSVG(k || themeChar())}<i>${say}</i></span>`;
 }
 
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 /* ---------- Milingo opens only from its button: the home-screen app always starts on Minaraverse ---------- */
-if (STANDALONE && /^#(app|lesson)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
-addEventListener("hashchange", () => { if (!/^#(app|lesson)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
+if (STANDALONE && /^#(app|lesson|drill)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+addEventListener("hashchange", () => { if (!/^#(app|lesson|drill)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
