@@ -60,8 +60,7 @@ function voteCards() { const v = voteState(), g = v.goal || 100;
 function drawVotes(root) { const b = root.querySelector(".sv-votes"); if (b) b.innerHTML = voteCards(); }
 function pickHTML() { const s = typeof subj === "function" ? subj() : "en", card = (k, e, t, p) => `<button class="sv-sub ${s === k ? "on" : ""}" data-subj="${k}"><span>${e}</span><b>${t}</b><small>${p}</small><i>›</i></button>`;
   return `<div class="sv-pick">${card("en", "🇬🇧", L("skEnglish"), "A1 → B1 · " + drillLessons() + "/" + UNITS.length * LPU)}
-    <h2 class="ap-h2">${L("svSoon")}</h2><p class="sv-soonp">${L("svSoonP")}</p><div class="sv-votes">${voteCards()}</div>
-    <h2 class="ap-h2">${L("svMore")}</h2>${["math", "music", "chess"].map(k => card(k, SK[k].e, L(SK[k].n), L(SK[k].p) + " · " + skLessons(k) + "/" + SK[k].U.length * SKL)).join("")}</div>`; }
+    <h2 class="ap-h2">${L("svSoon")}</h2><p class="sv-soonp">${L("svSoonP")}</p><div class="sv-votes">${voteCards()}</div></div>`; }
 function wirePick(root, after) {
   root.onclick = async e => {
     const v = e.target.closest("[data-vote]"); if (v && !v.disabled) { const k = v.dataset.vote, st = voteState(); st.mine = [...new Set([...(st.mine || []), k])]; st.counts = st.counts || {}; st.counts[k] = (st.counts[k] || 0) + 1; lsSet("mv-votec", st);

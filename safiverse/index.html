@@ -2131,6 +2131,17 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 @media (max-width:430px){.ap-hud{gap:9px!important;padding-left:12px;padding-right:12px}.ap-hud .ap-brand{font-size:16px}.ap-flag{font-size:21px}.ap-ring{width:34px;height:34px}.ap-hud .ap-back{padding:5px 9px 5px 8px;font-size:12px}}
 @media (max-width:430px){.ap-hud:not(.slim) .ap-brand{display:none}.ap-hud:not(.slim) .ap-back{margin-right:auto}}
 
+/* ===== Worlds tab: math / music / chess cards ===== */
+.wd-grid{display:grid;gap:12px;margin:6px 0 8px}
+.wd-card{position:relative;display:grid;grid-template-columns:64px 1fr auto;grid-template-rows:auto auto auto;column-gap:14px;row-gap:3px;align-items:center;padding:16px;border-radius:22px;border:0;color:#10201a;text-align:left;cursor:pointer;overflow:hidden;box-shadow:0 6px 0 rgba(0,0,0,.28);animation:optin .5s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--k) * 90ms)}
+.wd-card:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.wd-math{background:linear-gradient(135deg,#8FE3A8,#4FB98A)}.wd-music{background:linear-gradient(135deg,#D7A4FF,#9A6BFF)}.wd-chess{background:linear-gradient(135deg,#FFD98A,#E0A24F)}
+.wd-card::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.18)}
+.wd-e{grid-row:1/4;font-size:46px;line-height:1;filter:drop-shadow(0 3px 0 rgba(0,0,0,.18))}
+.wd-card b{font:900 20px var(--bf)}.wd-card small{grid-column:2/4;font:700 13px var(--bf);opacity:.8}
+.wd-card em{grid-row:1;grid-column:3;font:900 13px var(--bf);font-style:normal;background:rgba(255,255,255,.45);padding:3px 9px;border-radius:99px;z-index:1}
+.wd-bar{grid-column:2/4;height:8px;border-radius:8px;background:rgba(0,0,0,.15);overflow:hidden}.wd-bar i{display:block;height:100%;background:#fff;border-radius:8px}
+
 </style>
 <div id="view"></div>
 <script>
@@ -6429,21 +6440,21 @@ VIEWS.admin = root => {
 const SAFI = /\/safiverse(\/|$)/.test(location.pathname) || /safiverse/i.test(location.hostname);
 const brandHTML = () => `<span class="ap-brand sv">Safi<i>verse</i></span>`;
 /* ===== APP MODE (Duolingo-style): learning path, XP, daily goal, hearts-free practice, profile, badges ===== */
-Object.assign(UI.en, { apLearn: "Learn", apPractice: "Practice", apLeague: "Leaderboard", apProfile: "Profile", apXp: "XP", apGoal: "Daily goal", apGoalDone: "Daily goal reached!",
+Object.assign(UI.en, { apLearn: "Learn", apPractice: "Worlds", apEnPrac: "English practice", apLeague: "Leaderboard", apProfile: "Profile", apXp: "XP", apGoal: "Daily goal", apGoalDone: "Daily goal reached!",
   apStart: "START", apCourse: "Course", apChange: "Change", apUnit: "Unit", apLesson: "Lesson", apContinue: "Continue", apCheck: "Check", apGreat: ["Great job!", "Excellent!", "Nicely done!", "Amazing!", "You got it!"],
   apNo: "Correct answer:", apDone: "Lesson complete!", apEarned: "XP earned", apAccuracy: "Accuracy", apTime: "Time", apBack: "Back to path", apPick: "Pick your daily goal",
   apCasual: "Casual", apRegular: "Regular", apSerious: "Serious", apIntense: "Intense", apMin: "min / day", apWeek: "This week", apTotal: "Total XP", apBadges: "Badges", apDays: "day streak",
   apReview: "Review mistakes", apReviewP: "Questions you got wrong come back", apDaily: "Daily word", apErrors: "Mistake Hunters", apExam: "Exam practice", apLevelT: "Level test",
   apAppMode: "Safiverse", apSite: "Minaraverse", apReadFirst: "Read first", apAllUnits: "All courses", apLeagueP: "Weekly XP on this device. Send your results to Minara to appear on the hall of fame.",
   apSound: "Sound", apOn: "On", apOff: "Off", apName: "Your name", apLocked: "Finish the lesson before to unlock" });
-Object.assign(UI.az, { apLearn: "Öyrən", apPractice: "Məşq", apLeague: "Reytinq", apProfile: "Profil", apXp: "XP", apGoal: "Günlük hədəf", apGoalDone: "Günlük hədəf tamamlandı!",
+Object.assign(UI.az, { apLearn: "Öyrən", apPractice: "Dünyalar", apEnPrac: "İngilis dili məşqi", apLeague: "Reytinq", apProfile: "Profil", apXp: "XP", apGoal: "Günlük hədəf", apGoalDone: "Günlük hədəf tamamlandı!",
   apStart: "BAŞLA", apCourse: "Kurs", apChange: "Dəyiş", apUnit: "Bölmə", apLesson: "Dərs", apContinue: "Davam et", apCheck: "Yoxla", apGreat: ["Əla!", "Mükəmməl!", "Çox yaxşı!", "Super!", "Düzdür!"],
   apNo: "Düzgün cavab:", apDone: "Dərs bitdi!", apEarned: "Qazanılan XP", apAccuracy: "Dəqiqlik", apTime: "Vaxt", apBack: "Yola qayıt", apPick: "Günlük hədəfini seç",
   apCasual: "Rahat", apRegular: "Adi", apSerious: "Ciddi", apIntense: "İntensiv", apMin: "dəq / gün", apWeek: "Bu həftə", apTotal: "Cəmi XP", apBadges: "Nişanlar", apDays: "gün ardıcıl",
   apReview: "Səhvləri təkrarla", apReviewP: "Səhv cavab verdiyin suallar geri qayıdır", apDaily: "Günün sözü", apErrors: "Səhv ovçuları", apExam: "İmtahan məşqi", apLevelT: "Səviyyə testi",
   apAppMode: "Safiverse", apSite: "Minaraverse", apReadFirst: "Əvvəl oxu", apAllUnits: "Bütün kurslar", apLeagueP: "Bu cihazdakı həftəlik XP. Fəxri lövhəyə düşmək üçün nəticələrini Minaraya göndər.",
   apSound: "Səs", apOn: "Açıq", apOff: "Bağlı", apName: "Adın", apLocked: "Açmaq üçün əvvəlki dərsi bitir" });
-Object.assign(UI.ru, { apLearn: "Учиться", apPractice: "Практика", apLeague: "Рейтинг", apProfile: "Профиль", apXp: "XP", apGoal: "Цель дня", apGoalDone: "Цель дня выполнена!",
+Object.assign(UI.ru, { apLearn: "Учиться", apPractice: "Миры", apEnPrac: "Практика английского", apLeague: "Рейтинг", apProfile: "Профиль", apXp: "XP", apGoal: "Цель дня", apGoalDone: "Цель дня выполнена!",
   apStart: "СТАРТ", apCourse: "Курс", apChange: "Сменить", apUnit: "Раздел", apLesson: "Урок", apContinue: "Продолжить", apCheck: "Проверить", apGreat: ["Отлично!", "Превосходно!", "Молодец!", "Супер!", "Верно!"],
   apNo: "Правильный ответ:", apDone: "Урок пройден!", apEarned: "Получено XP", apAccuracy: "Точность", apTime: "Время", apBack: "К пути", apPick: "Выбери цель дня",
   apCasual: "Легко", apRegular: "Обычно", apSerious: "Серьёзно", apIntense: "Интенсивно", apMin: "мин / день", apWeek: "Эта неделя", apTotal: "Всего XP", apBadges: "Значки", apDays: "дней подряд",
@@ -6507,7 +6518,7 @@ const curCourse = () => { const c = lsGet("mv-course", null); if (!c || c === "m
 const noteOf = u => u.note || u.notes || u.log || u.syn || u.statement || u.prompt || "";
 
 /* ---------- views ---------- */
-const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], ["practice", "💪", L("apPractice")], ["quests", "🎯", L("qTitle")], ["league", "🏆", L("apLeague")], ["profile", "👤", L("apProfile")]]
+const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], ["practice", "🪐", L("apPractice")], ["quests", "🎯", L("qTitle")], ["league", "🏆", L("apLeague")], ["profile", "👤", L("apProfile")]]
   .map(([k, e, t]) => `<a href="#app-${k}" class="${k === act ? "on" : ""}"><span>${e}</span><small>${t}</small></a>`).join("")}</nav>`;
 
 VIEWS.app = root => {
@@ -6552,7 +6563,10 @@ VIEWS.app = root => {
     const due = dueKeys().length;
     const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
       ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#contract", "💼", "Business English", "B1–C1"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
-    root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1><div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
+    const worlds = typeof SK === "object" ? `<div class="wd-grid">${["math", "music", "chess"].map((k, i) => { const done = skLessons(k), all = SK[k].U.length * SKL;
+      return `<button class="wd-card wd-${k}" data-world="${k}" style="--k:${i}"><span class="wd-e">${SK[k].e}</span><b>${L(SK[k].n)}</b><small>${L(SK[k].p)}</small><div class="wd-bar"><i style="width:${Math.round(done / all * 100)}%"></i></div><em>${done}/${all}</em></button>`; }).join("")}</div><h2 class="ap-h2">🇬🇧 ${L("apEnPrac")}</h2>` : "";
+    root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1>${worlds}<div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
+    root.onclick = e => { const w = e.target.closest("[data-world]"); if (!w) return; lsSet("mv-subj", w.dataset.world); sfx("tap"); Router.go("app-learn"); };
     return {};
   }
   if (sub === "league") { leagueView(root, shell); return {}; }
@@ -8346,8 +8360,7 @@ function voteCards() { const v = voteState(), g = v.goal || 100;
 function drawVotes(root) { const b = root.querySelector(".sv-votes"); if (b) b.innerHTML = voteCards(); }
 function pickHTML() { const s = typeof subj === "function" ? subj() : "en", card = (k, e, t, p) => `<button class="sv-sub ${s === k ? "on" : ""}" data-subj="${k}"><span>${e}</span><b>${t}</b><small>${p}</small><i>›</i></button>`;
   return `<div class="sv-pick">${card("en", "🇬🇧", L("skEnglish"), "A1 → B1 · " + drillLessons() + "/" + UNITS.length * LPU)}
-    <h2 class="ap-h2">${L("svSoon")}</h2><p class="sv-soonp">${L("svSoonP")}</p><div class="sv-votes">${voteCards()}</div>
-    <h2 class="ap-h2">${L("svMore")}</h2>${["math", "music", "chess"].map(k => card(k, SK[k].e, L(SK[k].n), L(SK[k].p) + " · " + skLessons(k) + "/" + SK[k].U.length * SKL)).join("")}</div>`; }
+    <h2 class="ap-h2">${L("svSoon")}</h2><p class="sv-soonp">${L("svSoonP")}</p><div class="sv-votes">${voteCards()}</div></div>`; }
 function wirePick(root, after) {
   root.onclick = async e => {
     const v = e.target.closest("[data-vote]"); if (v && !v.disabled) { const k = v.dataset.vote, st = voteState(); st.mine = [...new Set([...(st.mine || []), k])]; st.counts = st.counts || {}; st.counts[k] = (st.counts[k] || 0) + 1; lsSet("mv-votec", st);
