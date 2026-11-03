@@ -150,7 +150,7 @@ VIEWS.home = root => {
   };
   raf = requestAnimationFrame(frame);
   root.addEventListener("click", e => { const ct = e.target.closest("[data-cert]"); if (ct) { e.preventDefault(); Certificate(ct.dataset.cert); return; } }, true);
-  wireLead(root); revealHome(root);
+  wireLead(root); revealHome(root); if (typeof loadBoard === "function") loadBoard();
   /* back-to-top button */
   const top = document.createElement("button"); top.type = "button"; top.className = "to-top"; top.setAttribute("aria-label", "Top"); top.textContent = "↑"; document.body.appendChild(top);
   top.onclick = () => scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
