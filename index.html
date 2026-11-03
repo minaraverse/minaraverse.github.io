@@ -1879,6 +1879,29 @@ html.ap-mode .dr-chest.ready{background:linear-gradient(160deg,color-mix(in srgb
 html.ap-mode :is(.dx-opt,.dx-tile,.dx-pr,.dx-bub b,.dx-fill p,.dr-fb b,.dr-fb p,.ap-item b,.q-row b,.q-card b,.dr-pall b,.dr-pop b,.ap-tabs a small,.dr-ub small,.ap-unit b){font-family:var(--bf)!important;font-weight:700}
 html.ap-mode .ap-tabs a small{font-weight:800!important}
 html.ap-mode .dx-bub b,html.ap-mode .dx-fill p{font-weight:600!important}
+/* parts ring, unit dividers, sticky banner, jump node, back-to-current */
+.dr-ring{position:absolute;left:50%;top:50%;width:104px;height:104px;transform:translate(-50%,-56%) rotate(-90deg);pointer-events:none;z-index:0}
+.dr-ring circle{fill:none;stroke:var(--line);stroke-width:7;stroke-linecap:round;transition:stroke .4s}
+.dr-ring circle.on{stroke:var(--uc)}
+.dr-ring circle.fresh{animation:ringin 1s .4s ease both}@keyframes ringin{from{stroke:var(--line)}50%{stroke:#fff}}
+.dr-nw .dr-node{z-index:1}
+.dr-node.now{outline:none!important;animation:nodebob 2.4s ease-in-out infinite}@keyframes nodebob{50%{transform:translateY(-3px)}}
+.dr-top{margin:14px 0 6px}
+.dr-top.locked{filter:saturate(.25) brightness(.8)}
+.dr-unit .dr-ub:not(.dr-top){display:none}
+.dr-div{display:flex;align-items:center;gap:12px;width:100%;margin:26px 0 0;padding:0;border:0;background:transparent;color:var(--mut);cursor:pointer}
+.dr-div i{flex:1;height:2px;border-radius:2px;background:var(--line)}
+.dr-div b{font:800 17px var(--bf)!important;color:var(--mut);white-space:nowrap;max-width:70%;overflow:hidden;text-overflow:ellipsis}
+.dr-unit:not(.locked) .dr-div b{color:var(--ink)}
+.dr-path{padding-top:58px}
+.dr-node.jump{background:linear-gradient(160deg,#ffc06a,#F28C28)!important;box-shadow:0 8px 0 #a5560f!important;filter:none!important}.dr-node.jump span{opacity:1!important}
+.dr-jumpb{background:var(--card)!important;color:#ffb347!important;border:2px solid var(--line)!important;font-weight:900!important;letter-spacing:.06em;text-transform:uppercase}.dr-jumpb::after{background:var(--card)!important}
+.dr-unit.locked .dr-pix{filter:grayscale(1) brightness(.55);opacity:.7}
+.dr-pstars{text-align:center;color:var(--line);font-size:22px;letter-spacing:4px;margin-top:-4px}
+.dr-pn{margin-top:2px;font-weight:800!important;opacity:.9!important}
+.dr-tocur{position:fixed;right:max(16px,calc(50% - 300px));bottom:calc(96px + env(safe-area-inset-bottom));z-index:25;width:54px;height:54px;border-radius:16px;border:2px solid var(--line);background:var(--card);backdrop-filter:blur(14px);color:var(--acc);font:900 24px var(--bf);cursor:pointer;opacity:0;transform:translateY(20px) scale(.9);pointer-events:none;transition:opacity .25s,transform .25s}
+.dr-tocur.show{opacity:1;transform:none;pointer-events:auto}
+html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html.ap-mode .dr-ub small{opacity:.72}html.ap-mode .dr-gb{color:var(--acci)}
 
 </style>
 <div id="view"></div>
@@ -6910,7 +6933,7 @@ Object.assign(UI.en, { dImg: "Select the correct picture", dMean: "What does thi
   dChestP: "Bonus +10 XP!", dStreak: "day streak!", dStreakP: "Come back tomorrow to keep the fire burning.", dPassed: "Test passed — units unlocked!",
   dFailed: "Not this time. Practise and try again!", dLessonOf: "Lesson {a} of {b}", dReview: "Unit review", dLocked: "Finish the levels above to unlock this",
   dStartXp: "Start +10 XP", dPracticeAll: "Practice everything", dPracticeAllP: "Mixed exercises from your units · +1 ❤️", dHearts: "Hearts", dFull: "Full",
-  dSlow: "Slow", dAfill: "Find the missing word", dSkip: "Can't listen now", dWin: ["Well done!", "Great work!", "You did it!", "Brilliant!"], dWinP: "Every lesson brings you closer to your goal.", dPerfect: "Perfect lesson — no mistakes!", dAccA: "Excellent", dAccB: "Good", dFast: "Speedy", dTypeHere: "Type in English", dCourseName: "English step by step", dStories: "Story courses", dFirst: "Start here" });
+  dSlow: "Slow", dJumpHere: "Jump here!", dNode: ["New words", "More words", "Listen & build", "Grammar & writing", "Unit review"], dNodeDone: "Completed — practise again", dPracticeXp: "Practise +5 XP", dAfill: "Find the missing word", dSkip: "Can't listen now", dWin: ["Well done!", "Great work!", "You did it!", "Brilliant!"], dWinP: "Every lesson brings you closer to your goal.", dPerfect: "Perfect lesson — no mistakes!", dAccA: "Excellent", dAccB: "Good", dFast: "Speedy", dTypeHere: "Type in English", dCourseName: "English step by step", dStories: "Story courses", dFirst: "Start here" });
 Object.assign(UI.az, { dImg: "Düzgün şəkli seç", dMean: "Bu nə deməkdir?", dRmean: "İngiliscə necə deyilir?", dPairs: "Uyğun cütləri tap",
   dHear: "Nə eşidirsən?", dType: "Eşitdiyini yaz", dBuild: "İngiliscə yaz", dBuildR: "Cümləni tərcümə et", dListen: "Eşitdiyini yığ",
   dFill: "Boşluğu doldur", dSmean: "Düzgün mənanı seç", dCheck: "Yoxla", dCont: "Davam et", dRight: ["Əla!", "Mükəmməl!", "Çox yaxşı!", "Super!", "Düzdür!", "Afərin!"],
@@ -6921,7 +6944,7 @@ Object.assign(UI.az, { dImg: "Düzgün şəkli seç", dMean: "Bu nə deməkdir?"
   dChestP: "Bonus +10 XP!", dStreak: "gün ardıcıl!", dStreakP: "Sabah da gəl ki, alov sönməsin.", dPassed: "Test keçildi — bölmələr açıldı!",
   dFailed: "Bu dəfə alınmadı. Məşq et və yenə yoxla!", dLessonOf: "Dərs {a} / {b}", dReview: "Bölmə təkrarı", dLocked: "Açmaq üçün yuxarıdakı səviyyələri bitir",
   dStartXp: "Başla +10 XP", dPracticeAll: "Hamısını məşq et", dPracticeAllP: "Keçdiyin bölmələrdən qarışıq tapşırıqlar · +1 ❤️", dHearts: "Ürəklər", dFull: "Dolu",
-  dSlow: "Yavaş", dAfill: "Çatışmayan sözü tap", dSkip: "İndi dinləyə bilmirəm", dWin: ["Əlinə sağlıq!", "Əla iş!", "Bacardın!", "Möhtəşəm!"], dWinP: "Hər dərs səni hədəfinə bir az da yaxınlaşdırır.", dPerfect: "Səhvsiz dərs!", dAccA: "Əla", dAccB: "Yaxşı", dFast: "Sürətli", dTypeHere: "İngiliscə yaz", dCourseName: "Addım-addım ingilis dili", dStories: "Hekayə kursları", dFirst: "Buradan başla" });
+  dSlow: "Yavaş", dJumpHere: "Bura keç!", dNode: ["Yeni sözlər", "Daha çox söz", "Dinlə və qur", "Qrammatika və yazı", "Bölmə təkrarı"], dNodeDone: "Tamamlanıb — yenidən məşq et", dPracticeXp: "Məşq et +5 XP", dAfill: "Çatışmayan sözü tap", dSkip: "İndi dinləyə bilmirəm", dWin: ["Əlinə sağlıq!", "Əla iş!", "Bacardın!", "Möhtəşəm!"], dWinP: "Hər dərs səni hədəfinə bir az da yaxınlaşdırır.", dPerfect: "Səhvsiz dərs!", dAccA: "Əla", dAccB: "Yaxşı", dFast: "Sürətli", dTypeHere: "İngiliscə yaz", dCourseName: "Addım-addım ingilis dili", dStories: "Hekayə kursları", dFirst: "Buradan başla" });
 Object.assign(UI.ru, { dImg: "Выбери правильную картинку", dMean: "Что это значит?", dRmean: "Как сказать по-английски?", dPairs: "Найди пары",
   dHear: "Что ты слышишь?", dType: "Напиши, что слышишь", dBuild: "Напиши по-английски", dBuildR: "Переведи предложение", dListen: "Собери то, что слышишь",
   dFill: "Заполни пропуск", dSmean: "Выбери правильный перевод", dCheck: "Проверить", dCont: "Продолжить", dRight: ["Отлично!", "Превосходно!", "Здорово!", "Супер!", "Верно!", "Молодец!"],
@@ -6932,7 +6955,7 @@ Object.assign(UI.ru, { dImg: "Выбери правильную картинку
   dChestP: "Бонус +10 XP!", dStreak: "дней подряд!", dStreakP: "Возвращайся завтра, чтобы огонь не погас.", dPassed: "Тест пройден — разделы открыты!",
   dFailed: "В этот раз не вышло. Потренируйся и попробуй снова!", dLessonOf: "Урок {a} из {b}", dReview: "Повторение раздела", dLocked: "Пройди уровни выше, чтобы открыть",
   dStartXp: "Начать +10 XP", dPracticeAll: "Повторить всё", dPracticeAllP: "Смешанные задания из пройденных разделов · +1 ❤️", dHearts: "Сердечки", dFull: "Полные",
-  dSlow: "Медленно", dAfill: "Найди пропущенное слово", dSkip: "Не могу сейчас слушать", dWin: ["Так держать!", "Отличная работа!", "Получилось!", "Блестяще!"], dWinP: "Каждый урок приближает тебя к цели.", dPerfect: "Урок без ошибок!", dAccA: "Отлично", dAccB: "Хорошо", dFast: "Быстро", dTypeHere: "Пиши по-английски", dCourseName: "Английский шаг за шагом", dStories: "Курсы-истории", dFirst: "Начни здесь" });
+  dSlow: "Медленно", dJumpHere: "Перейти сюда!", dNode: ["Новые слова", "Ещё слова", "Слушай и собирай", "Грамматика и письмо", "Повторение раздела"], dNodeDone: "Пройдено — повторить", dPracticeXp: "Повторить +5 XP", dAfill: "Найди пропущенное слово", dSkip: "Не могу сейчас слушать", dWin: ["Так держать!", "Отличная работа!", "Получилось!", "Блестяще!"], dWinP: "Каждый урок приближает тебя к цели.", dPerfect: "Урок без ошибок!", dAccA: "Отлично", dAccB: "Хорошо", dFast: "Быстро", dTypeHere: "Пиши по-английски", dCourseName: "Английский шаг за шагом", dStories: "Курсы-истории", dFirst: "Начни здесь" });
 
 /* ---------- course data ---------- */
 const UCOLS = [["#E07020", "#F2A65A", "#FBDBAF", "#D9783A", "#F5B971"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#6FFF00", "#7CF6FF", "#B724FF", "#EFF4FF", "#9DFFB0"]];
@@ -7023,12 +7046,15 @@ function makeEx(kind, U, ref, ctx) {
     case "afill": { const f = fill(ref); return { k: kind, f, opts: shuffle([f.a, f.w[0]]) }; }
   }
 }
-const RECIPES = [
-  "img:a0 img:a1 mean:a2 img:a3 pairs:A hearw:a4 img:a2 rmean:a1 mean:a3 typew:a0",
-  "img:b0 img:b1 mean:b2 pairs:B hearw:b3 rmean:b4 img:b0 smean:s0 build:s0 mean:r",
-  "smean:s1 build:s1 listen:s0 fill:f0 buildr:s1 pairs:M afill:f1 listen:s2 build:s2 hearw:r build:s3",
-  "fill:f1 build:s4 afill:f2 listen:s4 buildr:s3 smean:s5 build:s5 fill:f3 pairs:M build:s6",
-  "build:R listen:R fill:f0 buildr:R afill:f3 build:R fill:f1 typew:r listen:R pairs:M smean:R fill:f2 build:R"];
+/* each star = a node made of short parts (6 questions each); trophy = one long unit review */
+const NODE_PARTS = [
+  ["img:a0 img:a1 mean:a0 img:a2 mean:a1 rmean:a2", "img:a3 img:a4 mean:a3 hearw:a0 pairs:A rmean:a4", "img:a5 mean:a5 hearw:a2 rmean:a3 typew:a1 pairs:A", "hearw:a4 mean:a2 rmean:a5 typew:a3 img:a1 pairs:A"],
+  ["img:b0 img:b1 mean:b0 rmean:b1 img:b2 mean:b2", "img:b3 mean:b3 hearw:b1 pairs:B rmean:b0 img:b4", "mean:b4 hearw:b2 smean:s0 build:s0 rmean:b3 pairs:B", "typew:b0 smean:s1 build:s1 hearw:b4 mean:r pairs:M"],
+  ["smean:s0 build:s0 listen:s0 fill:f0 hearw:r afill:f1", "smean:s2 build:s2 listen:s1 buildr:s1 pairs:M fill:f1", "listen:s2 build:s3 afill:f0 buildr:s2 smean:s3 build:s1"],
+  ["fill:f1 build:s4 fill:f2 smean:s4 buildr:s3 listen:s4", "fill:f3 build:s5 afill:f2 listen:s5 buildr:s4 pairs:M", "build:s6 fill:f0 smean:s6 listen:s6 buildr:s5 typew:r"],
+  ["build:R listen:R fill:f0 buildr:R afill:f3 build:R fill:f1 typew:r listen:R pairs:M smean:R fill:f2 build:R"]];
+const partsOf = j => NODE_PARTS[j].length;
+const partDone = (u, j) => uDone(u) > j ? partsOf(j) : uDone(u) === j ? Math.min(partsOf(j) - 1, DP()["p" + u] || 0) : 0;
 const MIXED = "build:R fill:F listen:R mean:r img:r buildr:R pairs:M hearw:r smean:R build:R";
 const JUMPR = "build:R fill:F listen:R smean:R build:R fill:F buildr:R listen:R build:R fill:F";
 function buildQueue(recipe, unitsPick) { const ctx = {};
@@ -7081,7 +7107,8 @@ VIEWS.drill = root => {
   const U = UNITS[ui]; apTheme(mode === "lesson" || mode === "jump" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
   const pool = mode === "practice" ? (done.length ? done : [UNITS[curUnit()]]) : mode === "jump" ? UNITS.slice(Math.max(0, ui - 3), ui) : [U];
   pool.forEach(u => u.ctx = {});
-  const queue = buildQueue(mode === "lesson" ? RECIPES[li] : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
+  const pi = mode === "lesson" ? (li < uDone(ui) ? (Math.random() * partsOf(li)) | 0 : partDone(ui, li)) : 0;
+  const queue = buildQueue(mode === "lesson" ? NODE_PARTS[li][pi] : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
   const st = { total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, lives: 3, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer" };
   const heartsBox = () => mode === "jump" ? `<span class="dr-h">${"❤️".repeat(st.lives)}${"🤍".repeat(3 - st.lives)}</span>` : mode === "lesson" ? `<span class="dr-h">❤️ <b>${hearts()}</b></span>` : `<span class="dr-h inf">❤️ ∞</span>`;
   root.innerHTML = `<div class="ap ap-les dr" style="--uc:${U.c}"><header class="ap-lh">${apBack()}<a href="#app-learn" class="ap-x dr-x" aria-label="Close">✕</a><div class="dr-bar"><i></i><em class="dr-cb"></em></div>${heartsBox()}</header>
@@ -7182,7 +7209,8 @@ VIEWS.drill = root => {
     if (!passed) { sfx("fail"); return failScreen(root, L("dFailed")); }
     let xp = mode === "jump" ? 15 : 10; if (st.miss === 0) xp += 5; xp += Math.floor(st.maxCombo / 5) * 2;
     const p = DP();
-    if (mode === "lesson" && li >= (p["u" + ui] || 0)) { p["u" + ui] = li + 1; if (li + 1 >= LPU) sessionStorage.setItem("mv-dnew", ui + 1); else sessionStorage.setItem("mv-dnew", ui); }
+    if (mode === "lesson" && li >= (p["u" + ui] || 0)) { const pp = (p["p" + ui] || 0) + 1;
+      if (pp >= partsOf(li)) { p["u" + ui] = li + 1; p["p" + ui] = 0; sessionStorage.setItem("mv-dnew", li + 1 >= LPU ? ui + 1 : ui); } else { p["p" + ui] = pp; sessionStorage.setItem("mv-dpart", 1); } }
     if (mode === "jump") { p.jump = Math.max(p.jump || 0, ui); for (let k = 0; k < ui; k++) p["u" + k] = LPU; sessionStorage.setItem("mv-dnew", ui); }
     lsSet("mv-drill", p);
     if (mode === "practice") setHearts(hearts() + 1);
@@ -7225,25 +7253,42 @@ function noHearts(root) {
 
 /* ---------- the path (Learn tab) ---------- */
 const NODE_IC = ["⭐", "⭐", "🎧", "✍️", "🏆"];
+const ringSVG = (n, k) => { const C = 2 * Math.PI * 46, seg = C / n, gap = n > 1 ? 9 : 0;
+  return `<svg class="dr-ring" viewBox="0 0 104 104" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<circle cx="52" cy="52" r="46" class="${i < k ? "on" : ""}" stroke-dasharray="${(seg - gap).toFixed(1)} ${C.toFixed(1)}" stroke-dashoffset="${(-(i * seg) - gap / 2).toFixed(1)}"/>`).join("")}</svg>`; };
 function drillPathHTML() {
-  const cu = curUnit(), side = [[0, -46, -70, -46, 0], [0, 46, 70, 46, 0]];
+  const cu = curUnit(), side = [[0, -46, -70, -46, 0], [0, 46, 70, 46, 0]], CU = UNITS[cu];
+  const firstLocked = UNITS.findIndex(u => !unitOpen(u.n));
   return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🌱 ${L("dCourseName")}</b></span><i>${L("apChange")} ▾</i></button>
-  <a class="dr-pall" href="#drill-p"><span>💪</span><b>${L("dPracticeAll")}</b><small>${L("dPracticeAllP")}</small><i>❤️ ${hearts()}</i></a>` +
+  <a class="dr-pall" href="#drill-p"><span>💪</span><b>${L("dPracticeAll")}</b><small>${L("dPracticeAllP")}</small><i>❤️ ${hearts()}</i></a>
+  <header class="dr-ub dr-top" style="--uc:${CU.c}"><div><small>${L("dSection")} ${CU.sec + 1}, ${L("dUnit")} ${CU.n + 1}</small><b>${CU.e} ${esc(T3(CU.t))}</b></div><button class="dr-gb" data-guide="${CU.n}" aria-label="${L("dGuide")}">📖<span>${L("dGuide")}</span></button></header>` +
   SECTIONS.map((S, si) => `<div class="dr-sb" data-th="${si}"><div class="dr-sec"><span>${L("dSection")} ${si + 1} · ${S.lv}</span><b>${esc(T3(S.t))}</b></div>` + UNITS.slice(S.from, S.to).map(U => {
-    const open = unitOpen(U.n), d = uDone(U.n), offs = side[U.n % 2];
-    const nodes = Array.from({ length: LPU }, (_, j) => { const isDone = d > j, isCur = open && j === d && U.n === cu, can = open && j <= d;
-      return `<div class="dr-nw" style="--x:${offs[j]}px;--i:${j}">${isCur ? `<span class="ap-start">${U.n === 0 && j === 0 && !drillLessons() ? L("dFirst") : L("apStart")}</span>` : ""}
-        <button class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${j === LPU - 1 ? "trophy" : ""}" data-u="${U.n}" data-l="${j}" aria-label="${esc(T3(U.t))} ${j + 1}"><span>${can || isDone ? NODE_IC[j] : "🔒"}</span>${isDone && j < LPU - 1 ? `<em>✓</em>` : ""}</button></div>`
+    const open = unitOpen(U.n), d = uDone(U.n), offs = side[U.n % 2], jumpHere = U.n === firstLocked;
+    const nodes = Array.from({ length: LPU }, (_, j) => { const isDone = d > j, isCur = open && j === d && U.n === cu, can = open && j <= d, jump = !open && j === 0;
+      return `<div class="dr-nw" style="--x:${offs[j]}px;--i:${j}">${isCur ? `<span class="ap-start">${U.n === 0 && j === 0 && !drillLessons() ? L("dFirst") : L("apStart")}</span>` : jump && jumpHere ? `<span class="ap-start dr-jumpb">${L("dJumpHere")}</span>` : ""}
+        ${isCur ? ringSVG(partsOf(j), partDone(U.n, j)) : ""}
+        <button class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${jump ? "jump" : ""} ${j === LPU - 1 ? "trophy" : ""}" data-u="${U.n}" data-l="${j}" aria-label="${esc(T3(U.t))} ${j + 1}"><span>${jump ? "⏩" : can || isDone ? NODE_IC[j] : "🔒"}</span>${isDone && j < LPU - 1 ? `<em>✓</em>` : ""}</button></div>`
         + (j === 2 ? `<div class="dr-nw" style="--x:${-offs[2] * .9}px;--i:2.5"><button class="dr-chest ${d >= 3 ? "ready" : ""} ${(DP().chest || []).includes(U.n) ? "open" : ""}" data-chest="${U.n}" aria-label="Chest">${(DP().chest || []).includes(U.n) ? "📭" : "🎁"}</button></div>` : ""); }).join("");
-    return `<section class="dr-unit ${open ? "" : "locked"}" style="--uc:${U.c}" id="u${U.n}"><header class="dr-ub"><div><small>${L("dSection")} ${U.sec + 1}, ${L("dUnit")} ${U.n + 1}</small><b>${U.e} ${esc(T3(U.t))}</b></div>
-      <button class="dr-gb" data-guide="${U.n}" aria-label="${L("dGuide")}">📖<span>${L("dGuide")}</span></button></header>
-      <div class="dr-path">${nodes}<div class="dr-pix ${U.n % 2 ? "l" : "r"}">${mascot(["👋", "📚", "🎧", "✨", "💪", "🌟"][U.n % 6])}</div></div></section>`;
-  }).join("") + `</div>`).join("");
+    return `<section class="dr-unit ${open ? "" : "locked"}" style="--uc:${U.c}" id="u${U.n}" data-u="${U.n}">
+      <button class="dr-div" data-guide="${U.n}"><i></i><b>${U.e} ${esc(T3(U.t))}</b><i></i></button>
+      <div class="dr-path">${nodes}<div class="dr-pix ${U.n % 2 ? "l" : "r"}">${mascot(["👋", "📚", "🎧", "✨", "💪", "🌟"][U.n % 6])}${open ? "" : `<div class="dr-pstars">★★★</div>`}</div></div></section>`;
+  }).join("") + `</div>`).join("") + `<button class="dr-tocur" aria-label="Current lesson">↑</button>`;
 }
 function wireDrillPath(root) {
   apReveal(root);
   const sio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) apTheme(+e.target.dataset.th); }), { rootMargin: "-48% 0px -48% 0px" });
   root.querySelectorAll(".dr-sb").forEach(s => sio.observe(s)); root._sio && root._sio.disconnect(); root._sio = sio;
+  /* sticky banner follows the unit in view */
+  const top = root.querySelector(".dr-top");
+  const uio = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; const U = UNITS[+e.target.dataset.u];
+    if (top.dataset.u === String(U.n)) return; top.dataset.u = U.n; top.style.setProperty("--uc", U.c); top.classList.toggle("locked", !unitOpen(U.n));
+    top.querySelector("small").textContent = `${L("dSection")} ${U.sec + 1}, ${L("dUnit")} ${U.n + 1}`; top.querySelector("b").textContent = `${U.e} ${T3(U.t)}`; top.querySelector("[data-guide]").dataset.guide = U.n;
+    top.animate([{ transform: "translateY(-6px)", opacity: .6 }, { transform: "none", opacity: 1 }], { duration: 300 }); }), { rootMargin: "-20% 0px -70% 0px" });
+  root.querySelectorAll(".dr-unit").forEach(s => uio.observe(s)); root._uio && root._uio.disconnect(); root._uio = uio;
+  /* back-to-current button */
+  const tc = root.querySelector(".dr-tocur"), cur = () => root.querySelector(".dr-node.now") || root.querySelector(`#u${curUnit()} .dr-node`);
+  const cio = new IntersectionObserver(es => es.forEach(e => { const r = e.boundingClientRect; tc.classList.toggle("show", !e.isIntersecting); tc.textContent = r.top > innerHeight ? "↓" : "↑"; }));
+  const cn = cur(); cn && cio.observe(cn); root._cio && root._cio.disconnect(); root._cio = cio;
+  tc.onclick = () => { const c = cur(); c && c.scrollIntoView({ block: "center", behavior: "smooth" }); sfx("tap"); };
   let pop = null; const closePop = () => { pop && pop.remove(); pop = null; };
   root.onclick = e => {
     if (e.target.closest("[data-go='course']")) { Router.go("app-course"); return; }
@@ -7255,13 +7300,16 @@ function wireDrillPath(root) {
     if (!n) { if (!e.target.closest(".dr-pop")) closePop(); return; }
     const u = +n.dataset.u, l = +n.dataset.l, U = UNITS[u], can = !n.classList.contains("lock"); closePop(); sfx("tap");
     pop = document.createElement("div"); pop.className = "dr-pop" + (can ? "" : " lk"); pop.style.setProperty("--uc", U.c);
-    pop.innerHTML = can ? `<b>${l === LPU - 1 ? L("dReview") : esc(T3(U.t))}</b><small>${L("dLessonOf").replace("{a}", l + 1).replace("{b}", LPU)}</small><a class="dr-pgo" href="#drill-${u}-${l}">${uDone(u) > l ? "↺ " : ""}${L("dStartXp")}</a>`
-      : !unitOpen(u) && l === 0 ? `<b>${L("dJump")}</b><small>${L("dJumpP")}</small><a class="dr-pgo" href="#drill-j-${u}">⏩ ${L("dJumpGo")}</a>` : `<b>${esc(T3(U.t))}</b><small>${L("dLocked")}</small>`;
-    n.parentNode.appendChild(pop); if (!can) flash(n, "shake");
+    const done = uDone(u) > l, pd = partDone(u, l), np = partsOf(l);
+    pop.innerHTML = can ? `<b>${esc(L("dNode")[l])}</b><small>${U.e} ${esc(T3(U.t))}</small><small class="dr-pn">${done ? "✓ " + L("dNodeDone") : L("dLessonOf").replace("{a}", pd + 1).replace("{b}", np)}</small>
+        <a class="dr-pgo" href="#drill-${u}-${l}">${done ? "↺ " + L("dPracticeXp") : L("dStartXp")}</a>`
+      : n.classList.contains("jump") ? `<b>${L("dJump")}</b><small>${L("dJumpP")}</small><a class="dr-pgo" href="#drill-j-${u}">⏩ ${L("dJumpGo")}</a>` : `<b>${esc(L("dNode")[l])}</b><small>${L("dLocked")}</small>`;
+    n.parentNode.appendChild(pop); if (!can && !n.classList.contains("jump")) flash(n, "shake");
   };
-  const nu = sessionStorage.getItem("mv-dnew"); sessionStorage.removeItem("mv-dnew");
-  setTimeout(() => { const c = root.querySelector(".dr-node.now") || root.querySelector(`#u${curUnit()} .dr-node`); if (c) { c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" });
-    if (nu != null) { c.classList.add("born"); setTimeout(() => sfx("unlock"), 450); } } }, 250);
+  const nu = sessionStorage.getItem("mv-dnew"), np = sessionStorage.getItem("mv-dpart"); sessionStorage.removeItem("mv-dnew"); sessionStorage.removeItem("mv-dpart");
+  setTimeout(() => { const c = cur(); if (c) { c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" });
+    if (nu != null) { c.classList.add("born"); setTimeout(() => sfx("unlock"), 450); }
+    else if (np) { const rg = c.parentNode.querySelector(".dr-ring"); if (rg) { const ons = rg.querySelectorAll(".on"); const last = ons[ons.length - 1]; last && last.classList.add("fresh"); setTimeout(() => sfx("pop"), 500); } } } }, 250);
 }
 function guideSheet(U) {
   const ov = document.createElement("div"); ov.className = "dr-ov dr-guide"; ov.style.setProperty("--uc", U.c);
