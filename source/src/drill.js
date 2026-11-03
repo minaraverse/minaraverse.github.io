@@ -175,6 +175,7 @@ const lev = (a, b) => { const m = a.length, n = b.length, d = Array.from({ lengt
 /* ---------- the lesson player ---------- */
 VIEWS.drill = root => {
   document.documentElement.classList.add("ap-mode");
+  if (typeof safiGate === "function" && safiGate(root)) return {};
   const h = location.hash, mP = /^#drill-p/.test(h), mJ = h.match(/^#drill-j-(\d+)/), mL = h.match(/^#drill-(\d+)-(\d+)/);
   const mode = mP ? "practice" : mJ ? "jump" : mL ? "lesson" : null;
   const ui = mJ ? +mJ[1] : mL ? +mL[1] : 0, li = mL ? +mL[2] : 0;
@@ -293,6 +294,7 @@ VIEWS.drill = root => {
     if (mode === "practice") setHearts(hearts() + 1);
     qAdd(q => { q.les++; if (st.miss === 0) q.per++; q.sec += sec; q.cmb = Math.max(q.cmb, st.maxCombo); q.lis += st.lisOk || 0; });
     addXp(xp);
+    if (typeof safiAfterLesson === "function") safiAfterLesson(mode);
     const b = lsGet("mv-badges", {}); if (!b.first) b.first = dayStr(new Date()); if (st.miss === 0) b.perfect = (b.perfect || 0) + 1; if (streak() >= 7) b.week = true;
     if (XP().total >= 500) b.xp500 = true; if (XP().total >= 2000) b.xp2000 = true; SECTIONS.forEach((s, i) => { if (UNITS.slice(s.from, s.to).every(u => uDone(u.n) >= LPU)) b["sec" + i] = true; }); lsSet("mv-badges", b);
     const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, title: mode === "jump" ? L("dPassed") : L("apDone") });
@@ -493,7 +495,7 @@ function avatarSheet() {
   ov.onclick = e => { const t = e.target.closest("button"); if (e.target === ov || (t && t.classList.contains("dr-close"))) { ov.classList.remove("in"); setTimeout(() => ov.remove(), 300); return; }
     if (!t) return;
     if (t.dataset.k) cur.k = t.dataset.k; if (t.dataset.g) cur.g = +t.dataset.g; if (t.dataset.s) cur.s = cur.s === +t.dataset.s ? null : +t.dataset.s; if (t.dataset.c) cur.c = cur.c === +t.dataset.c ? null : +t.dataset.c;
-    if (t.classList.contains("av-save")) { delete cur.g; lsSet("mv-avatar", cur); sfx("unlock"); ov.remove(); Router.remount(); return; }
+    if (t.classList.contains("av-save")) { delete cur.g; lsSet("mv-avatar", cur); if (typeof pushSync === "function") pushSync(); sfx("unlock"); ov.remove(); Router.remount(); return; }
     sfx("tap"); draw(); requestAnimationFrame(() => ov.classList.add("in")); };
 }
 Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar", avAll: "Characters", avRace: "Racers", avFam: "Family", avCode: "Enter the family code", avWrong: "Wrong code, try again", rcCheer: ["Full speed ahead!", "Keep going, champion!", "You're in pole position!"] });
@@ -528,7 +530,7 @@ function wireQuests(root) {
   root.onclick = e => { const c = e.target.closest(".q-chest"); if (!c) return; const k = c.dataset.q, q = QS(), [f, n] = QDEF[k];
     if (q.got.includes(k)) return; if (f(q) < n) { flash(c, "shake"); sfx("miss"); return; }
     q.got.push(k); lsSet("mv-qday", q); const m = lsGet("mv-qmonth", {}); lsSet("mv-qmonth", { k: monthKey(), n: (m.k === monthKey() ? m.n : 0) + 1 });
-    sfx("chest"); buzz([20, 30, 60]); c.classList.add("opening"); addXp(10); toast("🎁 " + L("qGot"), "gold"); setTimeout(() => Router.remount(), 900); };
+    sfx("chest"); buzz([20, 30, 60]); c.classList.add("opening"); addXp(10); if (typeof pushSync === "function") pushSync(); toast("🎁 " + L("qGot"), "gold"); setTimeout(() => Router.remount(), 900); };
 }
 
 /* ---------- leagues: 10 tiers, real students, weekly promotion ---------- */
@@ -570,6 +572,8 @@ const weekXpNow = () => { const x = XP(), d = new Date(); const dow = (d.getDay(
 const avStr = () => { const v = myAvatar(); return v ? `${v.k},${v.s == null ? "" : v.s},${v.c == null ? "" : v.c}` : ""; };
 const avOf = (s, name) => { const [k, sk, c] = String(s || "").split(","); return CHARS.includes(k) || /^[prk]\d+$/.test(k) ? charSVG(k, { skin: sk === "" || sk == null ? undefined : SKINS[+sk], acc: c === "" || c == null ? undefined : AVC[+c] }) : `<b class="lg-let">${esc((name || "?")[0].toUpperCase())}</b>`; };
 async function lgSync(name) {
+  if (typeof svOn === "function" && svOn()) { const a = ACCT(); if (!a) throw new Error("reg");
+    const r = await sPost("lg", { email: a.email, token: a.token, name: a.name, av: avStr(), xp: weekXpNow() }, 9000); if (!r.ok) throw new Error(r.err || "x"); lsSet("mv-lg", r); return r; }
   if (typeof ADMIN_API === "undefined" || !ADMIN_API || /claude\.ai|claudeusercontent/.test(location.host)) throw new Error("off");
   const q = new URLSearchParams({ a: "lg", id: uid(), name: name || lsGet("mv-lgname", "") || "", av: avStr(), xp: weekXpNow() });
   const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 9000);
@@ -582,7 +586,8 @@ function lgListHTML(d) {
     <b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
 }
 function leagueView(root, shell) {
-  const cached = lsGet("mv-lg", null), joined = lsGet("mv-lgname", "");
+  if (typeof svOn === "function" && svOn() && !ACCT()) { root.innerHTML = shell(`<h1 class="ap-h">${esc(L("lgName")(0))}</h1><div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === 0 ? "on" : "lk"}">${trophySVG(i)}</span>`).join("")}</div><div class="ap-card lg-join"><b>${L("lgJoin")}</b><p class="ap-p">${L("svLgReg")}</p><button class="ap-cta" data-sreg>${L("svReg")}</button></div>`); root.onclick = e => { if (e.target.closest("[data-sreg]")) regScreen(root, "new"); }; return; }
+  const cached = lsGet("mv-lg", null), joined = lsGet("mv-lgname", "") || (typeof ACCT === "function" && ACCT() ? ACCT().name : "");
   const head = t => `<div class="lg-head"><h1 class="ap-h">${esc(L("lgName")(t))}</h1>${cached ? `<small>⏱ ${cached.days} ${L("lgDays")}</small>` : ""}
     <div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === t ? "on" : i > t ? "lk" : ""}" title="${esc(LG_N[LANG === "az" ? "az" : LANG === "ru" ? "ru" : "en"][i])}">${trophySVG(i)}</span>`).join("")}</div></div>`;
   const t0 = cached ? cached.tier : 0;

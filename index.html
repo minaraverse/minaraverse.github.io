@@ -2039,6 +2039,25 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 @keyframes rocket{0%{transform:translate(0,0) rotate(45deg) scale(.6);opacity:0}20%{opacity:1}100%{transform:translate(150px,-40px) rotate(45deg) scale(1.1);opacity:0}}
 .lg-let{display:grid!important;place-items:center;width:100%;height:100%}
 .lg-av.big svg:not(.ps){width:118%;height:118%;margin:4% 0 0 -9%}
+/* Safiverse accounts */
+.sv-main{display:grid;justify-items:center;text-align:center;gap:12px;padding-top:3vh}
+.sv-crew{display:flex;justify-content:center;gap:0;margin:4px 0 4px}.sv-crew span{width:84px;margin:0 -10px;animation:optin .6s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i) * .12s)}
+.sv-crew span svg{width:100%}.sv-crew.small .ap-pix{width:110px}
+.sv-btns{display:grid;gap:10px;width:100%;max-width:420px;margin-top:8px}
+.sv-ghost{display:grid;gap:2px;padding:14px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}.sv-ghost b{font:800 16px var(--bf)}.sv-ghost small{color:var(--mut)}
+.sv-lang{margin-top:10px}
+.sv-form{display:grid;gap:12px;width:100%;max-width:420px;text-align:left}
+.sv-form label{display:grid;gap:6px;font:700 14px var(--bf);color:var(--mut)}
+.sv-form input:not([type=checkbox]){padding:14px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:700 17px var(--bf);outline:none}.sv-form input:focus{border-color:var(--acc)}
+.sv-age{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sv-age button{padding:14px 8px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:800 15px var(--bf);cursor:pointer}
+.sv-age button.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 16%,transparent)}
+.sv-chk{display:flex!important;grid-template-columns:none;align-items:center;gap:10px!important;color:var(--ink)!important}.sv-chk input{width:22px;height:22px;accent-color:var(--acc)}
+.sv-priv{margin:0;color:var(--lab);font-size:13px}.sv-err{margin:0;color:var(--no);font-weight:800;min-height:1em}
+.sv-ct{font:800 17px var(--bf);text-align:center}.sv-pin{justify-content:center}
+.sv-adm .sv-tbl{display:grid;gap:8px;width:100%;margin-top:12px}.sv-q{width:100%;margin-top:6px}
+.sv-row{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;padding:10px;border-radius:14px;background:var(--card);border:1px solid var(--line);text-align:left}
+.sv-row small{display:block;color:var(--mut);font-size:12.5px}.sv-row b{font:800 16px var(--bf)}
+.sv-crew.small{margin-top:14px}
 
 </style>
 <div id="view"></div>
@@ -6419,6 +6438,8 @@ const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], 
 
 VIEWS.app = root => {
   document.documentElement.classList.add("ap-mode");
+  if (typeof safiGate === "function" && safiGate(root)) return {};
+  if (typeof pushSync === "function" && ACCT() && !window.__svPulled) { window.__svPulled = 1; pushSync(true); }
   if (typeof apTheme === "function") apTheme(myThemeSec());
   const sub = (location.hash.match(/app-(\w+)/) || [])[1] || (lsGet("mv-goal", null) ? "learn" : "goal");
   setTimeout(() => { riseLetters(root, ".ap-h .ch", { stagger: 28, dur: 800 }); root.querySelectorAll(".ap-item,.ap-course,.ap-badges>div,.ap-stats>div,.ap-card").forEach((el, k) => el.animate([{ transform: "translateY(24px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: REDUCED ? 1 : 600, delay: REDUCED ? 0 : 60 + k * 45, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" })); }, 0);
@@ -6469,9 +6490,10 @@ VIEWS.app = root => {
       <button class="ap-item" data-snd><span>🔊</span><b>${L("apSound")}</b><small>${soundOn() ? L("apOn") : L("apOff")}</small><i>›</i></button>
       <div class="ap-item"><span>🌐</span><b>EN · AZ · RU</b>${langPill()}</div>
       <a href="#" class="ap-item"><span>🌍</span><b>${L("apSite")}</b><small>minaraverse.github.io</small><i>›</i></a>
-      <a href="#admin" class="ap-item"><span>🔐</span><b>Minaraverse giriş</b><small>Admin</small><i>›</i></a></div>`);
+      ${typeof ACCT === "function" && ACCT() ? `<button class="ap-item" data-out><span>📧</span><b>${esc(ACCT().email)}</b><small>${L("svOut")}</small><i>›</i></button>` : ""}<a href="${typeof svOn === "function" && svOn() ? "#sadmin" : "#admin"}" class="ap-item"><span>🔐</span><b>Admin</b><small>${typeof svOn === "function" && svOn() ? "Safiverse" : "Minaraverse"}</small><i>›</i></a></div>`);
   root.querySelector(".ap-name").oninput = e => { NAME = e.target.value.trim(); try { localStorage.setItem("mv-name", NAME); } catch (er) {} };
   root.querySelector("[data-av]").onclick = () => avatarSheet();
+  const so = root.querySelector("[data-out]"); if (so) so.onclick = () => { pushSync(true); setTimeout(() => { ["mv-acct", "mv-lg", "mv-lgname", ...SYNC_KEYS].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} }); lsSet("mv-guest", null); Router.go("app-learn"); location.reload(); }, 1200); };
   root.querySelector("[data-snd]").onclick = () => { lsSet("mv-sound", !soundOn()); Router.remount(); };
   return {};
 };
@@ -7309,6 +7331,7 @@ const lev = (a, b) => { const m = a.length, n = b.length, d = Array.from({ lengt
 /* ---------- the lesson player ---------- */
 VIEWS.drill = root => {
   document.documentElement.classList.add("ap-mode");
+  if (typeof safiGate === "function" && safiGate(root)) return {};
   const h = location.hash, mP = /^#drill-p/.test(h), mJ = h.match(/^#drill-j-(\d+)/), mL = h.match(/^#drill-(\d+)-(\d+)/);
   const mode = mP ? "practice" : mJ ? "jump" : mL ? "lesson" : null;
   const ui = mJ ? +mJ[1] : mL ? +mL[1] : 0, li = mL ? +mL[2] : 0;
@@ -7427,6 +7450,7 @@ VIEWS.drill = root => {
     if (mode === "practice") setHearts(hearts() + 1);
     qAdd(q => { q.les++; if (st.miss === 0) q.per++; q.sec += sec; q.cmb = Math.max(q.cmb, st.maxCombo); q.lis += st.lisOk || 0; });
     addXp(xp);
+    if (typeof safiAfterLesson === "function") safiAfterLesson(mode);
     const b = lsGet("mv-badges", {}); if (!b.first) b.first = dayStr(new Date()); if (st.miss === 0) b.perfect = (b.perfect || 0) + 1; if (streak() >= 7) b.week = true;
     if (XP().total >= 500) b.xp500 = true; if (XP().total >= 2000) b.xp2000 = true; SECTIONS.forEach((s, i) => { if (UNITS.slice(s.from, s.to).every(u => uDone(u.n) >= LPU)) b["sec" + i] = true; }); lsSet("mv-badges", b);
     const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, title: mode === "jump" ? L("dPassed") : L("apDone") });
@@ -7627,7 +7651,7 @@ function avatarSheet() {
   ov.onclick = e => { const t = e.target.closest("button"); if (e.target === ov || (t && t.classList.contains("dr-close"))) { ov.classList.remove("in"); setTimeout(() => ov.remove(), 300); return; }
     if (!t) return;
     if (t.dataset.k) cur.k = t.dataset.k; if (t.dataset.g) cur.g = +t.dataset.g; if (t.dataset.s) cur.s = cur.s === +t.dataset.s ? null : +t.dataset.s; if (t.dataset.c) cur.c = cur.c === +t.dataset.c ? null : +t.dataset.c;
-    if (t.classList.contains("av-save")) { delete cur.g; lsSet("mv-avatar", cur); sfx("unlock"); ov.remove(); Router.remount(); return; }
+    if (t.classList.contains("av-save")) { delete cur.g; lsSet("mv-avatar", cur); if (typeof pushSync === "function") pushSync(); sfx("unlock"); ov.remove(); Router.remount(); return; }
     sfx("tap"); draw(); requestAnimationFrame(() => ov.classList.add("in")); };
 }
 Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar", avAll: "Characters", avRace: "Racers", avFam: "Family", avCode: "Enter the family code", avWrong: "Wrong code, try again", rcCheer: ["Full speed ahead!", "Keep going, champion!", "You're in pole position!"] });
@@ -7662,7 +7686,7 @@ function wireQuests(root) {
   root.onclick = e => { const c = e.target.closest(".q-chest"); if (!c) return; const k = c.dataset.q, q = QS(), [f, n] = QDEF[k];
     if (q.got.includes(k)) return; if (f(q) < n) { flash(c, "shake"); sfx("miss"); return; }
     q.got.push(k); lsSet("mv-qday", q); const m = lsGet("mv-qmonth", {}); lsSet("mv-qmonth", { k: monthKey(), n: (m.k === monthKey() ? m.n : 0) + 1 });
-    sfx("chest"); buzz([20, 30, 60]); c.classList.add("opening"); addXp(10); toast("🎁 " + L("qGot"), "gold"); setTimeout(() => Router.remount(), 900); };
+    sfx("chest"); buzz([20, 30, 60]); c.classList.add("opening"); addXp(10); if (typeof pushSync === "function") pushSync(); toast("🎁 " + L("qGot"), "gold"); setTimeout(() => Router.remount(), 900); };
 }
 
 /* ---------- leagues: 10 tiers, real students, weekly promotion ---------- */
@@ -7704,6 +7728,8 @@ const weekXpNow = () => { const x = XP(), d = new Date(); const dow = (d.getDay(
 const avStr = () => { const v = myAvatar(); return v ? `${v.k},${v.s == null ? "" : v.s},${v.c == null ? "" : v.c}` : ""; };
 const avOf = (s, name) => { const [k, sk, c] = String(s || "").split(","); return CHARS.includes(k) || /^[prk]\d+$/.test(k) ? charSVG(k, { skin: sk === "" || sk == null ? undefined : SKINS[+sk], acc: c === "" || c == null ? undefined : AVC[+c] }) : `<b class="lg-let">${esc((name || "?")[0].toUpperCase())}</b>`; };
 async function lgSync(name) {
+  if (typeof svOn === "function" && svOn()) { const a = ACCT(); if (!a) throw new Error("reg");
+    const r = await sPost("lg", { email: a.email, token: a.token, name: a.name, av: avStr(), xp: weekXpNow() }, 9000); if (!r.ok) throw new Error(r.err || "x"); lsSet("mv-lg", r); return r; }
   if (typeof ADMIN_API === "undefined" || !ADMIN_API || /claude\.ai|claudeusercontent/.test(location.host)) throw new Error("off");
   const q = new URLSearchParams({ a: "lg", id: uid(), name: name || lsGet("mv-lgname", "") || "", av: avStr(), xp: weekXpNow() });
   const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 9000);
@@ -7716,7 +7742,8 @@ function lgListHTML(d) {
     <b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
 }
 function leagueView(root, shell) {
-  const cached = lsGet("mv-lg", null), joined = lsGet("mv-lgname", "");
+  if (typeof svOn === "function" && svOn() && !ACCT()) { root.innerHTML = shell(`<h1 class="ap-h">${esc(L("lgName")(0))}</h1><div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === 0 ? "on" : "lk"}">${trophySVG(i)}</span>`).join("")}</div><div class="ap-card lg-join"><b>${L("lgJoin")}</b><p class="ap-p">${L("svLgReg")}</p><button class="ap-cta" data-sreg>${L("svReg")}</button></div>`); root.onclick = e => { if (e.target.closest("[data-sreg]")) regScreen(root, "new"); }; return; }
+  const cached = lsGet("mv-lg", null), joined = lsGet("mv-lgname", "") || (typeof ACCT === "function" && ACCT() ? ACCT().name : "");
   const head = t => `<div class="lg-head"><h1 class="ap-h">${esc(L("lgName")(t))}</h1>${cached ? `<small>⏱ ${cached.days} ${L("lgDays")}</small>` : ""}
     <div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === t ? "on" : i > t ? "lk" : ""}" title="${esc(LG_N[LANG === "az" ? "az" : LANG === "ru" ? "ru" : "en"][i])}">${trophySVG(i)}</span>`).join("")}</div></div>`;
   const t0 = cached ? cached.tier : 0;
@@ -7928,6 +7955,142 @@ personSVG = function (P, o = {}) {
   /* insert suit details before the arms (after torso) and the helmet at the end */
   s = s.replace(/(<path d="M38 110 Q36 76[^"]*" fill="[^"]*"\/>)/, `$1${det}`);
   return s.replace("</svg>", helmet + "</svg>");
+};
+
+/* ===== Safiverse accounts: welcome, guest lesson, email-code sign-up, progress sync, own admin ===== */
+const SAFI_API = "";   /* the Safiverse Apps Script /exec link goes here */
+Object.assign(UI.en, { svWelcome: "Welcome to Safiverse!", svWelcomeP: "Learn English step by step: short lessons, stars, quests and a cosmic league.", svReg: "Create my account", svGuest: "Look around as a guest",
+  svGuestP: "1 free lesson, then sign up", svHave: "I already have an account", svName: "Your name", svKid: "Child (up to 14)", svAdult: "Adult", svEmail: "Email", svEmailKid: "Parent's email",
+  svConsent: "I am the parent and I agree", svPriv: "Your data is seen only by the Safiverse teacher and is never shared.", svSend: "Send me a code", svCodeT: "Enter the 6-digit code", svCodeP: "We sent it to",
+  svResend: "Send again", svBad: "Wrong code, try again", svExp: "The code expired — send a new one", svWait: "Wait a minute before sending again", svErr: "Something went wrong. Check the internet and try again.",
+  svEmailBad: "Please write a correct email", svNameBad: "Please write your name", svAgeBad: "Choose child or adult", svConsBad: "A parent must agree first",
+  svGate: "Great first lesson! 🎉", svGateP: "Create your account to keep your stars, XP and streak — and continue on any phone.", svLogin: "Sign in", svOut: "Sign out", svAcct: "Account",
+  svSaved: "Progress saved", svLgReg: "Sign up to join the cosmic league." });
+Object.assign(UI.az, { svWelcome: "Safiverse-ə xoş gəldin!", svWelcomeP: "İngilis dilini addım-addım öyrən: qısa dərslər, ulduzlar, tapşırıqlar və kosmik liqa.", svReg: "Hesab yarat", svGuest: "Qonaq kimi bax",
+  svGuestP: "1 dərs pulsuz, sonra qeydiyyat", svHave: "Artıq hesabım var", svName: "Adın", svKid: "Uşaq (14 yaşadək)", svAdult: "Böyük", svEmail: "Email", svEmailKid: "Valideynin emaili",
+  svConsent: "Valideynəm və razıyam", svPriv: "Məlumatlarını yalnız Safiverse müəllimi görür, heç kimə verilmir.", svSend: "Kod göndər", svCodeT: "6 rəqəmli kodu yaz", svCodeP: "Kodu bu ünvana göndərdik:",
+  svResend: "Yenidən göndər", svBad: "Kod səhvdir, yenə yoxla", svExp: "Kodun vaxtı bitib — yenisini göndər", svWait: "Yenidən göndərmək üçün bir dəqiqə gözlə", svErr: "Nəsə alınmadı. İnterneti yoxla və yenə cəhd et.",
+  svEmailBad: "Düzgün email yaz", svNameBad: "Adını yaz", svAgeBad: "Uşaq və ya böyük seç", svConsBad: "Əvvəl valideyn razılıq verməlidir",
+  svGate: "Əla ilk dərs! 🎉", svGateP: "Ulduzların, XP-n və seriyan itməsin deyə hesab yarat — istənilən telefondan davam et.", svLogin: "Daxil ol", svOut: "Çıxış", svAcct: "Hesab",
+  svSaved: "İrəliləyiş yadda saxlandı", svLgReg: "Kosmik liqaya qoşulmaq üçün qeydiyyatdan keç." });
+Object.assign(UI.ru, { svWelcome: "Добро пожаловать в Safiverse!", svWelcomeP: "Учи английский шаг за шагом: короткие уроки, звёзды, задания и космическая лига.", svReg: "Создать аккаунт", svGuest: "Посмотреть как гость",
+  svGuestP: "1 урок бесплатно, потом регистрация", svHave: "У меня уже есть аккаунт", svName: "Твоё имя", svKid: "Ребёнок (до 14)", svAdult: "Взрослый", svEmail: "Email", svEmailKid: "Email родителя",
+  svConsent: "Я родитель и согласен(на)", svPriv: "Твои данные видит только учитель Safiverse, они никому не передаются.", svSend: "Отправить код", svCodeT: "Введи 6-значный код", svCodeP: "Мы отправили его на",
+  svResend: "Отправить снова", svBad: "Неверный код, попробуй ещё", svExp: "Код устарел — отправь новый", svWait: "Подожди минуту перед новой отправкой", svErr: "Что-то пошло не так. Проверь интернет и попробуй снова.",
+  svEmailBad: "Напиши правильный email", svNameBad: "Напиши своё имя", svAgeBad: "Выбери: ребёнок или взрослый", svConsBad: "Сначала нужно согласие родителя",
+  svGate: "Отличный первый урок! 🎉", svGateP: "Создай аккаунт, чтобы сохранить звёзды, XP и серию — и продолжать с любого телефона.", svLogin: "Войти", svOut: "Выйти", svAcct: "Аккаунт",
+  svSaved: "Прогресс сохранён", svLgReg: "Зарегистрируйся, чтобы участвовать в космической лиге." });
+
+const ACCT = () => lsGet("mv-acct", null);
+const svOn = () => !!SAFI_API && !/claude\.ai|claudeusercontent/.test(location.host);
+async function sPost(a, data, ms = 15000) {
+  const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), ms);
+  try { const r = await fetch(SAFI_API, { method: "POST", body: JSON.stringify(Object.assign({ a }, data)), redirect: "follow", signal: ctl.signal }); return await r.json(); } finally { clearTimeout(tm); }
+}
+const SYNC_KEYS = ["mv-drill", "mv-xp", "mv-days", "mv-badges", "mv-goal", "mv-avatar", "mv-qday", "mv-qmonth", "mv-level", "mv-hearts", "mv-course", "mv-family"];
+const gatherProgress = () => { const o = {}; SYNC_KEYS.forEach(k => { const v = lsGet(k, null); if (v != null) o[k] = v; }); return o; };
+function applyProgress(p) { if (!p) return; SYNC_KEYS.forEach(k => { if (k in p) lsSet(k, p[k]); }); try { DAYS = lsGet("mv-days", []); } catch (e) {} }
+let SYNC_T = 0;
+function pushSync(now) {
+  const a = ACCT(); if (!svOn() || !a) return; clearTimeout(SYNC_T);
+  SYNC_T = setTimeout(async () => { try {
+    const u = UNITS[curUnit()], d = await sPost("sync", { email: a.email, token: a.token, progress: gatherProgress(), xp: XP().total, streak: streak(), lessons: drillLessons(), unit: u ? T3(u.t) : "", name: a.name, av: avStr() });
+    if (d && d.err === "auth") { lsSet("mv-acct", null); return; }
+    if (d && d.progress) { applyProgress(d.progress); Router.remount(); } } catch (e) {} }, now ? 0 : 1500);
+}
+
+/* ---------- gate: welcome → guest (1 lesson) → required sign-up ---------- */
+const guest = () => lsGet("mv-guest", null);
+function safiGate(root) {
+  if (!svOn() || ACCT()) return false;
+  const g = guest();
+  if (!g) { welcomeScreen(root); return true; }
+  if (g.lessons >= 1) { regScreen(root, "gate"); return true; }
+  return false;
+}
+function safiAfterLesson(mode) {
+  if (!svOn()) return; if (ACCT()) { pushSync(true); return; }
+  const g = guest(); if (g && mode === "lesson") { g.lessons = (g.lessons || 0) + 1; lsSet("mv-guest", g); }
+}
+function welcomeScreen(root) {
+  document.documentElement.classList.add("ap-mode");
+  root.innerHTML = `<div class="ap sv-wel"><div class="ap-hud slim">${apBack()}${brandHTML()}</div><main class="ap-main sv-main">
+    <div class="sv-crew">${["p0", "p23", "r3", "p8"].map((k, i) => `<span style="--i:${i}">${charSVG(k)}</span>`).join("")}</div>
+    <h1 class="ap-h">${L("svWelcome")}</h1><p class="ap-p">${L("svWelcomeP")}</p>
+    <div class="sv-btns"><button class="ap-cta" data-reg>${L("svReg")}</button><button class="sv-ghost" data-guest><b>👀 ${L("svGuest")}</b><small>${L("svGuestP")}</small></button>
+    <button class="dr-link" data-login>${L("svHave")}</button></div><div class="sv-lang">${langPill()}</div></main></div>`;
+  root.onclick = e => { if (e.target.closest("[data-reg]")) regScreen(root, "new"); else if (e.target.closest("[data-login]")) regScreen(root, "login");
+    else if (e.target.closest("[data-guest]")) { lsSet("mv-guest", { lessons: 0, at: Date.now() }); sfx("tap"); Router.go("app-learn"); Router.remount(); } };
+}
+function regScreen(root, mode) {
+  document.documentElement.classList.add("ap-mode");
+  const st = { mode, age: "", email: "", name: NAME || "", step: 1 };
+  const draw = () => {
+    const kid = st.age === "kid", login = st.mode === "login";
+    root.innerHTML = `<div class="ap sv-reg"><div class="ap-hud slim">${apBack()}${brandHTML()}</div><main class="ap-main sv-main">
+      ${st.mode === "gate" ? `<div class="sv-crew small">${mascot("🎉")}</div><h1 class="ap-h">${L("svGate")}</h1><p class="ap-p">${L("svGateP")}</p>` : `<h1 class="ap-h">${login ? L("svLogin") : L("svReg")}</h1>`}
+      ${st.step === 1 ? `<form class="sv-form" novalidate>
+        ${login ? "" : `<label>${L("svName")}<input name="name" maxlength="30" autocomplete="given-name" value="${esc(st.name)}"></label>
+        <div class="sv-age"><button type="button" data-age="kid" class="${st.age === "kid" ? "on" : ""}">👧 ${L("svKid")}</button><button type="button" data-age="adult" class="${st.age === "adult" ? "on" : ""}">🧑 ${L("svAdult")}</button></div>`}
+        <label>${kid ? L("svEmailKid") : L("svEmail")}<input name="email" type="email" inputmode="email" autocomplete="email" value="${esc(st.email)}"></label>
+        ${kid && !login ? `<label class="sv-chk"><input type="checkbox" name="consent"> ${L("svConsent")}</label>` : ""}
+        <p class="sv-priv">🔒 ${L("svPriv")}</p><p class="sv-err" role="alert"></p>
+        <button class="ap-cta" type="submit">${L("svSend")}</button>
+        ${st.mode !== "gate" ? `<button type="button" class="dr-link" data-swap>${login ? L("svReg") : L("svHave")}</button>` : `<button type="button" class="dr-link" data-swap>${L("svHave")}</button>`}</form>`
+      : `<div class="sv-form"><p class="ap-p">${L("svCodeP")} <b>${esc(st.email)}</b></p><b class="sv-ct">${L("svCodeT")}</b>
+        <div class="av-pin sv-pin">${[0, 1, 2, 3, 4, 5].map(i => `<input inputmode="numeric" maxlength="1" data-pin="${i}" autocomplete="one-time-code">`).join("")}</div><p class="sv-err" role="alert"></p>
+        <button class="dr-link" data-resend>${L("svResend")}</button></div>`}</main></div>`;
+    wire();
+  };
+  const err = m => { const e = root.querySelector(".sv-err"); if (e) { e.textContent = m; flash(e, "shake"); } sfx("no"); };
+  const send = async () => { try { const d = await sPost("send", { email: st.email }); if (d.ok) return true; err(L(d.err === "wait" ? "svWait" : d.err === "email" ? "svEmailBad" : "svErr")); } catch (e) { err(L("svErr")); } return false; };
+  const wire = () => {
+    const f = root.querySelector("form.sv-form");
+    if (f) {
+      f.onclick = e => { const a = e.target.closest("[data-age]"); if (a) { st.name = (f.name && f.name.value) || st.name; st.email = f.email.value; st.age = a.dataset.age; sfx("tap"); draw(); }
+        if (e.target.closest("[data-swap]")) { st.mode = st.mode === "login" ? "new" : "login"; draw(); } };
+      f.onsubmit = async e => { e.preventDefault(); const login = st.mode === "login";
+        st.email = f.email.value.trim().toLowerCase(); if (!login) st.name = f.name.value.trim();
+        if (!login && st.name.length < 2) return err(L("svNameBad")); if (!login && !st.age) return err(L("svAgeBad"));
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(st.email)) return err(L("svEmailBad")); if (!login && st.age === "kid" && !f.consent.checked) return err(L("svConsBad"));
+        const b = f.querySelector(".ap-cta"); b.disabled = true; b.textContent = "…"; if (await send()) { st.step = 2; sfx("pop"); draw(); } else { b.disabled = false; b.textContent = L("svSend"); } };
+      return;
+    }
+    const ins = [...root.querySelectorAll("[data-pin]")]; setTimeout(() => ins[0] && ins[0].focus(), 200);
+    ins.forEach((inp, i) => { inp.oninput = async () => { const v = inp.value.replace(/\D/g, ""); if (v.length > 1) { v.split("").slice(0, 6).forEach((c, k) => { if (ins[k]) ins[k].value = c; }); } else inp.value = v;
+        if (inp.value && ins[i + 1]) ins[i + 1].focus(); const code = ins.map(x => x.value).join("");
+        if (code.length === 6) { try { const d = await sPost("verify", { email: st.email, code, name: st.name, age: st.age, av: avStr(), parent: st.age === "kid" });
+            if (d.ok) { lsSet("mv-acct", { email: st.email, token: d.token, name: d.student.name, age: d.student.age }); lsSet("mv-lgname", d.student.name); NAME = d.student.name; try { localStorage.setItem("mv-name", NAME); } catch (er) {}
+              lsSet("mv-guest", null); const sp = d.progress; if (sp && sp["mv-xp"] && sp["mv-xp"].total >= XP().total) applyProgress(sp); else pushSync(true);
+              sfx("win"); buzz([30, 40, 80]); toast("✅ " + L("svSaved"), "gold"); Router.go("app-learn"); Router.remount(); }
+            else { err(L(d.err === "expired" ? "svExp" : "svBad")); ins.forEach(x => x.value = ""); ins[0].focus(); } } catch (e) { err(L("svErr")); } } };
+      inp.onkeydown = e => { if (e.key === "Backspace" && !inp.value && ins[i - 1]) ins[i - 1].focus(); }; });
+    root.querySelector("[data-resend]").onclick = async () => { if (await send()) toast("📧 " + st.email); };
+  };
+  draw();
+}
+
+/* ---------- Safiverse admin (#sadmin): its own code, its own students ---------- */
+VIEWS.sadmin = root => {
+  document.documentElement.classList.add("ap-mode");
+  const key = () => { try { return sessionStorage.getItem("sv-key") || ""; } catch (e) { return ""; } };
+  const shell = body => `<div class="ap"><div class="ap-hud slim">${apBack()}${brandHTML()}</div><main class="ap-main sv-adm">${body}</main></div>`;
+  if (!svOn()) { root.innerHTML = shell(`<h1 class="ap-h">Admin</h1><p class="ap-p">Safiverse server is not connected yet.</p>`); return {}; }
+  const login = async () => { let s = {}; try { s = await sPost("ad_status", {}); } catch (e) {}
+    root.innerHTML = shell(`<h1 class="ap-h">🔐 Safiverse admin</h1>${s.hasCode ? `<form class="sv-form" data-in><label>Admin code<input type="password" name="k" autocomplete="current-password"></label><button class="ap-cta">→</button></form>` : ""}
+      <form class="sv-form" data-set><p class="ap-p">${s.hasCode ? "Change code" : "Set a code"} — a 6-digit confirmation goes to ${esc(s.email || "admin email")}.</p><button type="button" class="sv-ghost" data-otp><b>📧 Send confirmation</b></button>
+      <label>Confirmation<input name="otp" inputmode="numeric"></label><label>New admin code (6+)<input type="password" name="nk"></label><button class="ap-cta">Save</button></form><p class="sv-err"></p>`);
+    const e1 = root.querySelector("[data-in]"), e2 = root.querySelector("[data-set]"), er = m => root.querySelector(".sv-err").textContent = m;
+    if (e1) e1.onsubmit = async e => { e.preventDefault(); try { sessionStorage.setItem("sv-key", e1.k.value); } catch (x) {} load(); };
+    root.querySelector("[data-otp]").onclick = async () => { const d = await sPost("ad_send", {}).catch(() => ({})); er(d.ok ? "Sent ✓" : "Wait / error"); };
+    e2.onsubmit = async e => { e.preventDefault(); const d = await sPost("ad_set", { otp: e2.otp.value, key: e2.nk.value }).catch(() => ({})); if (d.ok) { try { sessionStorage.setItem("sv-key", e2.nk.value); } catch (x) {} load(); } else er("✗ " + (d.err || "error")); }; };
+  const load = async () => { let d = {}; try { d = await sPost("ad_rows", { key: key() }); } catch (e) {} if (!d.ok) return login();
+    const rows = (d.rows || []).sort((a, b) => String(b.last).localeCompare(String(a.last))), dt = s => s ? new Date(s).toLocaleDateString("az-AZ") : "—";
+    root.innerHTML = shell(`<h1 class="ap-h">👥 ${rows.length}</h1><input class="lg-in sv-q" placeholder="🔍"><div class="sv-tbl">${rows.map(r => `<div class="sv-row" data-q="${esc((r.name + " " + r.email).toLowerCase())}">
+      <span class="lg-av">${avOf(r.avatar, r.name)}</span><div><b>${esc(r.name)}</b> <small>${r.age === "kid" ? "👧" : "🧑"} ${esc(r.email)}</small><small>⚡ ${r.xp} · 🔥 ${r.streak} · 📚 ${r.lessons} · ${esc(r.unit || "")}</small><small>🕒 ${dt(r.last)} · ✨ ${dt(r.created)}</small></div></div>`).join("")}</div>`);
+    root.querySelector(".sv-q").oninput = e => { const q = e.target.value.toLowerCase(); root.querySelectorAll(".sv-row").forEach(x => x.hidden = q && !x.dataset.q.includes(q)); }; };
+  key() ? load() : login();
+  return {};
 };
 
 document.documentElement.lang = LANG;

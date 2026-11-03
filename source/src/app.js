@@ -83,6 +83,8 @@ const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], 
 
 VIEWS.app = root => {
   document.documentElement.classList.add("ap-mode");
+  if (typeof safiGate === "function" && safiGate(root)) return {};
+  if (typeof pushSync === "function" && ACCT() && !window.__svPulled) { window.__svPulled = 1; pushSync(true); }
   if (typeof apTheme === "function") apTheme(myThemeSec());
   const sub = (location.hash.match(/app-(\w+)/) || [])[1] || (lsGet("mv-goal", null) ? "learn" : "goal");
   setTimeout(() => { riseLetters(root, ".ap-h .ch", { stagger: 28, dur: 800 }); root.querySelectorAll(".ap-item,.ap-course,.ap-badges>div,.ap-stats>div,.ap-card").forEach((el, k) => el.animate([{ transform: "translateY(24px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: REDUCED ? 1 : 600, delay: REDUCED ? 0 : 60 + k * 45, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" })); }, 0);
@@ -133,9 +135,10 @@ VIEWS.app = root => {
       <button class="ap-item" data-snd><span>🔊</span><b>${L("apSound")}</b><small>${soundOn() ? L("apOn") : L("apOff")}</small><i>›</i></button>
       <div class="ap-item"><span>🌐</span><b>EN · AZ · RU</b>${langPill()}</div>
       <a href="#" class="ap-item"><span>🌍</span><b>${L("apSite")}</b><small>minaraverse.github.io</small><i>›</i></a>
-      <a href="#admin" class="ap-item"><span>🔐</span><b>Minaraverse giriş</b><small>Admin</small><i>›</i></a></div>`);
+      ${typeof ACCT === "function" && ACCT() ? `<button class="ap-item" data-out><span>📧</span><b>${esc(ACCT().email)}</b><small>${L("svOut")}</small><i>›</i></button>` : ""}<a href="${typeof svOn === "function" && svOn() ? "#sadmin" : "#admin"}" class="ap-item"><span>🔐</span><b>Admin</b><small>${typeof svOn === "function" && svOn() ? "Safiverse" : "Minaraverse"}</small><i>›</i></a></div>`);
   root.querySelector(".ap-name").oninput = e => { NAME = e.target.value.trim(); try { localStorage.setItem("mv-name", NAME); } catch (er) {} };
   root.querySelector("[data-av]").onclick = () => avatarSheet();
+  const so = root.querySelector("[data-out]"); if (so) so.onclick = () => { pushSync(true); setTimeout(() => { ["mv-acct", "mv-lg", "mv-lgname", ...SYNC_KEYS].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} }); lsSet("mv-guest", null); Router.go("app-learn"); location.reload(); }, 1200); };
   root.querySelector("[data-snd]").onclick = () => { lsSet("mv-sound", !soundOn()); Router.remount(); };
   return {};
 };
