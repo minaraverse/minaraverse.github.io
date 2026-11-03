@@ -36,3 +36,23 @@ D = R / "dist"; (D / "img").mkdir(parents=True, exist_ok=True)
   '<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>' + html + '</body></html>')
 for f in (R / ".." / "img").iterdir():
     if f.suffix in (".jpg", ".webp", ".mp4") and not f.name.startswith(("ship-gen", "p-ship.png")): shutil.copy(f, D / "img" / f.name)
+
+
+# ===== Safiverse: same app as its own installable product at /safiverse/ =====
+import re as _re
+S = D / "safiverse"; (S / "img").mkdir(parents=True, exist_ok=True)
+sv_html = _re.sub(r'''(["'(`])img/''', r'\1../img/', html).replace("<title>Minaraverse 2.0</title>", "<title>Safiverse</title>")
+sv_html = sv_html.replace('<meta name="description" content="Minaraverse: English through stories. Five story worlds, a daily word, a level test and DİM exam practice. EN · AZ · RU.">',
+  '<meta name="description" content="Safiverse: learn English step by step — short lessons, sounds, stars, quests and leagues. EN · AZ · RU.">')
+(S / "index.html").write_text('<!doctype html><html lang="en" class="ap-mode"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
+  '<meta property="og:title" content="Safiverse — English step by step"><link rel="icon" href="favicon.png">'
+  '<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0d1a15"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Safiverse">'
+  '<script>if(!location.hash)history.replaceState(null,"",location.pathname+"#app-learn");if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>'
+  '<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;background:#0d1a15}img{max-width:100%}[hidden]{display:none!important}</style></head><body>' + sv_html + '</body></html>')
+(S / "manifest.json").write_text('{"name":"Safiverse — English step by step","short_name":"Safiverse","start_url":"./#app-learn","scope":"./","display":"standalone","background_color":"#0d1a15","theme_color":"#0d1a15","orientation":"portrait",'
+  '"icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}')
+(S / "sw.js").write_text('/* Safiverse offline cache: network first, cache fallback */\nconst C = "sv-v1";\n'
+  'self.addEventListener("install", e => { e.waitUntil(caches.open(C).then(c => c.addAll(["./", "./index.html"])).then(() => self.skipWaiting())); });\n'
+  'self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith("sv-") && k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); });\n'
+  'self.addEventListener("fetch", e => { const r = e.request; if (r.method !== "GET" || !r.url.startsWith(self.location.origin)) return;\n'
+  '  e.respondWith(fetch(r, r.mode === "navigate" ? { cache: "no-store" } : {}).then(res => { const cp = res.clone(); caches.open(C).then(c => c.put(r, cp)); return res; }).catch(() => caches.match(r).then(m => m || caches.match("./index.html")))); });\n')

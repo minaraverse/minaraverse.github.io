@@ -1,3 +1,6 @@
+/* SAFI: the same app served as its own product at /safiverse/ */
+const SAFI = /\/safiverse(\/|$)/.test(location.pathname);
+const brandHTML = () => SAFI ? `<span class="ap-brand sv">Safi<i>verse</i></span>` : `<span class="ap-brand">mi<i>lingo</i></span>`;
 /* ===== APP MODE (Duolingo-style): learning path, XP, daily goal, hearts-free practice, profile, badges ===== */
 Object.assign(UI.en, { apLearn: "Learn", apPractice: "Practice", apLeague: "Leaderboard", apProfile: "Profile", apXp: "XP", apGoal: "Daily goal", apGoalDone: "Daily goal reached!",
   apStart: "START", apCourse: "Course", apChange: "Change", apUnit: "Unit", apLesson: "Lesson", apContinue: "Continue", apCheck: "Check", apGreat: ["Great job!", "Excellent!", "Nicely done!", "Amazing!", "You got it!"],
@@ -62,9 +65,9 @@ function onLessonDone(story, idx, score, n) {
 
 /* ---------- HUD (top bar) ---------- */
 function hudHTML() { const g = goal(), t = xpToday(), p = Math.min(1, t / g);
-  return `<div class="ap-hud">${apBack()}<span class="ap-brand">mi<i>lingo</i></span><span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
+  return `<div class="ap-hud">${apBack()}${brandHTML()}<span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
     <span class="ap-ring" title="${L("apGoal")}"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="bg"/><circle cx="18" cy="18" r="15" class="fg" style="stroke-dasharray:${(p * 94.2).toFixed(1)} 100"/></svg><b>${t}</b></span></div>`; }
-const apBack = () => `<a class="ap-back" href="#" aria-label="Minaraverse"><span>←</span><b>minara<i>verse</i></b></a>`;
+const apBack = () => `<a class="ap-back" href="${SAFI ? "../" : "#"}" aria-label="Minaraverse"><span>←</span><b>minara<i>verse</i></b></a>`;
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
 /* ---------- course choice ---------- */
@@ -85,7 +88,7 @@ VIEWS.app = root => {
   setTimeout(() => { riseLetters(root, ".ap-h .ch", { stagger: 28, dur: 800 }); root.querySelectorAll(".ap-item,.ap-course,.ap-badges>div,.ap-stats>div,.ap-card").forEach((el, k) => el.animate([{ transform: "translateY(24px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: REDUCED ? 1 : 600, delay: REDUCED ? 0 : 60 + k * 45, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" })); }, 0);
   const shell = (act, body) => `<div class="ap">${hudHTML()}<main class="ap-main">${body}</main>${tabbar(act)}</div>`;
   if (sub === "goal") {
-    root.innerHTML = `<div class="ap ap-onb"><div class="ap-hud slim">${apBack()}<span class="ap-brand">mi<i>lingo</i></span></div><main class="ap-main"><div class="ap-mascot">${mascot("👋")}</div><h1 class="ap-h">${L("apPick")}</h1>
+    root.innerHTML = `<div class="ap ap-onb"><div class="ap-hud slim">${apBack()}${brandHTML()}</div><main class="ap-main"><div class="ap-mascot">${mascot("👋")}</div><h1 class="ap-h">${L("apPick")}</h1>
       <div class="ap-goals">${[[10, "apCasual", 5], [30, "apRegular", 10], [50, "apSerious", 15], [80, "apIntense", 20]].map(([x, k, m]) => `<button data-goal="${x}" class="${goal() === x ? "on" : ""}"><b>${L(k)}</b><span>${m} ${L("apMin")}</span><i>${x} XP</i></button>`).join("")}</div>
       <a class="ap-cta" href="#app-learn">${L("apContinue")}</a></main></div>`;
     root.onclick = e => { const b = e.target.closest("[data-goal]"); if (!b) return; lsSet("mv-goal", +b.dataset.goal); root.querySelectorAll("[data-goal]").forEach(x => x.classList.toggle("on", x === b)); };
@@ -171,5 +174,9 @@ function mascot(say, k) {
 
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 /* ---------- Milingo opens only from its button: the home-screen app always starts on Minaraverse ---------- */
-if (STANDALONE && /^#(app|lesson|drill)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+if (!SAFI && STANDALONE && /^#(app|lesson|drill)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
 addEventListener("hashchange", () => { if (!/^#(app|lesson|drill)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
+
+/* Safiverse: the app itself is the home page */
+if (SAFI) { VIEWS.home = root => { Router.go("app-" + (lsGet("mv-goal", null) ? "learn" : "goal")); return {}; };
+  for (const k of ["en", "az", "ru"]) UI[k].apAppMode = "Safiverse"; document.title = "Safiverse"; }

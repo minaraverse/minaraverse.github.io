@@ -2006,3 +2006,4 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .av-lock b{font:800 16px var(--bf)}.av-pin{display:flex;gap:8px}
 .av-pin input{width:42px;height:52px;border-radius:12px;border:2px solid var(--line);background:var(--card2);color:var(--ink);text-align:center;font:900 22px var(--bf);outline:none}
 .av-pin input:focus{border-color:var(--acc)}.av-err{margin:0;color:var(--no);font-weight:700;min-height:1em}
+.ap-brand.sv{letter-spacing:-.01em}.ap-brand.sv i{font-family:"Condiment",cursive;font-size:1.15em;margin-left:1px}
