@@ -85,7 +85,7 @@ VIEWS.home = root => {
       <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
   <p class="h-next" aria-hidden="false"><span>${L("nx6")}</span><i>↓</i></p>
   ${leadHTML()}
-  <footer class="h-foot"><p class="h-k">${L("follow")}</p><a class="h-big" href="${IG}" target="_blank" rel="noopener">${[..."@minaraverse"].map((ch, i) => `<span class="fl" style="--i:${i}">${ch}</span>`).join("")} ↗</a><p class="h-small">© Minaraverse · English beyond the classroom</p></footer>
+  <footer class="h-foot"><p class="h-k">${L("follow")}</p><a class="h-big" href="${IG}" target="_blank" rel="noopener">${[..."@minaraverse"].map((ch, i) => `<span class="fl" style="--i:${i}">${ch}</span>`).join("")} ↗</a><a class="h-adminbtn" href="#admin">🔐 Minaraverse giriş</a><p class="h-small">© Minaraverse · English beyond the classroom</p></footer>
   </div>`;
 
   riseLetters(root, ".h-h1 .ch", { stagger: 28, dur: 1000, from: "translateY(.6em) rotate(5deg)" });

@@ -1432,3 +1432,5 @@ body[data-view="admin"]{background:#121218}
 .ad-link{border:0;background:transparent;color:#9DB0FF;font:600 14px "Bricolage Grotesque";text-decoration:underline;padding:6px}
 .ad-login [data-set]{display:grid;gap:10px;width:100%}.ad-login [data-send]{background:#ffcf5a;border-color:#ffcf5a;color:#2a2008;justify-self:stretch}
 .h-small{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;cursor:default}
+.h-adminbtn{display:inline-flex;align-items:center;gap:8px;margin:18px 0 6px;padding:11px 18px;border-radius:999px;border:1px solid var(--mv-line);background:var(--mv-card);color:var(--mv-ink);text-decoration:none;font:600 14px "Bricolage Grotesque"}
+.h-adminbtn:hover{border-color:var(--mv-cobalt)}
