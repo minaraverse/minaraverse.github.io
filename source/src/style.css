@@ -1998,3 +1998,11 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .av-row .kid-av{width:64px;height:80px;object-fit:cover;object-position:50% 10%;border-radius:12px}
 .av-prev .kid-av{max-height:210px;border-radius:24px;border:3px solid var(--acc)}
 .ap-av .kid-av,.lg-av .kid-av{width:100%!important;height:100%!important;margin:0!important;object-fit:cover;object-position:50% 8%;transform:scale(1.9);transform-origin:50% 12%}
+.av-lock{display:grid;justify-items:center;gap:12px;padding:18px;border-radius:18px;background:var(--card);border:1px solid var(--line);margin-top:4px}
+.av-lock b{font:800 16px var(--bf)}.av-pin{display:flex;gap:8px}
+.av-pin input{width:42px;height:52px;border-radius:12px;border:2px solid var(--line);background:var(--card2);color:var(--ink);text-align:center;font:900 22px var(--bf);outline:none}
+.av-pin input:focus{border-color:var(--acc)}.av-err{margin:0;color:var(--no);font-weight:700;min-height:1em}
+.av-lock{display:grid;justify-items:center;gap:12px;padding:18px;border-radius:18px;background:var(--card);border:1px solid var(--line);margin-top:4px}
+.av-lock b{font:800 16px var(--bf)}.av-pin{display:flex;gap:8px}
+.av-pin input{width:42px;height:52px;border-radius:12px;border:2px solid var(--line);background:var(--card2);color:var(--ink);text-align:center;font:900 22px var(--bf);outline:none}
+.av-pin input:focus{border-color:var(--acc)}.av-err{margin:0;color:var(--no);font-weight:700;min-height:1em}

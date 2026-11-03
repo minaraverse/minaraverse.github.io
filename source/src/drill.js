@@ -429,7 +429,7 @@ function apReveal(root) {
 const CHARS = ["ronin", "nova", "orbi"];
 /* family avatars (Pixar-style, made from family photos) — only shown after the family code is entered */
 const KIDS = ["img/kids/k0.webp", "img/kids/k1.webp", "img/kids/k2.webp"];
-const FAMILY_CODE = "minara2026";
+const FAMILY_CODE = "211112";
 const SKINS = ["#F6D2B4", "#EAB98F", "#C98E62", "#9C6440", "#6B4127"];
 const AVC = ["#E07020", "#D7262E", "#6FFF00", "#7CF6FF", "#C77DFF", "#F5B971"];
 let CHID = 0;
@@ -477,22 +477,28 @@ const avatarSVG = () => { const v = myAvatar(); return v ? charSVG(v.k, { skin: 
 function avatarSheet() {
   const cur = Object.assign({ k: themeChar(), s: null, c: null }, myAvatar() || {});
   const ov = document.createElement("div"); ov.className = "dr-ov dr-guide av-sheet";
-  const draw = () => { ov.innerHTML = `<div class="dr-sheet2"><button class="dr-close" aria-label="Close">✕</button><small>${L("apProfile")}</small><h2>${L("avTitle")}</h2>
+  let draw = () => { ov.innerHTML = `<div class="dr-sheet2"><button class="dr-close" aria-label="Close">✕</button><small>${L("apProfile")}</small><h2>${L("avTitle")}</h2>
     <div class="av-prev">${charSVG(cur.k, { skin: cur.s == null ? undefined : SKINS[cur.s], acc: cur.c == null ? undefined : AVC[cur.c] })}</div>
-    <h3>${L("avChar")}</h3><div class="av-tabs"><button data-g="0" class="${(cur.g || 0) === 0 ? "on" : ""}">🌟 ${L("avAll")}</button><button data-g="1" class="${cur.g === 1 ? "on" : ""}">🏎️ ${L("avRace")}</button><button data-g="2" class="${cur.g === 2 ? "on" : ""}">👨‍👩‍👧 ${L("avFam")}</button></div><div class="av-row">${(cur.g === 2 ? KIDS.map((_, i) => "k" + i) : cur.g === 1 ? RACERS.map((_, i) => "r" + i) : [...CHARS, ...PEOPLE.map((_, i) => "p" + i)]).map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k)}<small>${esc(/^p\d/.test(k) ? PEOPLE[+k.slice(1)].n : /^r\d/.test(k) ? RACERS[+k.slice(1)].n : /^k\d/.test(k) ? L("avFam") + " " + (+k.slice(1) + 1) : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
+    <h3>${L("avChar")}</h3><div class="av-tabs"><button data-g="0" class="${(cur.g || 0) === 0 ? "on" : ""}">🌟 ${L("avAll")}</button><button data-g="1" class="${cur.g === 1 ? "on" : ""}">🏎️ ${L("avRace")}</button><button data-g="2" class="${cur.g === 2 ? "on" : ""}">👨‍👩‍👧 ${L("avFam")}</button></div><div class="av-row">${(cur.g === 2 && !lsGet("mv-family", false) ? [] : cur.g === 2 ? KIDS.map((_, i) => "k" + i) : cur.g === 1 ? RACERS.map((_, i) => "r" + i) : [...CHARS, ...PEOPLE.map((_, i) => "p" + i)]).map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k)}<small>${esc(/^p\d/.test(k) ? PEOPLE[+k.slice(1)].n : /^r\d/.test(k) ? RACERS[+k.slice(1)].n : /^k\d/.test(k) ? L("avFam") + " " + (+k.slice(1) + 1) : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>${cur.g === 2 && !lsGet("mv-family", false) ? `<div class="av-lock"><b>🔒 ${L("avCode")}</b><div class="av-pin">${[0, 1, 2, 3, 4, 5].map(i => `<input inputmode="numeric" maxlength="1" data-pin="${i}" aria-label="${i + 1}">`).join("")}</div><p class="av-err"></p></div>` : ""}
     <h3>${L("avSkin")}</h3><div class="av-sw">${SKINS.map((c, i) => `<button data-s="${i}" class="${i === cur.s ? "on" : ""}" style="background:${c}" aria-label="skin ${i + 1}"></button>`).join("")}</div>
     <h3>${L("avColor")}</h3><div class="av-sw">${AVC.map((c, i) => `<button data-c="${i}" class="${i === cur.c ? "on" : ""}" style="background:${c}" aria-label="colour ${i + 1}"></button>`).join("")}</div>
     <button class="ap-cta av-save">${L("avSave")}</button></div>`; };
+  const wirePin = () => { const ins = [...ov.querySelectorAll("[data-pin]")]; if (!ins.length) return; setTimeout(() => ins[0].focus(), 250);
+    ins.forEach((inp, i) => { inp.oninput = () => { inp.value = inp.value.replace(/\D/g, "").slice(-1); if (inp.value && ins[i + 1]) ins[i + 1].focus();
+        const code = ins.map(x => x.value).join(""); if (code.length === 6) { if (code === FAMILY_CODE) { lsSet("mv-family", true); sfx("unlock"); buzz(30); draw(); requestAnimationFrame(() => ov.classList.add("in")); }
+          else { sfx("no"); buzz([30, 40, 30]); flash(ov.querySelector(".av-pin"), "shake"); ov.querySelector(".av-err").textContent = L("avWrong"); ins.forEach(x => x.value = ""); ins[0].focus(); } } };
+      inp.onkeydown = e => { if (e.key === "Backspace" && !inp.value && ins[i - 1]) ins[i - 1].focus(); }; }); };
+  const _draw = draw; draw = () => { _draw(); wirePin(); };
   draw(); document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add("in"));
   ov.onclick = e => { const t = e.target.closest("button"); if (e.target === ov || (t && t.classList.contains("dr-close"))) { ov.classList.remove("in"); setTimeout(() => ov.remove(), 300); return; }
-    if (!t) return; if (t.classList.contains("av-code")) { const c = prompt(L("avCode")); if (c && c.trim().toLowerCase() === FAMILY_CODE) { lsSet("mv-family", true); cur.g = 2; sfx("unlock"); draw(); requestAnimationFrame(() => ov.classList.add("in")); } else if (c) { sfx("miss"); } return; }
+    if (!t) return;
     if (t.dataset.k) cur.k = t.dataset.k; if (t.dataset.g) cur.g = +t.dataset.g; if (t.dataset.s) cur.s = cur.s === +t.dataset.s ? null : +t.dataset.s; if (t.dataset.c) cur.c = cur.c === +t.dataset.c ? null : +t.dataset.c;
     if (t.classList.contains("av-save")) { delete cur.g; lsSet("mv-avatar", cur); sfx("unlock"); ov.remove(); Router.remount(); return; }
     sfx("tap"); draw(); requestAnimationFrame(() => ov.classList.add("in")); };
 }
-Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar", avAll: "Characters", avRace: "Racers", avFam: "Family", avCode: "Family code", rcCheer: ["Full speed ahead!", "Keep going, champion!", "You're in pole position!"] });
-Object.assign(UI.az, { avTitle: "Avatarın", avChar: "Personaj", avSkin: "Dəri tonu", avColor: "Rəng", avSave: "Yadda saxla", avEdit: "Avatarı dəyiş", avAll: "Personajlar", avRace: "Yarışçılar", avFam: "Ailə", avCode: "Ailə kodu", rcCheer: ["Tam sürətlə irəli!", "Davam et, çempion!", "Sən birinci startdasan!"] });
-Object.assign(UI.ru, { avTitle: "Твой аватар", avChar: "Персонаж", avSkin: "Тон кожи", avColor: "Цвет", avSave: "Сохранить", avEdit: "Изменить аватар", avAll: "Персонажи", avRace: "Гонщики", avFam: "Семья", avCode: "Семейный код", rcCheer: ["Полный вперёд!", "Так держать, чемпион!", "Ты на поул-позиции!"] });
+Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar", avAll: "Characters", avRace: "Racers", avFam: "Family", avCode: "Enter the family code", avWrong: "Wrong code, try again", rcCheer: ["Full speed ahead!", "Keep going, champion!", "You're in pole position!"] });
+Object.assign(UI.az, { avTitle: "Avatarın", avChar: "Personaj", avSkin: "Dəri tonu", avColor: "Rəng", avSave: "Yadda saxla", avEdit: "Avatarı dəyiş", avAll: "Personajlar", avRace: "Yarışçılar", avFam: "Ailə", avCode: "Ailə kodunu daxil et", avWrong: "Kod səhvdir, yenə yoxla", rcCheer: ["Tam sürətlə irəli!", "Davam et, çempion!", "Sən birinci startdasan!"] });
+Object.assign(UI.ru, { avTitle: "Твой аватар", avChar: "Персонаж", avSkin: "Тон кожи", avColor: "Цвет", avSave: "Сохранить", avEdit: "Изменить аватар", avAll: "Персонажи", avRace: "Гонщики", avFam: "Семья", avCode: "Введи семейный код", avWrong: "Неверный код, попробуй ещё", rcCheer: ["Полный вперёд!", "Так держать, чемпион!", "Ты на поул-позиции!"] });
 
 /* ---------- quests: 3 daily (with chests) + monthly ---------- */
 Object.assign(UI.en, { qTitle: "Quests", qDaily: "Daily quests", qMonth: "Monthly quest", qMonthT: "Complete 20 daily quests", qLeft: "h left", qDays: "days left", qClaim: "Open", qGot: "Reward: +10 XP",
