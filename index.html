@@ -1564,6 +1564,15 @@ html.ap-mode .mv-home{display:none}
 .qz-ap .qz-q{font:400 22px/1.35 "Fraunces",serif}
 .h-app{border-color:#9DB0FF!important;color:#c3ceff!important;font-family:"Fraunces",serif!important;font-style:italic}
 @media (prefers-reduced-motion:reduce){.ap-node-w{animation:none}}
+.ap-back{display:inline-flex;align-items:center;gap:5px;padding:6px 11px 6px 9px;border-radius:999px;border:1px solid #34313A;background:rgba(32,31,37,.85);color:#F1EAD9;text-decoration:none;font:400 13px "Fraunces",serif;white-space:nowrap;flex:none}
+.ap-back span{font:600 15px "Bricolage Grotesque";color:#9DB0FF}.ap-back i{color:#9DB0FF;font-style:italic}
+.ap-back:active{transform:scale(.96)}
+.ap-hud .ap-brand{margin-right:auto;font-size:18px}
+.ap-hud.slim{justify-content:flex-start}
+.ap-onb .ap-main{padding-top:4vh}
+.ap-lh .ap-back{padding:5px 9px;font-size:12px}
+@media (max-width:380px){.ap-hud .ap-brand{display:none}.ap-hud{gap:10px}}
+.ap-back b{font-weight:400}.ap-st,.ap-xp{white-space:nowrap}
 
 </style>
 <div id="view"></div>
@@ -5846,8 +5855,9 @@ function onLessonDone(story, idx, score, n) {
 
 /* ---------- HUD (top bar) ---------- */
 function hudHTML() { const g = goal(), t = xpToday(), p = Math.min(1, t / g);
-  return `<div class="ap-hud"><a class="ap-brand" href="#" aria-label="Minaraverse">mi<i>lingo</i></a><span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
+  return `<div class="ap-hud">${apBack()}<span class="ap-brand">mi<i>lingo</i></span><span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
     <span class="ap-ring" title="${L("apGoal")}"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="bg"/><circle cx="18" cy="18" r="15" class="fg" style="stroke-dasharray:${(p * 94.2).toFixed(1)} 100"/></svg><b>${t}</b></span></div>`; }
+const apBack = () => `<a class="ap-back" href="#" aria-label="Minaraverse"><span>←</span><b>minara<i>verse</i></b></a>`;
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
 /* ---------- course choice ---------- */
@@ -5866,7 +5876,7 @@ VIEWS.app = root => {
   setTimeout(() => { riseLetters(root, ".ap-h .ch", { stagger: 28, dur: 800 }); root.querySelectorAll(".ap-item,.ap-course,.ap-badges>div,.ap-stats>div,.ap-card").forEach((el, k) => el.animate([{ transform: "translateY(24px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: REDUCED ? 1 : 600, delay: REDUCED ? 0 : 60 + k * 45, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" })); }, 0);
   const shell = (act, body) => `<div class="ap">${hudHTML()}<main class="ap-main">${body}</main>${tabbar(act)}</div>`;
   if (sub === "goal") {
-    root.innerHTML = `<div class="ap ap-onb"><main class="ap-main"><div class="ap-mascot">${mascot("👋")}</div><h1 class="ap-h">${L("apPick")}</h1>
+    root.innerHTML = `<div class="ap ap-onb"><div class="ap-hud slim">${apBack()}<span class="ap-brand">mi<i>lingo</i></span></div><main class="ap-main"><div class="ap-mascot">${mascot("👋")}</div><h1 class="ap-h">${L("apPick")}</h1>
       <div class="ap-goals">${[[10, "apCasual", 5], [30, "apRegular", 10], [50, "apSerious", 15], [80, "apIntense", 20]].map(([x, k, m]) => `<button data-goal="${x}" class="${goal() === x ? "on" : ""}"><b>${L(k)}</b><span>${m} ${L("apMin")}</span><i>${x} XP</i></button>`).join("")}</div>
       <a class="ap-cta" href="#app-learn">${L("apContinue")}</a></main></div>`;
     root.onclick = e => { const b = e.target.closest("[data-goal]"); if (!b) return; lsSet("mv-goal", +b.dataset.goal); root.querySelectorAll("[data-goal]").forEach(x => x.classList.toggle("on", x === b)); };
@@ -5929,7 +5939,7 @@ VIEWS.lesson = root => {
   const k = m[1], i = +m[2], S = STORIES[k], u = S.units[i]; if (!u || !isOpen(k, i)) { Router.go("app-learn"); return {}; }
   const note = noteOf(u);
   LESSON = { k, i, n: 0, ok: 0, miss: 0, streak: 0, total: u.qs.length + Math.min(3, dueKeys(k + "|").filter(x => !x.startsWith(`${k}|${i}|`)).length), start: Date.now() };
-  root.innerHTML = `<div class="ap ap-les"><header class="ap-lh"><a href="#app-learn" class="ap-x" aria-label="Close">✕</a><div class="ap-lbar"><i></i></div><span class="ap-st on">🔥 ${streak()}</span></header>
+  root.innerHTML = `<div class="ap ap-les"><header class="ap-lh">${apBack()}<a href="#app-learn" class="ap-x" aria-label="Close">✕</a><div class="ap-lbar"><i></i></div><span class="ap-st on">🔥 ${streak()}</span></header>
     <main class="ap-main">${note ? `<details class="ap-note" ${isDone(k, i) ? "" : "open"}><summary>📖 ${L("apReadFirst")} · ${esc(u.name)}</summary><p>${esc(note)} ${sayBtn(note)}</p>${trBlock(k, i)}</details>` : ""}
     <div class="ap-qz"></div></main><div class="ap-sheet"><b></b></div></div>`;
   Quiz(root.querySelector(".ap-qz"), { story: k, idx: i, cls: "qz-ap" });
