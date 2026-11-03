@@ -1437,6 +1437,7 @@ body[data-view="admin"]{background:#121218}
 @media (max-width:480px){.ad-row{grid-template-columns:1fr}.ad-stats{grid-template-columns:repeat(2,1fr)}}
 .ad-link{border:0;background:transparent;color:#9DB0FF;font:600 14px "Bricolage Grotesque";text-decoration:underline;padding:6px}
 .ad-login [data-set]{display:grid;gap:10px;width:100%}.ad-login [data-send]{background:#ffcf5a;border-color:#ffcf5a;color:#2a2008;justify-self:stretch}
+.h-small{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;cursor:default}
 
 </style>
 <div id="view"></div>
@@ -5637,6 +5638,10 @@ VIEWS.admin = root => {
   if (key() && ADMIN_API) adGet("a=rows&key=" + encodeURIComponent(key())).then(d => { if (d.ok) { rows = d.rows || []; panel(); } else login(); }).catch(login); else login();
   return {};
 };
+
+/* hidden entrance for the installed app (no address bar): tap the footer line "© Minaraverse" 5 times */
+(() => { let n = 0, t; document.addEventListener("click", e => { const f = e.target.closest(".h-small"); if (!f) return;
+  n++; clearTimeout(t); t = setTimeout(() => n = 0, 2500); if (n >= 5) { n = 0; Router.go("admin"); } }); })();
 
 document.documentElement.lang = LANG;
 Router.mount();

@@ -84,3 +84,7 @@ VIEWS.admin = root => {
   if (key() && ADMIN_API) adGet("a=rows&key=" + encodeURIComponent(key())).then(d => { if (d.ok) { rows = d.rows || []; panel(); } else login(); }).catch(login); else login();
   return {};
 };
+
+/* hidden entrance for the installed app (no address bar): tap the footer line "© Minaraverse" 5 times */
+(() => { let n = 0, t; document.addEventListener("click", e => { const f = e.target.closest(".h-small"); if (!f) return;
+  n++; clearTimeout(t); t = setTimeout(() => n = 0, 2500); if (n >= 5) { n = 0; Router.go("admin"); } }); })();
