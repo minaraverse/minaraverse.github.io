@@ -373,6 +373,7 @@ function wireDrillPath(root) {
     const n = e.target.closest(".dr-node"), g = e.target.closest("[data-guide]"), c = e.target.closest("[data-chest]");
     if (g) { guideSheet(UNITS[+g.dataset.guide]); return; }
     const sd = e.target.closest("[data-side]"); if (sd) { sideSheet(UNITS[+sd.dataset.side]); return; }
+    const kd = e.target.closest("[data-kid]"); if (kd) { sfx("pop"); buzz(15); kd.classList.remove("zoom"); void kd.offsetWidth; kd.classList.add("zoom"); toast("🌟 " + L("rcCheer")[(Math.random() * 3) | 0]); return; }
     const rc = e.target.closest("[data-racer]"); if (rc) { const R = RACERS[+rc.dataset.racer]; sfx("combo"); buzz(20); rc.classList.remove("zoom"); void rc.offsetWidth; rc.classList.add("zoom"); toast("🏁 " + R.n.split(" ")[0] + ": " + L("rcCheer")[(Math.random() * 3) | 0]); return; }
     if (c) { const u = +c.dataset.chest, p = DP(); p.chest = p.chest || [];
       if (p.chest.includes(u)) return; if (uDone(u) < 3) { flash(c, "shake"); sfx("miss"); toast("🔒 " + L("dLocked")); return; }
@@ -427,9 +428,7 @@ function apReveal(root) {
 /* ---------- characters (drawn in code): Ronin (A1) · Nova (A2) · Orbi (B1) — mascot + student avatars ---------- */
 const CHARS = ["ronin", "nova", "orbi"];
 /* family avatars (Pixar-style, made from family photos) — only shown after the family code is entered */
-const KIDS = ["https://d8j0ntlcm91z4.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/hf_20261103_165900_2c9ce45a-a1c4-42e7-ad3c-a9d530194acc.png",
-  "https://d8j0ntlcm91z4.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/hf_20261103_165904_fd0992e8-d2e4-47fe-9a9c-aa09dff7e9ea.png",
-  "https://d8j0ntlcm91z4.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/hf_20261103_165904_652ab5c3-4684-4ada-834c-e70054a703b9.png"];
+const KIDS = ["img/kids/k0.webp", "img/kids/k1.webp", "img/kids/k2.webp"];
 const FAMILY_CODE = "minara2026";
 const SKINS = ["#F6D2B4", "#EAB98F", "#C98E62", "#9C6440", "#6B4127"];
 const AVC = ["#E07020", "#D7262E", "#6FFF00", "#7CF6FF", "#C77DFF", "#F5B971"];
@@ -480,10 +479,10 @@ function avatarSheet() {
   const ov = document.createElement("div"); ov.className = "dr-ov dr-guide av-sheet";
   const draw = () => { ov.innerHTML = `<div class="dr-sheet2"><button class="dr-close" aria-label="Close">✕</button><small>${L("apProfile")}</small><h2>${L("avTitle")}</h2>
     <div class="av-prev">${charSVG(cur.k, { skin: cur.s == null ? undefined : SKINS[cur.s], acc: cur.c == null ? undefined : AVC[cur.c] })}</div>
-    <h3>${L("avChar")}</h3><div class="av-tabs"><button data-g="0" class="${(cur.g || 0) === 0 ? "on" : ""}">🌟 ${L("avAll")}</button><button data-g="1" class="${cur.g === 1 ? "on" : ""}">🏎️ ${L("avRace")}</button>${lsGet("mv-family", false) ? `<button data-g="2" class="${cur.g === 2 ? "on" : ""}">👨‍👩‍👧 ${L("avFam")}</button>` : ""}</div><div class="av-row">${(cur.g === 2 ? KIDS.map((_, i) => "k" + i) : cur.g === 1 ? RACERS.map((_, i) => "r" + i) : [...CHARS, ...PEOPLE.map((_, i) => "p" + i)]).map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k)}<small>${esc(/^p\d/.test(k) ? PEOPLE[+k.slice(1)].n : /^r\d/.test(k) ? RACERS[+k.slice(1)].n : /^k\d/.test(k) ? L("avFam") + " " + (+k.slice(1) + 1) : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
+    <h3>${L("avChar")}</h3><div class="av-tabs"><button data-g="0" class="${(cur.g || 0) === 0 ? "on" : ""}">🌟 ${L("avAll")}</button><button data-g="1" class="${cur.g === 1 ? "on" : ""}">🏎️ ${L("avRace")}</button><button data-g="2" class="${cur.g === 2 ? "on" : ""}">👨‍👩‍👧 ${L("avFam")}</button></div><div class="av-row">${(cur.g === 2 ? KIDS.map((_, i) => "k" + i) : cur.g === 1 ? RACERS.map((_, i) => "r" + i) : [...CHARS, ...PEOPLE.map((_, i) => "p" + i)]).map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k)}<small>${esc(/^p\d/.test(k) ? PEOPLE[+k.slice(1)].n : /^r\d/.test(k) ? RACERS[+k.slice(1)].n : /^k\d/.test(k) ? L("avFam") + " " + (+k.slice(1) + 1) : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
     <h3>${L("avSkin")}</h3><div class="av-sw">${SKINS.map((c, i) => `<button data-s="${i}" class="${i === cur.s ? "on" : ""}" style="background:${c}" aria-label="skin ${i + 1}"></button>`).join("")}</div>
     <h3>${L("avColor")}</h3><div class="av-sw">${AVC.map((c, i) => `<button data-c="${i}" class="${i === cur.c ? "on" : ""}" style="background:${c}" aria-label="colour ${i + 1}"></button>`).join("")}</div>
-    <button class="ap-cta av-save">${L("avSave")}</button>${lsGet("mv-family", false) ? "" : `<button class="dr-link av-code">🔑 ${L("avCode")}</button>`}</div>`; };
+    <button class="ap-cta av-save">${L("avSave")}</button></div>`; };
   draw(); document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add("in"));
   ov.onclick = e => { const t = e.target.closest("button"); if (e.target === ov || (t && t.classList.contains("dr-close"))) { ov.classList.remove("in"); setTimeout(() => ov.remove(), 300); return; }
     if (!t) return; if (t.classList.contains("av-code")) { const c = prompt(L("avCode")); if (c && c.trim().toLowerCase() === FAMILY_CODE) { lsSet("mv-family", true); cur.g = 2; sfx("unlock"); draw(); requestAnimationFrame(() => ov.classList.add("in")); } else if (c) { sfx("miss"); } return; }
@@ -613,11 +612,14 @@ const SIDE = [["👋", "wave"], ["👥", "wave"], ["😊", "bounce"], ["🎒", "
   ["⚽", "kick"], ["📺", "sit"], ["🎁", "bounce"], ["💤", "sleep"], ["🗺️", "wave"], ["🎸", "paint"], ["📞", "sip"], ["🛍️", "shop"], ["📷", "wave"], ["🛍️", "shop"], ["🏆", "bounce"], ["🔮", "pet"], ["🌍", "pet"], ["💛", "bounce"]];
 const unitStars = u => { const p = DP(); return [!!p["pf" + u], !!p["cb" + u], uDone(u) >= LPU]; };
 const RACER_AT = [1, 3, 4, 6, 8, 9, 11, 13, 15, 16, 18, 20, 21, 23];
+const KID_AT = { 2: [0, "🎈", "balloon"], 10: [1, "⚽", "ball"], 14: [0, "🗺️", "map"], 19: [2, "📷", "snap"], 22: [1, "✈️", "plane"] };
+const kidHTML = U => { const k = KID_AT[U.n]; if (!k) return "";
+  return `<button class="dr-pix dr-kid ${U.n % 2 ? "l" : "r"} kid-${k[2]}" data-kid="${U.n}" aria-label="${L("avFam")}"><span class="dr-ch"><img src="${KIDS[k[0]]}" alt="" loading="lazy"><i class="dr-kprop">${k[1]}</i></span></button>`; };
 const racerHTML = U => { const ri = RACER_AT.indexOf(U.n); if (ri < 0) return ""; const R = RACERS[ri];
   return `<button class="dr-pix dr-racer ${U.n % 2 ? "l" : "r"}" data-racer="${ri}" aria-label="${esc(R.n)}"><span class="dr-ch">${personSVG(R)}<i class="dr-flag">🏁</i></span><small class="dr-nm">${esc(R.n)}</small></button>`; };
 function sideHTML(U, open) {
   const P = PEOPLE[U.n % PEOPLE.length], pose = P.pose, st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
-  return racerHTML(U) + `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-${pose}" data-side="${U.n}" aria-label="★ ${st.filter(Boolean).length}/3">
+  return racerHTML(U) + kidHTML(U) + `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-${pose}" data-side="${U.n}" aria-label="★ ${st.filter(Boolean).length}/3">
     <span class="dr-ch">${personSVG(P)}${pose === "sleep" ? `<i class="dr-z">z</i><i class="dr-z z2">z</i>` : ""}</span><small class="dr-nm">${esc(P.n)}</small>
     <span class="dr-st3">${st.map((s, i) => `<i class="${s ? "on" : ""} ${s && i >= seen ? "new" : ""}" style="--k:${i}">★</i>`).join("")}</span></button>`;
 }

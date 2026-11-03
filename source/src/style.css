@@ -1978,3 +1978,23 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .av-prev .kid-av{max-height:200px;width:auto;margin:auto}
 .ap-av .kid-av,.lg-av .kid-av{width:150%;max-width:none;height:auto;margin:0 0 0 -25%}
 .av-code{display:block;margin:10px auto 0}
+/* family kids on the path & as avatars (soft spotlight mask hides the dark photo background) */
+.kid-av,.dr-kid img{-webkit-mask-image:radial-gradient(ellipse 46% 49% at 50% 50%,#000 62%,transparent 78%);mask-image:radial-gradient(ellipse 46% 49% at 50% 50%,#000 62%,transparent 78%)}
+.dr-kid{top:420px!important}.dr-kid .dr-ch{width:120px}.dr-kid img{display:block;width:100%;height:auto;animation:bob 2.8s ease-in-out infinite}
+.dr-kid .dr-ch::after{display:none}
+.dr-kprop{position:absolute;font-style:normal;font-size:34px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+.kid-ball .dr-kprop{right:4px;bottom:2px;animation:kickball 1.6s cubic-bezier(.3,0,.4,1) infinite}
+@keyframes kickball{0%,100%{transform:none}35%{transform:translate(18px,-38px) rotate(220deg)}60%{transform:translate(6px,0) rotate(360deg)}75%{transform:translateY(-8px)}}
+.kid-balloon .dr-kprop{left:-4px;top:-18px;font-size:40px;animation:floaty 3s ease-in-out infinite}@keyframes floaty{50%{transform:translateY(-10px) rotate(-6deg)}}
+.kid-map .dr-kprop{right:-6px;bottom:40px;animation:propw 2.6s ease-in-out infinite}
+.kid-snap .dr-kprop{right:-4px;top:40px;animation:flash 2.4s ease-in-out infinite}@keyframes flash{85%{filter:drop-shadow(0 0 0 #fff)}90%{filter:drop-shadow(0 0 18px #fff) brightness(1.6)}}
+.kid-plane .dr-kprop{left:-30px;top:6px;animation:fly 4s ease-in-out infinite}@keyframes fly{0%{transform:translate(-10px,10px) rotate(-10deg)}50%{transform:translate(30px,-14px) rotate(8deg)}100%{transform:translate(-10px,10px) rotate(-10deg)}}
+.dr-kid.zoom img{animation:kidjump .7s cubic-bezier(.3,1.5,.5,1)}@keyframes kidjump{40%{transform:translateY(-22px) scale(1.05)}}
+.dr-unit.locked .dr-kid{filter:grayscale(.85) brightness(.55)}
+.dr-unit:has(.dr-racer) .dr-kid{top:640px!important}
+.kid-av,.dr-kid img{-webkit-mask-image:none!important;mask-image:none!important}
+.dr-kid img{border-radius:22px;border:3px solid color-mix(in srgb,var(--acc) 70%,#fff);box-shadow:0 10px 26px rgba(0,0,0,.45),0 0 0 6px color-mix(in srgb,var(--acc) 18%,transparent);aspect-ratio:3/4;object-fit:cover}
+.dr-kid .dr-ch{width:104px}
+.av-row .kid-av{width:64px;height:80px;object-fit:cover;object-position:50% 10%;border-radius:12px}
+.av-prev .kid-av{max-height:210px;border-radius:24px;border:3px solid var(--acc)}
+.ap-av .kid-av,.lg-av .kid-av{width:100%!important;height:100%!important;margin:0!important;object-fit:cover;object-position:50% 8%;transform:scale(1.9);transform-origin:50% 12%}

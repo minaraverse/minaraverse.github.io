@@ -1984,6 +1984,26 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .av-prev .kid-av{max-height:200px;width:auto;margin:auto}
 .ap-av .kid-av,.lg-av .kid-av{width:150%;max-width:none;height:auto;margin:0 0 0 -25%}
 .av-code{display:block;margin:10px auto 0}
+/* family kids on the path & as avatars (soft spotlight mask hides the dark photo background) */
+.kid-av,.dr-kid img{-webkit-mask-image:radial-gradient(ellipse 46% 49% at 50% 50%,#000 62%,transparent 78%);mask-image:radial-gradient(ellipse 46% 49% at 50% 50%,#000 62%,transparent 78%)}
+.dr-kid{top:420px!important}.dr-kid .dr-ch{width:120px}.dr-kid img{display:block;width:100%;height:auto;animation:bob 2.8s ease-in-out infinite}
+.dr-kid .dr-ch::after{display:none}
+.dr-kprop{position:absolute;font-style:normal;font-size:34px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+.kid-ball .dr-kprop{right:4px;bottom:2px;animation:kickball 1.6s cubic-bezier(.3,0,.4,1) infinite}
+@keyframes kickball{0%,100%{transform:none}35%{transform:translate(18px,-38px) rotate(220deg)}60%{transform:translate(6px,0) rotate(360deg)}75%{transform:translateY(-8px)}}
+.kid-balloon .dr-kprop{left:-4px;top:-18px;font-size:40px;animation:floaty 3s ease-in-out infinite}@keyframes floaty{50%{transform:translateY(-10px) rotate(-6deg)}}
+.kid-map .dr-kprop{right:-6px;bottom:40px;animation:propw 2.6s ease-in-out infinite}
+.kid-snap .dr-kprop{right:-4px;top:40px;animation:flash 2.4s ease-in-out infinite}@keyframes flash{85%{filter:drop-shadow(0 0 0 #fff)}90%{filter:drop-shadow(0 0 18px #fff) brightness(1.6)}}
+.kid-plane .dr-kprop{left:-30px;top:6px;animation:fly 4s ease-in-out infinite}@keyframes fly{0%{transform:translate(-10px,10px) rotate(-10deg)}50%{transform:translate(30px,-14px) rotate(8deg)}100%{transform:translate(-10px,10px) rotate(-10deg)}}
+.dr-kid.zoom img{animation:kidjump .7s cubic-bezier(.3,1.5,.5,1)}@keyframes kidjump{40%{transform:translateY(-22px) scale(1.05)}}
+.dr-unit.locked .dr-kid{filter:grayscale(.85) brightness(.55)}
+.dr-unit:has(.dr-racer) .dr-kid{top:640px!important}
+.kid-av,.dr-kid img{-webkit-mask-image:none!important;mask-image:none!important}
+.dr-kid img{border-radius:22px;border:3px solid color-mix(in srgb,var(--acc) 70%,#fff);box-shadow:0 10px 26px rgba(0,0,0,.45),0 0 0 6px color-mix(in srgb,var(--acc) 18%,transparent);aspect-ratio:3/4;object-fit:cover}
+.dr-kid .dr-ch{width:104px}
+.av-row .kid-av{width:64px;height:80px;object-fit:cover;object-position:50% 10%;border-radius:12px}
+.av-prev .kid-av{max-height:210px;border-radius:24px;border:3px solid var(--acc)}
+.ap-av .kid-av,.lg-av .kid-av{width:100%!important;height:100%!important;margin:0!important;object-fit:cover;object-position:50% 8%;transform:scale(1.9);transform-origin:50% 12%}
 
 </style>
 <div id="view"></div>
@@ -7372,6 +7392,7 @@ function wireDrillPath(root) {
     const n = e.target.closest(".dr-node"), g = e.target.closest("[data-guide]"), c = e.target.closest("[data-chest]");
     if (g) { guideSheet(UNITS[+g.dataset.guide]); return; }
     const sd = e.target.closest("[data-side]"); if (sd) { sideSheet(UNITS[+sd.dataset.side]); return; }
+    const kd = e.target.closest("[data-kid]"); if (kd) { sfx("pop"); buzz(15); kd.classList.remove("zoom"); void kd.offsetWidth; kd.classList.add("zoom"); toast("🌟 " + L("rcCheer")[(Math.random() * 3) | 0]); return; }
     const rc = e.target.closest("[data-racer]"); if (rc) { const R = RACERS[+rc.dataset.racer]; sfx("combo"); buzz(20); rc.classList.remove("zoom"); void rc.offsetWidth; rc.classList.add("zoom"); toast("🏁 " + R.n.split(" ")[0] + ": " + L("rcCheer")[(Math.random() * 3) | 0]); return; }
     if (c) { const u = +c.dataset.chest, p = DP(); p.chest = p.chest || [];
       if (p.chest.includes(u)) return; if (uDone(u) < 3) { flash(c, "shake"); sfx("miss"); toast("🔒 " + L("dLocked")); return; }
@@ -7426,9 +7447,7 @@ function apReveal(root) {
 /* ---------- characters (drawn in code): Ronin (A1) · Nova (A2) · Orbi (B1) — mascot + student avatars ---------- */
 const CHARS = ["ronin", "nova", "orbi"];
 /* family avatars (Pixar-style, made from family photos) — only shown after the family code is entered */
-const KIDS = ["https://d8j0ntlcm91z4.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/hf_20261103_165900_2c9ce45a-a1c4-42e7-ad3c-a9d530194acc.png",
-  "https://d8j0ntlcm91z4.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/hf_20261103_165904_fd0992e8-d2e4-47fe-9a9c-aa09dff7e9ea.png",
-  "https://d8j0ntlcm91z4.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/hf_20261103_165904_652ab5c3-4684-4ada-834c-e70054a703b9.png"];
+const KIDS = ["img/kids/k0.webp", "img/kids/k1.webp", "img/kids/k2.webp"];
 const FAMILY_CODE = "minara2026";
 const SKINS = ["#F6D2B4", "#EAB98F", "#C98E62", "#9C6440", "#6B4127"];
 const AVC = ["#E07020", "#D7262E", "#6FFF00", "#7CF6FF", "#C77DFF", "#F5B971"];
@@ -7479,10 +7498,10 @@ function avatarSheet() {
   const ov = document.createElement("div"); ov.className = "dr-ov dr-guide av-sheet";
   const draw = () => { ov.innerHTML = `<div class="dr-sheet2"><button class="dr-close" aria-label="Close">✕</button><small>${L("apProfile")}</small><h2>${L("avTitle")}</h2>
     <div class="av-prev">${charSVG(cur.k, { skin: cur.s == null ? undefined : SKINS[cur.s], acc: cur.c == null ? undefined : AVC[cur.c] })}</div>
-    <h3>${L("avChar")}</h3><div class="av-tabs"><button data-g="0" class="${(cur.g || 0) === 0 ? "on" : ""}">🌟 ${L("avAll")}</button><button data-g="1" class="${cur.g === 1 ? "on" : ""}">🏎️ ${L("avRace")}</button>${lsGet("mv-family", false) ? `<button data-g="2" class="${cur.g === 2 ? "on" : ""}">👨‍👩‍👧 ${L("avFam")}</button>` : ""}</div><div class="av-row">${(cur.g === 2 ? KIDS.map((_, i) => "k" + i) : cur.g === 1 ? RACERS.map((_, i) => "r" + i) : [...CHARS, ...PEOPLE.map((_, i) => "p" + i)]).map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k)}<small>${esc(/^p\d/.test(k) ? PEOPLE[+k.slice(1)].n : /^r\d/.test(k) ? RACERS[+k.slice(1)].n : /^k\d/.test(k) ? L("avFam") + " " + (+k.slice(1) + 1) : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
+    <h3>${L("avChar")}</h3><div class="av-tabs"><button data-g="0" class="${(cur.g || 0) === 0 ? "on" : ""}">🌟 ${L("avAll")}</button><button data-g="1" class="${cur.g === 1 ? "on" : ""}">🏎️ ${L("avRace")}</button><button data-g="2" class="${cur.g === 2 ? "on" : ""}">👨‍👩‍👧 ${L("avFam")}</button></div><div class="av-row">${(cur.g === 2 ? KIDS.map((_, i) => "k" + i) : cur.g === 1 ? RACERS.map((_, i) => "r" + i) : [...CHARS, ...PEOPLE.map((_, i) => "p" + i)]).map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k)}<small>${esc(/^p\d/.test(k) ? PEOPLE[+k.slice(1)].n : /^r\d/.test(k) ? RACERS[+k.slice(1)].n : /^k\d/.test(k) ? L("avFam") + " " + (+k.slice(1) + 1) : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
     <h3>${L("avSkin")}</h3><div class="av-sw">${SKINS.map((c, i) => `<button data-s="${i}" class="${i === cur.s ? "on" : ""}" style="background:${c}" aria-label="skin ${i + 1}"></button>`).join("")}</div>
     <h3>${L("avColor")}</h3><div class="av-sw">${AVC.map((c, i) => `<button data-c="${i}" class="${i === cur.c ? "on" : ""}" style="background:${c}" aria-label="colour ${i + 1}"></button>`).join("")}</div>
-    <button class="ap-cta av-save">${L("avSave")}</button>${lsGet("mv-family", false) ? "" : `<button class="dr-link av-code">🔑 ${L("avCode")}</button>`}</div>`; };
+    <button class="ap-cta av-save">${L("avSave")}</button></div>`; };
   draw(); document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add("in"));
   ov.onclick = e => { const t = e.target.closest("button"); if (e.target === ov || (t && t.classList.contains("dr-close"))) { ov.classList.remove("in"); setTimeout(() => ov.remove(), 300); return; }
     if (!t) return; if (t.classList.contains("av-code")) { const c = prompt(L("avCode")); if (c && c.trim().toLowerCase() === FAMILY_CODE) { lsSet("mv-family", true); cur.g = 2; sfx("unlock"); draw(); requestAnimationFrame(() => ov.classList.add("in")); } else if (c) { sfx("miss"); } return; }
@@ -7612,11 +7631,14 @@ const SIDE = [["👋", "wave"], ["👥", "wave"], ["😊", "bounce"], ["🎒", "
   ["⚽", "kick"], ["📺", "sit"], ["🎁", "bounce"], ["💤", "sleep"], ["🗺️", "wave"], ["🎸", "paint"], ["📞", "sip"], ["🛍️", "shop"], ["📷", "wave"], ["🛍️", "shop"], ["🏆", "bounce"], ["🔮", "pet"], ["🌍", "pet"], ["💛", "bounce"]];
 const unitStars = u => { const p = DP(); return [!!p["pf" + u], !!p["cb" + u], uDone(u) >= LPU]; };
 const RACER_AT = [1, 3, 4, 6, 8, 9, 11, 13, 15, 16, 18, 20, 21, 23];
+const KID_AT = { 2: [0, "🎈", "balloon"], 10: [1, "⚽", "ball"], 14: [0, "🗺️", "map"], 19: [2, "📷", "snap"], 22: [1, "✈️", "plane"] };
+const kidHTML = U => { const k = KID_AT[U.n]; if (!k) return "";
+  return `<button class="dr-pix dr-kid ${U.n % 2 ? "l" : "r"} kid-${k[2]}" data-kid="${U.n}" aria-label="${L("avFam")}"><span class="dr-ch"><img src="${KIDS[k[0]]}" alt="" loading="lazy"><i class="dr-kprop">${k[1]}</i></span></button>`; };
 const racerHTML = U => { const ri = RACER_AT.indexOf(U.n); if (ri < 0) return ""; const R = RACERS[ri];
   return `<button class="dr-pix dr-racer ${U.n % 2 ? "l" : "r"}" data-racer="${ri}" aria-label="${esc(R.n)}"><span class="dr-ch">${personSVG(R)}<i class="dr-flag">🏁</i></span><small class="dr-nm">${esc(R.n)}</small></button>`; };
 function sideHTML(U, open) {
   const P = PEOPLE[U.n % PEOPLE.length], pose = P.pose, st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
-  return racerHTML(U) + `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-${pose}" data-side="${U.n}" aria-label="★ ${st.filter(Boolean).length}/3">
+  return racerHTML(U) + kidHTML(U) + `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-${pose}" data-side="${U.n}" aria-label="★ ${st.filter(Boolean).length}/3">
     <span class="dr-ch">${personSVG(P)}${pose === "sleep" ? `<i class="dr-z">z</i><i class="dr-z z2">z</i>` : ""}</span><small class="dr-nm">${esc(P.n)}</small>
     <span class="dr-st3">${st.map((s, i) => `<i class="${s ? "on" : ""} ${s && i >= seen ? "new" : ""}" style="--k:${i}">★</i>`).join("")}</span></button>`;
 }
