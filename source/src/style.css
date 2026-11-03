@@ -1567,3 +1567,4 @@ html.ap-mode .mv-home{display:none}
 .ap-lh .ap-back{padding:5px 9px;font-size:12px}
 @media (max-width:380px){.ap-hud .ap-brand{display:none}.ap-hud{gap:10px}}
 .ap-back b{font-weight:400}.ap-st,.ap-xp{white-space:nowrap}
+.h-hero-r{overflow-x:clip}

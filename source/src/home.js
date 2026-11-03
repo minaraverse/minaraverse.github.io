@@ -116,7 +116,9 @@ VIEWS.home = root => {
       h1.style.transform = `translateY(${-hp * 90}px)`; h1.style.opacity = 1 - hp * .9;
       lead.style.transform = `translateY(${-hp * 50}px)`; lead.style.opacity = 1 - hp * 1.1;
       badge.style.transform = `rotate(${y * .35}deg) scale(${1 + hp * .3})`;
-      posts.forEach((p, i) => { const [sx, sy, r] = spread[i]; p.style.transform = `translate(${sx * hp * 120}px,${sy * hp * 140 - hp * 30}px) rotate(${r * hp}deg) scale(${1 - hp * .12})`; });
+      /* cards fly in from left and right as they enter the screen, then settle in place */
+      posts.forEach((p, i) => { const [sx, , r] = spread[i], rc = p.parentNode.getBoundingClientRect(), e = smooth(clamp((vh - rc.top - i % 2 * 40) / (vh * .55)));
+        p.style.transform = `translate(${sx * (1 - e) * innerWidth * .7}px,${(1 - e) * 40}px) rotate(${r * (1 - e) * 1.6}deg)`; p.style.opacity = .15 + e * .85; });
       /* marquee: two rows, opposite directions, speed + skew follow the scroll */
       mx += (60 + Math.abs(vel) * .5) * dt; const sk = clamp(vel / 2500, -1, 1) * 10;
       mqA.style.transform = `translateX(${-(mx % (mqA.scrollWidth / 2))}px) skewX(${-sk}deg)`;
