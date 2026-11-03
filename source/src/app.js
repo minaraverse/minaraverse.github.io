@@ -174,6 +174,7 @@ function mascot(say) {
     <path class="tl" d="M90 98Q112 90 104 66" stroke="#3a3f47" stroke-width="8" stroke-linecap="round" fill="none"/></svg><i>${say}</i></span>`;
 }
 
-/* ---------- Milingo opens only from its button ---------- */
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+/* ---------- Milingo opens only from its button: the home-screen app always starts on Minaraverse ---------- */
+if (STANDALONE && /^#(app|lesson)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
 addEventListener("hashchange", () => { if (!/^#(app|lesson)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
