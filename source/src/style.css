@@ -1962,3 +1962,8 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .av-prev svg.ps{max-height:190px}
 .sm-card .sm-ch{width:110px}
 .dx-pix:has(.is-p),.dx-pix:has(.is-p) .ap-pix{width:96px}
+.av-tabs{display:flex;gap:8px;margin-bottom:10px}.av-tabs button{flex:1;padding:10px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:800 14px var(--bf);cursor:pointer}
+.av-tabs button.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 15%,transparent)}
+.ap-av.has,.lg-av{display:block!important}
+.ap-av svg.ps,.lg-av svg.ps{width:170%!important;height:auto!important;margin:-6% 0 0 -35%!important;border-radius:0}
+.ap-av svg:not(.ps),.lg-av svg:not(.ps){width:118%;height:118%;margin:4% 0 0 -9%}

@@ -430,6 +430,7 @@ const AVC = ["#E07020", "#FF6FB5", "#6FFF00", "#7CF6FF", "#C77DFF", "#F5B971"];
 let CHID = 0;
 function charSVG(k, o = {}) {
   if (/^p\d+$/.test(k)) return personSVG(PEOPLE[+k.slice(1)] || PEOPLE[0], o);
+  if (/^r\d+$/.test(k)) return personSVG(RACERS[+k.slice(1)] || RACERS[0], o);
   const id = "c" + (++CHID), s = o.skin || SKINS[1], a = o.acc || (k === "ronin" ? "#E07020" : k === "nova" ? "#FF6FB5" : "#6FFF00"), dark = "#120b07";
   const shadow = `<ellipse cx="60" cy="113" rx="30" ry="5" fill="rgba(0,0,0,.28)"/>`;
   const eyes = (y, r = 4.2, c = "#1b1410") => `<g class="ey"><ellipse cx="49" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><ellipse cx="71" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><circle cx="50.5" cy="${y - 1.6}" r="1.4" fill="#fff"/><circle cx="72.5" cy="${y - 1.6}" r="1.4" fill="#fff"/></g>`;
@@ -466,25 +467,25 @@ function charSVG(k, o = {}) {
 let LESSON_CHAR = null;
 const themeChar = () => LESSON_CHAR || CHARS[+(document.documentElement.dataset.th || 0)] || "ronin";
 const myAvatar = () => lsGet("mv-avatar", null);
-const avatarSVG = () => { const v = myAvatar(); return v ? charSVG(v.k, { skin: SKINS[v.s], acc: v.c == null ? undefined : AVC[v.c] }) : ""; };
+const avatarSVG = () => { const v = myAvatar(); return v ? charSVG(v.k, { skin: v.s == null ? undefined : SKINS[v.s], acc: v.c == null ? undefined : AVC[v.c] }) : ""; };
 function avatarSheet() {
-  const cur = Object.assign({ k: themeChar(), s: 1, c: null }, myAvatar() || {});
+  const cur = Object.assign({ k: themeChar(), s: null, c: null }, myAvatar() || {});
   const ov = document.createElement("div"); ov.className = "dr-ov dr-guide av-sheet";
   const draw = () => { ov.innerHTML = `<div class="dr-sheet2"><button class="dr-close" aria-label="Close">✕</button><small>${L("apProfile")}</small><h2>${L("avTitle")}</h2>
-    <div class="av-prev">${charSVG(cur.k, { skin: SKINS[cur.s], acc: cur.c == null ? undefined : AVC[cur.c] })}</div>
-    <h3>${L("avChar")}</h3><div class="av-row">${[...CHARS, ...PEOPLE.map((_, i) => "p" + i)].map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k, { skin: SKINS[cur.s] })}<small>${esc(/^p/.test(k) ? PEOPLE[+k.slice(1)].n : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
+    <div class="av-prev">${charSVG(cur.k, { skin: cur.s == null ? undefined : SKINS[cur.s], acc: cur.c == null ? undefined : AVC[cur.c] })}</div>
+    <h3>${L("avChar")}</h3><div class="av-tabs"><button data-g="0" class="${(cur.g || 0) === 0 ? "on" : ""}">🌟 ${L("avAll")}</button><button data-g="1" class="${cur.g === 1 ? "on" : ""}">🏎️ ${L("avRace")}</button></div><div class="av-row">${(cur.g === 1 ? RACERS.map((_, i) => "r" + i) : [...CHARS, ...PEOPLE.map((_, i) => "p" + i)]).map(k => `<button data-k="${k}" class="${k === cur.k ? "on" : ""}">${charSVG(k)}<small>${esc(/^p\d/.test(k) ? PEOPLE[+k.slice(1)].n : /^r\d/.test(k) ? RACERS[+k.slice(1)].n : k[0].toUpperCase() + k.slice(1))}</small></button>`).join("")}</div>
     <h3>${L("avSkin")}</h3><div class="av-sw">${SKINS.map((c, i) => `<button data-s="${i}" class="${i === cur.s ? "on" : ""}" style="background:${c}" aria-label="skin ${i + 1}"></button>`).join("")}</div>
     <h3>${L("avColor")}</h3><div class="av-sw">${AVC.map((c, i) => `<button data-c="${i}" class="${i === cur.c ? "on" : ""}" style="background:${c}" aria-label="colour ${i + 1}"></button>`).join("")}</div>
     <button class="ap-cta av-save">${L("avSave")}</button></div>`; };
   draw(); document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add("in"));
   ov.onclick = e => { const t = e.target.closest("button"); if (e.target === ov || (t && t.classList.contains("dr-close"))) { ov.classList.remove("in"); setTimeout(() => ov.remove(), 300); return; }
-    if (!t) return; if (t.dataset.k) cur.k = t.dataset.k; if (t.dataset.s) cur.s = +t.dataset.s; if (t.dataset.c) cur.c = cur.c === +t.dataset.c ? null : +t.dataset.c;
-    if (t.classList.contains("av-save")) { lsSet("mv-avatar", cur); sfx("unlock"); ov.remove(); Router.remount(); return; }
+    if (!t) return; if (t.dataset.k) cur.k = t.dataset.k; if (t.dataset.g) cur.g = +t.dataset.g; if (t.dataset.s) cur.s = cur.s === +t.dataset.s ? null : +t.dataset.s; if (t.dataset.c) cur.c = cur.c === +t.dataset.c ? null : +t.dataset.c;
+    if (t.classList.contains("av-save")) { delete cur.g; lsSet("mv-avatar", cur); sfx("unlock"); ov.remove(); Router.remount(); return; }
     sfx("tap"); draw(); requestAnimationFrame(() => ov.classList.add("in")); };
 }
-Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar" });
-Object.assign(UI.az, { avTitle: "Avatarın", avChar: "Personaj", avSkin: "Dəri tonu", avColor: "Rəng", avSave: "Yadda saxla", avEdit: "Avatarı dəyiş" });
-Object.assign(UI.ru, { avTitle: "Твой аватар", avChar: "Персонаж", avSkin: "Тон кожи", avColor: "Цвет", avSave: "Сохранить", avEdit: "Изменить аватар" });
+Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar", avAll: "Characters", avRace: "Racers" });
+Object.assign(UI.az, { avTitle: "Avatarın", avChar: "Personaj", avSkin: "Dəri tonu", avColor: "Rəng", avSave: "Yadda saxla", avEdit: "Avatarı dəyiş", avAll: "Personajlar", avRace: "Yarışçılar" });
+Object.assign(UI.ru, { avTitle: "Твой аватар", avChar: "Персонаж", avSkin: "Тон кожи", avColor: "Цвет", avSave: "Сохранить", avEdit: "Изменить аватар", avAll: "Персонажи", avRace: "Гонщики" });
 
 /* ---------- quests: 3 daily (with chests) + monthly ---------- */
 Object.assign(UI.en, { qTitle: "Quests", qDaily: "Daily quests", qMonth: "Monthly quest", qMonthT: "Complete 20 daily quests", qLeft: "h left", qDays: "days left", qClaim: "Open", qGot: "Reward: +10 XP",
@@ -541,8 +542,8 @@ function trophySVG(t, cls = "") { const [a, b] = LG_C[t];
     <path d="M20 16 Q22 12 27 13" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>${t === 9 ? `<circle cx="58" cy="10" r="2.2" fill="#fff" class="spark"/><circle cx="20" cy="40" r="1.6" fill="#fff" class="spark"/>` : ""}</svg>`; }
 const uid = () => { let u = lsGet("mv-uid", null); if (!u) { u = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, "0")).join(""); lsSet("mv-uid", u); } return u; };
 const weekXpNow = () => { const x = XP(), d = new Date(); const dow = (d.getDay() + 6) % 7; let s = 0; for (let k = 0; k <= dow; k++) { const t = new Date(d); t.setDate(d.getDate() - k); s += x.days[dayStr(t)] || 0; } return s; };
-const avStr = () => { const v = myAvatar(); return v ? `${v.k},${v.s},${v.c == null ? "" : v.c}` : ""; };
-const avOf = (s, name) => { const [k, sk, c] = String(s || "").split(","); return CHARS.includes(k) || /^p\d+$/.test(k) ? charSVG(k, { skin: SKINS[+sk] || SKINS[1], acc: c === "" || c == null ? undefined : AVC[+c] }) : `<b class="lg-let">${esc((name || "?")[0].toUpperCase())}</b>`; };
+const avStr = () => { const v = myAvatar(); return v ? `${v.k},${v.s == null ? "" : v.s},${v.c == null ? "" : v.c}` : ""; };
+const avOf = (s, name) => { const [k, sk, c] = String(s || "").split(","); return CHARS.includes(k) || /^[pr]\d+$/.test(k) ? charSVG(k, { skin: sk === "" || sk == null ? undefined : SKINS[+sk], acc: c === "" || c == null ? undefined : AVC[+c] }) : `<b class="lg-let">${esc((name || "?")[0].toUpperCase())}</b>`; };
 async function lgSync(name) {
   if (typeof ADMIN_API === "undefined" || !ADMIN_API || /claude\.ai|claudeusercontent/.test(location.host)) throw new Error("off");
   const q = new URLSearchParams({ a: "lg", id: uid(), name: name || lsGet("mv-lgname", "") || "", av: avStr(), xp: weekXpNow() });

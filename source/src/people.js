@@ -25,7 +25,7 @@ const PEOPLE = [
   { n: "Tariq", sk: 2, hair: ["short", "#2a1a10"], top: ["#FF6A4D", "shirt"], pants: "#6b5a33", hat: ["safari", "#e8d7a8"], pose: "side", prop: "🧳", extra: "straps", mouth: "open" },
   { n: "Astro Ada", sk: 0, hair: ["bob", "#e7b85a"], top: ["#eef2fb", "space"], pants: "#eef2fb", hat: ["helmet", "#7CF6FF"], pose: "wave", prop: "💛", mouth: "open" }];
 const PSKIN = ["#F6D2B4", "#EAB98F", "#C98E62", "#9C6440", "#6B4127"];
-function personSVG(P, o = {}) {
+var personSVG = function (P, o = {}) {
   const id = "p" + (++CHID), skin = o.skin || PSKIN[P.sk || 0], top = o.acc || P.top[0], kind = P.top[1], pants = o.acc && P.top[1] !== "suit" ? P.pants : P.pants;
   const dk = c => `color-mix(in srgb,${c} 72%,#000)`, hc = P.hair ? P.hair[1] : "#222", hs = P.hair ? P.hair[0] : "none";
   const dress = kind === "dress" || kind === "robe", pose = P.pose || "side";
@@ -108,4 +108,33 @@ function personSVG(P, o = {}) {
   if (P.prop && pose !== "sleep") s += `<text class="pp" x="${PP[0]}" y="${PP[1]}" font-size="${PP[2]}" text-anchor="middle">${P.prop}</text>`;
   if (pose === "shop") s += `<text class="pp" x="26" y="122" font-size="24" text-anchor="middle">🛍️</text>`;
   return s + `</svg>`;
-}
+};
+/* ===== racer avatars (F1-style, invented names, no real people or team brands) ===== */
+const RACERS = [
+  { n: "George Rivers", sk: 0, hair: ["short", "#4a2e1c"], top: ["#1fb8a6", "race"], c2: "#111418", num: "36", pants: "#1fb8a6" },
+  { n: "Kimi Valente", sk: 0, hair: ["curly", "#3b2416"], top: ["#1fb8a6", "race"], c2: "#111418", num: "21", pants: "#1fb8a6" },
+  { n: "Charles Morel", sk: 0, hair: ["short", "#2a1a10"], top: ["#d7262e", "race"], c2: "#ffffff", num: "61", pants: "#d7262e" },
+  { n: "Lewis Hart", sk: 3, hair: ["short", "#120c08"], top: ["#d7262e", "race"], c2: "#ffffff", num: "4", pants: "#d7262e", beard: "#120c08" },
+  { n: "Max Stone", sk: 0, hair: ["short", "#6b4a2b"], top: ["#1b2550", "race"], c2: "#e8b400", num: "33", pants: "#1b2550" },
+  { n: "Isack Duval", sk: 2, hair: ["short", "#120c08"], top: ["#1b2550", "race"], c2: "#e8b400", num: "60", pants: "#1b2550" },
+  { n: "Lando Brooks", sk: 1, hair: ["curly", "#2a1a10"], top: ["#ff8000", "race"], c2: "#14141a", num: "10", pants: "#ff8000" },
+  { n: "Oscar Reed", sk: 0, hair: ["short", "#c99a5a"], top: ["#ff8000", "race"], c2: "#14141a", num: "18", pants: "#ff8000" },
+  { n: "Liam Carter", sk: 0, hair: ["short", "#b5651d"], top: ["#1f5bff", "race"], c2: "#ffffff", num: "29", pants: "#1f5bff" },
+  { n: "Arvid Lund", sk: 1, hair: ["curly", "#120c08"], top: ["#1f5bff", "race"], c2: "#ffffff", num: "47", pants: "#1f5bff" },
+  { n: "Fernando Vega", sk: 1, hair: ["short", "#3b2416"], top: ["#0e7c5a", "race"], c2: "#c8ff3a", num: "41", pants: "#0e7c5a", beard: "#3b2416" },
+  { n: "Lance Miller", sk: 0, hair: ["short", "#2a1a10"], top: ["#0e7c5a", "race"], c2: "#c8ff3a", num: "81", pants: "#0e7c5a" },
+  { n: "Sergio Ramos", sk: 2, hair: ["short", "#120c08"], top: ["#8e99a8", "race"], c2: "#14141a", num: "2", pants: "#8e99a8" },
+  { n: "Valtteri Koski", sk: 0, hair: ["short", "#e8dcb0"], top: ["#8e99a8", "race"], c2: "#14141a", num: "71", pants: "#8e99a8", beard: "#c9b27a" }];
+RACERS.forEach(r => { r.pose = "side"; r.mouth = r.mouth || "smile"; r.prop = ""; r.helmet = true; });
+const _personSVG = personSVG;
+personSVG = function (P, o = {}) {
+  let s = _personSVG(P, o); if (P.top[1] !== "race") return s;
+  const c = o.acc || P.top[0], c2 = P.c2;
+  const det = `<path d="M44 76 L42 110 M76 76 L78 110" stroke="${c2}" stroke-width="4"/><path d="M50 74 Q60 79 70 74 L70 79 Q60 84 50 79Z" fill="${c2}"/>
+    <circle cx="60" cy="95" r="9" fill="#fff"/><text x="60" y="99.5" text-anchor="middle" font-size="${P.num.length > 1 ? 11 : 13}" font-weight="900" font-family="Nunito,sans-serif" fill="${c}">${P.num}</text>
+    <path d="M49 104 h22" stroke="${c2}" stroke-width="3"/>`;
+  const helmet = `<g class="pp"><circle cx="95" cy="108" r="13" fill="${c}"/><path d="M83 106 Q95 96 107 106 L107 110 Q95 103 83 110Z" fill="#15121b"/><path d="M84 103 Q95 94 106 103" stroke="#7CF6FF" stroke-width="1.6" fill="none" opacity=".7"/><path d="M89 116 h12" stroke="${c2}" stroke-width="3" stroke-linecap="round"/><circle cx="90" cy="99" r="2" fill="#fff" opacity=".6"/></g>`;
+  /* insert suit details before the arms (after torso) and the helmet at the end */
+  s = s.replace(/(<path d="M38 110 Q36 76[^"]*" fill="[^"]*"\/>)/, `$1${det}`);
+  return s.replace("</svg>", helmet + "</svg>");
+};
