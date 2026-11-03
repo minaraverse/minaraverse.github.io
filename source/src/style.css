@@ -2052,3 +2052,18 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .sv-row{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;padding:10px;border-radius:14px;background:var(--card);border:1px solid var(--line);text-align:left}
 .sv-row small{display:block;color:var(--mut);font-size:12.5px}.sv-row b{font:800 16px var(--bf)}
 .sv-crew.small{margin-top:14px}
+
+/* ring lives inside the node now, so it is centred on every browser */
+.dr-node>.dr-ring{position:absolute!important;top:50%!important;left:50%!important;width:104px;height:104px;transform:translate(-50%,-50%) rotate(-90deg)!important;z-index:-1}
+.dr-node.trophy>.dr-ring{width:112px;height:112px}
+/* jump node: cosmic rocket */
+.dr-node.jump{background:radial-gradient(circle at 35% 30%,#a98bff,#6a4be0 60%,#4b31b8)!important;box-shadow:0 8px 0 #34208a,0 0 22px rgba(140,110,255,.45)!important;overflow:visible}
+.dj-rocket{width:52px;height:52px;animation:djfly 2.2s ease-in-out infinite;filter:drop-shadow(0 3px 0 rgba(0,0,0,.25))}
+@keyframes djfly{0%,100%{transform:translate(0,0)}50%{transform:translate(3px,-4px)}}
+.dj-flame{transform-origin:24px 34px;animation:djflame .18s ease-in-out infinite alternate}
+@keyframes djflame{from{transform:scaleY(.75)}to{transform:scaleY(1.15)}}
+.dj-spark{position:absolute;font-style:normal;color:#FFE38A;font-size:16px;pointer-events:none;animation:djtw 1.8s ease-in-out infinite}
+.dj-spark.s1{top:-6px;left:2px}.dj-spark.s2{top:8px;right:-10px;font-size:10px;animation-delay:.6s}.dj-spark.s3{bottom:-2px;left:-10px;font-size:9px;animation-delay:1.2s}
+@keyframes djtw{0%,100%{opacity:.15;transform:scale(.6) rotate(0)}50%{opacity:1;transform:scale(1.15) rotate(45deg)}}
+.dr-jumpb{color:#c9b8ff!important;border-color:#6a4be0!important;box-shadow:0 0 14px rgba(140,110,255,.35)}
+@media (prefers-reduced-motion:reduce){.dj-rocket,.dj-flame,.dj-spark{animation:none}}

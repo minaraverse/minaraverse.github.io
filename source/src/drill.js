@@ -335,6 +335,8 @@ function noHearts(root) {
 const NODE_IC = ["⭐", "⭐", "🎧", "✍️", "🏆"];
 const ringSVG = (n, k) => { const C = 2 * Math.PI * 46, seg = C / n, gap = n > 1 ? 9 : 0;
   return `<svg class="dr-ring" viewBox="0 0 104 104" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<circle cx="52" cy="52" r="46" class="${i < k ? "on" : ""}" stroke-dasharray="${(seg - gap).toFixed(1)} ${C.toFixed(1)}" stroke-dashoffset="${(-(i * seg) - gap / 2).toFixed(1)}"/>`).join("")}</svg>`; };
+/* jump node: a little rocket with a flickering flame and twinkling sparkles */
+const JUMP_ICON = `<i class="dj-spark s1">✦</i><i class="dj-spark s2">✦</i><i class="dj-spark s3">✦</i><svg class="dj-rocket" viewBox="0 0 48 48" aria-hidden="true"><g transform="rotate(45 24 24)"><path class="dj-flame" d="M19 34 Q24 47 29 34 Q24 38 19 34Z" fill="#FFD166"/><path d="M24 5 C31 11 32 22 30 33 L18 33 C16 22 17 11 24 5Z" fill="#fff"/><path d="M24 5 C28 8.5 30 12 30.6 15.5 L17.4 15.5 C18 12 20 8.5 24 5Z" fill="#FF6B8B"/><circle cx="24" cy="22" r="4" fill="#5B8CFF" stroke="#2c3e7a" stroke-width="1.6"/><path d="M18 26 L12 34 L18 32Z M30 26 L36 34 L30 32Z" fill="#FF6B8B"/></g></svg>`;
 function drillPathHTML() {
   const cu = curUnit(), side = [[0, -46, -70, -46, 0], [0, 46, 70, 46, 0]], CU = UNITS[cu];
   const firstLocked = UNITS.findIndex(u => !unitOpen(u.n));
@@ -345,8 +347,7 @@ function drillPathHTML() {
     const open = unitOpen(U.n), d = uDone(U.n), offs = side[U.n % 2], jumpHere = U.n === firstLocked;
     const nodes = Array.from({ length: LPU }, (_, j) => { const isDone = d > j, isCur = open && j === d && U.n === cu, can = open && j <= d, jump = !open && j === 0;
       return `<div class="dr-nw" style="--x:${offs[j]}px;--i:${j}">${isCur ? `<span class="ap-start">${U.n === 0 && j === 0 && !drillLessons() ? L("dFirst") : L("apStart")}</span>` : jump && jumpHere ? `<span class="ap-start dr-jumpb">${L("dJumpHere")}</span>` : ""}
-        ${isCur ? ringSVG(partsOf(j), partDone(U.n, j)) : ""}
-        <button class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${jump ? "jump" : ""} ${j === LPU - 1 ? "trophy" : ""}" data-u="${U.n}" data-l="${j}" aria-label="${esc(T3(U.t))} ${j + 1}"><span>${jump ? "⏩" : can || isDone ? NODE_IC[j] : "🔒"}</span>${isDone && j < LPU - 1 ? `<em>✓</em>` : ""}</button></div>`
+        <button class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${jump ? "jump" : ""} ${j === LPU - 1 ? "trophy" : ""}" data-u="${U.n}" data-l="${j}" aria-label="${esc(T3(U.t))} ${j + 1}">${isCur ? ringSVG(partsOf(j), partDone(U.n, j)) : ""}${jump ? JUMP_ICON : `<span>${can || isDone ? NODE_IC[j] : "🔒"}</span>`}${isDone && j < LPU - 1 ? `<em>✓</em>` : ""}</button></div>`
         + (j === 2 ? `<div class="dr-nw" style="--x:${-offs[2] * .9}px;--i:2.5"><button class="dr-chest ${d >= 3 ? "ready" : ""} ${(DP().chest || []).includes(U.n) ? "open" : ""}" data-chest="${U.n}" aria-label="Chest">${(DP().chest || []).includes(U.n) ? "📭" : "🎁"}</button></div>` : ""); }).join("");
     return `<section class="dr-unit ${open ? "" : "locked"}" style="--uc:${U.c}" id="u${U.n}" data-u="${U.n}">
       <button class="dr-div" data-guide="${U.n}"><i></i><b>${U.e} ${esc(T3(U.t))}</b><i></i></button>
