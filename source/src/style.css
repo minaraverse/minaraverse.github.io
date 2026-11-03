@@ -1967,3 +1967,9 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .ap-av.has,.lg-av{display:block!important}
 .ap-av svg.ps,.lg-av svg.ps{width:170%!important;height:auto!important;margin:-6% 0 0 -35%!important;border-radius:0}
 .ap-av svg:not(.ps),.lg-av svg:not(.ps){width:118%;height:118%;margin:4% 0 0 -9%}
+/* racers along the path */
+.dr-racer{top:420px!important}
+.dr-flag{position:absolute;left:-6px;top:30px;font-size:26px;font-style:normal;transform-origin:80% 90%;animation:flagw 1.2s ease-in-out infinite}
+@keyframes flagw{50%{transform:rotate(-18deg)}}
+.dr-racer.zoom .dr-ch{animation:zoomby .9s cubic-bezier(.3,1.4,.5,1)}@keyframes zoomby{30%{transform:translateX(26px) rotate(6deg)}60%{transform:translateX(-8px)}}
+.dr-racer .dr-ch svg{animation-duration:2.1s}

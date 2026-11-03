@@ -373,6 +373,7 @@ function wireDrillPath(root) {
     const n = e.target.closest(".dr-node"), g = e.target.closest("[data-guide]"), c = e.target.closest("[data-chest]");
     if (g) { guideSheet(UNITS[+g.dataset.guide]); return; }
     const sd = e.target.closest("[data-side]"); if (sd) { sideSheet(UNITS[+sd.dataset.side]); return; }
+    const rc = e.target.closest("[data-racer]"); if (rc) { const R = RACERS[+rc.dataset.racer]; sfx("combo"); buzz(20); rc.classList.remove("zoom"); void rc.offsetWidth; rc.classList.add("zoom"); toast("🏁 " + R.n.split(" ")[0] + ": " + L("rcCheer")[(Math.random() * 3) | 0]); return; }
     if (c) { const u = +c.dataset.chest, p = DP(); p.chest = p.chest || [];
       if (p.chest.includes(u)) return; if (uDone(u) < 3) { flash(c, "shake"); sfx("miss"); toast("🔒 " + L("dLocked")); return; }
       p.chest.push(u); lsSet("mv-drill", p); sfx("chest"); c.classList.add("opening"); setTimeout(() => { c.textContent = "📭"; c.classList.add("open"); }, 500); addXp(10); toast("🎁 " + L("dChestP"), "gold"); return; }
@@ -483,9 +484,9 @@ function avatarSheet() {
     if (t.classList.contains("av-save")) { delete cur.g; lsSet("mv-avatar", cur); sfx("unlock"); ov.remove(); Router.remount(); return; }
     sfx("tap"); draw(); requestAnimationFrame(() => ov.classList.add("in")); };
 }
-Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar", avAll: "Characters", avRace: "Racers" });
-Object.assign(UI.az, { avTitle: "Avatarın", avChar: "Personaj", avSkin: "Dəri tonu", avColor: "Rəng", avSave: "Yadda saxla", avEdit: "Avatarı dəyiş", avAll: "Personajlar", avRace: "Yarışçılar" });
-Object.assign(UI.ru, { avTitle: "Твой аватар", avChar: "Персонаж", avSkin: "Тон кожи", avColor: "Цвет", avSave: "Сохранить", avEdit: "Изменить аватар", avAll: "Персонажи", avRace: "Гонщики" });
+Object.assign(UI.en, { avTitle: "Your avatar", avChar: "Character", avSkin: "Skin tone", avColor: "Colour", avSave: "Save", avEdit: "Edit avatar", avAll: "Characters", avRace: "Racers", rcCheer: ["Full speed ahead!", "Keep going, champion!", "You're in pole position!"] });
+Object.assign(UI.az, { avTitle: "Avatarın", avChar: "Personaj", avSkin: "Dəri tonu", avColor: "Rəng", avSave: "Yadda saxla", avEdit: "Avatarı dəyiş", avAll: "Personajlar", avRace: "Yarışçılar", rcCheer: ["Tam sürətlə irəli!", "Davam et, çempion!", "Sən birinci startdasan!"] });
+Object.assign(UI.ru, { avTitle: "Твой аватар", avChar: "Персонаж", avSkin: "Тон кожи", avColor: "Цвет", avSave: "Сохранить", avEdit: "Изменить аватар", avAll: "Персонажи", avRace: "Гонщики", rcCheer: ["Полный вперёд!", "Так держать, чемпион!", "Ты на поул-позиции!"] });
 
 /* ---------- quests: 3 daily (with chests) + monthly ---------- */
 Object.assign(UI.en, { qTitle: "Quests", qDaily: "Daily quests", qMonth: "Monthly quest", qMonthT: "Complete 20 daily quests", qLeft: "h left", qDays: "days left", qClaim: "Open", qGot: "Reward: +10 XP",
@@ -604,9 +605,12 @@ async function lgAfterLesson(root) {
 const SIDE = [["👋", "wave"], ["👥", "wave"], ["😊", "bounce"], ["🎒", "wave"], ["🐱", "pet"], ["🎨", "paint"], ["🔢", "bounce"], ["👶", "pet"], ["☕", "sip"], ["🌸", "bounce"],
   ["⚽", "kick"], ["📺", "sit"], ["🎁", "bounce"], ["💤", "sleep"], ["🗺️", "wave"], ["🎸", "paint"], ["📞", "sip"], ["🛍️", "shop"], ["📷", "wave"], ["🛍️", "shop"], ["🏆", "bounce"], ["🔮", "pet"], ["🌍", "pet"], ["💛", "bounce"]];
 const unitStars = u => { const p = DP(); return [!!p["pf" + u], !!p["cb" + u], uDone(u) >= LPU]; };
+const RACER_AT = [1, 3, 4, 6, 8, 9, 11, 13, 15, 16, 18, 20, 21, 23];
+const racerHTML = U => { const ri = RACER_AT.indexOf(U.n); if (ri < 0) return ""; const R = RACERS[ri];
+  return `<button class="dr-pix dr-racer ${U.n % 2 ? "l" : "r"}" data-racer="${ri}" aria-label="${esc(R.n)}"><span class="dr-ch">${personSVG(R)}<i class="dr-flag">🏁</i></span><small class="dr-nm">${esc(R.n)}</small></button>`; };
 function sideHTML(U, open) {
   const P = PEOPLE[U.n % PEOPLE.length], pose = P.pose, st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
-  return `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-${pose}" data-side="${U.n}" aria-label="★ ${st.filter(Boolean).length}/3">
+  return racerHTML(U) + `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-${pose}" data-side="${U.n}" aria-label="★ ${st.filter(Boolean).length}/3">
     <span class="dr-ch">${personSVG(P)}${pose === "sleep" ? `<i class="dr-z">z</i><i class="dr-z z2">z</i>` : ""}</span><small class="dr-nm">${esc(P.n)}</small>
     <span class="dr-st3">${st.map((s, i) => `<i class="${s ? "on" : ""} ${s && i >= seen ? "new" : ""}" style="--k:${i}">★</i>`).join("")}</span></button>`;
 }
