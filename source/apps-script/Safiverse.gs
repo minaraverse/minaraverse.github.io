@@ -11,7 +11,14 @@ const P = PropertiesService.getScriptProperties();
 
 function hash_(s) { return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, "sv|" + s).map(b => ("0" + ((b + 256) % 256).toString(16)).slice(-2)).join(""); }
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
-function ss_() { return SpreadsheetApp.getActiveSpreadsheet(); }
+function ss_() {
+  try { const a = SpreadsheetApp.getActiveSpreadsheet(); if (a) return a; } catch (e) {}
+  const id = P.getProperty("SHEET_ID");
+  if (id) { try { return SpreadsheetApp.openById(id); } catch (e) {} }
+  const n = SpreadsheetApp.create("Safiverse — tələbələr"); P.setProperty("SHEET_ID", n.getId()); return n;
+}
+/* Run once from the editor (▶ setup) to create/check the sheet and grant permissions. */
+function setup() { const s = ss_(); students_(); lgSheet_(); Logger.log(s.getUrl()); }
 const SH = ["email", "name", "age", "avatar", "created", "last", "xp", "streak", "lessons", "unit", "token", "progress", "parent_ok"];
 function students_() { let sh = ss_().getSheetByName("Tələbələr"); if (!sh) { sh = ss_().insertSheet("Tələbələr"); sh.appendRow(SH); sh.setFrozenRows(1); } return sh; }
 function find_(sh, email) { const v = sh.getDataRange().getValues(); for (let i = 1; i < v.length; i++) if (String(v[i][0]).toLowerCase() === email) return { row: i + 1, v: v[i] }; return null; }

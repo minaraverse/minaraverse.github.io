@@ -1,5 +1,5 @@
 import base64, pathlib
-R = pathlib.Path(__file__).resolve().parent
+R = pathlib.Path("/home/claude/mv")
 band = ""
 css = (R / "src/style.css").read_text()
 js = "\n".join((R / f"src/{n}.js").read_text() for n in ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "data8", "core", "art", "home", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "admin", "app", "course", "drill", "people", "safi"] if (R / f"src/{n}.js").exists())
@@ -21,7 +21,7 @@ document.documentElement.lang = LANG;
 Router.mount();
 </script>
 """
-(R / "minaraverse-v2.html").write_text(html)
+(R / "../minaraverse-v2.html").write_text(html)
 (R / "check.js").write_text(js)
 print(len(html))
 
@@ -34,7 +34,7 @@ D = R / "dist"; (D / "img").mkdir(parents=True, exist_ok=True)
   '<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#17161B"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Minaraverse"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">'
   '<script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>'
   '<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>' + html + '</body></html>')
-for f in (R / ".." / "img").iterdir():
+for f in pathlib.Path("/home/claude/img").iterdir():
     if f.suffix in (".jpg", ".webp", ".mp4") and not f.name.startswith(("ship-gen", "p-ship.png")): shutil.copy(f, D / "img" / f.name)
 
 
@@ -51,8 +51,18 @@ sv_html = sv_html.replace('<meta name="description" content="Minaraverse: Englis
   '<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;background:#0d1a15}img{max-width:100%}[hidden]{display:none!important}</style></head><body>' + sv_html + '</body></html>')
 (S / "manifest.json").write_text('{"name":"Safiverse — English step by step","short_name":"Safiverse","start_url":"./#app-learn","scope":"./","display":"standalone","background_color":"#0d1a15","theme_color":"#0d1a15","orientation":"portrait",'
   '"icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}')
-(S / "sw.js").write_text('/* Safiverse offline cache: network first, cache fallback */\nconst C = "sv-v1";\n'
+(S / "sw.js").write_text('/* Safiverse offline cache: network first, cache fallback */\nconst C = "sv-v6";\n'
   'self.addEventListener("install", e => { e.waitUntil(caches.open(C).then(c => c.addAll(["./", "./index.html"])).then(() => self.skipWaiting())); });\n'
   'self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith("sv-") && k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); });\n'
   'self.addEventListener("fetch", e => { const r = e.request; if (r.method !== "GET" || !r.url.startsWith(self.location.origin)) return;\n'
   '  e.respondWith(fetch(r, r.mode === "navigate" ? { cache: "no-store" } : {}).then(res => { const cp = res.clone(); caches.open(C).then(c => c.put(r, cp)); return res; }).catch(() => caches.match(r).then(m => m || caches.match("./index.html")))); });\n')
+
+
+# ===== Safiverse at its own address (safiverse.github.io): same page, images at root =====
+S2 = R / "dist-sv"; (S2 / "img").mkdir(parents=True, exist_ok=True)
+sv_root = (S / "index.html").read_text().replace('../img/', 'img/')
+(S2 / "index.html").write_text(sv_root)
+for f in ["manifest.json", "sw.js", "favicon.png", "icon-180.png", "icon-192.png", "icon-512.png"]:
+    if (S / f).exists(): shutil.copy(S / f, S2 / f)
+shutil.copytree(D / "img", S2 / "img", dirs_exist_ok=True)
+(S2 / ".nojekyll").write_text("")
