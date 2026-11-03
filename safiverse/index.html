@@ -2075,6 +2075,62 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .dr-jumpb{color:#c9b8ff!important;border-color:#6a4be0!important;box-shadow:0 0 14px rgba(140,110,255,.35)}
 @media (prefers-reduced-motion:reduce){.dj-rocket,.dj-flame,.dj-spark{animation:none}}
 
+/* ===== subject picker, language votes ===== */
+.sv-pick,.sv-langs{display:grid;gap:10px;width:100%;max-width:460px;text-align:left;margin:0 auto}
+.sv-sub{display:grid;grid-template-columns:48px 1fr 18px;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:14px 16px;border-radius:18px;border:2px solid var(--line);background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--line);cursor:pointer;text-align:left;transition:transform .08s,border-color .15s}
+.sv-sub span{grid-row:1/3;font-size:34px;line-height:1}.sv-sub b{font:800 18px var(--bf)}.sv-sub small{grid-column:2;color:var(--mut);font-size:13px}.sv-sub i{grid-row:1/3;grid-column:3;font-style:normal;color:var(--mut);font-size:22px}
+.sv-langs .sv-sub{grid-template-rows:auto}.sv-langs .sv-sub span{grid-row:auto}
+.sv-sub:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}.sv-sub.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 14%,var(--card))}
+.sv-pick .ap-h2{margin:14px 0 0}.sv-soonp{margin:-4px 0 4px;color:var(--mut);font-size:14px}
+.sv-votes{display:grid;gap:10px}
+.sv-vc{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card);border:2px dashed var(--line)}
+.sv-vc.win{border-style:solid;border-color:var(--gold,#f5c84b);box-shadow:0 0 18px rgba(245,200,75,.25)}
+.sv-flag{font-size:30px;line-height:1}.sv-vb b{font:800 16px var(--bf)}.sv-vb small{display:block;color:var(--mut);font-size:12.5px;margin-top:4px}.sv-vc.win small{color:var(--gold,#f5c84b);font-weight:800}
+.sv-bar{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:6px}.sv-bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--acc),#9ff0c0);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.sv-vc.win .sv-bar i{background:linear-gradient(90deg,#f5c84b,#ffe38a)}
+.sv-vote{padding:10px 12px;border-radius:12px;border:0;background:var(--acc);color:var(--acci,#0d1a15);font:800 13px var(--bf);cursor:pointer;white-space:nowrap;box-shadow:0 3px 0 color-mix(in srgb,var(--acc) 55%,#000)}
+.sv-vote.on{background:transparent;color:var(--acc);box-shadow:none;border:2px solid var(--acc)}
+.sv-vc.pulse{animation:svpulse .6s}@keyframes svpulse{40%{transform:scale(1.03)}}
+.sv-st{margin-top:14px}.sv-adv{display:grid;gap:8px;width:100%;padding:12px;border-radius:14px;background:var(--card);border:1px solid var(--line);margin-bottom:10px}
+.sv-adv form{display:flex;gap:8px;align-items:end}.sv-adv label{display:flex;gap:8px;align-items:center;font-weight:800}.sv-adv input{width:90px;padding:8px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:700 16px var(--bf)}
+@media (max-width:400px){.sv-vc{grid-template-columns:34px 1fr}.sv-vote{grid-column:1/-1}}
+
+/* ===== skill lessons: math / music / chess ===== */
+.sk-x{display:grid;gap:16px;justify-items:center}
+.sk-prompt{display:grid;gap:10px;justify-items:center;text-align:center}
+.sk-q{font:800 22px/1.25 var(--bf);color:var(--ink)}
+.sk-eq{margin:0;font:900 40px/1.1 var(--bf);letter-spacing:.02em}.sk-eq u{text-decoration:none;color:var(--uc,var(--acc));display:inline-block;min-width:1ch;border-bottom:4px solid currentColor}
+.sk-emo{margin:0;font-size:38px;line-height:1.25;max-width:330px;letter-spacing:4px}
+.sk-big{margin:0;font:900 44px var(--bf);color:var(--uc,var(--acc))}
+.sk-pic{width:170px;height:170px;background:#f7faf8;border-radius:22px;padding:10px;box-shadow:0 6px 0 rgba(0,0,0,.18)}.sk-pic.wide{width:230px;height:184px}
+.sk-glyph{margin:0;font-size:110px;line-height:1;font-family:"Segoe UI Symbol","Apple Symbols","Noto Sans Symbols 2",serif}.sk-glyph.w{color:#fff;text-shadow:0 0 2px #000,0 3px 0 #000}.sk-glyph.b{color:#222;text-shadow:0 0 2px #fff,0 2px 0 rgba(255,255,255,.4)}
+.sk-opts{width:100%;max-width:460px}.sk-opts .dx-opt b{font:800 20px var(--bf)}
+.sk-play{padding:10px 18px;border-radius:14px;border:0;background:var(--uc,var(--acc));color:#10201a;font:800 16px var(--bf);cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--uc,var(--acc)) 55%,#000)}
+.sk-play:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--uc,var(--acc)) 55%,#000)}
+.sk-piano{position:relative;display:grid;grid-template-columns:repeat(8,1fr);width:100%;max-width:440px;height:190px;user-select:none;-webkit-user-select:none}
+.sk-key{position:relative;border:0;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding:0 0 10px;font:800 14px var(--bf);-webkit-tap-highlight-color:transparent}
+.sk-key.w{background:linear-gradient(#fff,#e9efeb);color:#2b3a33;border:1.5px solid #9aa8a0;border-radius:0 0 10px 10px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)}
+.sk-key.b{position:absolute;top:0;width:9%;height:58%;background:linear-gradient(#3a4440,#111);color:#e8f0ec;border-radius:0 0 7px 7px;z-index:2;font-size:10.5px;padding-bottom:6px;box-shadow:0 3px 0 #000}
+.sk-key.hit.w{background:linear-gradient(#e8fff0,#c4f0d4)}.sk-key.hit.b{background:linear-gradient(#4f6d5e,#24382d)}
+.sk-key.sel.w{background:linear-gradient(#d9f7e6,#a8e8c1);box-shadow:inset 0 0 0 3px var(--acc)}.sk-key.sel.b{box-shadow:inset 0 0 0 3px var(--acc)}
+.sk-key.mk.w{background:linear-gradient(#fff7d1,#ffe38a)}.sk-key.mk.b{background:linear-gradient(#a8862a,#6b5410)}
+.sk-key.bad.w{background:linear-gradient(#ffe1e1,#ffb9b9)}
+.sk-seq{display:flex;gap:10px}.sk-seq i{width:16px;height:16px;border-radius:50%;background:var(--line);transition:background .2s}.sk-seq i.on{background:var(--uc,var(--acc))}
+.sk-board{display:grid;grid-template-columns:repeat(8,1fr);width:min(100%,400px);aspect-ratio:1;border-radius:12px;overflow:hidden;box-shadow:0 8px 0 rgba(0,0,0,.25),0 0 0 4px #5b4630}
+.sk-sq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;aspect-ratio:1;-webkit-tap-highlight-color:transparent}
+.sk-sq.l{background:#f1dfbf}.sk-sq.d{background:#b58863}
+.sk-sq.mk{box-shadow:inset 0 0 0 4px #F2C46D}.sk-sq.from{background:#f7e27a}.sk-sq.sel{box-shadow:inset 0 0 0 4px var(--acc)}
+.sk-sq.dot::after{content:"";width:28%;height:28%;border-radius:50%;background:rgba(30,60,40,.35)}.sk-sq.dot:has(.pc)::after{position:absolute;inset:6%;width:auto;height:auto;background:none;border:4px solid rgba(30,60,40,.4)}
+.sk-sq.good{box-shadow:inset 0 0 0 5px #3fbf6a}.sk-sq.bad{box-shadow:inset 0 0 0 5px #e0565b}
+.pc{font-style:normal;font-size:min(9vw,40px);line-height:1;font-family:"Segoe UI Symbol","Apple Symbols","Noto Sans Symbols 2",serif;pointer-events:none}
+.pc.w{color:#fff;text-shadow:0 0 1.5px #000,0 0 1.5px #000,0 2px 0 #000}.pc.b{color:#1d1d1d;text-shadow:0 1px 0 rgba(255,255,255,.35)}
+.sk-sq em{position:absolute;font-style:normal;font:700 9px var(--bf);opacity:.7;color:#4a3826}.sk-sq em.rk{left:3px;top:2px}.sk-sq em.fl{right:3px;bottom:1px}
+.sk-path .dr-node{text-decoration:none}
+
+.sv-tri{margin:-6px 0 6px;color:var(--mut);font-size:14px;line-height:1.5}
+@media (max-width:430px){.ap-hud{gap:9px!important;padding-left:12px;padding-right:12px}.ap-hud .ap-brand{font-size:16px}.ap-flag{font-size:21px}.ap-ring{width:34px;height:34px}.ap-hud .ap-back{padding:5px 9px 5px 8px;font-size:12px}}
+@media (max-width:430px){.ap-hud:not(.slim) .ap-brand{display:none}.ap-hud:not(.slim) .ap-back{margin-right:auto}}
+
 </style>
 <div id="view"></div>
 <script>
@@ -6436,13 +6492,14 @@ function onLessonDone(story, idx, score, n) {
 
 /* ---------- HUD (top bar) ---------- */
 function hudHTML() { const g = goal(), t = xpToday(), p = Math.min(1, t / g);
-  return `<div class="ap-hud">${apBack()}${brandHTML()}<span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
+  return `<div class="ap-hud">${apBack()}${brandHTML()}<span class="ap-flag" data-go="pick" role="button">${typeof subjEmoji === "function" ? subjEmoji() : courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
     <span class="ap-ring" title="${L("apGoal")}"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="bg"/><circle cx="18" cy="18" r="15" class="fg" style="stroke-dasharray:${(p * 94.2).toFixed(1)} 100"/></svg><b>${t}</b></span></div>`; }
 /* one Safiverse app: the top-left button looks the same whether opened on its own or from Minaraverse */
 const apBack = () => `<a class="ap-back" href="${SAFI ? "https://minaraverse.github.io/" : "#"}" aria-label="Minaraverse"><span>←</span><b>minara<i>verse</i></b></a>`;
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
 /* ---------- course choice ---------- */
+document.addEventListener("click", e => { if (e.target.closest(".ap-flag[data-go='pick']")) { e.stopPropagation(); Router.go("app-pick"); } }, true);
 const COURSE_EMOJI = { milingo: "🌱", kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", ielts: "🎙", debate: "⚖️", heist: "🗝" };
 const courseEmoji = k => COURSE_EMOJI[k] || "📘";
 if (!lsGet("mv-course2", null)) { lsSet("mv-course", "milingo"); lsSet("mv-course2", 1); }
@@ -6475,6 +6532,9 @@ VIEWS.app = root => {
     root.onclick = e => { const b = e.target.closest("[data-course]"); if (!b) return; lsSet("mv-course", b.dataset.course); Router.go("app-learn"); };
     return {};
   }
+  if (sub === "pick") { root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("svLearn"))}</h1>${pickHTML()}<button class="ap-item sv-st" data-stories><span>📚</span><b>${L("svStories")}</b><small>${WORLD_ORDER.length}</small><i>›</i></button>`);
+    wirePick(root, () => Router.go("app-learn")); return {}; }
+  if (sub === "learn" && typeof subj === "function" && subj() !== "en") { root.innerHTML = shell("learn", skPathHTML(subj())); wireSkPath(root); return {}; }
   if (sub === "learn" && curCourse() === "milingo") { root.innerHTML = shell("learn", drillPathHTML()); wireDrillPath(root); return {}; }
   if (sub === "learn") {
     const k = curCourse(), S = STORIES[k], nx = nextIndex(k);
@@ -7513,7 +7573,7 @@ const JUMP_ICON = `<i class="dj-spark s1">✦</i><i class="dj-spark s2">✦</i><
 function drillPathHTML() {
   const cu = curUnit(), side = [[0, -46, -70, -46, 0], [0, 46, 70, 46, 0]], CU = UNITS[cu];
   const firstLocked = UNITS.findIndex(u => !unitOpen(u.n));
-  return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🌱 ${L("dCourseName")}</b></span><i>${L("apChange")} ▾</i></button>
+  return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🇬🇧 ${L("skEnglish")}</b></span><i>${L("apChange")} ▾</i></button>
   <a class="dr-pall" href="#drill-p"><span>💪</span><b>${L("dPracticeAll")}</b><small>${L("dPracticeAllP")}</small><i>❤️ ${hearts()}</i></a>
   <header class="dr-ub dr-top" style="--uc:${CU.c}"><div><small>${L("dSection")} ${CU.sec + 1}, ${L("dUnit")} ${CU.n + 1}</small><b>${CU.e} ${esc(T3(CU.t))}</b></div><button class="dr-gb" data-guide="${CU.n}" aria-label="${L("dGuide")}">📖<span>${L("dGuide")}</span></button></header>` +
   SECTIONS.map((S, si) => `<div class="dr-sb" data-th="${si}"><div class="dr-sec"><span>${L("dSection")} ${si + 1} · ${S.lv}</span><b>${esc(T3(S.t))}</b></div>` + UNITS.slice(S.from, S.to).map(U => {
@@ -7545,7 +7605,7 @@ function wireDrillPath(root) {
   tc.onclick = () => { const c = cur(); c && c.scrollIntoView({ block: "center", behavior: "smooth" }); sfx("tap"); };
   let pop = null; const closePop = () => { pop && pop.remove(); pop = null; };
   root.onclick = e => {
-    if (e.target.closest("[data-go='course']")) { Router.go("app-course"); return; }
+    if (e.target.closest("[data-go='course']")) { Router.go("app-pick"); return; }
     const n = e.target.closest(".dr-node"), g = e.target.closest("[data-guide]"), c = e.target.closest("[data-chest]");
     if (g) { guideSheet(UNITS[+g.dataset.guide]); return; }
     const sd = e.target.closest("[data-side]"); if (sd) { sideSheet(UNITS[+sd.dataset.side]); return; }
@@ -7975,23 +8035,272 @@ personSVG = function (P, o = {}) {
   return s.replace("</svg>", helmet + "</svg>");
 };
 
+/* ===== Safiverse extra courses: Math, Music, Chess — every question is generated in code (no images, no credits) ===== */
+Object.assign(UI.en, { skMath: "Math", skMusic: "Music", skChess: "Chess", skEnglish: "English", skMathP: "From counting to percentages", skMusicP: "Notes, piano, ear and rhythm", skChessP: "Pieces, moves, check and mate",
+  skHowMany: "How many?", skSolve: "Solve", skCmp: "Which sign fits?", skFrac: "What part is coloured?", skClock: "What time is it?", skShape: "What is this shape?", skSides: "How many sides does it have?", skPct: "Calculate",
+  skTapNote: "Tap the note", skHearTap: "Listen and tap the same note", skHigher: "Which sound is higher?", skFirst: "The first", skSecond: "The second", skStaff: "Which note is this?", skBeats: "How many beats is this note?",
+  skRepeat: "Listen and play the melody back", skPlay: "Play again", skTapSq: "Tap the square", skPiece: "Which piece is this?", skWhere: "Tap a square where the {p} can move", skCapture: "Capture a black piece: tap your piece, then its target",
+  skCheck: "Give check to the black king: tap your piece, then a square", skMate: "Checkmate in one move! Tap your piece, then a square", skPickPiece: "Now tap where it goes", skReview: "Unit review", skLessonN: "Lesson",
+  skPieces: ["King", "Queen", "Rook", "Bishop", "Knight", "Pawn"], skShapes: ["Triangle", "Square", "Rectangle", "Circle", "Pentagon", "Hexagon"], skOk: "Correct answer:" });
+Object.assign(UI.az, { skMath: "Riyaziyyat", skMusic: "Musiqi", skChess: "Şahmat", skEnglish: "İngilis dili", skMathP: "Saymaqdan faizlərə qədər", skMusicP: "Notlar, piano, qulaq və ritm", skChessP: "Fiqurlar, gedişlər, şah və mat",
+  skHowMany: "Neçədir?", skSolve: "Hesabla", skCmp: "Hansı işarə uyğundur?", skFrac: "Rəngli hissə neçədir?", skClock: "Saat neçədir?", skShape: "Bu hansı fiqurdur?", skSides: "Bu fiqurun neçə tərəfi var?", skPct: "Hesabla",
+  skTapNote: "Bu notu bas", skHearTap: "Qulaq as və eyni notu bas", skHigher: "Hansı səs daha yüksəkdir?", skFirst: "Birinci", skSecond: "İkinci", skStaff: "Bu hansı notdur?", skBeats: "Bu not neçə vuruşdur?",
+  skRepeat: "Qulaq as və melodiyanı təkrar çal", skPlay: "Yenə dinlə", skTapSq: "Bu xanaya bas", skPiece: "Bu hansı fiqurdur?", skWhere: "{p} gedə biləcəyi bir xanaya bas", skCapture: "Qara fiquru vur: əvvəl öz fiqurunu, sonra hədəfi seç",
+  skCheck: "Qara şaha şah elan et: əvvəl fiquru, sonra xananı seç", skMate: "Bir gedişdə mat! Əvvəl fiquru, sonra xananı seç", skPickPiece: "İndi hara gedəcəyini seç", skReview: "Bölmə təkrarı", skLessonN: "Dərs",
+  skPieces: ["Şah", "Vəzir", "Top", "Fil", "At", "Piyada"], skShapes: ["Üçbucaq", "Kvadrat", "Düzbucaqlı", "Dairə", "Beşbucaq", "Altıbucaq"], skOk: "Düzgün cavab:" });
+Object.assign(UI.ru, { skMath: "Математика", skMusic: "Музыка", skChess: "Шахматы", skEnglish: "Английский", skMathP: "От счёта до процентов", skMusicP: "Ноты, пианино, слух и ритм", skChessP: "Фигуры, ходы, шах и мат",
+  skHowMany: "Сколько?", skSolve: "Реши", skCmp: "Какой знак подходит?", skFrac: "Какая часть закрашена?", skClock: "Который час?", skShape: "Что это за фигура?", skSides: "Сколько у неё сторон?", skPct: "Посчитай",
+  skTapNote: "Нажми ноту", skHearTap: "Послушай и нажми ту же ноту", skHigher: "Какой звук выше?", skFirst: "Первый", skSecond: "Второй", skStaff: "Какая это нота?", skBeats: "Сколько долей длится эта нота?",
+  skRepeat: "Послушай и сыграй мелодию", skPlay: "Ещё раз", skTapSq: "Нажми на клетку", skPiece: "Какая это фигура?", skWhere: "Нажми клетку, куда может пойти {p}", skCapture: "Возьми чёрную фигуру: сначала своя фигура, потом цель",
+  skCheck: "Объяви шах чёрному королю: сначала фигура, потом клетка", skMate: "Мат в один ход! Сначала фигура, потом клетка", skPickPiece: "Теперь выбери, куда идти", skReview: "Повторение раздела", skLessonN: "Урок",
+  skPieces: ["Король", "Ферзь", "Ладья", "Слон", "Конь", "Пешка"], skShapes: ["Треугольник", "Квадрат", "Прямоугольник", "Круг", "Пятиугольник", "Шестиугольник"], skOk: "Правильный ответ:" });
+
+const rnd = (a, b) => a + ((Math.random() * (b - a + 1)) | 0);
+const pick1 = a => a[(Math.random() * a.length) | 0];
+/* four options around the right number, all different and >= 0 */
+function numOpts(a, spread = 3) { const s = new Set([a]); let g = 0; while (s.size < 4 && g++ < 60) { const d = rnd(-spread, spread); if (d && a + d >= 0) s.add(a + d); } let k = 1; while (s.size < 4) s.add(a + spread + k++); return shuffle([...s]); }
+const optQ = (p, right, opts) => { opts = opts || numOpts(right); return { k: "opt", p, o: opts.map(String), a: opts.map(String).indexOf(String(right)), ans: String(right) }; };
+
+/* ---------- MATH ---------- */
+const EMO = ["🍎", "⭐", "🐟", "🎈", "🌸", "🐞", "🍪", "⚽"];
+function clockSVG(h, m) { const a1 = ((h % 12) + m / 60) * 30, a2 = m * 6, hand = (a, l, w, c) => `<line x1="50" y1="50" x2="${50 + l * Math.sin(a * Math.PI / 180)}" y2="${50 - l * Math.cos(a * Math.PI / 180)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+  return `<svg class="sk-pic" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#fff" stroke="#2b3a33" stroke-width="4"/>${Array.from({ length: 12 }, (_, i) => { const a = (i + 1) * 30 * Math.PI / 180; return `<text x="${50 + 35 * Math.sin(a)}" y="${54 + 35 * -Math.cos(a)}" font-size="10" font-weight="800" text-anchor="middle" fill="#2b3a33">${i + 1}</text>`; }).join("")}${hand(a1, 22, 5, "#2b3a33")}${hand(a2, 34, 3, "#e0565b")}<circle cx="50" cy="50" r="3.5" fill="#2b3a33"/></svg>`; }
+function fracSVG(n, d) { if (d === 1) return ""; let s = ""; for (let i = 0; i < d; i++) { const a0 = i / d * 2 * Math.PI - Math.PI / 2, a1 = (i + 1) / d * 2 * Math.PI - Math.PI / 2;
+    s += `<path d="M50 50 L${50 + 44 * Math.cos(a0)} ${50 + 44 * Math.sin(a0)} A44 44 0 0 1 ${50 + 44 * Math.cos(a1)} ${50 + 44 * Math.sin(a1)}Z" fill="${i < n ? "#6FCF8E" : "#eef3ef"}" stroke="#2b3a33" stroke-width="2.5"/>`; }
+  return `<svg class="sk-pic" viewBox="0 0 100 100">${s}</svg>`; }
+const SHAPES = [[3, `<polygon points="50,10 92,86 8,86"/>`], [4, `<rect x="16" y="16" width="68" height="68"/>`], [4, `<rect x="6" y="28" width="88" height="46"/>`], [0, `<circle cx="50" cy="50" r="40"/>`],
+  [5, `<polygon points="50,8 92,39 76,89 24,89 8,39"/>`], [6, `<polygon points="28,12 72,12 94,50 72,88 28,88 6,50"/>`]];
+const shapeSVG = i => `<svg class="sk-pic" viewBox="0 0 100 100"><g fill="#8FD9B6" stroke="#2b3a33" stroke-width="4" stroke-linejoin="round">${SHAPES[i][1]}</g></svg>`;
+const sum = (a, b, op) => `<p class="sk-eq">${a} ${op} ${b} = <u>?</u></p>`;
+const MATH = [
+  { e: "🍎", t: ["Counting 1–10", "1–10 sayırıq", "Считаем 1–10"], g: lv => { const n = rnd(1, 4 + lv * 2), em = pick1(EMO); return optQ(`<b class="sk-q">${L("skHowMany")}</b><p class="sk-emo">${em.repeat(n)}</p>`, n); } },
+  { e: "➕", t: ["Adding up to 10", "10-a qədər toplama", "Сложение до 10"], g: lv => { const a = rnd(0, 5 + lv), b = rnd(0, 10 - a > 0 ? 10 - a : 0); return optQ(`<b class="sk-q">${L("skSolve")}</b>${sum(a, b, "+")}`, a + b); } },
+  { e: "➖", t: ["Taking away up to 10", "10-a qədər çıxma", "Вычитание до 10"], g: () => { const a = rnd(2, 10), b = rnd(0, a); return optQ(`<b class="sk-q">${L("skSolve")}</b>${sum(a, b, "−")}`, a - b); } },
+  { e: "🔟", t: ["Adding up to 20", "20-yə qədər toplama", "Сложение до 20"], g: () => { const a = rnd(5, 15), b = rnd(1, 20 - a); return optQ(`<b class="sk-q">${L("skSolve")}</b>${sum(a, b, "+")}`, a + b); } },
+  { e: "🎯", t: ["Taking away up to 20", "20-yə qədər çıxma", "Вычитание до 20"], g: () => { const a = rnd(10, 20), b = rnd(1, a); return optQ(`<b class="sk-q">${L("skSolve")}</b>${sum(a, b, "−")}`, a - b); } },
+  { e: "⚖️", t: ["Bigger or smaller", "Böyük, yoxsa kiçik", "Больше или меньше"], g: lv => { const a = rnd(0, 20 + lv * 30), b = Math.random() < .2 ? a : rnd(0, 20 + lv * 30), r = a > b ? ">" : a < b ? "<" : "=";
+      return optQ(`<b class="sk-q">${L("skCmp")}</b><p class="sk-eq">${a} <u>?</u> ${b}</p>`, r, [">", "<", "="]); } },
+  { e: "💯", t: ["Adding up to 100", "100-ə qədər toplama", "Сложение до 100"], g: () => { const a = rnd(10, 80), b = rnd(5, 100 - a); return optQ(`<b class="sk-q">${L("skSolve")}</b>${sum(a, b, "+")}`, a + b, numOpts(a + b, 11)); } },
+  { e: "✖️", t: ["Times tables 2–5", "Vurma cədvəli 2–5", "Таблица умножения 2–5"], g: () => { const a = rnd(2, 5), b = rnd(1, 10); return optQ(`<b class="sk-q">${L("skSolve")}</b>${sum(a, b, "×")}`, a * b, numOpts(a * b, a)); } },
+  { e: "🧮", t: ["Times tables 6–9", "Vurma cədvəli 6–9", "Таблица умножения 6–9"], g: () => { const a = rnd(6, 9), b = rnd(2, 10); return optQ(`<b class="sk-q">${L("skSolve")}</b>${sum(a, b, "×")}`, a * b, numOpts(a * b, a)); } },
+  { e: "➗", t: ["Division", "Bölmə", "Деление"], g: () => { const b = rnd(2, 9), q = rnd(1, 10); return optQ(`<b class="sk-q">${L("skSolve")}</b>${sum(b * q, b, "÷")}`, q); } },
+  { e: "🍕", t: ["Fractions", "Kəsrlər", "Дроби"], g: () => { const d = rnd(2, 8), n = rnd(1, d - 1), r = `${n}/${d}`, s = new Set([r]); while (s.size < 4) { const d2 = rnd(2, 8), n2 = rnd(1, d2 - 1); if (n2 * d !== n * d2) s.add(`${n2}/${d2}`); }
+      return optQ(`<b class="sk-q">${L("skFrac")}</b>${fracSVG(n, d)}`, r, shuffle([...s])); } },
+  { e: "🕒", t: ["Telling the time", "Saata baxmaq", "Определяем время"], g: lv => { const h = rnd(1, 12), m = pick1(lv ? [0, 15, 30, 45, 5, 20, 40, 50] : [0, 30]), f = (h, m) => `${h}:${String(m).padStart(2, "0")}`, r = f(h, m), s = new Set([r]);
+      while (s.size < 4) s.add(f(Math.random() < .5 ? h : rnd(1, 12), Math.random() < .5 ? m : pick1([0, 15, 30, 45]))); return optQ(`<b class="sk-q">${L("skClock")}</b>${clockSVG(h, m)}`, r, shuffle([...s])); } },
+  { e: "🔺", t: ["Shapes", "Fiqurlar", "Фигуры"], g: () => { const i = rnd(0, SHAPES.length - 1);
+      if (SHAPES[i][0] >= 3 && Math.random() < .4) return optQ(`<b class="sk-q">${L("skSides")}</b>${shapeSVG(i)}`, SHAPES[i][0], shuffle([3, 4, 5, 6]));
+      const nm = L("skShapes"), o = shuffle([i, ...pickN(SHAPES.map((_, k) => k), 3, [i])]); return optQ(`<b class="sk-q">${L("skShape")}</b>${shapeSVG(i)}`, nm[i], o.map(k => nm[k])); } },
+  { e: "💸", t: ["Percentages", "Faizlər", "Проценты"], g: () => { const p = pick1([10, 20, 25, 50, 75, 100]), base = pick1([20, 40, 60, 80, 100, 120, 200, 400]), r = base * p / 100;
+      return optQ(`<b class="sk-q">${L("skPct")}</b><p class="sk-eq">${p}% × ${base} = <u>?</u></p>`, r, numOpts(r, Math.max(2, base / 10))); } }
+];
+
+/* ---------- MUSIC ---------- */
+const SOLF = ["Do", "Re", "Mi", "Fa", "Sol", "La", "Si", "Do"], LET = ["C", "D", "E", "F", "G", "A", "B", "C"], WSEMI = [0, 2, 4, 5, 7, 9, 11, 12];
+const BLACK = [[0, 1], [1, 3], [3, 6], [4, 8], [5, 10]];   /* [after white key, semitone] */
+const noteName = i => LANG === "en" ? LET[i] : SOLF[i];
+const sharpName = s => { const w = BLACK.find(b => b[1] === s)[0]; return (LANG === "en" ? LET[w] : SOLF[w]) + "♯"; };
+let MAC = null;
+function playSemi(s, at = 0, dur = .55) { if (!soundOn()) return; try { MAC = MAC || new (window.AudioContext || window.webkitAudioContext)(); if (MAC.state === "suspended") MAC.resume();
+  const t = MAC.currentTime + at, f = 261.63 * Math.pow(2, s / 12), g = MAC.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.32, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur + .5); g.connect(MAC.destination);
+  [[1, "triangle", 1], [2, "sine", .35], [3, "sine", .12]].forEach(([m, ty, v]) => { const o = MAC.createOscillator(), gg = MAC.createGain(); o.type = ty; o.frequency.value = f * m; gg.gain.value = v; o.connect(gg).connect(g); o.start(t); o.stop(t + dur + .6); }); } catch (e) {} }
+const playSeq = (seq, gap = .5) => seq.forEach((s, i) => playSemi(s, i * gap));
+function pianoHTML(labels, mark) { return `<div class="sk-piano">${WSEMI.map((s, i) => `<button class="sk-key w ${mark === s ? "mk" : ""}" data-key="${s}"><small>${labels ? noteName(i) : ""}</small></button>`).join("")}
+  ${BLACK.map(([w, s]) => `<button class="sk-key b" data-key="${s}" style="left:calc(${(w + 1) * 12.5}% - 4.5%)"><small>${labels > 1 ? sharpName(s) : ""}</small></button>`).join("")}</div>`; }
+function staffSVG(i) { const y = 90 - i * 6, ledger = i === 0 ? `<line x1="52" y1="90" x2="78" y2="90" stroke="#2b3a33" stroke-width="2"/>` : "";
+  return `<svg class="sk-pic wide" viewBox="0 0 130 104">${[0, 1, 2, 3, 4].map(k => `<line x1="8" y1="${30 + k * 12}" x2="122" y2="${30 + k * 12}" stroke="#2b3a33" stroke-width="2"/>`).join("")}
+    <text x="10" y="80" font-size="62" fill="#2b3a33" font-family="serif">𝄞</text>${ledger}<ellipse cx="65" cy="${y}" rx="8" ry="6" fill="#2b3a33" transform="rotate(-18 65 ${y})"/><line x1="72" y1="${y - 1}" x2="72" y2="${y - 36}" stroke="#2b3a33" stroke-width="2.4"/></svg>`; }
+function durSVG(k) { /* 0 whole, 1 half, 2 quarter, 3 eighth */ const fill = k >= 2 ? "#2b3a33" : "#fff";
+  return `<svg class="sk-pic" viewBox="0 0 100 100"><ellipse cx="44" cy="72" rx="15" ry="11" fill="${fill}" stroke="#2b3a33" stroke-width="5" transform="rotate(-20 44 72)"/>${k ? `<line x1="57" y1="68" x2="57" y2="12" stroke="#2b3a33" stroke-width="5"/>` : ""}${k === 3 ? `<path d="M57 12 Q80 26 74 52 Q72 34 57 30Z" fill="#2b3a33"/>` : ""}</svg>`; }
+const MELODIES = [[4, 4, 5, 7], [7, 5, 4, 2], [0, 0, 7, 7], [9, 9, 7], [0, 2, 4], [4, 2, 0], [0, 4, 7], [7, 4, 0], [2, 4, 5, 7], [12, 11, 9, 7]];
+const keyQ = (p, s, labels, play) => ({ k: "key", p, s, labels, play, ans: WSEMI.includes(s) ? noteName(WSEMI.indexOf(s)) : sharpName(s) });
+const MUSIC = [
+  { e: "🎹", t: ["Do Re Mi", "Do Re Mi", "До Ре Ми"], g: lv => { const i = rnd(0, 2 + lv); return keyQ(`<b class="sk-q">${L("skTapNote")}</b><p class="sk-big">${noteName(i)}</p>`, WSEMI[i], 1); } },
+  { e: "🎼", t: ["Fa Sol La Si", "Fa Sol La Si", "Фа Соль Ля Си"], g: lv => { const i = rnd(3, 7); return keyQ(`<b class="sk-q">${L("skTapNote")}</b><p class="sk-big">${noteName(i)}</p>`, WSEMI[i], lv < 2 ? 1 : 0); } },
+  { e: "👂", t: ["High or low?", "Yüksək, yoxsa alçaq?", "Высоко или низко?"], g: lv => { let a = rnd(0, 12), b = rnd(0, 12); while (Math.abs(a - b) < 4 - lv) b = rnd(0, 12);
+      const q = optQ(`<b class="sk-q">${L("skHigher")}</b><button class="sk-play" data-play="${a},${b}">🔊 ${L("skPlay")}</button>`, a > b ? L("skFirst") : L("skSecond"), [L("skFirst"), L("skSecond")]); q.play = [a, b]; q.gap = .8; return q; } },
+  { e: "🎧", t: ["Find the note by ear", "Notu qulaqla tap", "Найди ноту на слух"], g: lv => { const i = rnd(0, 4 + Math.min(3, lv)); const q = keyQ(`<b class="sk-q">${L("skHearTap")}</b><button class="sk-play" data-play="${WSEMI[i]}">🔊 ${L("skPlay")}</button>`, WSEMI[i], 1, [WSEMI[i]]); return q; } },
+  { e: "📜", t: ["Reading notes", "Notları oxu", "Читаем ноты"], g: () => { const i = rnd(0, 7), nm = [0, 1, 2, 3, 4, 5, 6, 7].map(noteName); const o = shuffle([i % 7, ...pickN([0, 1, 2, 3, 4, 5, 6], 3, [i % 7])]);
+      return optQ(`<b class="sk-q">${L("skStaff")}</b>${staffSVG(i)}`, nm[i % 7], o.map(k => nm[k])); } },
+  { e: "🥁", t: ["Rhythm", "Ritm", "Ритм"], g: () => { const k = rnd(0, 3), v = ["4", "2", "1", "½"]; return optQ(`<b class="sk-q">${L("skBeats")}</b>${durSVG(k)}`, v[k], v.slice()); } },
+  { e: "🎶", t: ["Play it back", "Melodiyanı təkrarla", "Повтори мелодию"], g: lv => { const m = lv < 2 ? pick1(MELODIES.filter(x => x.length === 3)) : pick1(MELODIES);
+      return { k: "seq", p: `<b class="sk-q">${L("skRepeat")}</b><button class="sk-play" data-play="${m.join(",")}">🔊 ${L("skPlay")}</button>`, seq: m, labels: 1, play: m, ans: m.map(s => noteName(WSEMI.indexOf(s))).join(" – ") }; } },
+  { e: "♯", t: ["Sharps", "Diyezlər", "Диезы"], g: () => { const s = pick1(BLACK)[1]; return keyQ(`<b class="sk-q">${L("skTapNote")}</b><p class="sk-big">${sharpName(s)}</p>`, s, 2); } }
+];
+
+/* ---------- CHESS: tiny move generator (no castling / en passant) ---------- */
+const FL = "abcdefgh", sqXY = s => [FL.indexOf(s[0]), +s[1] - 1], xySq = (x, y) => x >= 0 && x < 8 && y >= 0 && y < 8 ? FL[x] + (y + 1) : null;
+const DIRS = { R: [[1, 0], [-1, 0], [0, 1], [0, -1]], B: [[1, 1], [1, -1], [-1, 1], [-1, -1]], N: [[1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, -1], [-2, 1], [-1, 2]] };
+DIRS.Q = DIRS.R.concat(DIRS.B); DIRS.K = DIRS.Q;
+function pseudo(pos, s, attackOnly) { const p = pos[s], c = p[0], t = p[1], [x, y] = sqXY(s), out = [];
+  if (t === "P") { const d = c === "w" ? 1 : -1; [-1, 1].forEach(dx => { const q = xySq(x + dx, y + d); if (q && (attackOnly || (pos[q] && pos[q][0] !== c))) out.push(q); });
+    if (!attackOnly) { const f = xySq(x, y + d); if (f && !pos[f]) { out.push(f); const f2 = xySq(x, y + 2 * d); if ((c === "w" ? y === 1 : y === 6) && f2 && !pos[f2]) out.push(f2); } } return out; }
+  DIRS[t].forEach(([dx, dy]) => { for (let k = 1; k < 8; k++) { const q = xySq(x + dx * k, y + dy * k); if (!q) break; if (pos[q]) { if (pos[q][0] !== c) out.push(q); break; } out.push(q); if (t === "K" || t === "N") break; } });
+  return out; }
+const kingOf = (pos, c) => Object.keys(pos).find(s => pos[s] === c + "K");
+const attacked = (pos, sq, by) => Object.keys(pos).some(s => pos[s][0] === by && pseudo(pos, s, true).includes(sq));
+const inCheck = (pos, c) => { const k = kingOf(pos, c); return !!k && attacked(pos, k, c === "w" ? "b" : "w"); };
+const mv = (pos, a, b) => { const n = Object.assign({}, pos); n[b] = n[a]; delete n[a]; if (n[b][1] === "P" && (b[1] === "8" || b[1] === "1")) n[b] = n[b][0] + "Q"; return n; };
+const legal = (pos, s) => pseudo(pos, s).filter(q => !kingOf(pos, pos[s][0]) || !inCheck(mv(pos, s, q), pos[s][0]));
+const anyMove = (pos, c) => Object.keys(pos).some(s => pos[s][0] === c && legal(pos, s).length);
+const mated = (pos, c) => inCheck(pos, c) && !anyMove(pos, c);
+const GLYPH = { K: "♚", Q: "♛", R: "♜", B: "♝", N: "♞", P: "♟" };
+const PIDX = { K: 0, Q: 1, R: 2, B: 3, N: 4, P: 5 };
+function boardHTML(pos, opt = {}) { let h = ""; for (let y = 7; y >= 0; y--) for (let x = 0; x < 8; x++) { const s = FL[x] + (y + 1), p = pos[s];
+    h += `<button class="sk-sq ${(x + y) % 2 ? "l" : "d"} ${opt.mark === s ? "mk" : ""}" data-sq="${s}">${p ? `<i class="pc ${p[0]}">${GLYPH[p[1]]}︎</i>` : ""}${x === 0 ? `<em class="rk">${y + 1}</em>` : ""}${y === 0 ? `<em class="fl">${FL[x]}</em>` : ""}</button>`; }
+  return `<div class="sk-board">${h}</div>`; }
+const rsq = () => FL[rnd(0, 7)] + rnd(1, 8);
+function freeSq(pos, rows) { let s; do { s = FL[rnd(0, 7)] + (rows ? pick1(rows) : rnd(1, 8)); } while (pos[s]); return s; }
+const pName = t => L("skPieces")[PIDX[t]];
+function moveQ(t, lv) { const pos = {}, s = t === "P" ? freeSq(pos, [2, 3, 4, 5]) : rsq(); pos[s] = "w" + t;
+  const nb = t === "P" ? 1 : Math.min(3, lv); for (let i = 0; i < nb; i++) { const q = freeSq(pos); pos[q] = (t === "P" ? "b" : Math.random() < .5 ? "w" : "b") + pick1(["P", "N", "B"]); }
+  if (t === "P") { const [x, y] = sqXY(s), d = xySq(x + pick1([-1, 1]), y + 1); if (d && Math.random() < .6) pos[d] = "bN"; }
+  const ok = legal(pos, s); if (!ok.length) return moveQ(t, lv);
+  return { k: "sq", p: `<b class="sk-q">${L("skWhere").replace("{p}", pName(t))}</b>`, pos, mark: s, ok: q => ok.includes(q), ans: ok.slice(0, 4).join(", ") }; }
+function captureQ() { for (let g = 0; g < 200; g++) { const pos = {}, t = pick1(["Q", "R", "B", "N", "P"]), s = t === "P" ? freeSq(pos, [2, 3, 4, 5, 6]) : rsq(); pos[s] = "w" + t;
+    for (let i = 0; i < 3; i++) pos[freeSq(pos)] = "b" + pick1(["P", "N", "B", "R"]);
+    const caps = legal(pos, s).filter(q => pos[q]); if (caps.length === 1) return { k: "mv", p: `<b class="sk-q">${L("skCapture")}</b>`, pos, ok: (a, b) => a === s && b === caps[0], ans: `${s} → ${caps[0]}` }; } return moveQ("R", 0); }
+function checkQ() { for (let g = 0; g < 300; g++) { const pos = {}, bk = rsq(); pos[bk] = "bK"; const t = pick1(["Q", "R", "B", "N"]); pos[freeSq(pos)] = "w" + t; let wk; do { wk = freeSq(pos); } while (Math.max(...sqXY(wk).map((v, i) => Math.abs(v - sqXY(bk)[i]))) < 2); pos[wk] = "wK";
+    if (inCheck(pos, "b")) continue; const s = Object.keys(pos).find(k => pos[k] === "w" + t), good = legal(pos, s).filter(q => inCheck(mv(pos, s, q), "b"));
+    if (good.length) return { k: "mv", p: `<b class="sk-q">${L("skCheck")}</b>`, pos, ok: (a, b) => pos[a] && pos[a][0] === "w" && legal(pos, a).includes(b) && inCheck(mv(pos, a, b), "b"), ans: `${s} → ${good[0]}` }; } return captureQ(); }
+const MATES = [{ g8: "bK", f7: "bP", g7: "bP", h7: "bP", a1: "wR", g1: "wK" }, { h8: "bK", g6: "wK", a7: "wQ" }, { a8: "bK", b6: "wK", h1: "wR" }, { g8: "bK", f7: "bP", g7: "bP", h7: "bP", d1: "wQ", g1: "wK" },
+  { e1: "wK", h5: "wQ", c4: "wB", a2: "wP", b2: "wP", c2: "wP", d2: "wP", e4: "wP", f2: "wP", g2: "wP", h2: "wP", a1: "wR", h1: "wR", b1: "wN", g1: "wN", c1: "wB", e8: "bK", d8: "bQ", a8: "bR", h8: "bR", c8: "bB", f8: "bB", c6: "bN", f6: "bN", a7: "bP", b7: "bP", c7: "bP", d7: "bP", e5: "bP", f7: "bP", g7: "bP", h7: "bP" }];
+const mateMoves = pos => { const out = []; Object.keys(pos).forEach(s => { if (pos[s][0] === "w") legal(pos, s).forEach(q => { if (mated(mv(pos, s, q), "b")) out.push([s, q]); }); }); return out; };
+function mateQ(lv) { let pos = null;
+  if (Math.random() < .55) for (let g = 0; g < 400 && !pos; g++) { const p = {}, edge = pick1([[rnd(0, 7), 7], [rnd(0, 7), 0], [0, rnd(0, 7)], [7, rnd(0, 7)]]); const bk = xySq(...edge); p[bk] = "bK";
+    let wk; do { wk = freeSq(p); } while (Math.max(...sqXY(wk).map((v, i) => Math.abs(v - sqXY(bk)[i]))) < 2); p[wk] = "wK"; p[freeSq(p)] = "w" + (lv > 1 && Math.random() < .5 ? "R" : "Q");
+    if (!inCheck(p, "b") && anyMove(p, "b") && mateMoves(p).length) pos = p; }
+  pos = pos || Object.assign({}, pick1(MATES)); const m = mateMoves(pos)[0];
+  return { k: "mv", p: `<b class="sk-q">${L("skMate")}</b>`, pos, ok: (a, b) => pos[a] && pos[a][0] === "w" && legal(pos, a).includes(b) && mated(mv(pos, a, b), "b"), ans: m ? `${m[0]} → ${m[1]}` : "" }; }
+const CHESS = [
+  { e: "🔲", t: ["The board", "Şahmat taxtası", "Шахматная доска"], g: () => { const s = rsq(); return { k: "sq", p: `<b class="sk-q">${L("skTapSq")}</b><p class="sk-big">${s}</p>`, pos: {}, ok: q => q === s, ans: s }; } },
+  { e: "♟️", t: ["Meet the pieces", "Fiqurlarla tanış ol", "Знакомство с фигурами"], g: () => { const t = pick1("KQRBNP".split("")), nm = L("skPieces"), o = shuffle([PIDX[t], ...pickN([0, 1, 2, 3, 4, 5], 3, [PIDX[t]])]);
+      return optQ(`<b class="sk-q">${L("skPiece")}</b><p class="sk-glyph ${Math.random() < .5 ? "w" : "b"}">${GLYPH[t]}︎</p>`, nm[PIDX[t]], o.map(k => nm[k])); } },
+  { e: "🏰", t: ["The rook", "Top", "Ладья"], g: lv => moveQ("R", lv) },
+  { e: "⛪", t: ["The bishop", "Fil", "Слон"], g: lv => moveQ("B", lv) },
+  { e: "👑", t: ["The queen", "Vəzir", "Ферзь"], g: lv => moveQ("Q", lv) },
+  { e: "🐴", t: ["The knight", "At", "Конь"], g: lv => moveQ("N", lv) },
+  { e: "🪖", t: ["The pawn", "Piyada", "Пешка"], g: lv => moveQ("P", lv) },
+  { e: "🤴", t: ["The king", "Şah", "Король"], g: lv => moveQ("K", lv) },
+  { e: "⚔️", t: ["Capturing", "Vurmaq", "Взятие"], g: () => captureQ() },
+  { e: "⚡", t: ["Check!", "Şah!", "Шах!"], g: () => checkQ() },
+  { e: "🏆", t: ["Mate in one", "Bir gedişdə mat", "Мат в один ход"], g: lv => mateQ(lv) }
+];
+
+/* ---------- courses, progress, path ---------- */
+const SK = { math: { e: "🔢", n: "skMath", p: "skMathP", c: ["#6FCF8E", "#7CC7A8", "#9BD88A", "#5BB8A0"], U: MATH }, music: { e: "🎵", n: "skMusic", p: "skMusicP", c: ["#C77DFF", "#FF6FB5", "#B388FF", "#F2A65A"], U: MUSIC },
+  chess: { e: "♟️", n: "skChess", p: "skChessP", c: ["#F2C46D", "#D9A85B", "#E8B86A", "#C9955A"], U: CHESS } };
+const SKL = 4;   /* lessons per unit (the last one is the review) */
+const SP = () => lsGet("mv-sk", {});
+const skDone = (c, u) => (SP()[c] || {})[u] || 0;
+const skOpen = (c, u) => u === 0 || skDone(c, u - 1) >= SKL;
+const skCur = c => { const U = SK[c].U; for (let i = 0; i < U.length; i++) if (skOpen(c, i) && skDone(c, i) < SKL) return i; return U.length - 1; };
+const skLessons = c => SK[c].U.reduce((a, _, i) => a + skDone(c, i), 0);
+const subj = () => { const s = lsGet("mv-subj", "en"); return SK[s] ? s : "en"; };
+const subjEmoji = () => { const s = subj(); return s === "en" ? "🇬🇧" : SK[s].e; };
+
+function skPathHTML(c) { const C = SK[c], cu = skCur(c), offs = [[0, -50, -70, -30], [0, 50, 70, 30]];
+  return `<button class="ap-unit dr-course" data-go="pick"><span><small>${L("apCourse")}</small><b>${C.e} ${L(C.n)}</b></span><i>${L("apChange")} ▾</i></button>` +
+    C.U.map((U, u) => { const open = skOpen(c, u), d = skDone(c, u), col = C.c[u % C.c.length];
+      const nodes = Array.from({ length: SKL }, (_, j) => { const isDone = d > j, isCur = open && j === d && u === cu, can = open && j <= d, tro = j === SKL - 1;
+        return `<div class="dr-nw" style="--x:${offs[u % 2][j]}px;--i:${j}">${isCur ? `<span class="ap-start">${skLessons(c) ? L("apStart") : L("dFirst")}</span>` : ""}
+          <a class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${tro ? "trophy" : ""}" href="${can ? `#sk-${c}-${u}-${j}` : "#app-learn"}" aria-label="${esc(T3(U.t))} ${j + 1}"><span>${can || isDone ? (tro ? "🏆" : U.e) : "🔒"}</span>${isDone && !tro ? "<em>✓</em>" : ""}</a></div>`; }).join("");
+      return `<section class="dr-unit ${open ? "" : "locked"}" style="--uc:${col}" id="u${u}"><div class="dr-div"><i></i><b>${U.e} ${esc(T3(U.t))}</b><i></i></div><div class="dr-path sk-path">${nodes}</div></section>`; }).join("");
+}
+function wireSkPath(root) {
+  apReveal(root);
+  root.onclick = e => { if (e.target.closest("[data-go='pick']")) { Router.go("app-pick"); return; }
+    const l = e.target.closest(".dr-node.lock"); if (l) { e.preventDefault(); sfx("miss"); flash(l, "shake"); toast("🔒 " + L("apLocked")); } };
+  const nu = sessionStorage.getItem("mv-sknew"); sessionStorage.removeItem("mv-sknew");
+  setTimeout(() => { const c = root.querySelector(".dr-node.now"); if (c) { c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" }); if (nu) { c.classList.add("born"); setTimeout(() => sfx("unlock"), 450); } } }, 250);
+}
+
+/* ---------- lesson player ---------- */
+VIEWS.sk = root => {
+  document.documentElement.classList.add("ap-mode");
+  if (typeof safiGate === "function" && safiGate(root)) return {};
+  const m = location.hash.match(/^#sk-(\w+)-(\d+)-(\d+)/), c = m && m[1], u = m ? +m[2] : 0, j = m ? +m[3] : 0;
+  if (!m || !SK[c] || !SK[c].U[u] || !skOpen(c, u) || j > skDone(c, u) || j >= SKL) { Router.go("app-learn"); return {}; }
+  const C = SK[c], U = C.U[u], col = C.c[u % C.c.length], review = j === SKL - 1;
+  const gens = review ? C.U.slice(Math.max(0, u - 2), u + 1).map(x => x.g) : [U.g], N = review ? 10 : 8;
+  const queue = Array.from({ length: N }, (_, k) => pick1(gens)(Math.min(3, j + (k > N / 2 ? 1 : 0))));
+  const st = { total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer", from: null, seqIn: [] };
+  root.innerHTML = `<div class="ap ap-les dr sk-les" style="--uc:${col}"><header class="ap-lh">${apBack()}<a href="#app-learn" class="ap-x" aria-label="Close">✕</a><div class="dr-bar"><i></i><em class="dr-cb"></em></div><span class="dr-h inf">${C.e}</span></header>
+    <main class="dr-main"><div class="dx sk-x"></div></main><footer class="dr-foot"><div class="dr-fb"><span class="dr-ic"></span><div><b></b><p></p></div></div><button class="dr-go" disabled>${L("dCheck")}</button></footer></div>`;
+  const box = root.querySelector(".dx"), foot = root.querySelector(".dr-foot"), go = root.querySelector(".dr-go"), bar = root.querySelector(".dr-bar i");
+  let sel = null;
+  const ready = on => { go.disabled = !on; go.classList.toggle("on", !!on); };
+  const setBar = () => { bar.style.width = Math.max(3, st.solved / st.total * 100) + "%"; };
+  function render() {
+    const x = st.cur = queue.shift(); window.__skq = x; sel = null; st.phase = "answer"; st.from = null; st.seqIn = []; foot.className = "dr-foot"; go.textContent = L("dCheck"); ready(false);
+    let body = `<div class="sk-prompt">${x.p}</div>`;
+    if (x.k === "opt") body += `<div class="dx-opts sk-opts ${x.o.length === 2 ? "two" : ""}">${x.o.map((o, i) => `<button class="dx-opt" data-i="${i}"><span class="dx-n">${i + 1}</span><b>${esc(o)}</b></button>`).join("")}</div>`;
+    if (x.k === "key" || x.k === "seq") body += `${x.k === "seq" ? `<div class="sk-seq">${x.seq.map(() => "<i></i>").join("")}</div>` : ""}${pianoHTML(x.labels)}`;
+    if (x.k === "sq" || x.k === "mv") body += boardHTML(x.pos, { mark: x.mark });
+    box.classList.remove("in"); box.innerHTML = body; void box.offsetWidth; box.classList.add("in");
+    if (x.play) setTimeout(() => playSeq(x.play, x.gap || .5), 400);
+  }
+  box.onclick = e => { const x = st.cur; if (st.phase !== "answer") return;
+    const pl = e.target.closest("[data-play]"); if (pl) { playSeq(pl.dataset.play.split(",").map(Number), x.gap || .5); return; }
+    const o = e.target.closest(".dx-opt"); if (o) { sfx("tap"); box.querySelectorAll(".dx-opt").forEach(b => b.classList.toggle("sel", b === o)); sel = +o.dataset.i; ready(true); return; }
+    const k = e.target.closest("[data-key]"); if (k) { const s = +k.dataset.key; playSemi(s); k.classList.remove("hit"); void k.offsetWidth; k.classList.add("hit");
+      if (x.k === "key") { box.querySelectorAll(".sk-key").forEach(b => b.classList.toggle("sel", b === k)); sel = s; ready(true); }
+      else { st.seqIn.push(s); const dots = box.querySelectorAll(".sk-seq i"); dots.forEach((d, i) => d.classList.toggle("on", i < st.seqIn.length)); if (st.seqIn.length >= x.seq.length) { sel = 1; ready(true); check(); } }
+      return; }
+    const q = e.target.closest("[data-sq]"); if (q) { const s = q.dataset.sq;
+      if (x.k === "sq") { sfx("tap"); box.querySelectorAll(".sk-sq").forEach(b => b.classList.toggle("sel", b === q)); sel = s; ready(true); return; }
+      if (!st.from || (x.pos[s] && x.pos[s][0] === "w")) { if (x.pos[s] && x.pos[s][0] === "w") { sfx("tap"); st.from = s; sel = null; ready(false);
+          box.querySelectorAll(".sk-sq").forEach(b => { b.classList.toggle("from", b === q); b.classList.remove("sel", "dot"); }); legal(x.pos, s).forEach(t => { const b = box.querySelector(`[data-sq="${t}"]`); b && b.classList.add("dot"); }); toast("👉 " + L("skPickPiece")); }
+        return; }
+      sfx("tap"); box.querySelectorAll(".sk-sq").forEach(b => b.classList.toggle("sel", b === q)); sel = s; ready(true); } };
+  function check() {
+    const x = st.cur; let ok = false;
+    if (x.k === "opt") ok = sel === x.a; else if (x.k === "key") ok = sel === x.s; else if (x.k === "seq") ok = st.seqIn.every((s, i) => s === x.seq[i]);
+    else if (x.k === "sq") ok = x.ok(sel); else if (x.k === "mv") ok = !!st.from && x.ok(st.from, sel);
+    st.phase = "fb"; const ico = foot.querySelector(".dr-ic"), tb = foot.querySelector("b"), tp = foot.querySelector("p");
+    box.querySelectorAll(".sel").forEach(o => o.classList.add(ok ? "good" : "bad"));
+    if (x.k === "mv" && ok) { const a = box.querySelector(`[data-sq="${st.from}"] .pc`), b = box.querySelector(`[data-sq="${sel}"]`); if (a && b) { b.querySelector(".pc") && b.querySelector(".pc").remove(); b.appendChild(a); } }
+    if (ok) { st.ok++; st.solved++; st.combo++; st.maxCombo = Math.max(st.maxCombo, st.combo); const big = st.combo >= 5 && st.combo % 5 === 0; sfx(big ? "combo" : "ok"); buzz(15);
+      ico.textContent = "✓"; tb.textContent = L("dRight")[(Math.random() * 6) | 0]; tp.textContent = ""; foot.className = "dr-foot show ok";
+      if (big) { const cb = root.querySelector(".dr-cb"); cb.textContent = `🔥 ${st.combo} ${L("dCombo")}`; cb.classList.remove("pop"); void cb.offsetWidth; cb.classList.add("pop"); } }
+    else { st.miss++; st.combo = 0; sfx("no"); buzz([30, 40, 30]); ico.textContent = "✕"; tb.textContent = L("dWrongT"); tp.innerHTML = x.ans ? `${L("skOk")} <span class="dr-ans">${esc(x.ans)}</span>` : ""; foot.className = "dr-foot show no";
+      if (x.k === "key" || x.k === "seq") { const want = x.k === "key" ? [x.s] : x.seq; want.forEach(s => { const b = box.querySelector(`[data-key="${s}"]`); b && b.classList.add("mk"); }); }
+      queue.push(pick1(gens)(j)); }
+    setBar(); go.textContent = L("dCont"); ready(true);
+  }
+  function finish() {
+    const acc = Math.round(st.ok / Math.max(1, st.ok + st.miss) * 100), sec = Math.round((Date.now() - st.start) / 1000);
+    let xp = 10; if (st.miss === 0) xp += 5; xp += Math.floor(st.maxCombo / 5) * 2;
+    const p = SP(); p[c] = p[c] || {}; if (j >= (p[c][u] || 0)) { p[c][u] = j + 1; sessionStorage.setItem("mv-sknew", 1); } lsSet("mv-sk", p);
+    qAdd(q => { q.les++; if (st.miss === 0) q.per++; q.sec += sec; q.cmb = Math.max(q.cmb, st.maxCombo); });
+    addXp(xp); if (typeof safiAfterLesson === "function") safiAfterLesson("lesson");
+    const b = lsGet("mv-badges", {}); if (!b.first) b.first = dayStr(new Date()); if (st.miss === 0) b.perfect = (b.perfect || 0) + 1; if (streak() >= 7) b.week = true; lsSet("mv-badges", b);
+    const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, title: L("apDone") });
+    if (!st.wasToday && playedToday()) streakScreen(root, showDone); else showDone();
+  }
+  go.onclick = () => { if (go.disabled) return; if (st.phase === "answer") check(); else if (!queue.length) finish(); else render(); };
+  const onKey = e => { if (e.key === "Enter") { e.preventDefault(); go.click(); } }; addEventListener("keydown", onKey);
+  render(); setBar();
+  return { unmount() { removeEventListener("keydown", onKey); } };
+};
+
 /* ===== Safiverse accounts: welcome, guest lesson, email-code sign-up, progress sync, own admin ===== */
 const SAFI_API = "https://script.google.com/macros/s/AKfycbw7xrJ_Y59DlK0dRZ_z2tZJYHLAKqQcXRKmzcCyKckEf_tOmVHvcpBw3MgH3XGftems/exec";   /* the Safiverse Apps Script /exec link goes here */
-Object.assign(UI.en, { svUser: "Username", svUserH: "3–20 letters or numbers, e.g. safiya_7", svPin: "Your secret code", svPinH: "4–6 digits — only you know it", svUserBad: "Username: 3–20 Latin letters or numbers", svPinBad: "The code must be 4–6 digits", svTaken: "This username is taken — try another", svLoginBad: "Wrong username or code", svLocked: "Too many tries — wait 15 minutes", svForgot: "Forgot your code? Sign in with email", svEmailP: "We will send a 6-digit code to your email.", svSetT: "Choose your username and code", svSetP: "Next time just type them — on any phone.", svLater: "Later", svSave: "Save", svWelcome: "Welcome to Safiverse!", svWelcomeP: "Learn English step by step: short lessons, stars, quests and a cosmic league.", svReg: "Create my account", svGuest: "Look around as a guest",
+Object.assign(UI.en, { svUser: "Username", svUserH: "3–20 letters or numbers, e.g. safiya_7", svPin: "Your secret code", svPinH: "4–6 digits — only you know it", svUserBad: "Username: 3–20 Latin letters or numbers", svPinBad: "The code must be 4–6 digits", svTaken: "This username is taken — try another", svLoginBad: "Wrong username or code", svLocked: "Too many tries — wait 15 minutes", svForgot: "Forgot your code? Sign in with email", svEmailP: "We will send a 6-digit code to your email.", svSetT: "Choose your username and code", svSetP: "Next time just type them — on any phone.", svLater: "Later", svSave: "Save", svWelcome: "Welcome to Safiverse!", svWelcomeP: "Learn step by step: short lessons, stars, quests and a cosmic league.", svReg: "Create my account", svGuest: "Look around as a guest",
   svGuestP: "1 free lesson, then sign up", svHave: "I already have an account", svName: "Your name", svKid: "Child (up to 14)", svAdult: "Adult", svEmail: "Email", svEmailKid: "Parent's email",
   svConsent: "I am the parent and I agree", svPriv: "Your data is seen only by the Safiverse teacher and is never shared.", svSend: "Send me a code", svCodeT: "Enter the 6-digit code", svCodeP: "We sent it to",
   svResend: "Send again", svBad: "Wrong code, try again", svExp: "The code expired — send a new one", svWait: "Wait a minute before sending again", svErr: "Something went wrong. Check the internet and try again.",
   svEmailBad: "Please write a correct email", svNameBad: "Please write your name", svAgeBad: "Choose child or adult", svConsBad: "A parent must agree first",
   svGate: "Great first lesson! 🎉", svGateP: "Create your account to keep your stars, XP and streak — and continue on any phone.", svLogin: "Sign in", svOut: "Sign out", svAcct: "Account",
   svSaved: "Progress saved", svLgReg: "Sign up to join the cosmic league." });
-Object.assign(UI.az, { svUser: "İstifadəçi adı", svUserH: "3–20 hərf və ya rəqəm, məs. safiya_7", svPin: "Şəxsi kodun", svPinH: "4–6 rəqəm — yalnız sən bilirsən", svUserBad: "İstifadəçi adı: 3–20 latın hərfi və ya rəqəm", svPinBad: "Kod 4–6 rəqəm olmalıdır", svTaken: "Bu ad artıq tutulub — başqasını yaz", svLoginBad: "Ad və ya kod səhvdir", svLocked: "Çox cəhd oldu — 15 dəqiqə gözlə", svForgot: "Kodu unutmusan? Email ilə daxil ol", svEmailP: "Emailinə 6 rəqəmli kod göndərəcəyik.", svSetT: "İstifadəçi adı və kod seç", svSetP: "Növbəti dəfə sadəcə bunları yaz — istənilən telefondan.", svLater: "Sonra", svSave: "Yadda saxla", svWelcome: "Safiverse-ə xoş gəldin!", svWelcomeP: "İngilis dilini addım-addım öyrən: qısa dərslər, ulduzlar, tapşırıqlar və kosmik liqa.", svReg: "Hesab yarat", svGuest: "Qonaq kimi bax",
+Object.assign(UI.az, { svUser: "İstifadəçi adı", svUserH: "3–20 hərf və ya rəqəm, məs. safiya_7", svPin: "Şəxsi kodun", svPinH: "4–6 rəqəm — yalnız sən bilirsən", svUserBad: "İstifadəçi adı: 3–20 latın hərfi və ya rəqəm", svPinBad: "Kod 4–6 rəqəm olmalıdır", svTaken: "Bu ad artıq tutulub — başqasını yaz", svLoginBad: "Ad və ya kod səhvdir", svLocked: "Çox cəhd oldu — 15 dəqiqə gözlə", svForgot: "Kodu unutmusan? Email ilə daxil ol", svEmailP: "Emailinə 6 rəqəmli kod göndərəcəyik.", svSetT: "İstifadəçi adı və kod seç", svSetP: "Növbəti dəfə sadəcə bunları yaz — istənilən telefondan.", svLater: "Sonra", svSave: "Yadda saxla", svWelcome: "Safiverse-ə xoş gəldin!", svWelcomeP: "Addım-addım öyrən: qısa dərslər, ulduzlar, tapşırıqlar və kosmik liqa.", svReg: "Hesab yarat", svGuest: "Qonaq kimi bax",
   svGuestP: "1 dərs pulsuz, sonra qeydiyyat", svHave: "Artıq hesabım var", svName: "Adın", svKid: "Uşaq (14 yaşadək)", svAdult: "Böyük", svEmail: "Email", svEmailKid: "Valideynin emaili",
   svConsent: "Valideynəm və razıyam", svPriv: "Məlumatlarını yalnız Safiverse müəllimi görür, heç kimə verilmir.", svSend: "Kod göndər", svCodeT: "6 rəqəmli kodu yaz", svCodeP: "Kodu bu ünvana göndərdik:",
   svResend: "Yenidən göndər", svBad: "Kod səhvdir, yenə yoxla", svExp: "Kodun vaxtı bitib — yenisini göndər", svWait: "Yenidən göndərmək üçün bir dəqiqə gözlə", svErr: "Nəsə alınmadı. İnterneti yoxla və yenə cəhd et.",
   svEmailBad: "Düzgün email yaz", svNameBad: "Adını yaz", svAgeBad: "Uşaq və ya böyük seç", svConsBad: "Əvvəl valideyn razılıq verməlidir",
   svGate: "Əla ilk dərs! 🎉", svGateP: "Ulduzların, XP-n və seriyan itməsin deyə hesab yarat — istənilən telefondan davam et.", svLogin: "Daxil ol", svOut: "Çıxış", svAcct: "Hesab",
   svSaved: "İrəliləyiş yadda saxlandı", svLgReg: "Kosmik liqaya qoşulmaq üçün qeydiyyatdan keç." });
-Object.assign(UI.ru, { svUser: "Имя пользователя", svUserH: "3–20 букв или цифр, напр. safiya_7", svPin: "Твой личный код", svPinH: "4–6 цифр — знаешь только ты", svUserBad: "Имя: 3–20 латинских букв или цифр", svPinBad: "Код — 4–6 цифр", svTaken: "Это имя занято — попробуй другое", svLoginBad: "Неверное имя или код", svLocked: "Слишком много попыток — подожди 15 минут", svForgot: "Забыл код? Войди через email", svEmailP: "Мы отправим 6-значный код на твой email.", svSetT: "Выбери имя и код", svSetP: "В следующий раз просто введи их — с любого телефона.", svLater: "Позже", svSave: "Сохранить", svWelcome: "Добро пожаловать в Safiverse!", svWelcomeP: "Учи английский шаг за шагом: короткие уроки, звёзды, задания и космическая лига.", svReg: "Создать аккаунт", svGuest: "Посмотреть как гость",
+Object.assign(UI.ru, { svUser: "Имя пользователя", svUserH: "3–20 букв или цифр, напр. safiya_7", svPin: "Твой личный код", svPinH: "4–6 цифр — знаешь только ты", svUserBad: "Имя: 3–20 латинских букв или цифр", svPinBad: "Код — 4–6 цифр", svTaken: "Это имя занято — попробуй другое", svLoginBad: "Неверное имя или код", svLocked: "Слишком много попыток — подожди 15 минут", svForgot: "Забыл код? Войди через email", svEmailP: "Мы отправим 6-значный код на твой email.", svSetT: "Выбери имя и код", svSetP: "В следующий раз просто введи их — с любого телефона.", svLater: "Позже", svSave: "Сохранить", svWelcome: "Добро пожаловать в Safiverse!", svWelcomeP: "Учись шаг за шагом: короткие уроки, звёзды, задания и космическая лига.", svReg: "Создать аккаунт", svGuest: "Посмотреть как гость",
   svGuestP: "1 урок бесплатно, потом регистрация", svHave: "У меня уже есть аккаунт", svName: "Твоё имя", svKid: "Ребёнок (до 14)", svAdult: "Взрослый", svEmail: "Email", svEmailKid: "Email родителя",
   svConsent: "Я родитель и согласен(на)", svPriv: "Твои данные видит только учитель Safiverse, они никому не передаются.", svSend: "Отправить код", svCodeT: "Введи 6-значный код", svCodeP: "Мы отправили его на",
   svResend: "Отправить снова", svBad: "Неверный код, попробуй ещё", svExp: "Код устарел — отправь новый", svWait: "Подожди минуту перед новой отправкой", svErr: "Что-то пошло не так. Проверь интернет и попробуй снова.",
@@ -8006,7 +8315,7 @@ async function sPost(a, data, ms = 15000) {
   const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), ms);
   try { const r = await fetch(SAFI_API, { method: "POST", body: JSON.stringify(Object.assign({ a }, data)), redirect: "follow", signal: ctl.signal }); return await r.json(); } finally { clearTimeout(tm); }
 }
-const SYNC_KEYS = ["mv-drill", "mv-xp", "mv-days", "mv-badges", "mv-goal", "mv-avatar", "mv-qday", "mv-qmonth", "mv-level", "mv-hearts", "mv-course", "mv-family"];
+const SYNC_KEYS = ["mv-drill", "mv-xp", "mv-days", "mv-badges", "mv-goal", "mv-avatar", "mv-qday", "mv-qmonth", "mv-level", "mv-hearts", "mv-course", "mv-family", "mv-subj", "mv-sk", "mv-onb"];
 const gatherProgress = () => { const o = {}; SYNC_KEYS.forEach(k => { const v = lsGet(k, null); if (v != null) o[k] = v; }); return o; };
 function applyProgress(p) { if (!p) return; SYNC_KEYS.forEach(k => { if (k in p) lsSet(k, p[k]); }); try { DAYS = lsGet("mv-days", []); } catch (e) {} }
 let SYNC_T = 0;
@@ -8018,11 +8327,55 @@ function pushSync(now) {
     if (d && d.progress) { applyProgress(d.progress); Router.remount(); } } catch (e) {} }, now ? 0 : 1500);
 }
 
+
+/* ---------- first questions: which language you speak, what you want to learn (+ votes for new languages) ---------- */
+Object.assign(UI.en, { svSpeak: "Which language do you speak?", svSpeakP: "Explanations and buttons will be in this language.", svLearn: "What do you want to learn?", svSoon: "Coming soon — vote!",
+  svSoonP: "When a language reaches 100%, we add it to Safiverse.", svVote: "I want this 👍", svVoted: "You voted ✓", svWin: "🎉 This language will be added!", svMore: "Other courses", svVotesW: "votes", svStories: "Story courses (English)" });
+Object.assign(UI.az, { svSpeak: "Sən hansı dildə danışırsan?", svSpeakP: "İzahlar və düymələr bu dildə olacaq.", svLearn: "Hansı dili öyrənmək istəyirsən?", svSoon: "Tezliklə — səs ver!",
+  svSoonP: "Dil 100%-ə çatanda onu Safiverse-ə əlavə edirik.", svVote: "Bu dili istəyirəm 👍", svVoted: "Səs verdin ✓", svWin: "🎉 Bu dil əlavə olunacaq!", svMore: "Başqa kurslar", svVotesW: "səs", svStories: "Hekayə kursları (ingilis dili)" });
+Object.assign(UI.ru, { svSpeak: "На каком языке ты говоришь?", svSpeakP: "Объяснения и кнопки будут на этом языке.", svLearn: "Какой язык ты хочешь учить?", svSoon: "Скоро — голосуй!",
+  svSoonP: "Когда язык наберёт 100%, мы добавим его в Safiverse.", svVote: "Хочу этот язык 👍", svVoted: "Ты проголосовал(а) ✓", svWin: "🎉 Этот язык будет добавлен!", svMore: "Другие курсы", svVotesW: "голосов", svStories: "Курсы-истории (английский)" });
+const VL = [["es", "🇪🇸", ["Spanish", "İspan dili", "Испанский"]], ["it", "🇮🇹", ["Italian", "İtalyan dili", "Итальянский"]], ["fr", "🇫🇷", ["French", "Fransız dili", "Французский"]], ["de", "🇩🇪", ["German", "Alman dili", "Немецкий"]]];
+const voteState = () => lsGet("mv-votec", { counts: {}, goal: 100, mine: [] });
+const voterId = () => { const a = ACCT(); return a ? a.email : uid(); };
+async function loadVotes(root) { if (!svOn()) return; try { const d = await sPost("votes", { voter: voterId() }, 10000); if (d && d.ok) { const old = voteState(); d.mine = [...new Set([...(d.mine || []), ...(old.mine || [])])]; lsSet("mv-votec", d); drawVotes(root); } } catch (e) {} }
+function voteCards() { const v = voteState(), g = v.goal || 100;
+  return VL.map(([k, f, n]) => { const c = (v.counts || {})[k] || 0, pc = Math.min(100, Math.round(c / g * 100)), me = (v.mine || []).includes(k), win = pc >= 100;
+    return `<div class="sv-vc ${win ? "win" : ""}" data-vc="${k}"><span class="sv-flag">${f}</span><div class="sv-vb"><b>${T3(n)}</b><div class="sv-bar"><i style="width:${pc}%"></i></div><small>${win ? L("svWin") : `${pc}% · ${c}/${g} ${L("svVotesW")}`}</small></div>
+      <button class="sv-vote ${me ? "on" : ""}" data-vote="${k}" ${me ? "disabled" : ""}>${me ? L("svVoted") : L("svVote")}</button></div>`; }).join(""); }
+function drawVotes(root) { const b = root.querySelector(".sv-votes"); if (b) b.innerHTML = voteCards(); }
+function pickHTML() { const s = typeof subj === "function" ? subj() : "en", card = (k, e, t, p) => `<button class="sv-sub ${s === k ? "on" : ""}" data-subj="${k}"><span>${e}</span><b>${t}</b><small>${p}</small><i>›</i></button>`;
+  return `<div class="sv-pick">${card("en", "🇬🇧", L("skEnglish"), "A1 → B1 · " + drillLessons() + "/" + UNITS.length * LPU)}
+    <h2 class="ap-h2">${L("svSoon")}</h2><p class="sv-soonp">${L("svSoonP")}</p><div class="sv-votes">${voteCards()}</div>
+    <h2 class="ap-h2">${L("svMore")}</h2>${["math", "music", "chess"].map(k => card(k, SK[k].e, L(SK[k].n), L(SK[k].p) + " · " + skLessons(k) + "/" + SK[k].U.length * SKL)).join("")}</div>`; }
+function wirePick(root, after) {
+  root.onclick = async e => {
+    const v = e.target.closest("[data-vote]"); if (v && !v.disabled) { const k = v.dataset.vote, st = voteState(); st.mine = [...new Set([...(st.mine || []), k])]; st.counts = st.counts || {}; st.counts[k] = (st.counts[k] || 0) + 1; lsSet("mv-votec", st);
+      sfx("pop"); buzz(20); drawVotes(root); const c = root.querySelector(`[data-vc="${k}"]`); c && flash(c, "pulse");
+      if (svOn()) try { const d = await sPost("vote", { lang: k, voter: voterId() }); if (d && d.ok) { d.mine = st.mine; lsSet("mv-votec", d); drawVotes(root); } } catch (er) {} return; }
+    const b = e.target.closest("[data-subj]"); if (b) { const k = b.dataset.subj; lsSet("mv-subj", k); if (k === "en") lsSet("mv-course", "milingo"); sfx("tap"); after(k); }
+    const st = e.target.closest("[data-stories]"); if (st) Router.go("app-course"); };
+  loadVotes(root);
+}
+function onbScreen(root, step = 1) {
+  document.documentElement.classList.add("ap-mode");
+  const head = `<div class="ap sv-onb"><div class="ap-hud slim">${apBack()}${brandHTML()}</div><main class="ap-main sv-main">`;
+  if (step === 1) {
+    root.innerHTML = head + `<div class="sv-crew small">${mascot("👋")}</div><h1 class="ap-h">${L("svSpeak")}</h1><p class="sv-tri">${["az", "ru", "en"].filter(k => k !== LANG).map(k => UI[k].svSpeak).join("<br>")}</p>
+      <div class="sv-langs">${[["az", "🇦🇿", "Azərbaycanca"], ["ru", "🇷🇺", "Русский"], ["en", "🇬🇧", "English"]].map(([k, f, n]) => `<button class="sv-sub ${LANG === k ? "on" : ""}" data-sp="${k}"><span>${f}</span><b>${n}</b><i>›</i></button>`).join("")}</div></main></div>`;
+    root.onclick = e => { const b = e.target.closest("[data-sp]"); if (!b) return; LANG = b.dataset.sp; try { localStorage.setItem("mv-lang", LANG); } catch (er) {} document.documentElement.lang = LANG; sfx("tap"); onbScreen(root, 2); };
+    return;
+  }
+  root.innerHTML = head + `<h1 class="ap-h">${L("svLearn")}</h1>${pickHTML()}</main></div>`;
+  wirePick(root, () => { lsSet("mv-onb", 1); welcomeScreen(root); });
+}
+
 /* ---------- gate: welcome → guest (1 lesson) → required sign-up ---------- */
 const guest = () => lsGet("mv-guest", null);
 function safiGate(root) {
   if (!svOn() || ACCT()) return false;
   const g = guest();
+  if (!g && !lsGet("mv-onb", 0)) { onbScreen(root); return true; }
   if (!g) { welcomeScreen(root); return true; }
   if (g.lessons >= 1) { regScreen(root, "gate"); return true; }
   return false;
@@ -8134,8 +8487,11 @@ VIEWS.sadmin = root => {
     e2.onsubmit = async e => { e.preventDefault(); const d = await sPost("ad_set", { otp: e2.otp.value, key: e2.nk.value }).catch(() => ({})); if (d.ok) { try { sessionStorage.setItem("sv-key", e2.nk.value); } catch (x) {} load(); } else er("✗ " + (d.err || "error")); }; };
   const load = async () => { let d = {}; try { d = await sPost("ad_rows", { key: key() }); } catch (e) {} if (!d.ok) return login();
     const rows = (d.rows || []).sort((a, b) => String(b.last).localeCompare(String(a.last))), dt = s => s ? new Date(s).toLocaleDateString("az-AZ") : "—";
-    root.innerHTML = shell(`<h1 class="ap-h">👥 ${rows.length}</h1><input class="lg-in sv-q" placeholder="🔍"><div class="sv-tbl">${rows.map(r => `<div class="sv-row" data-q="${esc((r.name + " " + r.email).toLowerCase())}">
+    let vt = {}; try { vt = await sPost("votes", {}); } catch (e) {}
+    const vbox = vt.ok ? `<div class="sv-adv"><b>🗳️ ${VL.map(([k, f]) => `${f} ${(vt.counts || {})[k] || 0}`).join(" · ")}</b><form data-goal><label>🎯 100% =<input name="g" inputmode="numeric" value="${vt.goal}"></label><button class="sv-ghost"><b>✓</b></button></form></div>` : "";
+    root.innerHTML = shell(`${vbox}<h1 class="ap-h">👥 ${rows.length}</h1><input class="lg-in sv-q" placeholder="🔍"><div class="sv-tbl">${rows.map(r => `<div class="sv-row" data-q="${esc((r.name + " " + r.email).toLowerCase())}">
       <span class="lg-av">${avOf(r.avatar, r.name)}</span><div><b>${esc(r.name)}</b> <small>${r.age === "kid" ? "👧" : "🧑"} ${esc(r.email)}</small><small>⚡ ${r.xp} · 🔥 ${r.streak} · 📚 ${r.lessons} · ${esc(r.unit || "")}</small><small>🕒 ${dt(r.last)} · ✨ ${dt(r.created)}</small></div></div>`).join("")}</div>`);
+    const gf = root.querySelector("[data-goal]"); if (gf) gf.onsubmit = async e => { e.preventDefault(); const d = await sPost("ad_goal", { key: key(), goal: gf.g.value }).catch(() => ({})); toast(d.ok ? "✓ " + d.goal : "✗"); };
     root.querySelector(".sv-q").oninput = e => { const q = e.target.value.toLowerCase(); root.querySelectorAll(".sv-row").forEach(x => x.hidden = q && !x.dataset.q.includes(q)); }; };
   key() ? load() : login();
   return {};

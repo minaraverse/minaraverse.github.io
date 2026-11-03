@@ -2,7 +2,7 @@ import base64, pathlib
 R = pathlib.Path("/home/claude/mv")
 band = ""
 css = (R / "src/style.css").read_text()
-js = "\n".join((R / f"src/{n}.js").read_text() for n in ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "data8", "core", "art", "home", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "admin", "app", "course", "drill", "people", "safi"] if (R / f"src/{n}.js").exists())
+js = "\n".join((R / f"src/{n}.js").read_text() for n in ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "data8", "core", "art", "home", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "admin", "app", "course", "drill", "people", "skills", "safi"] if (R / f"src/{n}.js").exists())
 js = js.replace("__BAND__", band)
 fonts = ("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100"
          "&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IM+Fell+English:ital@0;1&family=Special+Elite&family=Great+Vibes&family=Nunito:wght@500;600;700;800;900&family=Condiment&display=swap")
@@ -51,7 +51,7 @@ sv_html = sv_html.replace('<meta name="description" content="Minaraverse: Englis
   '<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;background:#0d1a15}img{max-width:100%}[hidden]{display:none!important}</style></head><body>' + sv_html + '</body></html>')
 (S / "manifest.json").write_text('{"name":"Safiverse — English step by step","short_name":"Safiverse","start_url":"./#app-learn","scope":"./","display":"standalone","background_color":"#0d1a15","theme_color":"#0d1a15","orientation":"portrait",'
   '"icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}')
-(S / "sw.js").write_text('/* Safiverse offline cache: network first, cache fallback */\nconst C = "sv-v6";\n'
+(S / "sw.js").write_text('/* Safiverse offline cache: network first, cache fallback */\nconst C = "sv-v9";\n'
   'self.addEventListener("install", e => { e.waitUntil(caches.open(C).then(c => c.addAll(["./", "./index.html"])).then(() => self.skipWaiting())); });\n'
   'self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith("sv-") && k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); });\n'
   'self.addEventListener("fetch", e => { const r = e.request; if (r.method !== "GET" || !r.url.startsWith(self.location.origin)) return;\n'

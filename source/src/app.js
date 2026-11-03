@@ -65,13 +65,14 @@ function onLessonDone(story, idx, score, n) {
 
 /* ---------- HUD (top bar) ---------- */
 function hudHTML() { const g = goal(), t = xpToday(), p = Math.min(1, t / g);
-  return `<div class="ap-hud">${apBack()}${brandHTML()}<span class="ap-flag" data-go="course">${courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
+  return `<div class="ap-hud">${apBack()}${brandHTML()}<span class="ap-flag" data-go="pick" role="button">${typeof subjEmoji === "function" ? subjEmoji() : courseEmoji(curCourse())}</span><span class="ap-st ${playedToday() ? "on" : ""}">🔥 <b>${streak()}</b></span><span class="ap-xp">⚡ <b>${XP().total}</b></span>
     <span class="ap-ring" title="${L("apGoal")}"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="bg"/><circle cx="18" cy="18" r="15" class="fg" style="stroke-dasharray:${(p * 94.2).toFixed(1)} 100"/></svg><b>${t}</b></span></div>`; }
 /* one Safiverse app: the top-left button looks the same whether opened on its own or from Minaraverse */
 const apBack = () => `<a class="ap-back" href="${SAFI ? "https://minaraverse.github.io/" : "#"}" aria-label="Minaraverse"><span>←</span><b>minara<i>verse</i></b></a>`;
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
 /* ---------- course choice ---------- */
+document.addEventListener("click", e => { if (e.target.closest(".ap-flag[data-go='pick']")) { e.stopPropagation(); Router.go("app-pick"); } }, true);
 const COURSE_EMOJI = { milingo: "🌱", kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", ielts: "🎙", debate: "⚖️", heist: "🗝" };
 const courseEmoji = k => COURSE_EMOJI[k] || "📘";
 if (!lsGet("mv-course2", null)) { lsSet("mv-course", "milingo"); lsSet("mv-course2", 1); }
@@ -104,6 +105,9 @@ VIEWS.app = root => {
     root.onclick = e => { const b = e.target.closest("[data-course]"); if (!b) return; lsSet("mv-course", b.dataset.course); Router.go("app-learn"); };
     return {};
   }
+  if (sub === "pick") { root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("svLearn"))}</h1>${pickHTML()}<button class="ap-item sv-st" data-stories><span>📚</span><b>${L("svStories")}</b><small>${WORLD_ORDER.length}</small><i>›</i></button>`);
+    wirePick(root, () => Router.go("app-learn")); return {}; }
+  if (sub === "learn" && typeof subj === "function" && subj() !== "en") { root.innerHTML = shell("learn", skPathHTML(subj())); wireSkPath(root); return {}; }
   if (sub === "learn" && curCourse() === "milingo") { root.innerHTML = shell("learn", drillPathHTML()); wireDrillPath(root); return {}; }
   if (sub === "learn") {
     const k = curCourse(), S = STORIES[k], nx = nextIndex(k);
