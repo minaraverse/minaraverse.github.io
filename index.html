@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta property="og:title" content="Minaraverse — English through stories"><meta property="og:description" content="Five story worlds, a daily word, a level test and DİM exam practice. EN · AZ · RU."><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%2317161B%22/%3E%3Ctext x=%2232%22 y=%2243%22 text-anchor=%22middle%22 font-family=%22Georgia%22 font-style=%22italic%22 font-size=%2232%22 fill=%22%239DB0FF%22%3Emv%3C/text%3E%3C/svg%3E"><style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Minaraverse 2.0</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta property="og:title" content="Minaraverse — English through stories"><meta property="og:description" content="Five story worlds, a daily word, a level test and DİM exam practice. EN · AZ · RU."><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%2317161B%22/%3E%3Ctext x=%2232%22 y=%2243%22 text-anchor=%22middle%22 font-family=%22Georgia%22 font-style=%22italic%22 font-size=%2232%22 fill=%22%239DB0FF%22%3Emv%3C/text%3E%3C/svg%3E"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#17161B"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Minaraverse"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script><style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Minaraverse 2.0</title>
 <meta name="description" content="Minaraverse: English through stories. Five story worlds, a daily word, a level test and DİM exam practice. EN · AZ · RU.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IM+Fell+English:ital@0;1&family=Special+Elite&family=Great+Vibes&display=swap">
@@ -4927,7 +4927,8 @@ VIEWS.level = root => {
     const rec = () => ({ type: "Level test", ...profileFields(), level: lvl, name: (PROFILE().first || NAME || "—"), story: "Level test", chapter: lvl, score: `${total}/${LEVELQ.length}`, riddle: "—", answers: `${LVLS.map(l => l + " " + by[l] + "/5").join(" · ")}`, lang: LANG });
     const ni = body.querySelector("#lv-name"), pre = body.querySelector(".qz-copy");
     ni.oninput = () => { NAME = ni.value.trim(); try { localStorage.setItem("mv-name", NAME); } catch (e) {} pre.textContent = `Minaraverse level test\nName: ${NAME || "—"}\nLevel: ${lvl} (${total}/${LEVELQ.length})\n${rec().answers}`; };
-    const fl = body.querySelector("[data-form]"); if (fl) fl.onclick = e => { if (!NAME) { e.preventDefault(); ni.focus(); ni.classList.add("need"); return; } fl.href = formLink(rec()); };
+    const fl = body.querySelector("[data-form]"); if (fl) fl.onclick = e => { if (!NAME) { e.preventDefault(); ni.focus(); ni.classList.add("need"); return; }
+      if (resultsOn()) { e.preventDefault(); fl.textContent = "…"; sendResult(rec()).then(ok => { fl.textContent = ok ? "✓ " + L("sent") : L("sendFail"); }); return; } fl.href = formLink(rec()); };
   };
   body.onclick = e => {
     if (e.target.closest("[data-go]")) { const g = id => (body.querySelector(id) || {}).value || ""; const pf = { ...PROFILE(), first: g("#lp-first").trim(), last: g("#lp-last").trim(), age: g("#lp-age").trim() };
@@ -5346,7 +5347,7 @@ Object.assign(UI.en, {
   leadInd: "Individual lessons", leadIndP: "One-to-one, your goals, your pace.", leadGrp: "Group lessons", leadGrpP: "Small online groups, lots of speaking.",
   fFirst: "First name", fLast: "Last name", fAge: "Age", fEmail: "Email", fWa: "WhatsApp number", fLevel: "Your level", fMsg: "Your goal (optional)", fUnknown: "Not sure yet",
   fSend: "Send my request", fNote: "Your details go only to Minara and are used only to contact you about lessons.", fNeed: "Please fill in name, last name and WhatsApp or email.",
-  fOpened: "Almost done! A Google Form has opened with your details. Press “Submit” there to send your request.", fOpenBtn: "Open the form again", fCopied: "Your request is copied. Paste it into the Instagram chat that just opened.",
+  fOpened: "Almost done! A Google Form has opened with your details. Press “Submit” there to send your request.", fOpenBtn: "Open the form again", fSent: "Thank you! Your request has been sent. Minara will contact you soon.", fCopied: "Your request is copied. Paste it into the Instagram chat that just opened.",
   profK: "Before you start (optional)", profP: "So Minara knows who took the test."
 });
 Object.assign(UI.az, {
@@ -5362,7 +5363,7 @@ Object.assign(UI.az, {
   leadInd: "Fərdi dərslər", leadIndP: "Təkbətək, sənin məqsədin, sənin tempin.", leadGrp: "Qrup dərsləri", leadGrpP: "Kiçik onlayn qruplar, çox danışıq.",
   fFirst: "Ad", fLast: "Soyad", fAge: "Yaş", fEmail: "Email", fWa: "WhatsApp nömrəsi", fLevel: "Səviyyən", fMsg: "Məqsədin (istəyə görə)", fUnknown: "Hələ bilmirəm",
   fSend: "Müraciətimi göndər", fNote: "Məlumatların yalnız Minaraya gedir və yalnız dərslərlə bağlı əlaqə üçün istifadə olunur.", fNeed: "Ad, soyad və WhatsApp və ya email yaz.",
-  fOpened: "Az qaldı! Məlumatlarınla Google Forma açıldı. Müraciəti göndərmək üçün orada «Göndər / Submit» düyməsini bas.", fOpenBtn: "Formanı yenidən aç", fCopied: "Müraciətin kopyalandı. Açılan Instagram çatına yapışdır.",
+  fOpened: "Az qaldı! Məlumatlarınla Google Forma açıldı. Müraciəti göndərmək üçün orada «Göndər / Submit» düyməsini bas.", fOpenBtn: "Formanı yenidən aç", fSent: "Təşəkkürlər! Müraciətin göndərildi. Minara tezliklə səninlə əlaqə saxlayacaq.", fCopied: "Müraciətin kopyalandı. Açılan Instagram çatına yapışdır.",
   profK: "Başlamazdan əvvəl (istəyə görə)", profP: "Minara testi kimin keçdiyini bilsin."
 });
 Object.assign(UI.ru, {
@@ -5378,7 +5379,7 @@ Object.assign(UI.ru, {
   leadInd: "Индивидуальные уроки", leadIndP: "Один на один, твои цели, твой темп.", leadGrp: "Групповые уроки", leadGrpP: "Небольшие онлайн-группы, много разговорной практики.",
   fFirst: "Имя", fLast: "Фамилия", fAge: "Возраст", fEmail: "Email", fWa: "Номер WhatsApp", fLevel: "Твой уровень", fMsg: "Твоя цель (по желанию)", fUnknown: "Пока не знаю",
   fSend: "Отправить заявку", fNote: "Твои данные получит только Минара и использует их только для связи по урокам.", fNeed: "Заполни имя, фамилию и WhatsApp или email.",
-  fOpened: "Почти готово! Открылась Google Форма с твоими данными. Нажми там «Отправить / Submit», чтобы отправить заявку.", fOpenBtn: "Открыть форму ещё раз", fCopied: "Заявка скопирована. Вставь её в открывшийся чат Instagram.",
+  fOpened: "Почти готово! Открылась Google Форма с твоими данными. Нажми там «Отправить / Submit», чтобы отправить заявку.", fOpenBtn: "Открыть форму ещё раз", fSent: "Спасибо! Заявка отправлена. Минара скоро свяжется с тобой.", fCopied: "Заявка скопирована. Вставь её в открывшийся чат Instagram.",
   profK: "Перед началом (по желанию)", profP: "Чтобы Минара знала, кто прошёл тест."
 });
 
@@ -5458,6 +5459,7 @@ function wireLead(root) {
     const fmt = d.format === "grp" ? "Group" : "Individual", lvl = lsGet("mv-level", null);
     const rec = { type: "Lesson request", name: d.first.trim(), surname: d.last.trim(), age: d.age.trim(), email: d.email.trim(), whatsapp: d.wa.trim(), format: fmt, level: d.level || "", message: d.msg.trim(), score: lvl ? `${lvl.lvl} (${lvl.total})` : "", lang: LANG };
     const txt = `Minaraverse — ${fmt} lessons\n${rec.name} ${rec.surname}${rec.age ? ", " + rec.age : ""}\nWhatsApp: ${rec.whatsapp || "—"}\nEmail: ${rec.email || "—"}\nLevel: ${rec.level || "—"}${rec.message ? "\nGoal: " + rec.message : ""}`;
+    if (resultsOn()) { st.textContent = "…"; sendResult(rec).then(ok => { st.textContent = ok ? "✓ " + L("fSent") : L("sendFail"); st.className = "hl2-status " + (ok ? "ok" : "bad"); if (ok) f.querySelector("[name=msg]").value = ""; }); return; }
     if (RESULTS.form) { const u = formLink(rec); window.open(u, "_blank", "noopener"); st.innerHTML = "✓ " + esc(L("fOpened")) + ` <a class="hl2-open" href="${esc(u)}" target="_blank" rel="noopener">${esc(L("fOpenBtn"))} ↗</a>`; }
     else { try { navigator.clipboard.writeText(txt); } catch (er) {} window.open(DM, "_blank", "noopener"); st.textContent = "✓ " + L("fCopied"); }
     st.className = "hl2-status ok";
