@@ -1574,6 +1574,21 @@ html.ap-mode .mv-home{display:none}
 @media (max-width:380px){.ap-hud .ap-brand{display:none}.ap-hud{gap:10px}}
 .ap-back b{font-weight:400}.ap-st,.ap-xp{white-space:nowrap}
 .h-hero-r{overflow-x:clip}
+/* tidy footer */
+.h-foot{padding-block:60px 40px!important}
+.h-big{align-items:center!important;gap:.12em}
+.h-arr{display:inline-grid;place-items:center;width:.62em;height:.62em;margin-left:.08em;border-radius:50%;border:1.5px solid currentColor;transition:transform .3s,background .3s,color .3s}
+.h-arr svg{width:58%;height:58%}
+.h-big:hover .h-arr{transform:rotate(45deg);background:var(--mv-cobalt);color:#17161B;border-color:var(--mv-cobalt)}
+.h-fbar{display:flex;align-items:center;gap:14px;margin-top:40px;padding-top:22px;border-top:1px solid var(--mv-line)}
+.h-fmv{font:italic 400 30px/1 "Great Vibes","Fraunces",cursive;color:#F6EFE2;letter-spacing:-.04em}.h-fmv i{color:#9DB0FF;font-size:.8em;margin-left:-.12em}
+.h-fbar .h-small{margin:0!important;line-height:1.45;font-size:13px}.h-fbar .h-small span{color:#7d786e}
+.h-adminbtn{margin:0 0 0 auto!important;padding:9px 14px!important;font-size:12.5px!important;gap:7px!important;color:var(--mv-muted)!important;background:transparent!important}
+.h-adminbtn svg{width:15px;height:15px}
+.h-adminbtn:hover{color:var(--mv-ink)!important}
+@media (max-width:560px){.h-fbar{flex-wrap:wrap}.h-adminbtn{margin:6px 0 0!important;flex-basis:100%;justify-content:center}.h-big{font-size:11.5vw!important}}
+.h-adminbtn{font-family:"Bricolage Grotesque",system-ui,sans-serif!important;font-weight:500!important}
+@media (max-width:560px){.h-foot{padding-bottom:90px!important}}
 
 </style>
 <div id="view"></div>
@@ -4259,7 +4274,8 @@ VIEWS.home = root => {
       <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
   <p class="h-next" aria-hidden="false"><span>${L("nx6")}</span><i>↓</i></p>
   ${leadHTML()}
-  <footer class="h-foot"><p class="h-k">${L("follow")}</p><a class="h-big" href="${IG}" target="_blank" rel="noopener">${[..."@minaraverse"].map((ch, i) => `<span class="fl" style="--i:${i}">${ch}</span>`).join("")} ↗</a><a class="h-adminbtn" href="#admin">🔐 Minaraverse giriş</a><p class="h-small">© Minaraverse · English beyond the classroom</p></footer>
+  <footer class="h-foot"><p class="h-k">${L("follow")}</p><a class="h-big" href="${IG}" target="_blank" rel="noopener">${[..."@minaraverse"].map((ch, i) => `<span class="fl" style="--i:${i}">${ch}</span>`).join("")}<span class="h-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></a>
+    <div class="h-fbar"><span class="h-fmv" aria-hidden="true">M<i>V</i></span><p class="h-small">© ${new Date().getFullYear()} Minaraverse<br><span>English beyond the classroom</span></p><a class="h-adminbtn" href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Minaraverse giriş</a></div></footer>
   </div>`;
 
   riseLetters(root, ".h-h1 .ch", { stagger: 28, dur: 1000, from: "translateY(.6em) rotate(5deg)" });
