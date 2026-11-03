@@ -1755,12 +1755,12 @@ html.ap-mode .mv-home{display:none}
 @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 
 /* ===== MILINGO THEMES BY LEVEL: A1 sunset (Cyber Ronin) → A2 dusk → B1 space (Orbis) ===== */
-@property --bg{syntax:"<color>";inherits:true;initial-value:#0f0906}
-@property --glow{syntax:"<color>";inherits:true;initial-value:rgba(196,90,24,.5)}
-@property --glow2{syntax:"<color>";inherits:true;initial-value:rgba(224,112,32,.16)}
-@property --acc{syntax:"<color>";inherits:true;initial-value:#E07020}
-html.ap-mode,[data-th]{--bg:#0f0906;--glow:rgba(196,90,24,.5);--glow2:rgba(224,112,32,.16);--ink:#FBDBAF;--mut:rgba(251,219,175,.72);--lab:rgba(251,219,175,.48);
-  --acc:#E07020;--accd:#8f420f;--acc2:#F2A65A;--acci:#1a0f08;--card:rgba(10,8,7,.58);--card2:rgba(251,219,175,.06);--line:rgba(251,219,175,.14);--line2:rgba(251,219,175,.06);
+@property --bg{syntax:"<color>";inherits:true;initial-value:#0d1a15}
+@property --glow{syntax:"<color>";inherits:true;initial-value:rgba(88,180,120,.32)}
+@property --glow2{syntax:"<color>";inherits:true;initial-value:rgba(140,220,170,.12)}
+@property --acc{syntax:"<color>";inherits:true;initial-value:#6FCF8E}
+html.ap-mode,[data-th]{--bg:#0d1a15;--glow:rgba(88,180,120,.32);--glow2:rgba(140,220,170,.12);--ink:#EAF6EE;--mut:rgba(234,246,238,.72);--lab:rgba(234,246,238,.48);
+  --acc:#6FCF8E;--accd:#3C8F5A;--acc2:#A8E6BC;--acci:#0b1a12;--card:rgba(8,20,14,.55);--card2:rgba(234,246,238,.06);--line:rgba(234,246,238,.13);--line2:rgba(234,246,238,.06);
   --gold:#F5B971;--goldd:#9c5a1c;--hf:"Nunito",system-ui,sans-serif;--sf:"Nunito",sans-serif;--bf:"Nunito",system-ui,-apple-system,sans-serif;--hs:1;--ok:#B5F28A;--okd:#4f8a22;--no:#FF6A4D;--nod:#9a321f}
 [data-th="1"],html.ap-mode[data-th="1"]{--bg:#120a1e;--glow:rgba(150,62,170,.48);--glow2:rgba(255,111,181,.14);--ink:#FCE7F3;--mut:rgba(252,231,243,.72);--lab:rgba(252,231,243,.48);
   --acc:#FF6FB5;--accd:#9b2e66;--acc2:#C77DFF;--acci:#1d0b17;--card:rgba(20,10,30,.55);--card2:rgba(252,231,243,.06);--line:rgba(252,231,243,.14);--line2:rgba(252,231,243,.06);
@@ -7022,7 +7022,7 @@ Object.assign(UI.ru, { dImg: "Выбери правильную картинку
   dSlow: "Медленно", dJumpHere: "Перейти сюда!", dNode: ["Новые слова", "Ещё слова", "Слушай и собирай", "Грамматика и письмо", "Повторение раздела"], dNodeDone: "Пройдено — повторить", dPracticeXp: "Повторить +5 XP", dAfill: "Найди пропущенное слово", dSkip: "Не могу сейчас слушать", dWin: ["Так держать!", "Отличная работа!", "Получилось!", "Блестяще!"], dWinP: "Каждый урок приближает тебя к цели.", dPerfect: "Урок без ошибок!", dAccA: "Отлично", dAccB: "Хорошо", dFast: "Быстро", dTypeHere: "Пиши по-английски", dCourseName: "Английский шаг за шагом", dStories: "Курсы-истории", dFirst: "Начни здесь" });
 
 /* ---------- course data ---------- */
-const UCOLS = [["#E07020", "#F2A65A", "#FBDBAF", "#D9783A", "#F5B971"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#6FFF00", "#7CF6FF", "#B724FF", "#EFF4FF", "#9DFFB0"]];
+const UCOLS = [["#6FCF8E", "#8FD9B6", "#B5E3A1", "#7CC7A8", "#9BD88A"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#6FFF00", "#7CF6FF", "#B724FF", "#EFF4FF", "#9DFFB0"]];
 const UNITS = [];
 const SECTIONS = COURSE_SECTIONS.map((sec, si) => { const from = UNITS.length;
   sec.units.forEach(u => { const rows = s => String(s || "").trim().split("\n").map(x => x.trim()).filter(Boolean).map(x => x.split("|").map(y => y.trim()));
@@ -7419,7 +7419,7 @@ let CHID = 0;
 function charSVG(k, o = {}) {
   if (/^p\d+$/.test(k)) return personSVG(PEOPLE[+k.slice(1)] || PEOPLE[0], o);
   if (/^r\d+$/.test(k)) return personSVG(RACERS[+k.slice(1)] || RACERS[0], o);
-  const id = "c" + (++CHID), s = o.skin || SKINS[1], a = o.acc || (k === "ronin" ? "#E07020" : k === "nova" ? "#FF6FB5" : "#6FFF00"), dark = "#120b07";
+  const id = "c" + (++CHID), s = o.skin || SKINS[1], a = o.acc || (k === "ronin" ? "#6FCF8E" : k === "nova" ? "#FF6FB5" : "#6FFF00"), dark = "#120b07";
   const shadow = `<ellipse cx="60" cy="113" rx="30" ry="5" fill="rgba(0,0,0,.28)"/>`;
   const eyes = (y, r = 4.2, c = "#1b1410") => `<g class="ey"><ellipse cx="49" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><ellipse cx="71" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><circle cx="50.5" cy="${y - 1.6}" r="1.4" fill="#fff"/><circle cx="72.5" cy="${y - 1.6}" r="1.4" fill="#fff"/></g>`;
   if (k === "ronin") return `<svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="${id}v" x1="0" x2="1"><stop offset="0" stop-color="${a}"/><stop offset=".55" stop-color="#ffd29a"/><stop offset="1" stop-color="${a}"/></linearGradient>

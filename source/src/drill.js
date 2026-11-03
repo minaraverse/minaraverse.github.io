@@ -34,7 +34,7 @@ Object.assign(UI.ru, { dImg: "Выбери правильную картинку
   dSlow: "Медленно", dJumpHere: "Перейти сюда!", dNode: ["Новые слова", "Ещё слова", "Слушай и собирай", "Грамматика и письмо", "Повторение раздела"], dNodeDone: "Пройдено — повторить", dPracticeXp: "Повторить +5 XP", dAfill: "Найди пропущенное слово", dSkip: "Не могу сейчас слушать", dWin: ["Так держать!", "Отличная работа!", "Получилось!", "Блестяще!"], dWinP: "Каждый урок приближает тебя к цели.", dPerfect: "Урок без ошибок!", dAccA: "Отлично", dAccB: "Хорошо", dFast: "Быстро", dTypeHere: "Пиши по-английски", dCourseName: "Английский шаг за шагом", dStories: "Курсы-истории", dFirst: "Начни здесь" });
 
 /* ---------- course data ---------- */
-const UCOLS = [["#E07020", "#F2A65A", "#FBDBAF", "#D9783A", "#F5B971"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#6FFF00", "#7CF6FF", "#B724FF", "#EFF4FF", "#9DFFB0"]];
+const UCOLS = [["#6FCF8E", "#8FD9B6", "#B5E3A1", "#7CC7A8", "#9BD88A"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#6FFF00", "#7CF6FF", "#B724FF", "#EFF4FF", "#9DFFB0"]];
 const UNITS = [];
 const SECTIONS = COURSE_SECTIONS.map((sec, si) => { const from = UNITS.length;
   sec.units.forEach(u => { const rows = s => String(s || "").trim().split("\n").map(x => x.trim()).filter(Boolean).map(x => x.split("|").map(y => y.trim()));
@@ -431,7 +431,7 @@ let CHID = 0;
 function charSVG(k, o = {}) {
   if (/^p\d+$/.test(k)) return personSVG(PEOPLE[+k.slice(1)] || PEOPLE[0], o);
   if (/^r\d+$/.test(k)) return personSVG(RACERS[+k.slice(1)] || RACERS[0], o);
-  const id = "c" + (++CHID), s = o.skin || SKINS[1], a = o.acc || (k === "ronin" ? "#E07020" : k === "nova" ? "#FF6FB5" : "#6FFF00"), dark = "#120b07";
+  const id = "c" + (++CHID), s = o.skin || SKINS[1], a = o.acc || (k === "ronin" ? "#6FCF8E" : k === "nova" ? "#FF6FB5" : "#6FFF00"), dark = "#120b07";
   const shadow = `<ellipse cx="60" cy="113" rx="30" ry="5" fill="rgba(0,0,0,.28)"/>`;
   const eyes = (y, r = 4.2, c = "#1b1410") => `<g class="ey"><ellipse cx="49" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><ellipse cx="71" cy="${y}" rx="${r}" ry="${r + .6}" fill="${c}"/><circle cx="50.5" cy="${y - 1.6}" r="1.4" fill="#fff"/><circle cx="72.5" cy="${y - 1.6}" r="1.4" fill="#fff"/></g>`;
   if (k === "ronin") return `<svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="${id}v" x1="0" x2="1"><stop offset="0" stop-color="${a}"/><stop offset=".55" stop-color="#ffd29a"/><stop offset="1" stop-color="${a}"/></linearGradient>
