@@ -16,8 +16,15 @@ function hash_(s) {
 }
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
 
+/* finds the form-responses sheet (the one with Name/Type columns and the most rows) */
+function sheet_() {
+  const all = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+  const ok = all.filter(sh => { const h = sh.getRange(1, 1, 1, Math.max(1, sh.getLastColumn())).getValues()[0].map(x => String(x).toLowerCase());
+    return h.indexOf("name") > -1 && h.indexOf("type") > -1; });
+  return (ok.length ? ok : all).sort((a, b) => b.getLastRow() - a.getLastRow())[0];
+}
 function readRows_() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+  const sh = sheet_();
   const v = sh.getDataRange().getValues();
   const head = v.shift().map(h => String(h).trim().toLowerCase());
   return v.filter(r => r.join("") !== "").map(r => {
@@ -51,7 +58,8 @@ function doGet(e) {
   const lock = LockService.getScriptLock(); lock.waitLock(10000);
   try {
     if (a === "board") return json_({ ok: true, board: board_(readRows_()) });
-    if (a === "status") return json_({ ok: true, hasCode: !!P.getProperty("KEY"), email: ADMIN_EMAIL.replace(/^(.).*(@.*)$/, "$1***$2") });
+    if (a === "status") { const sh = sheet_(); return json_({ ok: true, hasCode: !!P.getProperty("KEY"), email: ADMIN_EMAIL.replace(/^(.).*(@.*)$/, "$1***$2"),
+      file: SpreadsheetApp.getActiveSpreadsheet().getName(), sheet: sh.getName(), rows: Math.max(0, sh.getLastRow() - 1) }); }
     if (a === "rows") {
       const k = P.getProperty("KEY");
       if (!k || !p.key || hash_(p.key) !== k) return json_({ ok: false });
