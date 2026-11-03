@@ -7834,7 +7834,7 @@ function lgListHTML(d) {
     <b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
 }
 function leagueView(root, shell) {
-  if (typeof svOn === "function" && svOn() && !ACCT()) { root.innerHTML = shell(`<h1 class="ap-h">${esc(L("lgName")(0))}</h1><div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === 0 ? "on" : "lk"}">${trophySVG(i)}</span>`).join("")}</div><div class="ap-card lg-join"><b>${L("lgJoin")}</b><p class="ap-p">${L("svLgReg")}</p><button class="ap-cta" data-sreg>${L("svReg")}</button></div>`); root.onclick = e => { if (e.target.closest("[data-sreg]")) regScreen(root, "new"); }; return; }
+  if (typeof svOn === "function" && svOn() && !ACCT()) { root.innerHTML = shell("league", `<h1 class="ap-h">${esc(L("lgName")(0))}</h1><div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === 0 ? "on" : "lk"}">${trophySVG(i)}</span>`).join("")}</div><div class="ap-card lg-join"><b>${L("lgJoin")}</b><p class="ap-p">${L("svLgReg")}</p><button class="ap-cta" data-sreg>${L("svReg")}</button></div>`); root.onclick = e => { if (e.target.closest("[data-sreg]")) regScreen(root, "new"); }; return; }
   const cached = lsGet("mv-lg", null), joined = lsGet("mv-lgname", "") || (typeof ACCT === "function" && ACCT() ? ACCT().name : "");
   const head = t => `<div class="lg-head"><h1 class="ap-h">${esc(L("lgName")(t))}</h1>${cached ? `<small>⏱ ${cached.days} ${L("lgDays")}</small>` : ""}
     <div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === t ? "on" : i > t ? "lk" : ""}" title="${esc(LG_N[LANG === "az" ? "az" : LANG === "ru" ? "ru" : "en"][i])}">${trophySVG(i)}</span>`).join("")}</div></div>`;
