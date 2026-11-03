@@ -118,14 +118,7 @@ VIEWS.app = root => {
     root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1><div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
     return {};
   }
-  if (sub === "league") {
-    const w = weekXp(), sum = w.reduce((a, x) => a + x.v, 0), max = Math.max(goal(), ...w.map(x => x.v));
-    root.innerHTML = shell("league", `<h1 class="ap-h">${letters(L("apLeague"))}</h1><div class="ap-card"><p class="ap-k">${L("apWeek")}</p><b class="ap-big">${sum} XP</b>
-      <div class="ap-chart">${w.map(x => `<div><i style="height:${x.v / max * 100}%"></i><small>${"SMTWTFS"[x.d.getDay()]}</small></div>`).join("")}</div><p class="ap-p">${L("apLeagueP")}</p></div>
-      <div class="ap-board"></div>`);
-    const bx = root.querySelector(".ap-board"); bx.innerHTML = boardHTML(); revealHome(bx); if (typeof loadBoard === "function") loadBoard();
-    return {};
-  }
+  if (sub === "league") { leagueView(root, shell); return {}; }
   /* profile */
   const b = lsGet("mv-badges", {}), x = XP(), lv = myLevel();
   const BADGES = [["first", "🌱", "First lesson"], ...SECTIONS.map((s, i) => ["sec" + i, ["🥉", "🥈", "🥇"][i], T3(s.t) + " · " + s.lv]), ["perfect", "👑", "Perfect lesson"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],

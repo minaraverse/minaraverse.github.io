@@ -53,10 +53,44 @@ function board_(rows) {
   return { week: fmt(week[0]), month: { adults: top3(month.filter(x => !x.age || x.age > KIDS_MAX_AGE)), kids: top3(month.filter(x => x.age && x.age <= KIDS_MAX_AGE)) }, levels: levels };
 }
 
+
+/* ===== Milingo leagues: 10 tiers, weekly groups of up to 30, promotion/demotion every Monday (Asia/Baku) ===== */
+const PROMO = [20, 15, 10, 7, 7, 7, 7, 7, 5, 0];
+function day_() { return Number(Utilities.formatDate(new Date(), "Asia/Baku", "u")); }          /* 1 = Monday … 7 = Sunday */
+function wk_() { const m = new Date(Date.now() - (day_() - 1) * 864e5); return Utilities.formatDate(m, "Asia/Baku", "yyyy-MM-dd"); }
+function lgSheet_() { const ss = SpreadsheetApp.getActiveSpreadsheet(); let sh = ss.getSheetByName("Liqa");
+  if (!sh) { sh = ss.insertSheet("Liqa"); sh.appendRow(["id", "name", "avatar", "tier", "week", "xp", "last", "prev"]); } return sh; }
+function zones_(t, n) { const up = t >= 9 ? 0 : Math.max(1, Math.round(PROMO[t] / 30 * n)); const down = t === 0 ? 0 : n >= 10 ? 5 : n >= 5 ? Math.round(n / 6) : 0; return { up: n < 2 ? 0 : up, down: down }; }
+function groups_(v) { const by = {}; v.forEach((r, i) => { if (i === 0 || !r[0]) return; const t = Number(r[3]) || 0; (by[t] = by[t] || []).push(i); });
+  const out = []; Object.keys(by).forEach(t => { for (let k = 0; k < by[t].length; k += 30) out.push({ t: Number(t), rows: by[t].slice(k, k + 30) }); }); return out; }
+function roll_(sh, cur) {
+  if (P.getProperty("LG_WK") === cur) return;
+  const v = sh.getDataRange().getValues();
+  groups_(v).forEach(g => { const list = g.rows.slice().sort((a, b) => (Number(v[b][5]) || 0) - (Number(v[a][5]) || 0)), n = list.length, z = zones_(g.t, n);
+    list.forEach((i, rank) => { const xp = Number(v[i][5]) || 0; let t = g.t, res = "stay";
+      if (rank < z.up && xp > 0) { t = Math.min(9, t + 1); res = "up"; } else if (rank >= n - z.down) { t = Math.max(0, t - 1); res = "down"; }
+      v[i][7] = JSON.stringify({ wk: String(v[i][4]), from: g.t, to: t, rank: rank + 1, n: n, res: res, xp: xp }); v[i][3] = t; v[i][4] = cur; v[i][5] = 0; }); });
+  if (v.length > 1) sh.getRange(1, 1, v.length, 8).setValues(v);
+  P.setProperty("LG_WK", cur);
+}
+function league_(p) {
+  const id = String(p.id || ""); if (!/^[a-z0-9]{10,40}$/i.test(id)) return { ok: false, err: "id" };
+  const sh = lgSheet_(), cur = wk_(); roll_(sh, cur);
+  let v = sh.getDataRange().getValues(); let row = -1; for (let i = 1; i < v.length; i++) if (v[i][0] === id) { row = i; break; }
+  const name = String(p.name || "").replace(/[<>"]/g, "").trim().slice(0, 24), av = String(p.av || "").replace(/[^a-z0-9,]/gi, "").slice(0, 30), xp = Math.max(0, Math.min(5000, Number(p.xp) || 0));
+  if (row < 0) { if (!name) return { ok: false, err: "name" }; sh.appendRow([id, name, av, 0, cur, xp, new Date(), ""]); v = sh.getDataRange().getValues(); row = v.length - 1; }
+  else { const r = v[row]; if (name) r[1] = name; if (av) r[2] = av; r[5] = Math.max(Number(r[5]) || 0, xp); r[6] = new Date(); sh.getRange(row + 1, 1, 1, 8).setValues([r]); }
+  const g = groups_(v).filter(x => x.rows.indexOf(row) > -1)[0], t = g.t;
+  const players = g.rows.map(i => ({ name: String(v[i][1]), av: String(v[i][2]), xp: Number(v[i][5]) || 0, me: i === row })).sort((a, b) => b.xp - a.xp);
+  let prev = null; try { prev = v[row][7] ? JSON.parse(v[row][7]) : null; } catch (e) {}
+  return { ok: true, tier: t, week: cur, days: 8 - day_(), players: players, zones: zones_(t, players.length), prev: prev };
+}
+
 function doGet(e) {
   const p = (e && e.parameter) || {}, a = p.a || (p.board ? "board" : "rows");
   const lock = LockService.getScriptLock(); lock.waitLock(10000);
   try {
+    if (a === "lg") return json_(league_(p));
     if (a === "board") return json_({ ok: true, board: board_(readRows_()) });
     if (a === "status") { const sh = sheet_(); return json_({ ok: true, hasCode: !!P.getProperty("KEY"), email: ADMIN_EMAIL.replace(/^(.).*(@.*)$/, "$1***$2"),
       file: SpreadsheetApp.getActiveSpreadsheet().getName(), sheet: sh.getName(), rows: Math.max(0, sh.getLastRow() - 1) }); }

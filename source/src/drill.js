@@ -309,7 +309,8 @@ function dDoneScreen(root, { xp, acc, sec, perfect, title }) {
     <div class="dr-endpix">${mascot(perfect ? "👑" : "🎉")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>
     <div class="ap-res"><div class="y" style="--k:0"><small>${L("apEarned")}</small><b>⚡ <span data-n="${xp}">0</span></b></div><div class="g" style="--k:1"><small>${acc >= 90 ? L("dAccA") : acc >= 70 ? L("dAccB") : L("apAccuracy")}</small><b>🎯 <span data-n="${acc}">0</span>%</b></div><div class="b" style="--k:2"><small>${sec < 150 ? L("dFast") : L("apTime")}</small><b>⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}</b></div></div>
     <div class="ap-goalbar"><span>${L("apGoal")}</span><div><i style="width:${Math.min(100, xpToday() / goal() * 100)}%"></i></div><b>${xpToday()}/${goal()}</b></div>
-    <a class="ap-cta" href="#app-learn">${L("dCont")}</a></div>`;
+    <a class="ap-cta dr-cont" href="#app-learn">${L("dCont")}</a></div>`;
+  const cont = root.querySelector(".dr-cont"); cont.onclick = async e => { if (!lsGet("mv-lgname", "")) return; e.preventDefault(); cont.textContent = "…"; if (!(await lgAfterLesson(root))) Router.go("app-learn"); };
   root.querySelectorAll("[data-n]").forEach((s, i) => setTimeout(() => countUp(s, +s.dataset.n), 500 + i * 250));
 }
 function streakScreen(root, then) {
@@ -507,4 +508,86 @@ function wireQuests(root) {
     if (q.got.includes(k)) return; if (f(q) < n) { flash(c, "shake"); sfx("miss"); return; }
     q.got.push(k); lsSet("mv-qday", q); const m = lsGet("mv-qmonth", {}); lsSet("mv-qmonth", { k: monthKey(), n: (m.k === monthKey() ? m.n : 0) + 1 });
     sfx("chest"); buzz([20, 30, 60]); c.classList.add("opening"); addXp(10); toast("🎁 " + L("qGot"), "gold"); setTimeout(() => Router.remount(), 900); };
+}
+
+/* ---------- leagues: 10 tiers, real students, weekly promotion ---------- */
+const LG_N = { en: ["Bronze", "Silver", "Gold", "Sapphire", "Ruby", "Emerald", "Amethyst", "Pearl", "Obsidian", "Diamond"],
+  az: ["Bürünc", "Gümüş", "Qızıl", "Sapfir", "Yaqut", "Zümrüd", "Ametist", "Mirvari", "Obsidian", "Almaz"],
+  ru: ["Бронзовая", "Серебряная", "Золотая", "Сапфировая", "Рубиновая", "Изумрудная", "Аметистовая", "Жемчужная", "Обсидиановая", "Бриллиантовая"] };
+const LG_C = [["#E39A5B", "#A4572A"], ["#DDE3EA", "#8C98A6"], ["#FFD45A", "#C98A12"], ["#5BA8FF", "#1F5FC4"], ["#FF5C7A", "#B0163A"], ["#4FE39A", "#14965A"], ["#C489FF", "#7A3BD1"], ["#F6EEE3", "#BCA98F"], ["#5B5370", "#231E30"], ["#9FF6FF", "#2BB7D6"]];
+Object.assign(UI.en, { lgName: t => LG_N.en[t] + " League", lgDays: "days left", lgUp: "PROMOTION ZONE", lgDown: "DEMOTION ZONE", lgJoin: "Join the league", lgJoinP: "Compete every week with other Minaraverse students. Only your first name and avatar are shown.",
+  lgJoinB: "Join", lgName2: "Your first name", lgErr: "The league can't load right now. Your XP is saved — try again later.", lgRankUp: "You moved up!", lgRank: "You're in {n} place", lgChase: "but {name} is right behind you!",
+  lgLead: "You're leading the league!", lgRes: { up: "Promoted to {t}! 🎉", down: "Moved down to {t}. You'll come back!", stay: "You stayed in {t}." }, lgYou: "You", lgWeek: "Weekly XP" });
+Object.assign(UI.az, { lgName: t => LG_N.az[t] + " liqası", lgDays: "gün qalıb", lgUp: "YÜKSƏLMƏ ZONASI", lgDown: "DÜŞMƏ ZONASI", lgJoin: "Liqaya qoşul", lgJoinP: "Hər həftə digər Minaraverse tələbələri ilə yarış. Yalnız adın və avatarın görünür.",
+  lgJoinB: "Qoşul", lgName2: "Adın", lgErr: "Reytinq hazırda yüklənmir. XP-n yadda qalıb — bir az sonra yenə yoxla.", lgRankUp: "Sıra atladın!", lgRank: "İndi {n} yerdəsən", lgChase: "amma {name} arxanca gəlir!",
+  lgLead: "Liqada birincisən!", lgRes: { up: "{t} liqasına yüksəldin! 🎉", down: "{t} liqasına düşdün. Geri qayıdacaqsan!", stay: "{t} liqasında qaldın." }, lgYou: "Sən", lgWeek: "Həftəlik XP" });
+Object.assign(UI.ru, { lgName: t => LG_N.ru[t] + " лига", lgDays: "дн. осталось", lgUp: "ЗОНА ПОВЫШЕНИЯ", lgDown: "ЗОНА ПОНИЖЕНИЯ", lgJoin: "Вступить в лигу", lgJoinP: "Соревнуйся каждую неделю с другими учениками Minaraverse. Видны только имя и аватар.",
+  lgJoinB: "Вступить", lgName2: "Твоё имя", lgErr: "Рейтинг сейчас не загружается. XP сохранён — попробуй позже.", lgRankUp: "Ты поднялся!", lgRank: "Ты на {n} месте", lgChase: "но {name} уже догоняет!",
+  lgLead: "Ты лидер лиги!", lgRes: { up: "Повышение: {t}! 🎉", down: "Понижение: {t}. Ты вернёшься!", stay: "Ты остался в лиге: {t}." }, lgYou: "Ты", lgWeek: "XP за неделю" });
+const ordAz = n => { const sfx2 = { 1: "ci", 2: "ci", 3: "cü", 4: "cü", 5: "ci", 6: "cı", 7: "ci", 8: "ci", 9: "cu", 0: "cu" }, t = { 10: "cu", 20: "ci", 30: "cu", 40: "cı", 50: "ci" };
+  return n + "-" + (n % 10 ? sfx2[n % 10] : t[n] || "cü"); };
+const ordinal = n => LANG === "az" ? ordAz(n) : LANG === "ru" ? n + "-м" : n + (n % 10 === 1 && n % 100 !== 11 ? "st" : n % 10 === 2 && n % 100 !== 12 ? "nd" : n % 10 === 3 && n % 100 !== 13 ? "rd" : "th");
+function trophySVG(t, cls = "") { const [a, b] = LG_C[t];
+  return `<svg class="lg-tr ${cls}" viewBox="0 0 80 80" aria-hidden="true"><ellipse cx="40" cy="73" rx="17" ry="4.5" fill="rgba(0,0,0,.25)"/><rect x="27" y="62" width="26" height="8" rx="3" fill="${b}"/><rect x="31" y="58" width="18" height="6" rx="2" fill="${a}"/>
+    <path d="M36 46h8v13h-8z" fill="${b}"/><path d="M14 14 Q22 8 30 12 Q40 4 50 12 Q58 8 66 14 Q68 40 40 50 Q12 40 14 14Z" fill="${a}"/><path d="M40 6 Q50 12 50 12 Q58 8 66 14 Q68 40 40 50Z" fill="${b}" opacity=".35"/>
+    <path d="M24 18 L40 13 L56 18 L50 34 L40 40 L30 34Z" fill="#fff" opacity=".28"/><path d="M24 18 L40 13 L40 40 L30 34Z" fill="#fff" opacity=".22"/>${t >= 3 ? `<path d="M30 34 L40 26 L50 34 L40 40Z" fill="${b}" opacity=".35"/>` : ""}
+    <path d="M20 16 Q22 12 27 13" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>${t === 9 ? `<circle cx="58" cy="10" r="2.2" fill="#fff" class="spark"/><circle cx="20" cy="40" r="1.6" fill="#fff" class="spark"/>` : ""}</svg>`; }
+const uid = () => { let u = lsGet("mv-uid", null); if (!u) { u = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, "0")).join(""); lsSet("mv-uid", u); } return u; };
+const weekXpNow = () => { const x = XP(), d = new Date(); const dow = (d.getDay() + 6) % 7; let s = 0; for (let k = 0; k <= dow; k++) { const t = new Date(d); t.setDate(d.getDate() - k); s += x.days[dayStr(t)] || 0; } return s; };
+const avStr = () => { const v = myAvatar(); return v ? `${v.k},${v.s},${v.c}` : ""; };
+const avOf = (s, name) => { const [k, sk, c] = String(s || "").split(","); return CHARS.includes(k) ? charSVG(k, { skin: SKINS[+sk] || SKINS[1], acc: AVC[+c] || AVC[0] }) : `<b class="lg-let">${esc((name || "?")[0].toUpperCase())}</b>`; };
+async function lgSync(name) {
+  if (typeof ADMIN_API === "undefined" || !ADMIN_API || /claude\.ai|claudeusercontent/.test(location.host)) throw new Error("off");
+  const q = new URLSearchParams({ a: "lg", id: uid(), name: name || lsGet("mv-lgname", "") || "", av: avStr(), xp: weekXpNow() });
+  const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 9000);
+  try { const r = await fetch(ADMIN_API + "?" + q, { redirect: "follow", signal: ctl.signal }); const d = await r.json(); if (!d.ok) throw new Error(d.err || "x"); lsSet("mv-lg", d); return d; } finally { clearTimeout(tm); }
+}
+function lgListHTML(d) {
+  const z = d.zones || { up: 0, down: 0 }, n = d.players.length;
+  return `<ol class="lg-list">${d.players.map((p, i) => `${i === z.up && z.up > 0 && i > 0 ? `<li class="lg-zone up">⬆ ${L("lgUp")} ⬆</li>` : ""}${i === n - z.down && z.down > 0 ? `<li class="lg-zone down">⬇ ${L("lgDown")} ⬇</li>` : ""}
+    <li class="lg-row ${p.me ? "me" : ""} ${i < z.up ? "pz" : i >= n - z.down ? "dz" : ""}" style="--k:${i}"><span class="lg-rk">${i < 3 ? `<i class="m${i + 1}">${i + 1}</i>` : i + 1}</span><span class="lg-av">${avOf(p.av, p.name)}</span>
+    <b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
+}
+function leagueView(root, shell) {
+  const cached = lsGet("mv-lg", null), joined = lsGet("mv-lgname", "");
+  const head = t => `<div class="lg-head"><h1 class="ap-h">${esc(L("lgName")(t))}</h1>${cached ? `<small>⏱ ${cached.days} ${L("lgDays")}</small>` : ""}
+    <div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === t ? "on" : i > t ? "lk" : ""}" title="${esc(LG_N[LANG === "az" ? "az" : LANG === "ru" ? "ru" : "en"][i])}">${trophySVG(i)}</span>`).join("")}</div></div>`;
+  const t0 = cached ? cached.tier : 0;
+  if (!joined) {
+    root.innerHTML = shell("league", head(0) + `<div class="ap-card lg-join"><b>${L("lgJoin")}</b><p class="ap-p">${L("lgJoinP")}</p>
+      <div class="lg-jr"><span class="lg-av big">${avOf(avStr(), NAME)}</span><input class="lg-in" maxlength="24" value="${esc(NAME || "")}" placeholder="${L("lgName2")}"></div><button class="ap-cta lg-go">${L("lgJoinB")}</button><p class="lg-msg"></p></div>`);
+    const go = root.querySelector(".lg-go"), inp = root.querySelector(".lg-in"), msg = root.querySelector(".lg-msg");
+    go.onclick = async () => { const nm = inp.value.trim(); if (nm.length < 2) { flash(inp, "shake"); return; } go.disabled = true; go.textContent = "…";
+      try { await lgSync(nm); lsSet("mv-lgname", nm); if (!NAME) { NAME = nm; try { localStorage.setItem("mv-name", nm); } catch (e) {} } sfx("unlock"); Router.remount(); }
+      catch (e) { msg.textContent = L("lgErr"); go.disabled = false; go.textContent = L("lgJoinB"); } };
+    return;
+  }
+  root.innerHTML = shell("league", head(t0) + `<div class="lg-body">${cached ? lgListHTML(cached) : `<p class="ap-p">…</p>`}</div>`);
+  setTimeout(() => { const on = root.querySelector(".lg-tiers .on"); on && on.scrollIntoView({ inline: "center", block: "nearest" }); }, 50);
+  lgSync().then(d => { if (Router.name !== "app" || !/league/.test(location.hash)) return; const body = root.querySelector(".lg-body"); if (!body) return;
+    if (d.tier !== t0) { Router.remount(); return; } body.innerHTML = lgListHTML(d); lgResult(d); })
+    .catch(() => { const body = root.querySelector(".lg-body"); body && !cached && (body.innerHTML = `<p class="ap-p">${L("lgErr")}</p>`); });
+}
+function lgResult(d) { /* once per week: show last week's promotion/demotion */
+  if (!d.prev || lsGet("mv-lgres", "") === d.week) return; lsSet("mv-lgres", d.week);
+  const nm = LG_N[LANG === "az" ? "az" : LANG === "ru" ? "ru" : "en"][d.prev.to];
+  const ov = document.createElement("div"); ov.className = "dr-ov"; ov.innerHTML = `<div class="dr-card lg-resc">${trophySVG(d.prev.to, "big")}<h2>${esc(L("lgRes")[d.prev.res].replace("{t}", nm))}</h2><p>#${d.prev.rank} · ${d.prev.xp} XP</p><button class="ap-cta">${L("dCont")}</button></div>`;
+  document.body.appendChild(ov); sfx(d.prev.res === "up" ? "win" : d.prev.res === "down" ? "fail" : "pop"); ov.onclick = e => { if (e.target.closest(".ap-cta") || e.target === ov) ov.remove(); };
+}
+/* after a lesson: rank-change screen (like "you moved up, but X is chasing you") */
+async function lgAfterLesson(root) {
+  if (!lsGet("mv-lgname", "")) return false;
+  const before = lsGet("mv-lg", null), meB = before ? before.players.findIndex(p => p.me) : -1;
+  let d; try { d = await lgSync(); } catch (e) { return false; }
+  const i = d.players.findIndex(p => p.me); if (i < 0) return false;
+  const up = meB >= 0 && i < meB && before.tier === d.tier, me = d.players[i], chaser = d.players[i + 1], ahead = d.players[i - 1];
+  const title = i === 0 ? L("lgLead") : up ? L("lgRankUp") : L("lgRank").replace("{n}", ordinal(i + 1));
+  const sub = chaser && me.xp - chaser.xp <= 30 ? L("lgChase").replace("{name}", `<em>${esc(chaser.name)}</em>`) : up ? L("lgRank").replace("{n}", ordinal(i + 1)) : "";
+  const win = d.players.map((p, k) => ({ p, k })).slice(Math.max(0, i - 2), i + 3);
+  root.innerHTML = `<div class="ap dr-end lg-after">${trophySVG(d.tier, "big")}<h1>${title}</h1>${sub ? `<p class="dr-sub">${sub}</p>` : ""}
+    <ol class="lg-list mini">${win.map(({ p, k }) => `<li class="lg-row ${p.me ? "me" : ""}" style="--k:${k - win[0].k}"><span class="lg-rk">${k + 1}</span><span class="lg-av">${avOf(p.av, p.name)}</span><b>${esc(p.name)}</b><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>
+    <a class="ap-cta" href="#app-learn">${L("dCont")}</a></div>`;
+  sfx(up || i === 0 ? "combo" : "pop"); if (up) buzz([30, 40, 30]);
+  if (up && !REDUCED) { const me2 = root.querySelector(".lg-row.me"); me2 && me2.animate([{ transform: "translateY(64px)" }, { transform: "none" }], { duration: 800, easing: "cubic-bezier(.2,1.2,.3,1)" }); }
+  return true;
 }
