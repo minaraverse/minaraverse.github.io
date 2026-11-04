@@ -160,19 +160,19 @@ const skOpen = (c, u) => u === 0 || skDone(c, u - 1) >= SKL;
 const skCur = c => { const U = SK[c].U; for (let i = 0; i < U.length; i++) if (skOpen(c, i) && skDone(c, i) < SKL) return i; return U.length - 1; };
 const skLessons = c => SK[c].U.reduce((a, _, i) => a + skDone(c, i), 0);
 const subj = () => { const s = lsGet("mv-subj", "en"); return SK[s] ? s : "en"; };
-const subjEmoji = () => { const s = subj(); return s === "en" ? "🇬🇧" : SK[s].e; };
+const subjEmoji = () => { const m = location.hash.match(/app-world-(\w+)|sk-(\w+)-/), s = m && (m[1] || m[2]); return s && SK[s] ? SK[s].e : "🇬🇧"; };
 
 function skPathHTML(c) { const C = SK[c], cu = skCur(c), offs = [[0, -50, -70, -30], [0, 50, 70, 30]];
   return `<button class="ap-unit dr-course" data-go="pick"><span><small>${L("apCourse")}</small><b>${C.e} ${L(C.n)}</b></span><i>${L("apChange")} ▾</i></button>` +
     C.U.map((U, u) => { const open = skOpen(c, u), d = skDone(c, u), col = C.c[u % C.c.length];
       const nodes = Array.from({ length: SKL }, (_, j) => { const isDone = d > j, isCur = open && j === d && u === cu, can = open && j <= d, tro = j === SKL - 1;
         return `<div class="dr-nw" style="--x:${offs[u % 2][j]}px;--i:${j}">${isCur ? `<span class="ap-start">${skLessons(c) ? L("apStart") : L("dFirst")}</span>` : ""}
-          <a class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${tro ? "trophy" : ""}" href="${can ? `#sk-${c}-${u}-${j}` : "#app-learn"}" aria-label="${esc(T3(U.t))} ${j + 1}"><span>${can || isDone ? (tro ? "🏆" : U.e) : "🔒"}</span>${isDone && !tro ? "<em>✓</em>" : ""}</a></div>`; }).join("");
+          <a class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${tro ? "trophy" : ""}" href="${can ? `#sk-${c}-${u}-${j}` : `#app-world-${c}`}" aria-label="${esc(T3(U.t))} ${j + 1}"><span>${can || isDone ? (tro ? "🏆" : U.e) : "🔒"}</span>${isDone && !tro ? "<em>✓</em>" : ""}</a></div>`; }).join("");
       return `<section class="dr-unit ${open ? "" : "locked"}" style="--uc:${col}" id="u${u}"><div class="dr-div"><i></i><b>${U.e} ${esc(T3(U.t))}</b><i></i></div><div class="dr-path sk-path">${nodes}</div></section>`; }).join("");
 }
 function wireSkPath(root) {
   apReveal(root);
-  root.onclick = e => { if (e.target.closest("[data-go='pick']")) { Router.go("app-pick"); return; }
+  root.onclick = e => { if (e.target.closest("[data-go='pick']")) { Router.go("app-practice"); return; }
     const l = e.target.closest(".dr-node.lock"); if (l) { e.preventDefault(); sfx("miss"); flash(l, "shake"); toast("🔒 " + L("apLocked")); } };
   const nu = sessionStorage.getItem("mv-sknew"); sessionStorage.removeItem("mv-sknew");
   setTimeout(() => { const c = root.querySelector(".dr-node.now"); if (c) { c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" }); if (nu) { c.classList.add("born"); setTimeout(() => sfx("unlock"), 450); } } }, 250);
@@ -183,12 +183,12 @@ VIEWS.sk = root => {
   document.documentElement.classList.add("ap-mode");
   if (typeof safiGate === "function" && safiGate(root)) return {};
   const m = location.hash.match(/^#sk-(\w+)-(\d+)-(\d+)/), c = m && m[1], u = m ? +m[2] : 0, j = m ? +m[3] : 0;
-  if (!m || !SK[c] || !SK[c].U[u] || !skOpen(c, u) || j > skDone(c, u) || j >= SKL) { Router.go("app-learn"); return {}; }
+  if (!m || !SK[c] || !SK[c].U[u] || !skOpen(c, u) || j > skDone(c, u) || j >= SKL) { Router.go(SK[c] ? "app-world-" + c : "app-practice"); return {}; }
   const C = SK[c], U = C.U[u], col = C.c[u % C.c.length], review = j === SKL - 1;
   const gens = review ? C.U.slice(Math.max(0, u - 2), u + 1).map(x => x.g) : [U.g], N = review ? 10 : 8;
   const queue = Array.from({ length: N }, (_, k) => pick1(gens)(Math.min(3, j + (k > N / 2 ? 1 : 0))));
   const st = { total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer", from: null, seqIn: [] };
-  root.innerHTML = `<div class="ap ap-les dr sk-les" style="--uc:${col}"><header class="ap-lh">${apBack()}<a href="#app-learn" class="ap-x" aria-label="Close">✕</a><div class="dr-bar"><i></i><em class="dr-cb"></em></div><span class="dr-h inf">${C.e}</span></header>
+  root.innerHTML = `<div class="ap ap-les dr sk-les" style="--uc:${col}"><header class="ap-lh"><a href="#app-world-${c}" class="ap-x" aria-label="Close">✕</a>${lhBrand()}<div class="dr-bar"><i></i><em class="dr-cb"></em></div><span class="dr-h inf">${C.e}</span></header>
     <main class="dr-main"><div class="dx sk-x"></div></main><footer class="dr-foot"><div class="dr-fb"><span class="dr-ic"></span><div><b></b><p></p></div></div><button class="dr-go" disabled>${L("dCheck")}</button></footer></div>`;
   const box = root.querySelector(".dx"), foot = root.querySelector(".dr-foot"), go = root.querySelector(".dr-go"), bar = root.querySelector(".dr-bar i");
   let sel = null;
@@ -238,7 +238,7 @@ VIEWS.sk = root => {
     qAdd(q => { q.les++; if (st.miss === 0) q.per++; q.sec += sec; q.cmb = Math.max(q.cmb, st.maxCombo); });
     addXp(xp); if (typeof safiAfterLesson === "function") safiAfterLesson("lesson");
     const b = lsGet("mv-badges", {}); if (!b.first) b.first = dayStr(new Date()); if (st.miss === 0) b.perfect = (b.perfect || 0) + 1; if (streak() >= 7) b.week = true; lsSet("mv-badges", b);
-    const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, title: L("apDone") });
+    const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, title: L("apDone"), back: "app-world-" + c });
     if (!st.wasToday && playedToday()) streakScreen(root, showDone); else showDone();
   }
   go.onclick = () => { if (go.disabled) return; if (st.phase === "answer") check(); else if (!queue.length) finish(); else render(); };

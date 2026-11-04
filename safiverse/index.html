@@ -2224,6 +2224,16 @@ html.ap-mode .ap-main{overflow-x:clip}
 .sk-sq em.rk{left:4px;top:3px}.sk-sq em.fl{right:4px;bottom:3px}
 /* lesson header back button: same font as everywhere */
 html .ap-lh .ap-back b{font-family:"Nunito",system-ui,sans-serif}
+/* ---- lesson header: ✕ · Safiverse · progress ---- */
+.ap-lh .lh-brand{flex:none;display:inline-flex;align-items:center}.ap-lh .lh-brand .ap-brand.sv{margin:0}
+html .ap-lh .ap-brand.sv,html .ap-lh .ap-brand.sv i{font-size:16px!important}
+.lh-ghost{position:fixed;z-index:1000;transform:translateY(-50%);pointer-events:none;margin:0}
+.lh-dot{position:fixed;z-index:1001;border-radius:50%;pointer-events:none;box-shadow:0 0 6px #ffd86b}
+@media (max-width:380px){html .ap-lh .ap-brand.sv,html .ap-lh .ap-brand.sv i{font-size:14px!important}}
+.ex-sheet .inv-card h2{margin:0}.ex-leave{width:100%;max-width:420px;padding:13px;border-radius:16px;border:0;background:transparent;color:#ff8a7a;font:800 15px var(--bf);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+html .ap-lh .ap-brand.sv{font:800 16px "Nunito",system-ui,sans-serif!important;letter-spacing:-.01em;display:inline-flex;align-items:baseline;line-height:1;color:var(--ink,#eef6f0)}
+html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important;font-style:normal;color:var(--acc,#6fcf8e)}
+.inv-sheet .ap-cta{font:800 16px "Nunito",system-ui,sans-serif!important;letter-spacing:.06em}
 
 </style>
 <div id="view"></div>
@@ -6594,7 +6604,7 @@ const apBack = () => `<a class="ap-back" href="${SAFI ? "https://minaraverse.git
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
 /* ---------- course choice ---------- */
-document.addEventListener("click", e => { if (e.target.closest(".ap-flag[data-go='pick']")) { e.stopPropagation(); Router.go("app-pick"); } }, true);
+document.addEventListener("click", e => { if (e.target.closest(".ap-flag[data-go='pick']")) { e.stopPropagation(); Router.go(/app-world-/.test(location.hash) ? "app-practice" : "app-pick"); } }, true);
 const COURSE_EMOJI = { milingo: "🌱", kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", ielts: "🎙", debate: "⚖️", heist: "🗝" };
 const courseEmoji = k => COURSE_EMOJI[k] || "📘";
 if (!lsGet("mv-course2", null)) { lsSet("mv-course", "milingo"); lsSet("mv-course2", 1); }
@@ -6632,7 +6642,9 @@ VIEWS.app = root => {
   }
   if (sub === "pick") { root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("svLearn"))}</h1>${pickHTML()}<button class="ap-item sv-st" data-stories><span>📚</span><b>${L("svStories")}</b><small>${WORLD_ORDER.length}</small><i>›</i></button>`);
     wirePick(root, () => Router.go("app-learn")); return {}; }
-  if (sub === "learn" && typeof subj === "function" && subj() !== "en") { root.innerHTML = shell("learn", skPathHTML(subj())); wireSkPath(root); return {}; }
+  /* Worlds (math, music, chess) live inside the Worlds tab; Learn is only for languages */
+  if (sub === "world" && typeof SK === "object") { const c = (location.hash.match(/app-world-(\w+)/) || [])[1]; if (!SK[c]) { Router.go("app-practice"); return {}; }
+    root.innerHTML = shell("practice", `<a href="#app-practice" class="fr-back">← ${L("apPractice")}</a>` + skPathHTML(c)); wireSkPath(root); return {}; }
   if (sub === "learn" && curCourse() === "milingo") { root.innerHTML = shell("learn", drillPathHTML()); wireDrillPath(root); return {}; }
   if (sub === "learn") {
     const k = curCourse(), S = STORIES[k], nx = nextIndex(k);
@@ -6653,7 +6665,7 @@ VIEWS.app = root => {
     const worlds = typeof SK === "object" ? `<div class="wd-grid">${["math", "music", "chess"].map((k, i) => { const done = skLessons(k), all = SK[k].U.length * SKL;
       return `<button class="wd-card wd-${k}" data-world="${k}" style="--k:${i}"><span class="wd-e">${SK[k].e}</span><b>${L(SK[k].n)}</b><small>${L(SK[k].p)}</small><div class="wd-bar"><i style="width:${Math.round(done / all * 100)}%"></i></div><em>${done}/${all}</em></button>`; }).join("")}</div><h2 class="ap-h2">🇬🇧 ${L("apEnPrac")}</h2>` : "";
     root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1>${worlds}<div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
-    root.onclick = e => { const w = e.target.closest("[data-world]"); if (!w) return; lsSet("mv-subj", w.dataset.world); sfx("tap"); Router.go("app-learn"); };
+    root.onclick = e => { const w = e.target.closest("[data-world]"); if (!w) return; sfx("tap"); Router.go("app-world-" + w.dataset.world); };
     return {};
   }
   if (sub === "league") { leagueView(root, shell); return {}; }
@@ -6687,7 +6699,7 @@ VIEWS.lesson = root => {
   const k = m[1], i = +m[2], S = STORIES[k], u = S.units[i]; if (!u || !isOpen(k, i)) { Router.go("app-learn"); return {}; }
   const note = noteOf(u);
   LESSON = { k, i, n: 0, ok: 0, miss: 0, streak: 0, total: u.qs.length + Math.min(3, dueKeys(k + "|").filter(x => !x.startsWith(`${k}|${i}|`)).length), start: Date.now() };
-  root.innerHTML = `<div class="ap ap-les"><header class="ap-lh">${apBack()}<a href="#app-learn" class="ap-x" aria-label="Close">✕</a><div class="ap-lbar"><i></i></div><span class="ap-st on">🔥 ${streak()}</span></header>
+  root.innerHTML = `<div class="ap ap-les"><header class="ap-lh"><a href="#app-learn" class="ap-x" aria-label="Close">✕</a>${lhBrand()}<div class="ap-lbar"><i></i></div><span class="ap-st on">🔥 ${streak()}</span></header>
     <main class="ap-main">${note ? `<details class="ap-note" ${isDone(k, i) ? "" : "open"}><summary>📖 ${L("apReadFirst")} · ${esc(u.name)}</summary><p>${esc(note)} ${sayBtn(note)}</p>${trBlock(k, i)}</details>` : ""}
     <div class="ap-qz"></div></main><div class="ap-sheet"><b></b></div></div>`;
   Quiz(root.querySelector(".ap-qz"), { story: k, idx: i, cls: "qz-ap" });
@@ -7530,7 +7542,7 @@ VIEWS.drill = root => {
   const queue = buildQueue(mode === "lesson" ? NODE_PARTS[li][pi] : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
   const st = { total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, lives: 3, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer" };
   const heartsBox = () => mode === "jump" ? `<span class="dr-h">${"❤️".repeat(st.lives)}${"🤍".repeat(3 - st.lives)}</span>` : mode === "lesson" ? `<span class="dr-h">❤️ <b>${hearts()}</b></span>` : `<span class="dr-h inf">❤️ ∞</span>`;
-  root.innerHTML = `<div class="ap ap-les dr" style="--uc:${U.c}"><header class="ap-lh">${apBack()}<a href="#app-learn" class="ap-x dr-x" aria-label="Close">✕</a><div class="dr-bar"><i></i><em class="dr-cb"></em></div>${heartsBox()}</header>
+  root.innerHTML = `<div class="ap ap-les dr" style="--uc:${U.c}"><header class="ap-lh"><a href="#app-learn" class="ap-x dr-x" aria-label="Close">✕</a>${lhBrand()}<div class="dr-bar"><i></i><em class="dr-cb"></em></div>${heartsBox()}</header>
     <main class="dr-main"><div class="dx"></div></main>
     <button class="dr-skip" hidden>${L("dSkip")}</button><footer class="dr-foot"><div class="dr-fb"><span class="dr-ic"></span><div><b></b><p></p></div></div><button class="dr-go" disabled>${L("dCheck")}</button></footer></div>`;
   const box = root.querySelector(".dx"), foot = root.querySelector(".dr-foot"), go = root.querySelector(".dr-go"), bar = root.querySelector(".dr-bar i");
@@ -7647,15 +7659,15 @@ VIEWS.drill = root => {
 };
 
 function countUp(el, to, ms = 900) { if (REDUCED) { el.textContent = to; return; } const t0 = performance.now(); const f = t => { const p = Math.min(1, (t - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
-function dDoneScreen(root, { xp, acc, sec, perfect, title }) {
+function dDoneScreen(root, { xp, acc, sec, perfect, title, back = "app-learn" }) {
   sfx("win"); buzz([60, 50, 60, 50, 160]);
   title = title === L("apDone") ? L("dWin")[(Math.random() * L("dWin").length) | 0] : title;
   root.innerHTML = `<div class="ap dr-end"><div class="ap-cf">${Array.from({ length: 46 }, (_, j) => `<i style="left:${Math.random() * 100}%;--d:${(Math.random() * .8).toFixed(2)}s;--c:${["#ffcf5a", "#9ff0c0", "#9DB0FF", "#ff9fb0", "#c9a7ff"][j % 5]}"></i>`).join("")}</div>
     <div class="dr-endpix">${mascot(perfect ? "👑" : "🎉")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>
     <div class="ap-res"><div class="y" style="--k:0"><small>${L("apEarned")}</small><b>⚡ <span data-n="${xp}">0</span></b></div><div class="g" style="--k:1"><small>${acc >= 90 ? L("dAccA") : acc >= 70 ? L("dAccB") : L("apAccuracy")}</small><b>🎯 <span data-n="${acc}">0</span>%</b></div><div class="b" style="--k:2"><small>${sec < 150 ? L("dFast") : L("apTime")}</small><b>⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}</b></div></div>
     <div class="ap-goalbar"><span>${L("apGoal")}</span><div><i style="width:${Math.min(100, xpToday() / goal() * 100)}%"></i></div><b>${xpToday()}/${goal()}</b></div>
-    <a class="ap-cta dr-cont" href="#app-learn">${L("dCont")}</a></div>`;
-  const cont = root.querySelector(".dr-cont"); cont.onclick = async e => { if (!lsGet("mv-lgname", "")) return; e.preventDefault(); cont.textContent = "…"; if (!(await lgAfterLesson(root))) Router.go("app-learn"); };
+    <a class="ap-cta dr-cont" href="#${back}">${L("dCont")}</a></div>`;
+  const cont = root.querySelector(".dr-cont"); cont.onclick = async e => { if (!lsGet("mv-lgname", "")) return; e.preventDefault(); cont.textContent = "…"; if (!(await lgAfterLesson(root, back))) Router.go(back); };
   root.querySelectorAll("[data-n]").forEach((s, i) => setTimeout(() => countUp(s, +s.dataset.n), 500 + i * 250));
 }
 function streakScreen(root, then) {
@@ -7956,7 +7968,7 @@ function lgResult(d) { /* once per week: show last week's promotion/demotion */
   document.body.appendChild(ov); sfx(d.prev.res === "up" ? "win" : d.prev.res === "down" ? "fail" : "pop"); ov.onclick = e => { if (e.target.closest(".ap-cta") || e.target === ov) ov.remove(); };
 }
 /* after a lesson: rank-change screen (like "you moved up, but X is chasing you") */
-async function lgAfterLesson(root) {
+async function lgAfterLesson(root, back = "app-learn") {
   if (!lsGet("mv-lgname", "")) return false;
   const before = lsGet("mv-lg", null), meB = before ? before.players.findIndex(p => p.me) : -1;
   let d; try { d = await lgSync(); } catch (e) { return false; }
@@ -7967,7 +7979,7 @@ async function lgAfterLesson(root) {
   const win = d.players.map((p, k) => ({ p, k })).slice(Math.max(0, i - 2), i + 3);
   root.innerHTML = `<div class="ap dr-end lg-after">${trophySVG(d.tier, "big")}<h1>${title}</h1>${sub ? `<p class="dr-sub">${sub}</p>` : ""}
     <ol class="lg-list mini">${win.map(({ p, k }) => `<li class="lg-row ${p.me ? "me" : ""}" style="--k:${k - win[0].k}"><span class="lg-rk">${k + 1}</span><span class="lg-av">${avOf(p.av, p.name)}</span><b>${esc(p.name)}</b><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>
-    <a class="ap-cta" href="#app-learn">${L("dCont")}</a></div>`;
+    <a class="ap-cta" href="#${back}">${L("dCont")}</a></div>`;
   sfx(up || i === 0 ? "combo" : "pop"); if (up) buzz([30, 40, 30]);
   if (up && !REDUCED) { const me2 = root.querySelector(".lg-row.me"); me2 && me2.animate([{ transform: "translateY(64px)" }, { transform: "none" }], { duration: 800, easing: "cubic-bezier(.2,1.2,.3,1)" }); }
   return true;
@@ -8306,19 +8318,19 @@ const skOpen = (c, u) => u === 0 || skDone(c, u - 1) >= SKL;
 const skCur = c => { const U = SK[c].U; for (let i = 0; i < U.length; i++) if (skOpen(c, i) && skDone(c, i) < SKL) return i; return U.length - 1; };
 const skLessons = c => SK[c].U.reduce((a, _, i) => a + skDone(c, i), 0);
 const subj = () => { const s = lsGet("mv-subj", "en"); return SK[s] ? s : "en"; };
-const subjEmoji = () => { const s = subj(); return s === "en" ? "🇬🇧" : SK[s].e; };
+const subjEmoji = () => { const m = location.hash.match(/app-world-(\w+)|sk-(\w+)-/), s = m && (m[1] || m[2]); return s && SK[s] ? SK[s].e : "🇬🇧"; };
 
 function skPathHTML(c) { const C = SK[c], cu = skCur(c), offs = [[0, -50, -70, -30], [0, 50, 70, 30]];
   return `<button class="ap-unit dr-course" data-go="pick"><span><small>${L("apCourse")}</small><b>${C.e} ${L(C.n)}</b></span><i>${L("apChange")} ▾</i></button>` +
     C.U.map((U, u) => { const open = skOpen(c, u), d = skDone(c, u), col = C.c[u % C.c.length];
       const nodes = Array.from({ length: SKL }, (_, j) => { const isDone = d > j, isCur = open && j === d && u === cu, can = open && j <= d, tro = j === SKL - 1;
         return `<div class="dr-nw" style="--x:${offs[u % 2][j]}px;--i:${j}">${isCur ? `<span class="ap-start">${skLessons(c) ? L("apStart") : L("dFirst")}</span>` : ""}
-          <a class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${tro ? "trophy" : ""}" href="${can ? `#sk-${c}-${u}-${j}` : "#app-learn"}" aria-label="${esc(T3(U.t))} ${j + 1}"><span>${can || isDone ? (tro ? "🏆" : U.e) : "🔒"}</span>${isDone && !tro ? "<em>✓</em>" : ""}</a></div>`; }).join("");
+          <a class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${tro ? "trophy" : ""}" href="${can ? `#sk-${c}-${u}-${j}` : `#app-world-${c}`}" aria-label="${esc(T3(U.t))} ${j + 1}"><span>${can || isDone ? (tro ? "🏆" : U.e) : "🔒"}</span>${isDone && !tro ? "<em>✓</em>" : ""}</a></div>`; }).join("");
       return `<section class="dr-unit ${open ? "" : "locked"}" style="--uc:${col}" id="u${u}"><div class="dr-div"><i></i><b>${U.e} ${esc(T3(U.t))}</b><i></i></div><div class="dr-path sk-path">${nodes}</div></section>`; }).join("");
 }
 function wireSkPath(root) {
   apReveal(root);
-  root.onclick = e => { if (e.target.closest("[data-go='pick']")) { Router.go("app-pick"); return; }
+  root.onclick = e => { if (e.target.closest("[data-go='pick']")) { Router.go("app-practice"); return; }
     const l = e.target.closest(".dr-node.lock"); if (l) { e.preventDefault(); sfx("miss"); flash(l, "shake"); toast("🔒 " + L("apLocked")); } };
   const nu = sessionStorage.getItem("mv-sknew"); sessionStorage.removeItem("mv-sknew");
   setTimeout(() => { const c = root.querySelector(".dr-node.now"); if (c) { c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" }); if (nu) { c.classList.add("born"); setTimeout(() => sfx("unlock"), 450); } } }, 250);
@@ -8329,12 +8341,12 @@ VIEWS.sk = root => {
   document.documentElement.classList.add("ap-mode");
   if (typeof safiGate === "function" && safiGate(root)) return {};
   const m = location.hash.match(/^#sk-(\w+)-(\d+)-(\d+)/), c = m && m[1], u = m ? +m[2] : 0, j = m ? +m[3] : 0;
-  if (!m || !SK[c] || !SK[c].U[u] || !skOpen(c, u) || j > skDone(c, u) || j >= SKL) { Router.go("app-learn"); return {}; }
+  if (!m || !SK[c] || !SK[c].U[u] || !skOpen(c, u) || j > skDone(c, u) || j >= SKL) { Router.go(SK[c] ? "app-world-" + c : "app-practice"); return {}; }
   const C = SK[c], U = C.U[u], col = C.c[u % C.c.length], review = j === SKL - 1;
   const gens = review ? C.U.slice(Math.max(0, u - 2), u + 1).map(x => x.g) : [U.g], N = review ? 10 : 8;
   const queue = Array.from({ length: N }, (_, k) => pick1(gens)(Math.min(3, j + (k > N / 2 ? 1 : 0))));
   const st = { total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer", from: null, seqIn: [] };
-  root.innerHTML = `<div class="ap ap-les dr sk-les" style="--uc:${col}"><header class="ap-lh">${apBack()}<a href="#app-learn" class="ap-x" aria-label="Close">✕</a><div class="dr-bar"><i></i><em class="dr-cb"></em></div><span class="dr-h inf">${C.e}</span></header>
+  root.innerHTML = `<div class="ap ap-les dr sk-les" style="--uc:${col}"><header class="ap-lh"><a href="#app-world-${c}" class="ap-x" aria-label="Close">✕</a>${lhBrand()}<div class="dr-bar"><i></i><em class="dr-cb"></em></div><span class="dr-h inf">${C.e}</span></header>
     <main class="dr-main"><div class="dx sk-x"></div></main><footer class="dr-foot"><div class="dr-fb"><span class="dr-ic"></span><div><b></b><p></p></div></div><button class="dr-go" disabled>${L("dCheck")}</button></footer></div>`;
   const box = root.querySelector(".dx"), foot = root.querySelector(".dr-foot"), go = root.querySelector(".dr-go"), bar = root.querySelector(".dr-bar i");
   let sel = null;
@@ -8384,7 +8396,7 @@ VIEWS.sk = root => {
     qAdd(q => { q.les++; if (st.miss === 0) q.per++; q.sec += sec; q.cmb = Math.max(q.cmb, st.maxCombo); });
     addXp(xp); if (typeof safiAfterLesson === "function") safiAfterLesson("lesson");
     const b = lsGet("mv-badges", {}); if (!b.first) b.first = dayStr(new Date()); if (st.miss === 0) b.perfect = (b.perfect || 0) + 1; if (streak() >= 7) b.week = true; lsSet("mv-badges", b);
-    const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, title: L("apDone") });
+    const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, title: L("apDone"), back: "app-world-" + c });
     if (!st.wasToday && playedToday()) streakScreen(root, showDone); else showDone();
   }
   go.onclick = () => { if (go.disabled) return; if (st.phase === "answer") check(); else if (!queue.length) finish(); else render(); };
@@ -8439,7 +8451,7 @@ function pushSync(now) {
 
 
 /* ---------- first questions: which language you speak, what you want to learn (+ votes for new languages) ---------- */
-Object.assign(UI.en, { svSpeak: "Which language do you speak?", svSpeakP: "Explanations and buttons will be in this language.", svLearn: "What do you want to learn?", svSoon: "Coming soon — vote!",
+Object.assign(UI.en, { svSpeak: "Which language do you speak?", svSpeakP: "Explanations and buttons will be in this language.", svLearn: "Which language do you want to learn?", svSoon: "Coming soon — vote!",
   svSoonP: "When a language reaches 100%, we add it to Safiverse.", svVote: "I want this 👍", svVoted: "You voted ✓", svWin: "🎉 This language will be added!", svMore: "Other courses", svVotesW: "votes", svStories: "Story courses (English)" });
 Object.assign(UI.az, { svSpeak: "Sən hansı dildə danışırsan?", svSpeakP: "İzahlar və düymələr bu dildə olacaq.", svLearn: "Hansı dili öyrənmək istəyirsən?", svSoon: "Tezliklə — səs ver!",
   svSoonP: "Dil 100%-ə çatanda onu Safiverse-ə əlavə edirik.", svVote: "Bu dili istəyirəm 👍", svVoted: "Səs verdin ✓", svWin: "🎉 Bu dil əlavə olunacaq!", svMore: "Başqa kurslar", svVotesW: "səs", svStories: "Hekayə kursları (ingilis dili)" });
@@ -8825,7 +8837,7 @@ function soPlay(id, qs, back) {
   const st = { i: 0, ans: [], t0: Date.now() }, n = qs.length;
   const W = (u, k) => UNITS[u] && UNITS[u].W[k] || { en: "?", az: "?", ru: "?", e: "" };
   const draw = () => { const q = qs[st.i], w = W(q.u, q.k), en = q.t === "w";
-    root.innerHTML = `<div class="ap ap-les so-play"><header class="ap-lh"><a href="#app-friends" class="ap-x" aria-label="Close">✕</a><div class="ap-lbar"><i style="width:${st.i / n * 100}%"></i></div><span class="ap-st on">⚔️</span></header>
+    root.innerHTML = `<div class="ap ap-les so-play"><header class="ap-lh"><a href="#app-friends" class="ap-x" aria-label="Close">✕</a>${lhBrand()}<div class="ap-lbar"><i style="width:${st.i / n * 100}%"></i></div><span class="ap-st on">⚔️</span></header>
       <main class="ap-main"><small class="so-qn">${L("soQ")(st.i + 1, n)}</small><h2 class="ap-h2">${en ? L("soPickMeaning") : L("soPickEn")}</h2>
       <div class="so-word">${w.e ? `<span>${w.e}</span>` : ""}<b>${esc(en ? w.en : nat(w))}</b>${en ? sayBtn(w.en) : ""}</div>
       <div class="so-opts">${q.o.map((k, j) => `<button class="so-opt" data-o="${j}">${esc(en ? nat(W(q.u, k)) : W(q.u, k).en)}</button>`).join("")}</div></main></div>`;
@@ -8966,6 +8978,42 @@ document.addEventListener("click", e => {
   if (t.closest("[data-setlang], [data-snd], [data-mail], .ad-tabs button, [data-qr], [data-age]")) { sfx("toggle"); return; }
   if (t.closest("[data-world], [data-so-duel], [data-so-play], [data-so-gift], [data-so-gt], [data-so-cheer], .so-opt, .dr-node, [data-kid], [data-racer], [data-chest]")) return; /* have their own sounds */
   if (t.closest(".ap-item, .ap-flag, .dr-course, .ap-course, [data-go], [data-cert], [data-share], [data-copy], [data-so-goal], .sv-new-b, .sv-guest-b, .sv-main-b")) sfx("open");
+}, true);
+
+/* ===== Lessons & games: "← minaraverse" turns into golden dust and "Safiverse" takes its place; ✕ asks before leaving ===== */
+Object.assign(UI.en, { exT: "Leave the lesson?", exP: "Your progress in this lesson will be lost.", exStay: "Keep going", exLeave: "Leave" });
+Object.assign(UI.az, { exT: "Dərsdən çıxırsan?", exP: "Bu dərsdəki irəliləyiş itəcək.", exStay: "Davam et", exLeave: "Çıx" });
+Object.assign(UI.ru, { exT: "Выйти из урока?", exP: "Прогресс этого урока пропадёт.", exStay: "Продолжить", exLeave: "Выйти" });
+const lhBrand = () => `<span class="lh-brand">${brandHTML()}</span>`;
+let LH_LAST = "";
+function lhDust(h) {
+  const br = h.querySelector(".lh-brand"); if (!br) return;
+  const key = location.hash.split("?")[0]; if (key === LH_LAST) return; LH_LAST = key; /* once per lesson, not on every question */
+  if (REDUCED) return;
+  const r = br.getBoundingClientRect(); if (!r.width) return;
+  const ghost = document.createElement("span"); ghost.className = "ap-back lh-ghost"; ghost.innerHTML = `<span>←</span><b>minara<i>verse</i></b>`;
+  Object.assign(ghost.style, { left: r.left + "px", top: (r.top + r.height / 2) + "px" }); document.body.appendChild(ghost);
+  br.style.opacity = "0";
+  const g = ghost.getBoundingClientRect(), cols = ["#ffd86b", "#f5c242", "#fff1b8", "#e8a93a"];
+  for (let k = 0; k < 42; k++) { const d = document.createElement("i"); d.className = "lh-dot"; const sz = 2 + Math.random() * 4;
+    const x = g.left + Math.random() * g.width, y = g.top + Math.random() * g.height; Object.assign(d.style, { left: x + "px", top: y + "px", width: sz + "px", height: sz + "px", background: cols[k % 4] });
+    document.body.appendChild(d); const dx = (Math.random() - .3) * 160, dy = -20 - Math.random() * 70, dur = 700 + Math.random() * 700;
+    d.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: `translate(${dx * .5}px,${dy * .6}px) scale(1.1)`, opacity: .9, offset: .4 }, { transform: `translate(${dx}px,${dy}px) scale(.2)`, opacity: 0 }],
+      { duration: dur, delay: Math.random() * 220, easing: "cubic-bezier(.2,.7,.3,1)", fill: "forwards" }).onfinish = () => d.remove(); }
+  ghost.animate([{ opacity: 1, filter: "blur(0)", transform: "translateY(-50%) scale(1)" }, { opacity: 0, filter: "blur(6px)", transform: "translateY(-50%) scale(1.08)" }], { duration: 560, easing: "ease-out", fill: "forwards" }).onfinish = () => ghost.remove();
+  br.animate([{ opacity: 0, transform: "translateY(4px) scale(.96)", filter: "blur(4px)" }, { opacity: 1, transform: "none", filter: "blur(0)" }], { duration: 520, delay: 360, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" }).onfinish = () => { br.style.opacity = ""; };
+}
+new MutationObserver(() => { const h = document.querySelector(".ap-lh:not([data-fx])"); if (h) { h.dataset.fx = 1; requestAnimationFrame(() => lhDust(h)); } if (!document.querySelector(".ap-lh")) LH_LAST = ""; })
+  .observe(document.documentElement, { childList: true, subtree: true });
+
+/* ✕ in a lesson: confirm before leaving */
+document.addEventListener("click", e => {
+  const x = e.target.closest(".ap-lh .ap-x"); if (!x) return; e.preventDefault(); e.stopPropagation();
+  if (document.querySelector(".ex-sheet")) return; const to = x.getAttribute("href") || "#app-learn";
+  const sh = document.createElement("div"); sh.className = "inv-sheet ex-sheet";
+  sh.innerHTML = `<div class="inv-card" role="dialog" aria-modal="true"><div class="ap-mascot">${mascot("🥺")}</div><h2>${L("exT")}</h2><p>${L("exP")}</p><button class="ap-cta" data-ex-stay>${L("exStay")}</button><button class="ex-leave" data-ex-go>${L("exLeave")}</button></div>`;
+  document.body.appendChild(sh); setTimeout(() => sh.querySelector("[data-ex-stay]").focus(), 50);
+  sh.onclick = ev => { if (ev.target === sh || ev.target.closest("[data-ex-stay]")) { sh.remove(); sfx("tap"); return; } if (ev.target.closest("[data-ex-go]")) { sh.remove(); sfx("back"); location.hash = to; } };
 }, true);
 
 document.documentElement.lang = LANG;

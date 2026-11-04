@@ -44,7 +44,7 @@ function pushSync(now) {
 
 
 /* ---------- first questions: which language you speak, what you want to learn (+ votes for new languages) ---------- */
-Object.assign(UI.en, { svSpeak: "Which language do you speak?", svSpeakP: "Explanations and buttons will be in this language.", svLearn: "What do you want to learn?", svSoon: "Coming soon — vote!",
+Object.assign(UI.en, { svSpeak: "Which language do you speak?", svSpeakP: "Explanations and buttons will be in this language.", svLearn: "Which language do you want to learn?", svSoon: "Coming soon — vote!",
   svSoonP: "When a language reaches 100%, we add it to Safiverse.", svVote: "I want this 👍", svVoted: "You voted ✓", svWin: "🎉 This language will be added!", svMore: "Other courses", svVotesW: "votes", svStories: "Story courses (English)" });
 Object.assign(UI.az, { svSpeak: "Sən hansı dildə danışırsan?", svSpeakP: "İzahlar və düymələr bu dildə olacaq.", svLearn: "Hansı dili öyrənmək istəyirsən?", svSoon: "Tezliklə — səs ver!",
   svSoonP: "Dil 100%-ə çatanda onu Safiverse-ə əlavə edirik.", svVote: "Bu dili istəyirəm 👍", svVoted: "Səs verdin ✓", svWin: "🎉 Bu dil əlavə olunacaq!", svMore: "Başqa kurslar", svVotesW: "səs", svStories: "Hekayə kursları (ingilis dili)" });

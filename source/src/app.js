@@ -72,7 +72,7 @@ const apBack = () => `<a class="ap-back" href="${SAFI ? "https://minaraverse.git
 function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { const t = document.createElement("div"); t.innerHTML = hudHTML(); h.replaceWith(t.firstElementChild); }); }
 
 /* ---------- course choice ---------- */
-document.addEventListener("click", e => { if (e.target.closest(".ap-flag[data-go='pick']")) { e.stopPropagation(); Router.go("app-pick"); } }, true);
+document.addEventListener("click", e => { if (e.target.closest(".ap-flag[data-go='pick']")) { e.stopPropagation(); Router.go(/app-world-/.test(location.hash) ? "app-practice" : "app-pick"); } }, true);
 const COURSE_EMOJI = { milingo: "🌱", kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", ielts: "🎙", debate: "⚖️", heist: "🗝" };
 const courseEmoji = k => COURSE_EMOJI[k] || "📘";
 if (!lsGet("mv-course2", null)) { lsSet("mv-course", "milingo"); lsSet("mv-course2", 1); }
@@ -110,7 +110,9 @@ VIEWS.app = root => {
   }
   if (sub === "pick") { root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("svLearn"))}</h1>${pickHTML()}<button class="ap-item sv-st" data-stories><span>📚</span><b>${L("svStories")}</b><small>${WORLD_ORDER.length}</small><i>›</i></button>`);
     wirePick(root, () => Router.go("app-learn")); return {}; }
-  if (sub === "learn" && typeof subj === "function" && subj() !== "en") { root.innerHTML = shell("learn", skPathHTML(subj())); wireSkPath(root); return {}; }
+  /* Worlds (math, music, chess) live inside the Worlds tab; Learn is only for languages */
+  if (sub === "world" && typeof SK === "object") { const c = (location.hash.match(/app-world-(\w+)/) || [])[1]; if (!SK[c]) { Router.go("app-practice"); return {}; }
+    root.innerHTML = shell("practice", `<a href="#app-practice" class="fr-back">← ${L("apPractice")}</a>` + skPathHTML(c)); wireSkPath(root); return {}; }
   if (sub === "learn" && curCourse() === "milingo") { root.innerHTML = shell("learn", drillPathHTML()); wireDrillPath(root); return {}; }
   if (sub === "learn") {
     const k = curCourse(), S = STORIES[k], nx = nextIndex(k);
@@ -131,7 +133,7 @@ VIEWS.app = root => {
     const worlds = typeof SK === "object" ? `<div class="wd-grid">${["math", "music", "chess"].map((k, i) => { const done = skLessons(k), all = SK[k].U.length * SKL;
       return `<button class="wd-card wd-${k}" data-world="${k}" style="--k:${i}"><span class="wd-e">${SK[k].e}</span><b>${L(SK[k].n)}</b><small>${L(SK[k].p)}</small><div class="wd-bar"><i style="width:${Math.round(done / all * 100)}%"></i></div><em>${done}/${all}</em></button>`; }).join("")}</div><h2 class="ap-h2">🇬🇧 ${L("apEnPrac")}</h2>` : "";
     root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1>${worlds}<div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
-    root.onclick = e => { const w = e.target.closest("[data-world]"); if (!w) return; lsSet("mv-subj", w.dataset.world); sfx("tap"); Router.go("app-learn"); };
+    root.onclick = e => { const w = e.target.closest("[data-world]"); if (!w) return; sfx("tap"); Router.go("app-world-" + w.dataset.world); };
     return {};
   }
   if (sub === "league") { leagueView(root, shell); return {}; }
@@ -165,7 +167,7 @@ VIEWS.lesson = root => {
   const k = m[1], i = +m[2], S = STORIES[k], u = S.units[i]; if (!u || !isOpen(k, i)) { Router.go("app-learn"); return {}; }
   const note = noteOf(u);
   LESSON = { k, i, n: 0, ok: 0, miss: 0, streak: 0, total: u.qs.length + Math.min(3, dueKeys(k + "|").filter(x => !x.startsWith(`${k}|${i}|`)).length), start: Date.now() };
-  root.innerHTML = `<div class="ap ap-les"><header class="ap-lh">${apBack()}<a href="#app-learn" class="ap-x" aria-label="Close">✕</a><div class="ap-lbar"><i></i></div><span class="ap-st on">🔥 ${streak()}</span></header>
+  root.innerHTML = `<div class="ap ap-les"><header class="ap-lh"><a href="#app-learn" class="ap-x" aria-label="Close">✕</a>${lhBrand()}<div class="ap-lbar"><i></i></div><span class="ap-st on">🔥 ${streak()}</span></header>
     <main class="ap-main">${note ? `<details class="ap-note" ${isDone(k, i) ? "" : "open"}><summary>📖 ${L("apReadFirst")} · ${esc(u.name)}</summary><p>${esc(note)} ${sayBtn(note)}</p>${trBlock(k, i)}</details>` : ""}
     <div class="ap-qz"></div></main><div class="ap-sheet"><b></b></div></div>`;
   Quiz(root.querySelector(".ap-qz"), { story: k, idx: i, cls: "qz-ap" });

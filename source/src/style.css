@@ -2218,3 +2218,13 @@ html.ap-mode .ap-main{overflow-x:clip}
 .sk-sq em.rk{left:4px;top:3px}.sk-sq em.fl{right:4px;bottom:3px}
 /* lesson header back button: same font as everywhere */
 html .ap-lh .ap-back b{font-family:"Nunito",system-ui,sans-serif}
+/* ---- lesson header: ✕ · Safiverse · progress ---- */
+.ap-lh .lh-brand{flex:none;display:inline-flex;align-items:center}.ap-lh .lh-brand .ap-brand.sv{margin:0}
+html .ap-lh .ap-brand.sv,html .ap-lh .ap-brand.sv i{font-size:16px!important}
+.lh-ghost{position:fixed;z-index:1000;transform:translateY(-50%);pointer-events:none;margin:0}
+.lh-dot{position:fixed;z-index:1001;border-radius:50%;pointer-events:none;box-shadow:0 0 6px #ffd86b}
+@media (max-width:380px){html .ap-lh .ap-brand.sv,html .ap-lh .ap-brand.sv i{font-size:14px!important}}
+.ex-sheet .inv-card h2{margin:0}.ex-leave{width:100%;max-width:420px;padding:13px;border-radius:16px;border:0;background:transparent;color:#ff8a7a;font:800 15px var(--bf);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+html .ap-lh .ap-brand.sv{font:800 16px "Nunito",system-ui,sans-serif!important;letter-spacing:-.01em;display:inline-flex;align-items:baseline;line-height:1;color:var(--ink,#eef6f0)}
+html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important;font-style:normal;color:var(--acc,#6fcf8e)}
+.inv-sheet .ap-cta{font:800 16px "Nunito",system-ui,sans-serif!important;letter-spacing:.06em}

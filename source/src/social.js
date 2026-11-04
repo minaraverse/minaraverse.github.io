@@ -82,7 +82,7 @@ function soPlay(id, qs, back) {
   const st = { i: 0, ans: [], t0: Date.now() }, n = qs.length;
   const W = (u, k) => UNITS[u] && UNITS[u].W[k] || { en: "?", az: "?", ru: "?", e: "" };
   const draw = () => { const q = qs[st.i], w = W(q.u, q.k), en = q.t === "w";
-    root.innerHTML = `<div class="ap ap-les so-play"><header class="ap-lh"><a href="#app-friends" class="ap-x" aria-label="Close">✕</a><div class="ap-lbar"><i style="width:${st.i / n * 100}%"></i></div><span class="ap-st on">⚔️</span></header>
+    root.innerHTML = `<div class="ap ap-les so-play"><header class="ap-lh"><a href="#app-friends" class="ap-x" aria-label="Close">✕</a>${lhBrand()}<div class="ap-lbar"><i style="width:${st.i / n * 100}%"></i></div><span class="ap-st on">⚔️</span></header>
       <main class="ap-main"><small class="so-qn">${L("soQ")(st.i + 1, n)}</small><h2 class="ap-h2">${en ? L("soPickMeaning") : L("soPickEn")}</h2>
       <div class="so-word">${w.e ? `<span>${w.e}</span>` : ""}<b>${esc(en ? w.en : nat(w))}</b>${en ? sayBtn(w.en) : ""}</div>
       <div class="so-opts">${q.o.map((k, j) => `<button class="so-opt" data-o="${j}">${esc(en ? nat(W(q.u, k)) : W(q.u, k).en)}</button>`).join("")}</div></main></div>`;

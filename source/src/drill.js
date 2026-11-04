@@ -192,7 +192,7 @@ VIEWS.drill = root => {
   const queue = buildQueue(mode === "lesson" ? NODE_PARTS[li][pi] : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
   const st = { total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, lives: 3, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer" };
   const heartsBox = () => mode === "jump" ? `<span class="dr-h">${"❤️".repeat(st.lives)}${"🤍".repeat(3 - st.lives)}</span>` : mode === "lesson" ? `<span class="dr-h">❤️ <b>${hearts()}</b></span>` : `<span class="dr-h inf">❤️ ∞</span>`;
-  root.innerHTML = `<div class="ap ap-les dr" style="--uc:${U.c}"><header class="ap-lh">${apBack()}<a href="#app-learn" class="ap-x dr-x" aria-label="Close">✕</a><div class="dr-bar"><i></i><em class="dr-cb"></em></div>${heartsBox()}</header>
+  root.innerHTML = `<div class="ap ap-les dr" style="--uc:${U.c}"><header class="ap-lh"><a href="#app-learn" class="ap-x dr-x" aria-label="Close">✕</a>${lhBrand()}<div class="dr-bar"><i></i><em class="dr-cb"></em></div>${heartsBox()}</header>
     <main class="dr-main"><div class="dx"></div></main>
     <button class="dr-skip" hidden>${L("dSkip")}</button><footer class="dr-foot"><div class="dr-fb"><span class="dr-ic"></span><div><b></b><p></p></div></div><button class="dr-go" disabled>${L("dCheck")}</button></footer></div>`;
   const box = root.querySelector(".dx"), foot = root.querySelector(".dr-foot"), go = root.querySelector(".dr-go"), bar = root.querySelector(".dr-bar i");
@@ -309,15 +309,15 @@ VIEWS.drill = root => {
 };
 
 function countUp(el, to, ms = 900) { if (REDUCED) { el.textContent = to; return; } const t0 = performance.now(); const f = t => { const p = Math.min(1, (t - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
-function dDoneScreen(root, { xp, acc, sec, perfect, title }) {
+function dDoneScreen(root, { xp, acc, sec, perfect, title, back = "app-learn" }) {
   sfx("win"); buzz([60, 50, 60, 50, 160]);
   title = title === L("apDone") ? L("dWin")[(Math.random() * L("dWin").length) | 0] : title;
   root.innerHTML = `<div class="ap dr-end"><div class="ap-cf">${Array.from({ length: 46 }, (_, j) => `<i style="left:${Math.random() * 100}%;--d:${(Math.random() * .8).toFixed(2)}s;--c:${["#ffcf5a", "#9ff0c0", "#9DB0FF", "#ff9fb0", "#c9a7ff"][j % 5]}"></i>`).join("")}</div>
     <div class="dr-endpix">${mascot(perfect ? "👑" : "🎉")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>
     <div class="ap-res"><div class="y" style="--k:0"><small>${L("apEarned")}</small><b>⚡ <span data-n="${xp}">0</span></b></div><div class="g" style="--k:1"><small>${acc >= 90 ? L("dAccA") : acc >= 70 ? L("dAccB") : L("apAccuracy")}</small><b>🎯 <span data-n="${acc}">0</span>%</b></div><div class="b" style="--k:2"><small>${sec < 150 ? L("dFast") : L("apTime")}</small><b>⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}</b></div></div>
     <div class="ap-goalbar"><span>${L("apGoal")}</span><div><i style="width:${Math.min(100, xpToday() / goal() * 100)}%"></i></div><b>${xpToday()}/${goal()}</b></div>
-    <a class="ap-cta dr-cont" href="#app-learn">${L("dCont")}</a></div>`;
-  const cont = root.querySelector(".dr-cont"); cont.onclick = async e => { if (!lsGet("mv-lgname", "")) return; e.preventDefault(); cont.textContent = "…"; if (!(await lgAfterLesson(root))) Router.go("app-learn"); };
+    <a class="ap-cta dr-cont" href="#${back}">${L("dCont")}</a></div>`;
+  const cont = root.querySelector(".dr-cont"); cont.onclick = async e => { if (!lsGet("mv-lgname", "")) return; e.preventDefault(); cont.textContent = "…"; if (!(await lgAfterLesson(root, back))) Router.go(back); };
   root.querySelectorAll("[data-n]").forEach((s, i) => setTimeout(() => countUp(s, +s.dataset.n), 500 + i * 250));
 }
 function streakScreen(root, then) {
@@ -618,7 +618,7 @@ function lgResult(d) { /* once per week: show last week's promotion/demotion */
   document.body.appendChild(ov); sfx(d.prev.res === "up" ? "win" : d.prev.res === "down" ? "fail" : "pop"); ov.onclick = e => { if (e.target.closest(".ap-cta") || e.target === ov) ov.remove(); };
 }
 /* after a lesson: rank-change screen (like "you moved up, but X is chasing you") */
-async function lgAfterLesson(root) {
+async function lgAfterLesson(root, back = "app-learn") {
   if (!lsGet("mv-lgname", "")) return false;
   const before = lsGet("mv-lg", null), meB = before ? before.players.findIndex(p => p.me) : -1;
   let d; try { d = await lgSync(); } catch (e) { return false; }
@@ -629,7 +629,7 @@ async function lgAfterLesson(root) {
   const win = d.players.map((p, k) => ({ p, k })).slice(Math.max(0, i - 2), i + 3);
   root.innerHTML = `<div class="ap dr-end lg-after">${trophySVG(d.tier, "big")}<h1>${title}</h1>${sub ? `<p class="dr-sub">${sub}</p>` : ""}
     <ol class="lg-list mini">${win.map(({ p, k }) => `<li class="lg-row ${p.me ? "me" : ""}" style="--k:${k - win[0].k}"><span class="lg-rk">${k + 1}</span><span class="lg-av">${avOf(p.av, p.name)}</span><b>${esc(p.name)}</b><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>
-    <a class="ap-cta" href="#app-learn">${L("dCont")}</a></div>`;
+    <a class="ap-cta" href="#${back}">${L("dCont")}</a></div>`;
   sfx(up || i === 0 ? "combo" : "pop"); if (up) buzz([30, 40, 30]);
   if (up && !REDUCED) { const me2 = root.querySelector(".lg-row.me"); me2 && me2.animate([{ transform: "translateY(64px)" }, { transform: "none" }], { duration: 800, easing: "cubic-bezier(.2,1.2,.3,1)" }); }
   return true;
