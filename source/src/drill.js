@@ -384,7 +384,7 @@ const JUMP_ICON = `<i class="dj-spark s1">✦</i><i class="dj-spark s2">✦</i><
 function drillPathHTML() {
   const cu = curUnit(), side = [[0, -46, -70, -46, 0], [0, 46, 70, 46, 0]], CU = UNITS[cu];
   const firstLocked = UNITS.findIndex(u => !unitOpen(u.n));
-  return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🇬🇧 ${L("skEnglish")}</b></span><i>${L("apChange")} ▾</i></button>
+  return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🇬🇧 ${L("skEnglish")}</b></span>${typeof levelChip === "function" ? levelChip() : ""}<i>${typeof L("lvLang") === "string" ? L("lvLang") : L("apChange")} ▾</i></button>
   <a class="dr-pall" href="#drill-p"><span>💪</span><b>${L("dPracticeAll")}</b><small>${L("dPracticeAllP")}</small><i>❤️ ${hearts()}</i></a>
   <header class="dr-ub dr-top" style="--uc:${CU.c}"><div><small>${L("dSection")} ${CU.sec + 1}, ${L("dUnit")} ${CU.n + 1}</small><b>${CU.e} ${esc(T3(CU.t))}</b></div><button class="dr-gb" data-guide="${CU.n}" aria-label="${L("dGuide")}">📖<span>${L("dGuide")}</span></button></header>` +
   SECTIONS.map((S, si) => `<div class="dr-sb" data-th="${si}"><div class="dr-sec"><span>${L("dSection")} ${si + 1} · ${S.lv}</span><b>${esc(T3(S.t))}</b></div>` + UNITS.slice(S.from, S.to).map(U => {

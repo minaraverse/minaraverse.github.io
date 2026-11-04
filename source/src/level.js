@@ -1,7 +1,7 @@
 /* ===== "My level": learners choose A1–C2 themselves (onboarding + profile); the path starts there and questions match it ===== */
-Object.assign(UI.en, { lvT: "What is your English level?", lvP: "Lessons and questions will match it. You can change it any time.", lvMine: "My level", lvChange: "Change", lvTest: "I don't know — take a short test", lvSet: "Level set" });
-Object.assign(UI.az, { lvT: "İngilis dili səviyyən nədir?", lvP: "Dərslər və suallar ona uyğun olacaq. İstənilən vaxt dəyişə bilərsən.", lvMine: "Səviyyəm", lvChange: "Dəyiş", lvTest: "Bilmirəm — qısa testdən keçim", lvSet: "Səviyyə seçildi" });
-Object.assign(UI.ru, { lvT: "Какой у тебя уровень английского?", lvP: "Уроки и вопросы будут под него. Можно поменять в любое время.", lvMine: "Мой уровень", lvChange: "Изменить", lvTest: "Не знаю — пройти короткий тест", lvSet: "Уровень выбран" });
+Object.assign(UI.en, { lvT: "What is your English level?", lvP: "Lessons and questions will match it. You can change it any time.", lvMine: "My level", lvChange: "Change", lvTest: "I don't know — take a short test", lvSet: "Level set", lvShort: "Level", lvPick: "Choose", lvLang: "Language" });
+Object.assign(UI.az, { lvT: "İngilis dili səviyyən nədir?", lvP: "Dərslər və suallar ona uyğun olacaq. İstənilən vaxt dəyişə bilərsən.", lvMine: "Səviyyəm", lvChange: "Dəyiş", lvTest: "Bilmirəm — qısa testdən keçim", lvSet: "Səviyyə seçildi", lvShort: "Səviyyə", lvPick: "Seç", lvLang: "Dil" });
+Object.assign(UI.ru, { lvT: "Какой у тебя уровень английского?", lvP: "Уроки и вопросы будут под него. Можно поменять в любое время.", lvMine: "Мой уровень", lvChange: "Изменить", lvTest: "Не знаю — пройти короткий тест", lvSet: "Уровень выбран", lvShort: "Уровень", lvPick: "Выбрать", lvLang: "Язык" });
 const LV_LIST = [
   ["A1", "🌱", { en: "Beginner", az: "Başlanğıc", ru: "Начальный" }, { en: "I'm starting from zero", az: "Sıfırdan başlayıram", ru: "Начинаю с нуля" }],
   ["A2", "🌿", { en: "Elementary", az: "Elementar", ru: "Элементарный" }, { en: "I can make simple sentences", az: "Sadə cümlələr qururam", ru: "Строю простые фразы" }],
@@ -25,4 +25,6 @@ function levelSheet(after) {
 }
 const levelItem = () => { const l = myLevel(), it = LV_LIST.find(x => x[0] === l);
   return `<button class="ap-item" data-lvpick><span>${it ? it[1] : "🎯"}</span><b>${L("lvMine")}: ${l ? l + " · " + lvT3(it ? it[2] : { en: "" }) : "—"}</b><small>${L("lvChange")}</small><i>›</i></button>`; };
-document.addEventListener("click", e => { if (e.target.closest("[data-lvpick]")) levelSheet(); });
+/* level chip on the course card: its own button inside the card */
+const levelChip = () => { const l = myLevel(); return `<span class="dr-lv ${l ? "" : "none"}" data-lvpick role="button" tabindex="0" aria-label="${L("lvMine")}: ${l || "—"}"><small>${L("lvShort")}</small><b>🎯 ${l || L("lvPick")} ▾</b></span>`; };
+document.addEventListener("click", e => { if (!e.target.closest("[data-lvpick]")) return; e.preventDefault(); e.stopPropagation(); if (typeof sfx === "function") sfx("open"); levelSheet(); }, true);

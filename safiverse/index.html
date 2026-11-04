@@ -2252,6 +2252,14 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 .lv-list{display:grid;gap:8px;width:100%}.lv-it{display:flex;align-items:center;gap:12px;width:100%;padding:11px 14px;border-radius:16px;border:2px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink,#eef6f0);text-align:left;cursor:pointer}
 .lv-it.on{border-color:var(--acc);background:#6fcf8e1f}.lv-e{font-size:26px;flex:none}.lv-tx{display:grid;gap:2px;flex:1;min-width:0}.lv-tx b{font:800 15.5px "Nunito",system-ui,sans-serif}.lv-tx small{color:var(--mut,#9fb3a8);font:600 12.5px "Nunito",system-ui,sans-serif}
 .lv-it i{font-style:normal;color:var(--acc);font-weight:900}.lv-test{display:block;margin-top:6px;color:var(--acc);font:800 14px "Nunito",system-ui,sans-serif;text-decoration:none;padding:8px}
+/* level chip on the course card */
+.dr-course{gap:10px}.dr-course .dr-lv{display:inline-grid;justify-items:center;gap:1px;margin-left:auto;padding:6px 12px;border-radius:14px;border:2px solid #ffc94d;background:#ffc94d1a;color:#ffd77a;cursor:pointer;flex:none;line-height:1.1}
+.dr-course .dr-lv small{font:800 10px "Nunito",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#ffd77acc}.dr-course .dr-lv b{font:900 15px "Nunito",system-ui,sans-serif;white-space:nowrap}
+.dr-course .dr-lv.none b{font-size:13px}.dr-course .dr-lv:active{transform:scale(.96)}.dr-course .dr-lv + i{margin-left:0}
+@media (max-width:380px){.dr-course .dr-lv{padding:5px 9px}.dr-course .dr-lv b{font-size:13.5px}}
+.dr-course > i{white-space:nowrap;flex:none}.dr-course > span:first-child{min-width:0}
+.dr-course > span:first-child{flex:1;min-width:0}.dr-course > span:first-child b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:400px){.dr-course{gap:7px;padding-left:14px;padding-right:12px}.dr-course > span:first-child b{font-size:17px}.dr-course .dr-lv{padding:5px 8px}.dr-course .dr-lv b{font-size:13px}.dr-course > i{font-size:13px;padding:6px 10px}}
 
 </style>
 <div id="view"></div>
@@ -8440,7 +8448,7 @@ const JUMP_ICON = `<i class="dj-spark s1">✦</i><i class="dj-spark s2">✦</i><
 function drillPathHTML() {
   const cu = curUnit(), side = [[0, -46, -70, -46, 0], [0, 46, 70, 46, 0]], CU = UNITS[cu];
   const firstLocked = UNITS.findIndex(u => !unitOpen(u.n));
-  return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🇬🇧 ${L("skEnglish")}</b></span><i>${L("apChange")} ▾</i></button>
+  return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🇬🇧 ${L("skEnglish")}</b></span>${typeof levelChip === "function" ? levelChip() : ""}<i>${typeof L("lvLang") === "string" ? L("lvLang") : L("apChange")} ▾</i></button>
   <a class="dr-pall" href="#drill-p"><span>💪</span><b>${L("dPracticeAll")}</b><small>${L("dPracticeAllP")}</small><i>❤️ ${hearts()}</i></a>
   <header class="dr-ub dr-top" style="--uc:${CU.c}"><div><small>${L("dSection")} ${CU.sec + 1}, ${L("dUnit")} ${CU.n + 1}</small><b>${CU.e} ${esc(T3(CU.t))}</b></div><button class="dr-gb" data-guide="${CU.n}" aria-label="${L("dGuide")}">📖<span>${L("dGuide")}</span></button></header>` +
   SECTIONS.map((S, si) => `<div class="dr-sb" data-th="${si}"><div class="dr-sec"><span>${L("dSection")} ${si + 1} · ${S.lv}</span><b>${esc(T3(S.t))}</b></div>` + UNITS.slice(S.from, S.to).map(U => {
@@ -9783,9 +9791,9 @@ document.addEventListener("click", e => {
 }, true);
 
 /* ===== "My level": learners choose A1–C2 themselves (onboarding + profile); the path starts there and questions match it ===== */
-Object.assign(UI.en, { lvT: "What is your English level?", lvP: "Lessons and questions will match it. You can change it any time.", lvMine: "My level", lvChange: "Change", lvTest: "I don't know — take a short test", lvSet: "Level set" });
-Object.assign(UI.az, { lvT: "İngilis dili səviyyən nədir?", lvP: "Dərslər və suallar ona uyğun olacaq. İstənilən vaxt dəyişə bilərsən.", lvMine: "Səviyyəm", lvChange: "Dəyiş", lvTest: "Bilmirəm — qısa testdən keçim", lvSet: "Səviyyə seçildi" });
-Object.assign(UI.ru, { lvT: "Какой у тебя уровень английского?", lvP: "Уроки и вопросы будут под него. Можно поменять в любое время.", lvMine: "Мой уровень", lvChange: "Изменить", lvTest: "Не знаю — пройти короткий тест", lvSet: "Уровень выбран" });
+Object.assign(UI.en, { lvT: "What is your English level?", lvP: "Lessons and questions will match it. You can change it any time.", lvMine: "My level", lvChange: "Change", lvTest: "I don't know — take a short test", lvSet: "Level set", lvShort: "Level", lvPick: "Choose", lvLang: "Language" });
+Object.assign(UI.az, { lvT: "İngilis dili səviyyən nədir?", lvP: "Dərslər və suallar ona uyğun olacaq. İstənilən vaxt dəyişə bilərsən.", lvMine: "Səviyyəm", lvChange: "Dəyiş", lvTest: "Bilmirəm — qısa testdən keçim", lvSet: "Səviyyə seçildi", lvShort: "Səviyyə", lvPick: "Seç", lvLang: "Dil" });
+Object.assign(UI.ru, { lvT: "Какой у тебя уровень английского?", lvP: "Уроки и вопросы будут под него. Можно поменять в любое время.", lvMine: "Мой уровень", lvChange: "Изменить", lvTest: "Не знаю — пройти короткий тест", lvSet: "Уровень выбран", lvShort: "Уровень", lvPick: "Выбрать", lvLang: "Язык" });
 const LV_LIST = [
   ["A1", "🌱", { en: "Beginner", az: "Başlanğıc", ru: "Начальный" }, { en: "I'm starting from zero", az: "Sıfırdan başlayıram", ru: "Начинаю с нуля" }],
   ["A2", "🌿", { en: "Elementary", az: "Elementar", ru: "Элементарный" }, { en: "I can make simple sentences", az: "Sadə cümlələr qururam", ru: "Строю простые фразы" }],
@@ -9809,7 +9817,9 @@ function levelSheet(after) {
 }
 const levelItem = () => { const l = myLevel(), it = LV_LIST.find(x => x[0] === l);
   return `<button class="ap-item" data-lvpick><span>${it ? it[1] : "🎯"}</span><b>${L("lvMine")}: ${l ? l + " · " + lvT3(it ? it[2] : { en: "" }) : "—"}</b><small>${L("lvChange")}</small><i>›</i></button>`; };
-document.addEventListener("click", e => { if (e.target.closest("[data-lvpick]")) levelSheet(); });
+/* level chip on the course card: its own button inside the card */
+const levelChip = () => { const l = myLevel(); return `<span class="dr-lv ${l ? "" : "none"}" data-lvpick role="button" tabindex="0" aria-label="${L("lvMine")}: ${l || "—"}"><small>${L("lvShort")}</small><b>🎯 ${l || L("lvPick")} ▾</b></span>`; };
+document.addEventListener("click", e => { if (!e.target.closest("[data-lvpick]")) return; e.preventDefault(); e.stopPropagation(); if (typeof sfx === "function") sfx("open"); levelSheet(); }, true);
 
 document.documentElement.lang = LANG;
 Router.mount();
