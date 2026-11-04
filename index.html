@@ -2142,6 +2142,11 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .wd-card em{grid-row:1;grid-column:3;font:900 13px var(--bf);font-style:normal;background:rgba(255,255,255,.45);padding:3px 9px;border-radius:99px;z-index:1}
 .wd-bar{grid-column:2/4;height:8px;border-radius:8px;background:rgba(0,0,0,.15);overflow:hidden}.wd-bar i{display:block;height:100%;background:#fff;border-radius:8px}
 
+/* Minaraverse hero: Safiverse button with the app's own logo */
+.h-app{display:inline-flex!important;align-items:center;gap:10px;padding-left:8px!important;font-style:normal!important;border-color:#6FCF8E!important;background:linear-gradient(135deg,rgba(111,207,142,.16),rgba(13,26,21,.6))!important}
+.h-app-ic{width:34px;height:34px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.35);flex:none}
+.h-app-w{font:800 19px/1 "Nunito",system-ui,sans-serif!important;letter-spacing:-.01em;color:#fff}.h-app-w b{font-weight:900;color:#fff}.h-app-w i{font-style:normal;font-weight:700;color:#6FCF8E}
+
 </style>
 <div id="view"></div>
 <script>
@@ -4835,7 +4840,7 @@ VIEWS.home = root => {
       <p class="h-eyebrow">${L("eyebrow")}</p>
       <h1 class="h-h1"><span class="ln">${letters(L("h1a"))}</span><span class="ln">${letters(L("h1b"))} <em>${letters(L("h1c"))}</em></span></h1>
       <p class="h-lead">${L("lead")}</p>
-      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><a class="h-cta2 h-app" href="#app">📱 Safiverse</a></div>
+      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><a class="h-cta2 h-app" href="#app" aria-label="Safiverse"><img class="h-app-ic" src="safiverse/icon-192.png" alt="" width="34" height="34"><span class="h-app-w"><b>Safi</b><i>verse</i></span></a></div>
     </div>
     <div class="h-hero-r" aria-hidden="true">
       <svg class="h-badge" viewBox="0 0 200 200"><defs><path id="bc" d="M100 100 m-78 0 a78 78 0 1 1 156 0 a78 78 0 1 1 -156 0"/></defs><text font-family="Bricolage Grotesque,Arial,sans-serif" font-size="13.5" font-weight="600" letter-spacing="3.2"><textPath href="#bc">MINARAVERSE ✦ ENGLISH THROUGH STORIES ✦ A1–B2 ✦ </textPath></text><text x="100" y="112" text-anchor="middle" font-family="'Fraunces',Georgia,serif" font-size="40" font-style="italic">mv</text></svg>

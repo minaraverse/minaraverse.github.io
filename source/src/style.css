@@ -2135,3 +2135,8 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .wd-card b{font:900 20px var(--bf)}.wd-card small{grid-column:2/4;font:700 13px var(--bf);opacity:.8}
 .wd-card em{grid-row:1;grid-column:3;font:900 13px var(--bf);font-style:normal;background:rgba(255,255,255,.45);padding:3px 9px;border-radius:99px;z-index:1}
 .wd-bar{grid-column:2/4;height:8px;border-radius:8px;background:rgba(0,0,0,.15);overflow:hidden}.wd-bar i{display:block;height:100%;background:#fff;border-radius:8px}
+
+/* Minaraverse hero: Safiverse button with the app's own logo */
+.h-app{display:inline-flex!important;align-items:center;gap:10px;padding-left:8px!important;font-style:normal!important;border-color:#6FCF8E!important;background:linear-gradient(135deg,rgba(111,207,142,.16),rgba(13,26,21,.6))!important}
+.h-app-ic{width:34px;height:34px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.35);flex:none}
+.h-app-w{font:800 19px/1 "Nunito",system-ui,sans-serif!important;letter-spacing:-.01em;color:#fff}.h-app-w b{font-weight:900;color:#fff}.h-app-w i{font-style:normal;font-weight:700;color:#6FCF8E}
