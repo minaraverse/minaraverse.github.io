@@ -2146,6 +2146,26 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .h-app{display:inline-flex!important;align-items:center;gap:10px;padding-left:8px!important;font-style:normal!important;border-color:#6FCF8E!important;background:linear-gradient(135deg,rgba(111,207,142,.16),rgba(13,26,21,.6))!important}
 .h-app-ic{width:34px;height:34px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.35);flex:none}
 .h-app-w{font:800 19px/1 "Nunito",system-ui,sans-serif!important;letter-spacing:-.01em;color:#fff}.h-app-w b{font-weight:900;color:#fff}.h-app-w i{font-style:normal;font-weight:700;color:#6FCF8E}
+/* ---- Safiverse friends ---- */
+.fr-back{display:inline-block;margin:0 0 6px;color:var(--mut);text-decoration:none;font:700 14px var(--bf)}
+.fr-me{display:grid;gap:4px;text-align:left;margin:6px 0 14px}.fr-me small{color:var(--mut);font:700 12px var(--bf);text-transform:uppercase;letter-spacing:.06em}.fr-me b{font:800 20px var(--bf);color:var(--acc)}
+.fr-find{display:grid;gap:8px;margin:0 0 14px;text-align:left}.fr-find>b{font:800 16px var(--bf)}
+.fr-in{display:flex;gap:8px}.fr-in input{flex:1;min-width:0;padding:13px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:700 16px var(--bf);outline:none}.fr-in input:focus{border-color:var(--acc)}
+.fr-in .ap-cta{flex:none;width:auto!important;max-width:none;min-width:0;padding:0 16px!important;margin:0!important;font-size:14px}
+.fr-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;border:1px solid var(--line);background:var(--card);margin:6px 0;text-align:left}
+.fr-row .lg-av{flex:none}.fr-who{flex:1;min-width:0;display:grid}.fr-who b{font:800 15px var(--bf);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-who small{color:var(--mut);font:600 12.5px var(--bf);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.fr-b{border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:7px 12px;font:800 13px var(--bf);cursor:pointer;white-space:nowrap}
+.fr-b.go{background:var(--acc);border-color:var(--acc);color:#0d1a15}.fr-b.x{padding:6px 10px;color:var(--mut)}.fr-b.warn{border-color:#ff7a6b;color:#ff7a6b}.fr-b:active{transform:scale(.96)}
+.fr-tag{font:700 12.5px var(--bf);color:var(--mut);white-space:nowrap}.fr-tag.ok{color:var(--acc)}
+.fr-n{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#ff5a5f;color:#fff;font:800 12px var(--bf);font-style:normal;vertical-align:middle}
+.fr-wk{display:block;color:var(--mut);font:700 13px var(--bf);margin:-4px 0 4px;text-align:left}
+.fr-board{list-style:none;margin:0;padding:0}.fr-board li{display:flex;align-items:center;gap:6px}.fr-board li .fr-row{flex:1;min-width:0}
+.fr-rk{width:22px;flex:none;text-align:center;font:800 15px var(--bf);color:var(--mut)}.fr-board li:first-child .fr-rk{color:#ffc94d}
+.fr-x{flex:none;min-width:52px;text-align:right;font:800 14px var(--bf);color:#ffc94d}.fr-board li.me .fr-row{border-color:var(--acc)}
+.fr-hint{color:var(--mut);font:600 13px var(--bf);margin-top:-4px}
+.fr-find,.fr-me,.fr-board,.fr-row{width:100%;max-width:520px;box-sizing:border-box}.fr-board li{width:100%;max-width:520px}.fr-board li .fr-row{width:auto}
+.fr-find{grid-template-columns:minmax(0,1fr)}.fr-in input{width:0}
 
 </style>
 <div id="view"></div>
@@ -6575,6 +6595,8 @@ VIEWS.app = root => {
     return {};
   }
   if (sub === "league") { leagueView(root, shell); return {}; }
+  if (sub === "friends" && typeof friendsView === "function") { friendsView(root, shell); return {}; }
+  if (typeof frRefresh === "function" && ACCT() && !window.__frPulled) { window.__frPulled = 1; frRefresh().then(r => { if (r && r.incoming.length && /app-profile/.test(location.hash)) Router.remount(); }); }
   /* profile */
   const b = lsGet("mv-badges", {}), x = XP(), lv = myLevel();
   const BADGES = [["first", "🌱", "First lesson"], ...SECTIONS.map((s, i) => ["sec" + i, ["🥉", "🥈", "🥇"][i], T3(s.t) + " · " + s.lv]), ["perfect", "👑", "Perfect lesson"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],
@@ -6582,7 +6604,7 @@ VIEWS.app = root => {
   root.innerHTML = shell("profile", `<div class="ap-prof"><button class="ap-av ${myAvatar() ? "has" : ""}" data-av aria-label="${L("avEdit")}">${myAvatar() ? avatarSVG() : esc((NAME || "M")[0].toUpperCase())}<em>✎</em></button><div><input class="ap-name" value="${esc(NAME)}" placeholder="${L("apName")}"><small>${lv ? lv + " · " + lvName(lv) : L("findLevel")}</small></div></div>
     <div class="ap-stats"><div><b>🔥 ${streak()}</b><small>${L("apDays")}</small></div><div><b>⚡ ${x.total}</b><small>${L("apTotal")}</small></div><div><b>🎯 ${goal()}</b><small>${L("apGoal")}</small></div><div><b>📚 ${drillLessons() + WORLD_ORDER.reduce((a, k) => a + doneCount(k), 0)}</b><small>${L("chapters")}</small></div></div>
     <h2 class="ap-h2">${L("apBadges")}</h2><div class="ap-badges">${BADGES.map(([k, e, t]) => `<div class="${b[k] ? "on" : ""}"><span>${e}</span><small>${esc(t)}</small></div>`).join("")}</div>
-    <div class="ap-set"><div class="ap-item"><span>❤️</span><b>${L("dHearts")}</b><small>${hearts()} / 5${hearts() >= 5 ? " · " + L("dFull") : ""}</small></div><a href="#app-goal" class="ap-item"><span>🎯</span><b>${L("apGoal")}</b><small>${goal()} XP</small><i>›</i></a>
+    <div class="ap-set"><div class="ap-item"><span>❤️</span><b>${L("dHearts")}</b><small>${hearts()} / 5${hearts() >= 5 ? " · " + L("dFull") : ""}</small></div>${typeof friendsView === "function" && typeof ACCT === "function" && ACCT() ? `<a href="#app-friends" class="ap-item"><span>👥</span><b>${L("frT")}</b><small>${frCount() ? `<em class="fr-n">${frCount()}</em>` : ""}</small><i>›</i></a>` : ""}<a href="#app-goal" class="ap-item"><span>🎯</span><b>${L("apGoal")}</b><small>${goal()} XP</small><i>›</i></a>
       <button class="ap-item" data-snd><span>🔊</span><b>${L("apSound")}</b><small>${soundOn() ? L("apOn") : L("apOff")}</small><i>›</i></button>
       <div class="ap-item"><span>🌐</span><b>EN · AZ · RU</b>${langPill()}</div>
       <a href="#" class="ap-item"><span>🌍</span><b>${L("apSite")}</b><small>minaraverse.github.io</small><i>›</i></a>
@@ -8514,6 +8536,65 @@ VIEWS.sadmin = root => {
   key() ? load() : login();
   return {};
 };
+
+/* ===== Safiverse friends: find by exact username → request → accept. No browsing of users, no emails shown. ===== */
+Object.assign(UI.en, { frT: "Friends", frFind: "Find a friend", frFindP: "Type your friend's exact username", frGo: "Search", frNone: "No one with this username", frSelf: "This is you 🙂",
+  frAdd: "Add friend", frSent: "Request sent", frCancel: "Cancel", frAccept: "Accept", frDecline: "Decline", frRemove: "Remove", frIsFriend: "Friends ✓",
+  frIn: "Friend requests", frOut: "Waiting for answer", frList: "My friends", frEmpty: "No friends yet — find someone by username.", frWeek: "This week",
+  frNoUser: "First choose your username", frMany: "Too many open requests", frSure: "Remove from friends?", frShare: "Your username", frOff: "Friends work on the Safiverse site." });
+Object.assign(UI.az, { frT: "Dostlar", frFind: "Dost tap", frFindP: "Dostunun dəqiq istifadəçi adını yaz", frGo: "Axtar", frNone: "Bu adla istifadəçi yoxdur", frSelf: "Bu sənsən 🙂",
+  frAdd: "Dost əlavə et", frSent: "Sorğu göndərildi", frCancel: "Ləğv et", frAccept: "Qəbul et", frDecline: "Rədd et", frRemove: "Sil", frIsFriend: "Dostsunuz ✓",
+  frIn: "Dostluq sorğuları", frOut: "Cavab gözlənilir", frList: "Dostlarım", frEmpty: "Hələ dostun yoxdur — istifadəçi adı ilə tap.", frWeek: "Bu həftə",
+  frNoUser: "Əvvəl istifadəçi adını seç", frMany: "Çox açıq sorğu var", frSure: "Dostlardan silinsin?", frShare: "Sənin istifadəçi adın", frOff: "Dostlar Safiverse saytında işləyir." });
+Object.assign(UI.ru, { frT: "Друзья", frFind: "Найти друга", frFindP: "Введи точное имя пользователя друга", frGo: "Искать", frNone: "Пользователя с таким именем нет", frSelf: "Это ты 🙂",
+  frAdd: "Добавить в друзья", frSent: "Запрос отправлен", frCancel: "Отменить", frAccept: "Принять", frDecline: "Отклонить", frRemove: "Удалить", frIsFriend: "Вы друзья ✓",
+  frIn: "Запросы в друзья", frOut: "Ждём ответа", frList: "Мои друзья", frEmpty: "Пока нет друзей — найди кого-нибудь по имени пользователя.", frWeek: "На этой неделе",
+  frNoUser: "Сначала выбери имя пользователя", frMany: "Слишком много открытых запросов", frSure: "Удалить из друзей?", frShare: "Твоё имя пользователя", frOff: "Друзья работают на сайте Safiverse." });
+
+const frAuth = () => { const a = ACCT() || {}; return { email: a.email, token: a.token }; };
+const frCall = (a, extra) => sPost(a, Object.assign(frAuth(), extra || {}), 12000);
+const frCount = () => (lsGet("mv-fr", null) || { incoming: [] }).incoming.length;
+async function frRefresh() { if (!svOn() || !ACCT()) return null; try { const d = await frCall("fr_list"); if (d.ok) { lsSet("mv-fr", d); return d; } if (d.err === "auth") lsSet("mv-acct", null); } catch (e) {} return null; }
+
+function friendsView(root, shell) {
+  if (!svOn() || !ACCT()) { root.innerHTML = shell("profile", `<h1 class="ap-h">👥 ${L("frT")}</h1><p class="ap-p">${L("frOff")}</p>`); return; }
+  const st = { q: "", found: undefined, fstate: "", busy: false, data: lsGet("mv-fr", null) };
+  const row = (c, btns) => `<div class="fr-row"><span class="lg-av">${avOf(c.av, c.name)}</span><div class="fr-who"><b>${esc(c.name)}</b><small>@${esc(c.user)} · 🔥 ${c.streak} · ⚡ ${c.xp}</small></div><div class="fr-btns">${btns}</div></div>`;
+  const btn = (k, u, t, cls = "") => `<button class="fr-b ${cls}" data-${k}="${esc(u)}">${t}</button>`;
+  const stateBtns = (s, u) => s === "none" ? btn("req", u, "➕ " + L("frAdd"), "go") : s === "out" ? `<small class="fr-tag">⏳ ${L("frSent")}</small>` + btn("del", u, L("frCancel"))
+    : s === "in" ? btn("yes", u, L("frAccept"), "go") + btn("no", u, L("frDecline")) : s === "friends" ? `<small class="fr-tag ok">${L("frIsFriend")}</small>` : `<small class="fr-tag">${L("frSelf")}</small>`;
+  const draw = () => { const d = st.data || { friends: [], incoming: [], outgoing: [] }, a = ACCT() || {};
+    const board = [...(d.friends || []), ...(d.me ? [d.me] : [])].sort((x, y) => y.wk - x.wk || y.xp - x.xp);
+    root.innerHTML = shell("profile", `<a href="#app-profile" class="fr-back">← ${L("apProfile")}</a><h1 class="ap-h">👥 ${L("frT")}</h1>
+      <div class="ap-card fr-me"><small>${L("frShare")}</small><b>@${esc(a.user || "—")}</b>${a.user ? "" : `<button class="fr-b go" data-setu>${L("frNoUser")}</button>`}</div>
+      <form class="fr-find" novalidate><b>${L("frFind")}</b><small class="fr-hint">${L("frFindP")}</small><div class="fr-in"><input name="q" maxlength="24" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="@username" aria-label="${L("frFindP")}" value="${esc(st.q)}"><button class="ap-cta fr-go">${L("frGo")}</button></div>
+        <div class="fr-res" role="status">${st.found === undefined ? "" : st.found === null ? `<p class="ap-p">${L("frNone")}</p>` : row(st.found, stateBtns(st.fstate, st.found.user))}</div><p class="sv-err" role="alert"></p></form>
+      ${(d.incoming || []).length ? `<h2 class="ap-h2">${L("frIn")} <em class="fr-n">${d.incoming.length}</em></h2>${d.incoming.map(c => row(c, btn("yes", c.user, L("frAccept"), "go") + btn("no", c.user, L("frDecline")))).join("")}` : ""}
+      <h2 class="ap-h2">${L("frList")}</h2>${(d.friends || []).length ? `<small class="fr-wk">🏆 ${L("frWeek")}</small><ol class="fr-board">${board.map((c, i) => `<li class="${c.me ? "me" : ""}"><span class="fr-rk">${i + 1}</span>${row(c, c.me ? "" : btn("rm", c.user, "✕", "x"))}<b class="fr-x">⚡ ${c.wk}</b></li>`).join("")}</ol>`
+        : `<p class="ap-p">${L("frEmpty")}</p>`}
+      ${(d.outgoing || []).length ? `<h2 class="ap-h2">${L("frOut")}</h2>${d.outgoing.map(c => row(c, btn("del", c.user, L("frCancel")))).join("")}` : ""}`);
+    wire(); };
+  const err = m => { const e = root.querySelector(".sv-err"); if (e) { e.textContent = m; flash(e, "shake"); } sfx("no"); };
+  const errOf = d => L({ nouser: "frNoUser", many: "frMany", user: "svUserBad" }[d && d.err] || "svErr");
+  const act = async (a, u, extra) => { if (st.busy) return; st.busy = true;
+    try { const d = await frCall(a, Object.assign({ user: u }, extra || {})); st.busy = false; if (!d.ok) return err(errOf(d));
+      if (st.found && st.found.user === u) st.fstate = d.state; sfx(d.state === "friends" ? "win" : "tap"); const r = await frRefresh(); if (r) st.data = r; draw(); }
+    catch (e) { st.busy = false; err(L("svErr")); } };
+  const wire = () => {
+    const f = root.querySelector(".fr-find");
+    f.onsubmit = async e => { e.preventDefault(); st.q = f.q.value.trim(); const u = st.q.toLowerCase().replace(/^@/, "").replace(/\s+/g, "_");
+      if (!/^[a-z0-9._]{3,20}$/.test(u)) return err(L("svUserBad")); const b = f.querySelector(".fr-go"); b.disabled = true; b.textContent = "…";
+      try { const d = await frCall("fr_find", { user: u }); if (!d.ok) { b.disabled = false; b.textContent = L("frGo"); return err(errOf(d)); } st.found = d.found; st.fstate = d.state || ""; draw(); }
+      catch (x) { b.disabled = false; b.textContent = L("frGo"); err(L("svErr")); } };
+    root.onclick = e => { const g = k => { const el = e.target.closest(`[data-${k}]`); return el ? el.getAttribute(`data-${k}`) : null; };
+      let u; if ((u = g("req")) != null) act("fr_req", u); else if ((u = g("yes")) != null) act("fr_ans", u, { yes: true }); else if ((u = g("no")) != null) act("fr_ans", u, { yes: false });
+      else if ((u = g("del")) != null) act("fr_del", u); else if ((u = g("rm")) != null) { if (confirmSheetless(L("frSure"), e.target)) act("fr_del", u); }
+      else if (e.target.closest("[data-setu]")) regScreen(root, "set"); };
+  };
+  /* inline two-tap confirm (no browser dialogs) */
+  const confirmSheetless = (msg, el) => { const b = el.closest("[data-rm]"); if (b.dataset.sure) return true; b.dataset.sure = 1; b.textContent = msg; b.classList.add("warn"); setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = "✕"; b.classList.remove("warn"); } }, 3000); return false; };
+  draw(); frRefresh().then(r => { if (r && root.isConnected && /app-friends/.test(location.hash)) { st.data = r; draw(); } });
+}
 
 document.documentElement.lang = LANG;
 Router.mount();

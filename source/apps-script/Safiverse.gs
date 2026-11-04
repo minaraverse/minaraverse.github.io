@@ -157,6 +157,37 @@ function admin_(p) {
   return { ok: false };
 }
 
+/* ---------- friends: find by exact username, request → accept (safe for kids: no browsing, no emails) ---------- */
+function frSheet_() { let sh = ss_().getSheetByName("Dostlar"); if (!sh) { sh = ss_().insertSheet("Dostlar"); sh.appendRow(["from", "to", "status", "created"]); sh.setFrozenRows(1); } return sh; }
+const uidOf_ = email => hash_(String(email).toLowerCase()).slice(0, 24);
+function people_() { const v = students_().getDataRange().getValues(), by = {}; for (let i = 1; i < v.length; i++) if (v[i][0]) by[uidOf_(v[i][0])] = v[i]; return by; }
+function weekXp_() { const sh = lgSheet_(), v = sh.getDataRange().getValues(), cur = wk_(), o = {}; for (let i = 1; i < v.length; i++) if (String(v[i][4]) === cur) o[v[i][0]] = Number(v[i][5]) || 0; return o; }
+function card_(r, wx) { const id = uidOf_(r[0]); return { user: String(r[13] || ""), name: String(r[1] || ""), av: String(r[3] || ""), xp: Number(r[6]) || 0, streak: Number(r[7]) || 0, wk: wx ? wx[id] || 0 : 0 }; }
+function links_(me) { const sh = frSheet_(), v = sh.getDataRange().getValues(), out = []; for (let i = 1; i < v.length; i++) if (v[i][0] === me || v[i][1] === me) out.push({ row: i + 1, from: v[i][0], to: v[i][1], st: v[i][2] }); return { sh: sh, list: out }; }
+function friends_(p) {
+  const a = auth_(p); if (!a) return { ok: false, err: "auth" };
+  const me = uidOf_(a.email), myUser = String(a.f.v[13] || "");
+  if (p.a === "fr_list") { const L = links_(me).list, by = people_(), wx = weekXp_(), fr = [], inc = [], outg = [];
+    L.forEach(l => { const other = l.from === me ? l.to : l.from, r = by[other]; if (!r) return; const c = card_(r, wx);
+      if (l.st === "ok") fr.push(c); else if (l.to === me) inc.push(c); else outg.push(c); });
+    const mine = card_(a.f.v, wx); mine.me = true;
+    return { ok: true, me: mine, friends: fr, incoming: inc, outgoing: outg }; }
+  const u = normUser(p.user); if (!okUser(u)) return { ok: false, err: "user" };
+  const t = findUser_(a.sh, u); if (!t) return { ok: true, found: null };
+  const other = uidOf_(t.v[0]); if (other === me) return { ok: true, found: card_(t.v), state: "self" };
+  const L = links_(me), l = L.list.filter(x => x.from === other || x.to === other)[0];
+  const state = !l ? "none" : l.st === "ok" ? "friends" : l.from === me ? "out" : "in";
+  if (p.a === "fr_find") return { ok: true, found: card_(t.v), state: state };
+  if (p.a === "fr_req") { if (!myUser) return { ok: false, err: "nouser" };
+    if (state === "none") { if (L.list.filter(x => x.from === me && x.st !== "ok").length >= 30) return { ok: false, err: "many" }; L.sh.appendRow([me, other, "wait", new Date()]); return { ok: true, state: "out" }; }
+    if (state === "in") { L.sh.getRange(l.row, 3).setValue("ok"); return { ok: true, state: "friends" }; }
+    return { ok: true, state: state }; }
+  if (p.a === "fr_ans") { if (state !== "in") return { ok: true, state: state };
+    if (p.yes) { L.sh.getRange(l.row, 3).setValue("ok"); return { ok: true, state: "friends" }; } L.sh.deleteRow(l.row); return { ok: true, state: "none" }; }
+  if (p.a === "fr_del") { if (l) L.sh.deleteRow(l.row); return { ok: true, state: "none" }; }
+  return { ok: false };
+}
+
 function handle_(p) {
   const lock = LockService.getScriptLock(); lock.waitLock(15000);
   try {
@@ -169,6 +200,7 @@ function handle_(p) {
     if (p.a === "lg") return league_(p);
     if (p.a === "votes") return votes_(p);
     if (p.a === "vote") return vote_(p);
+    if (String(p.a || "").indexOf("fr_") === 0) return friends_(p);
     if (String(p.a || "").indexOf("ad_") === 0) return admin_(p);
     return { ok: false };
   } finally { lock.releaseLock(); }
