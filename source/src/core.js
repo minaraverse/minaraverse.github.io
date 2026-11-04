@@ -446,7 +446,16 @@ function playClip(text, rate, btn) {
     if (btn) { document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); btn.classList.add("on"); AUD.onended = AUD.onerror = () => btn.classList.remove("on"); } else AUD.onended = null;
     const p = AUD.play(); if (p && p.catch) p.catch(() => { if (btn) btn.classList.remove("on"); speakFallback(t, rate, btn); }); return true; } catch (e) { return false; } }
 function speakFallback(text, rate, btn) { if (!TTS) return; const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"')); voiceFor(u, text); u.rate = rate || .92; speakU(u, text); }
+/* story texts: natural US/UK voices, women and men (Kokoro), pre-recorded in /audio and keyed by the exact text */
+const AUD_BASE = "https://minaraverse.github.io/audio/";
+const audHash = s => { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return ("0000000" + h.toString(16)).slice(-8); };
+function sayRec(h, text, btn) {
+  try { AUD = AUD || new Audio(); if (TTS) speechSynthesis.cancel(); AUD.pause(); AUD.playbackRate = 1;
+    document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); if (btn) btn.classList.add("on");
+    let fell = false; const off = () => { if (btn) btn.classList.remove("on"); }, fall = () => { if (fell) return; fell = true; off(); speakFallback(text, .92, btn); };
+    AUD.onended = off; AUD.onerror = fall; AUD.src = AUD_BASE + h + ".mp3"; const p = AUD.play(); if (p && p.catch) p.catch(fall); } catch (e) { speakFallback(text, .92, btn); } }
 function say(text, btn) {
+  const h = audHash(String(text)); if (typeof AUDH !== "undefined" && AUDH.has(h)) return sayRec(h, text, btn);
   if (playClip(text, .92, btn)) return;
   if (!TTS) return;
   const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"'));
@@ -454,7 +463,7 @@ function say(text, btn) {
   if (btn) { document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); btn.classList.add("on"); u.onend = u.onerror = () => btn.classList.remove("on"); }
   speakU(u, text);
 }
-const sayBtn = (text, cls = "") => TTS ? `<span role="button" tabindex="0" class="say ${cls}" data-say="${esc(text)}" aria-label="Listen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>` : "";
+const sayBtn = (text, cls = "") => TTS || typeof AUDH !== "undefined" ? `<span role="button" tabindex="0" class="say ${cls}" data-say="${esc(text)}" aria-label="Listen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>` : "";
 document.addEventListener("click", e => { const b = e.target.closest("[data-say]"); if (!b) return; e.preventDefault(); e.stopPropagation(); say(b.dataset.say, b); }, true);
 
 /* translation toggle for reading texts */

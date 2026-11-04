@@ -4519,6 +4519,9 @@ TXT.call = [
 { az: "“Mövzu: Protokol və tapşırıqlar — yükdaşıma zəngi, 12 iyun. Hörmətli Hans və Yuki, bugünkü səmərəli zəngə görə təşəkkür edirəm. Tapşırıqlar aşağıdadır: • BlueSail: konteynerləri Batumi üzərindən yönləndirmək (çərşənbəyə qədər) — Nigar • BlueSail: ən çoxu dörd günlük gecikməyə dair yazılı zəmanət göndərmək — Elvin • Hamburq ofisi: növbəti iki yükdaşımanı təsdiqləmək — Hans • Osaka ofisi: saxlanma tarixlərini təsdiqləmək — Yuki. Hər hansı sualınız olarsa, mənimlə əlaqə saxlamaqdan çəkinməyin. Hörmətlə, Nigar”",
   ru: "«Тема: Протокол и задачи — звонок по отгрузкам, 12 июня. Уважаемые Ганс и Юки, спасибо за продуктивный звонок сегодня. Ниже — задачи: • BlueSail: перенаправить контейнеры через Батуми (до среды) — Нигяр • BlueSail: отправить письменную гарантию задержки не более четырёх дней — Эльвин • Офис в Гамбурге: подтвердить следующие две отгрузки — Ганс • Офис в Осаке: подтвердить даты хранения — Юки. Если у вас возникнут вопросы, пожалуйста, не стесняйтесь обращаться ко мне. С наилучшими пожеланиями, Нигяр»" }];
 
+/* hashes of story texts that have a recorded natural voice in /audio */
+const AUDH = new Set(["01c105d2", "095e469c", "0b9bba3e", "1306bda3", "1b619f78", "1c481e6e", "1c90dc48", "1dd93ca8", "1fba5f01", "21bf30ca", "22c27382", "2435ae37", "24c8b6ec", "29784559", "29906314", "2d75a812", "33981690", "374836a8", "3e8b12d2", "3ecddc2e", "41d2368c", "42450546", "498a9c53", "4b28a54c", "4ce08319", "4db7d1bd", "5d123e5c", "62c3a485", "67669992", "67dd7116", "6bd7812a", "6f811892", "75794fbe", "764668e7", "76f78d66", "78f1c08d", "82e4bdcf", "8430de26", "88319de5", "89fc4023", "8c40e141", "8c4ef9a6", "8f0a3902", "964b6ef6", "9c72ab43", "9cdb3b00", "a5307523", "a6829644", "a8473629", "ad616838", "b944fffb", "ba865ea4", "bf045f24", "c4e3ec97", "c7ea6d37", "ccb1952b", "ce0c26a4", "d78ddcad", "d91fce8c", "db7bd9f4", "decdd30c", "e9df4aa6", "ea5ae430", "eca41447", "efaf2341", "fca4d3b6"]);
+
 /* ===== CORE: language, progress, router, shared quiz ===== */
 const UI = {
 en:{home:"Minaraverse",back:"Back",locked:"Locked",lockedMsg:"Finish the previous chapter and solve its riddle to open this one.",q:"Question",of:"of",right:"Correct!",wrong:"Not quite.",next:"Next",finish:"See my score",again:"Try again",copy:"Copy my result",copied:"Copied!",share:"Share it with @minaraverse",done:"done",chapters:"chapters",questions:"questions",start:"Start the story",cont:"Continue",complete:"Completed",
@@ -4967,7 +4970,16 @@ function playClip(text, rate, btn) {
     if (btn) { document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); btn.classList.add("on"); AUD.onended = AUD.onerror = () => btn.classList.remove("on"); } else AUD.onended = null;
     const p = AUD.play(); if (p && p.catch) p.catch(() => { if (btn) btn.classList.remove("on"); speakFallback(t, rate, btn); }); return true; } catch (e) { return false; } }
 function speakFallback(text, rate, btn) { if (!TTS) return; const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"')); voiceFor(u, text); u.rate = rate || .92; speakU(u, text); }
+/* story texts: natural US/UK voices, women and men (Kokoro), pre-recorded in /audio and keyed by the exact text */
+const AUD_BASE = "https://minaraverse.github.io/audio/";
+const audHash = s => { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return ("0000000" + h.toString(16)).slice(-8); };
+function sayRec(h, text, btn) {
+  try { AUD = AUD || new Audio(); if (TTS) speechSynthesis.cancel(); AUD.pause(); AUD.playbackRate = 1;
+    document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); if (btn) btn.classList.add("on");
+    let fell = false; const off = () => { if (btn) btn.classList.remove("on"); }, fall = () => { if (fell) return; fell = true; off(); speakFallback(text, .92, btn); };
+    AUD.onended = off; AUD.onerror = fall; AUD.src = AUD_BASE + h + ".mp3"; const p = AUD.play(); if (p && p.catch) p.catch(fall); } catch (e) { speakFallback(text, .92, btn); } }
 function say(text, btn) {
+  const h = audHash(String(text)); if (typeof AUDH !== "undefined" && AUDH.has(h)) return sayRec(h, text, btn);
   if (playClip(text, .92, btn)) return;
   if (!TTS) return;
   const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"'));
@@ -4975,7 +4987,7 @@ function say(text, btn) {
   if (btn) { document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); btn.classList.add("on"); u.onend = u.onerror = () => btn.classList.remove("on"); }
   speakU(u, text);
 }
-const sayBtn = (text, cls = "") => TTS ? `<span role="button" tabindex="0" class="say ${cls}" data-say="${esc(text)}" aria-label="Listen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>` : "";
+const sayBtn = (text, cls = "") => TTS || typeof AUDH !== "undefined" ? `<span role="button" tabindex="0" class="say ${cls}" data-say="${esc(text)}" aria-label="Listen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>` : "";
 document.addEventListener("click", e => { const b = e.target.closest("[data-say]"); if (!b) return; e.preventDefault(); e.stopPropagation(); say(b.dataset.say, b); }, true);
 
 /* translation toggle for reading texts */
