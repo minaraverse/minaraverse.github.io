@@ -181,7 +181,9 @@ function speakerChar(t) { if (typeof PEOPLE === "undefined" || !t) return null; 
   if (!g) return null; const cur = themeChar(), ci = /^p\d+$/.test(cur) ? +cur.slice(1) : -1;
   if (ci > -1 && PEOPLE[ci] && !PEOPLE[ci].robot && (P_FEM.test(PEOPLE[ci].n) === (g === "f"))) return null;
   const i = PEOPLE.findIndex(p => !p.robot && P_FEM.test(p.n) === (g === "f")); return i > -1 ? "p" + i : null; }
-const pixMini = t => `<span class="dx-pix">${mascot("", speakerChar(t) || themeChar())}</span>`;
+/* lesson speaker: the mural animal of this unit (animated); falls back to the people characters */
+let LESSON_ANIMAL = null;
+const pixMini = t => LESSON_ANIMAL ? `<span class="dx-pix dx-animal">${animalImg(LESSON_ANIMAL).replace('class="dr-animal live wake" src="img/av-fawn-sleep.webp"', 'class="dr-animal live" src="img/av-fawn-live.webp"').replace(' loading="lazy"', "")}</span>` : `<span class="dx-pix">${mascot("", speakerChar(t) || themeChar())}</span>`;
 const bigSay = (text, slow) => TTS ? `<div class="dx-spk"><button class="dx-sp" data-sp="${esc(text)}" aria-label="Listen">🔊</button>${slow ? `<button class="dx-sp sm" data-sp="${esc(text)}" data-slow="1" aria-label="${L("dSlow")}">🐢</button>` : ""}</div>` : `<p class="dx-big">${esc(text)}</p>`;
 function sayRate(text, rate) { if (!TTS) return; const u = new SpeechSynthesisUtterance(text); voiceFor(u, text); u.rate = rate; speakU(u, text); }
 function exHTML(x) {
@@ -220,7 +222,7 @@ VIEWS.drill = root => {
   const ui = mJ ? +mJ[1] : mL ? +mL[1] : 0, li = mL ? +mL[2] : 0;
   if (!mode || (mode === "lesson" && (!UNITS[ui] || !unitOpen(ui) || li > uDone(ui) || li >= LPU)) || (mode === "jump" && (!UNITS[ui] || unitOpen(ui)))) { Router.go("app-learn"); return {}; }
   if (mode === "lesson" && hearts() <= 0) { noHearts(root); return {}; }
-  const U = UNITS[ui]; LESSON_CHAR = "p" + (mode === "lesson" ? ui : (Math.random() * PEOPLE.length) | 0); apTheme(mode === "lesson" || mode === "jump" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
+  const U = UNITS[ui]; LESSON_CHAR = "p" + (mode === "lesson" ? ui : (Math.random() * PEOPLE.length) | 0); LESSON_ANIMAL = animalOf(mode === "lesson" ? ui : (Math.random() * ANIMALS.length) | 0); apTheme(mode === "lesson" || mode === "jump" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
   const pool = mode === "practice" ? (done.length ? done : [UNITS[curUnit()]]) : mode === "jump" ? UNITS.slice(Math.max(0, ui - 3), ui) : [U];
   pool.forEach(u => u.ctx = {});
   const pi = mode === "lesson" ? (li < uDone(ui) ? (Math.random() * partsOf(li)) | 0 : partDone(ui, li)) : 0;
@@ -347,7 +349,7 @@ VIEWS.drill = root => {
     if (!st.wasToday && playedToday()) streakScreen(root, showDone); else showDone();
   }
   render(); setBar();
-  return { unmount() { LESSON_CHAR = null; removeEventListener("keydown", onKey); document.querySelectorAll(".dr-ov").forEach(o => o.remove()); window.__dx = null; } };
+  return { unmount() { LESSON_CHAR = null; LESSON_ANIMAL = null; removeEventListener("keydown", onKey); document.querySelectorAll(".dr-ov").forEach(o => o.remove()); window.__dx = null; } };
 };
 
 function countUp(el, to, ms = 900) { if (REDUCED) { el.textContent = to; return; } const t0 = performance.now(); const f = t => { const p = Math.min(1, (t - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }

@@ -2447,3 +2447,8 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .an-raccoon .dr-ch{height:165px}.an-raccoon .dr-animal{max-width:150px;max-height:165px}
 .dr-node{transition:translate .35s cubic-bezier(.2,.9,.3,1.2)}
 .an-bunny-swing .dr-ch{height:160px}.an-bunny-swing .dr-animal{max-width:150px;max-height:160px}
+/* lesson speaker = the unit's animal */
+.dx-pix.dx-animal{width:110px;display:grid;place-items:center}
+.dx-pix.dx-animal .dr-animal{max-width:110px;max-height:130px;width:auto;height:auto;animation:none}
+@media (max-width:400px){.dx-pix.dx-animal{width:92px}.dx-pix.dx-animal .dr-animal{max-width:92px;max-height:112px}}
+.dx-pix.dx-animal.joy img{animation:pjoy .7s cubic-bezier(.2,1.6,.4,1)}.dx-pix.dx-animal.sad img{animation:psad .8s ease}
