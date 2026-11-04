@@ -2239,6 +2239,13 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 .lh-ghost,.lh-ghost b,.lh-ghost i{font-family:"Nunito",system-ui,sans-serif!important}.lh-ghost{font-size:12.5px!important;padding:5px 10px 5px 8px!important;gap:4px!important}
 .lh-ghost b{font-weight:600}.lh-ghost i{font-style:italic;color:var(--acc)}
 .lh-ghost b .lh-l{font:inherit!important;color:inherit}
+/* Business English cases grid */
+.hx-cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-bottom:20px}
+.hx-case .hx-art{position:relative;overflow:hidden}.hx-case .hx-art .gw-svg{position:absolute;inset:0;width:100%;height:100%}
+.hx-bar{display:block;height:6px;border-radius:6px;background:var(--mv-line);overflow:hidden;margin-top:4px}.hx-bar i{display:block;height:100%;background:linear-gradient(90deg,#9DB0FF,#f2c14e);border-radius:6px}
+.hx-case .hx-t b{font-size:25px}.hx-case .hx-t>span:not(.hx-bar){font-size:14.5px}
+.hx-one{grid-template-columns:1fr}
+@media (max-width:640px){.hx-cases{grid-template-columns:1fr}}
 
 </style>
 <div id="view"></div>
@@ -4069,6 +4076,179 @@ units: [
 ["What did Caspian Logistics get?", ["A 5% discount for a three-year contract", "A free office", "Murad as a new employee"], "Nigar offered a 5% discount if they signed for three years, and they agreed."]]}
 ]};
 
+/* ===== Business English cases (BlueSail Trading, Baku): The Job Interview · The Angry Client · The Video Call ===== */
+/* question format: [text, options (correct first), explanation] */
+STORIES.interview = { title: "The Job Interview", level: "A2–B1", unit: "Step",
+units: [
+{ id: "ad", name: "The Job Ad", az: "İş elanı", ru: "Вакансия", emoji: "📰",
+  note: "Aysel is 24. She sees a job ad on the BlueSail Trading website: “Marketing Assistant — full-time, Baku. Requirements: a degree in marketing or a related field, good English, at least one year of experience. Responsibilities: managing social media, preparing reports and supporting the sales team. We offer a competitive salary, health insurance and training. To apply, send your CV and a cover letter to hr@bluesail.az by 15 March.” Aysel has a degree in Business Administration and two years of experience running social media for a café chain. “This job is perfect for me,” she thinks.",
+  qs: [
+["“Full-time” means…", ["working the whole normal working week", "working only in the mornings", "working only from home"], "A full-time job is about 40 hours a week. The opposite is part-time."],
+["“A competitive salary” means…", ["good pay compared with other companies", "very low pay", "pay that depends on a competition"], "Competitive = as good as or better than others on the market."],
+["“Responsibilities” are…", ["the tasks you must do in the job", "the things the company gives you", "the people you work with"], "Your responsibilities = your duties at work."],
+["What must Aysel send?", ["Her CV and a cover letter", "Only a photo", "A video about herself"], "The ad says: “send your CV and a cover letter”."],
+["Is Aysel a good candidate?", ["Yes — she has a related degree and two years of experience", "No — she has no experience", "No — the job is part-time"], "The ad asks for a related degree and at least one year of experience. Aysel has both."]]},
+
+{ id: "letter", name: "The Cover Letter", az: "Müraciət məktubu", ru: "Сопроводительное письмо", emoji: "✉️",
+  note: "Aysel writes her cover letter: “Dear Hiring Manager, I am writing to apply for the position of Marketing Assistant, which I saw advertised on your website. I have a degree in Business Administration and two years of experience in social media marketing. In my current role, I am responsible for three Instagram accounts, and I have increased our followers by 40%. I am a fast learner and I work well in a team. I have attached my CV. I look forward to hearing from you. Yours faithfully, Aysel Mammadova”",
+  qs: [
+["“I am writing to apply for…” is used to…", ["say which job you want", "complain about a product", "cancel a meeting"], "It is the standard first sentence of a job application."],
+["“I am responsible for three accounts” means…", ["managing three accounts is her job", "she created three problems", "she closed three accounts"], "To be responsible for something = it is your duty to take care of it."],
+["A “fast learner” is someone who…", ["learns new things quickly", "drives very fast", "always finishes early"], "Employers like fast learners because they need less training."],
+["“I look forward to hearing from you” means…", ["I hope you will answer me", "I will call you tomorrow", "Please don't answer"], "A polite, formal way to finish a letter when you expect a reply."],
+["She doesn't know the manager's name. Which ending is correct?", ["Yours faithfully,", "Love,", "See you!"], "In British English: “Dear Sir/Madam” or “Dear Hiring Manager” → “Yours faithfully”; “Dear Ms Aliyeva” → “Yours sincerely”."]]},
+
+{ id: "call", name: "The Phone Call", az: "Telefon zəngi", ru: "Звонок", emoji: "📞",
+  note: "Two days later Aysel's phone rings. “Hello, is that Aysel Mammadova? This is Kamran from the HR department at BlueSail Trading. We've received your application, and we'd like to invite you for an interview.” “Oh, thank you! That's great news.” “Are you available on Thursday at 10 a.m.?” “I'm afraid I have a class on Thursday morning. Would Friday suit you?” “Friday at 11 is fine. Please bring your ID and a copy of your diploma.” “Perfect. Could you send me the address by email?” “Of course. See you on Friday.”",
+  qs: [
+["Why does Kamran call?", ["To invite Aysel to an interview", "To offer her the job", "To say she didn't get the job"], "“We'd like to invite you for an interview.”"],
+["“Are you available on Thursday?” means…", ["Are you free on Thursday?", "Do you work on Thursdays?", "Did you come on Thursday?"], "Available = free, able to come."],
+["“I'm afraid I have a class.” Here, “I'm afraid” is…", ["a polite way to give bad news", "a sign that she is scared", "a way to say she is late"], "“I'm afraid…” softens bad news: “I'm afraid I can't come.”"],
+["“Would Friday suit you?” means…", ["Is Friday convenient for you?", "Do you have a suit for Friday?", "Will you wear a suit on Friday?"], "To suit someone = to be convenient for them."],
+["When is the interview?", ["Friday at 11", "Thursday at 10", "Friday at 10"], "Kamran says: “Friday at 11 is fine.”"]]},
+
+{ id: "about", name: "Tell Me About Yourself", az: "Özün haqqında danış", ru: "Расскажите о себе", emoji: "🎤",
+  note: "Friday, 10:55. The HR manager, Ms Leyla, smiles. “So, Aysel, tell me about yourself.” Aysel takes a breath. “I graduated from university two years ago with a degree in Business Administration. Since then, I've been working at Coffee Corner, where I'm in charge of social media. I really enjoy creating content and analysing the results. Now I'm looking for a new challenge in an international company — that's why I applied for this position.” “What are your strengths?” “I'm creative and well organised, and I always meet deadlines.” “And your weaknesses?” “Sometimes I'm too much of a perfectionist, but I'm learning to prioritise.”",
+  qs: [
+["“Since then, I've been working at Coffee Corner” means…", ["she started there and still works there", "she worked there in the past and left", "she will start there next year"], "Present perfect continuous (have been + -ing) = started in the past and continues now."],
+["“I'm in charge of social media” means…", ["social media is her responsibility", "she pays for social media", "she doesn't like social media"], "To be in charge of = to be responsible for and control something."],
+["“A new challenge” is…", ["a new, difficult but interesting task", "a new prize in a competition", "a new problem with the boss"], "In interviews, “a new challenge” is a positive way to say you want to grow."],
+["“I always meet deadlines” means…", ["I always finish work on time", "I meet people at the deadline", "I often miss time limits"], "To meet a deadline = to finish before the time limit. The opposite is to miss a deadline."],
+["“To prioritise” means…", ["to decide what is most important and do it first", "to do everything at the same time", "to work slowly and carefully"], "Prioritise = put tasks in order of importance."]]},
+
+{ id: "questions", name: "Any Questions?", az: "Sualın var?", ru: "Есть вопросы?", emoji: "❓",
+  note: "“Do you have any questions for us?” asks Ms Leyla. Aysel is ready. “Yes. Could you tell me more about the team I would work with?” “You'd be part of a team of five, and you'd report to the Head of Marketing.” “What does a typical day look like?” “Mornings are usually for planning and meetings, and afternoons are for creating content.” “Are there any opportunities for training?” “Yes, we offer courses every year.” “And what are the next steps?” “We'll let you know by Wednesday.”",
+  qs: [
+["Why is it good to ask questions at the end of an interview?", ["It shows you are interested and prepared", "It makes the interview longer", "It is a company rule"], "Good questions show motivation. Saying “No, nothing” can look like a lack of interest."],
+["“You'd report to the Head of Marketing” means…", ["the Head of Marketing would be your manager", "you'd write reports about her", "you'd complain about her"], "To report to someone = they are your direct manager."],
+["“A typical day” is…", ["a normal, usual day", "a holiday", "the first day"], "Typical = usual, normal."],
+["“Opportunities for training” are…", ["chances to learn and develop", "free trips abroad", "extra days off"], "An opportunity = a chance."],
+["“What are the next steps?” asks about…", ["what will happen after the interview", "how to find the office", "the stairs in the building"], "A smart final question: it shows you plan ahead."]]},
+
+{ id: "offer", name: "The Offer", az: "Təklif", ru: "Предложение", emoji: "🎉",
+  note: "On Wednesday morning an email arrives: “Dear Aysel, Thank you for attending the interview. We are pleased to offer you the position of Marketing Assistant. Your starting salary will be 1,400 manat per month, with a three-month probation period. Your start date would be 1 April. Please confirm whether you accept this offer by Friday.” Aysel replies: “Dear Ms Leyla, Thank you very much for the offer. I am delighted to accept. Could you please let me know which documents I should bring on my first day? Best regards, Aysel”",
+  qs: [
+["“We are pleased to offer you the position” means…", ["she got the job", "she must wait longer", "the position is closed"], "A job offer!"],
+["“A probation period” is…", ["a trial period at the start of a job", "a holiday period", "a period without pay"], "During probation, the company and the employee check that the job is a good fit."],
+["“Start date” is…", ["the first day of work", "the date of the interview", "the last day of the contract"], "Start date = when the job begins."],
+["“I am delighted to accept” means…", ["I'm very happy to say yes", "I'm saying no politely", "I need more time to decide"], "Delighted = very pleased."],
+["What does Aysel ask about?", ["The documents for her first day", "A higher salary", "A different start date"], "“Could you please let me know which documents I should bring?”"]]}
+]};
+
+STORIES.client = { title: "The Angry Client", level: "B1–B2", unit: "Step",
+units: [
+{ id: "complaint", name: "The Complaint", az: "Şikayət", ru: "Жалоба", emoji: "😠",
+  note: "You work in Customer Service at BlueSail Trading. On Monday morning this email arrives: “Subject: Unacceptable delivery — Order #4471. To whom it may concern, I am writing to complain about our recent order. We ordered 300 sets of white towels for our new hotel, which opens on Saturday. The delivery was due on 2 May but arrived five days late, and half of the towels are blue, not white. This is completely unacceptable. I expect a full explanation and an immediate solution. If this is not resolved by Thursday, I will cancel all future orders. Rauf Hasanov, Owner, Sahil Hotels”",
+  qs: [
+["“The delivery was due on 2 May” means…", ["it should have arrived on 2 May", "it arrived on 2 May", "it was paid for on 2 May"], "Due = expected or planned for that time."],
+["What are the TWO problems?", ["The delivery was late and half the towels are the wrong colour", "The price was high and the towels were small", "The hotel is closed and the towels are dirty"], "Five days late + blue instead of white."],
+["“Unacceptable” means…", ["so bad that it cannot be accepted", "a little strange", "quite good"], "A strong word in complaints: “This is completely unacceptable.”"],
+["“If this is not resolved” — to resolve means…", ["to find a solution", "to start a problem", "to repeat something"], "Resolve a problem = solve it."],
+["What is the client's deadline?", ["Thursday", "Saturday", "2 May"], "“If this is not resolved by Thursday, I will cancel all future orders.”"]]},
+
+{ id: "sorry", name: "Say Sorry Properly", az: "Düzgün üzr istə", ru: "Извинись правильно", emoji: "🙏",
+  note: "Your manager, Lala, gives you advice before you reply. “First, never argue with an angry client. Acknowledge the problem: ‘I completely understand your frustration.’ Then apologise sincerely: ‘Please accept our apologies for the inconvenience.’ Don't make excuses, and don't promise anything you can't deliver. Finally, take ownership: say ‘I will personally make sure…’ and give a clear time. Clients forgive mistakes. They don't forgive silence.”",
+  qs: [
+["“Acknowledge the problem” means…", ["show that you understand there is a problem", "ignore the problem", "explain why it is not your fault"], "To acknowledge = to accept that something is true."],
+["Which is the best first sentence to the client?", ["“I completely understand your frustration.”", "“It's not our fault.”", "“Calm down, please.”"], "Show empathy first. “Calm down” usually makes people angrier."],
+["“Inconvenience” means…", ["trouble or difficulty caused to someone", "a type of delivery", "a discount"], "“We apologise for any inconvenience” is a very common business phrase."],
+["“Don't make excuses” means…", ["don't give reasons to avoid the blame", "don't send any emails", "don't say sorry"], "An excuse = a reason you give so that you don't look guilty."],
+["“Take ownership” means…", ["accept responsibility and act", "buy the company", "keep the towels"], "Ownership of a problem = you say “I will fix it”."]]},
+
+{ id: "phone", name: "On the Phone", az: "Telefonda", ru: "По телефону", emoji: "📞",
+  note: "You call Mr Hasanov. “Good morning, Mr Hasanov. This is Nail from BlueSail customer service. I'm calling about your order 4471. First of all, I'm very sorry for the delay and the mistake.” “Sorry won't open my hotel!” “I completely understand. Could you bear with me for a moment while I check the details?” … “Thank you for holding. I can see what happened: the warehouse sent another client's order together with yours. I'll look into it straight away and get back to you within the hour.” “Within the hour. I'm counting on you.”",
+  qs: [
+["“Could you bear with me for a moment?” means…", ["Please wait a moment while I do something", "Please be angry with me", "Can you carry this for me?"], "A polite phrase on the phone or in meetings."],
+["“Thank you for holding” is said…", ["after someone has waited on the phone", "at the end of a call", "when you shake hands"], "To hold = to wait on the line."],
+["What caused the mistake?", ["The warehouse mixed two orders", "The client ordered blue towels", "The driver was ill"], "“The warehouse sent another client's order together with yours.”"],
+["“I'll look into it” means…", ["I'll check and investigate it", "I'll look at the client", "I'll forget about it"], "Look into = investigate."],
+["“I'm counting on you” means…", ["I'm relying on you", "I'm calculating your price", "I'm counting the towels"], "Count on someone = trust them to do something."]]},
+
+{ id: "solution", name: "Find a Solution", az: "Həll yolu tap", ru: "Найди решение", emoji: "🔍",
+  note: "You talk to the warehouse manager, Orxan. “We have 150 white sets in stock,” he says. “If we send them by express courier, they can arrive tomorrow afternoon. The extra cost is 120 manat.” You check with Lala. “Go ahead,” she says. “We'll cover the cost. Also, offer him a 15% discount on this order as a goodwill gesture. He can keep the blue towels for free, or our driver can collect them.”",
+  qs: [
+["“In stock” means…", ["available in the warehouse now", "sold out", "ordered from another country"], "The opposite is “out of stock”."],
+["“By express courier” means…", ["by a fast delivery service", "by post next month", "by a free bus"], "Express = very fast."],
+["“We'll cover the cost” means…", ["we will pay for it", "we will hide the price", "the client will pay"], "To cover a cost = to pay for it."],
+["“A goodwill gesture” is…", ["something nice you do to show you care", "a legal document", "a rude sign"], "Goodwill = friendly feelings and trust."],
+["What will happen to the blue towels?", ["The client can keep them for free, or the driver will collect them", "The client must pay double", "They will be dyed white"], "Lala gives the client a choice."]]},
+
+{ id: "email", name: "The Solution Email", az: "Həll məktubu", ru: "Письмо с решением", emoji: "📧",
+  note: "You write: “Dear Mr Hasanov, Further to our phone call this morning, I am writing to confirm the following: 1) 150 sets of white towels will be delivered by express courier tomorrow by 3 p.m., at no extra cost to you. 2) You will receive a 15% discount on order #4471. 3) You are welcome to keep the blue towels free of charge; alternatively, our driver can collect them at a time that suits you. Once again, please accept our sincere apologies. Kind regards, Nail Aliyev, Customer Service”",
+  qs: [
+["“Further to our phone call” means…", ["following our phone call", "before our phone call", "instead of a phone call"], "Further to = following / connected to something earlier."],
+["“At no extra cost to you” means…", ["you don't pay anything more", "it is very expensive", "you will pay later"], "No extra cost = free of additional charges."],
+["“Free of charge” means…", ["you don't have to pay", "there is a charge", "the battery is full"], "Free of charge = free."],
+["“Alternatively” introduces…", ["another possible option", "the final price", "a complaint"], "Alternatively = or, as another choice."],
+["Why does Nail write an email after the call?", ["To confirm the solution in writing", "Because the call failed", "To complain about the client"], "Always confirm important agreements in writing."]]},
+
+{ id: "loyal", name: "From Angry to Loyal", az: "Hirsdən sadiqliyə", ru: "От гнева к лояльности", emoji: "🤝",
+  note: "On Saturday, the hotel opens on time. Mr Hasanov writes: “Dear Nail, I must say I was impressed by how quickly your team handled the situation. The towels arrived on time, and our guests loved the hotel. We will definitely keep working with BlueSail. In fact, we'd like to order 500 more sets for our new hotel in Gabala.” Lala smiles. “Well done. That's how you turn an angry client into a loyal one.”",
+  qs: [
+["“I was impressed” means…", ["I had a very good opinion of what you did", "I was angry", "I was disappointed"], "Impressed = you admire something."],
+["“Handled the situation” means…", ["dealt with the problem", "touched the towels", "lost control"], "To handle = to deal with, to manage."],
+["A “loyal client” is someone who…", ["keeps buying from you", "often complains", "never pays"], "Loyal = faithful, staying with you."],
+["What is the new order?", ["500 sets for the hotel in Gabala", "300 blue towels", "A refund"], "“We'd like to order 500 more sets for our new hotel in Gabala.”"],
+["What is the main lesson of this case?", ["A problem solved well can make the relationship stronger", "Never answer complaints", "Always give a 50% discount"], "Good service after a mistake often creates the most loyal clients."]]}
+]};
+
+STORIES.call = { title: "The Video Call", level: "B2–C1", unit: "Scene",
+units: [
+{ id: "join", name: "Joining the Call", az: "Zəngə qoşulmaq", ru: "Подключение", emoji: "💻",
+  note: "9:00 a.m. in Baku. Nigar opens a video call with BlueSail's partners: Hans in Hamburg and Yuki in Osaka. “Good morning, everyone — or good afternoon for some of you! Can everyone hear me?” Hans: “Loud and clear.” Yuki's picture is frozen. “Yuki, I think you're breaking up. Could you turn your camera off to improve the connection?” “Is that better?” “Much better. Hans, you're on mute — we can't hear you.” “Sorry! Can you hear me now?” “Yes. Right, let's get started. The purpose of today's call is to agree on a new shipping schedule.”",
+  qs: [
+["“Loud and clear” means…", ["I can hear you very well", "Please speak louder", "The sound is bad"], "A common answer to “Can you hear me?”"],
+["“You're breaking up” in a call means…", ["your sound or video keeps cutting out", "you are ending a relationship", "you are leaving the company"], "Break up = the connection is unstable."],
+["“You're on mute” means…", ["your microphone is off", "you are not allowed to speak", "you are a quiet person"], "Mute = the sound is switched off."],
+["“The purpose of today's call” is…", ["the reason for the call", "the length of the call", "the people on the call"], "Purpose = aim, reason."],
+["What is the call about?", ["Agreeing on a new shipping schedule", "Hiring Yuki", "A party in Hamburg"], "Nigar states the purpose at the start — a good meeting habit."]]},
+
+{ id: "news", name: "The Bad News", az: "Pis xəbər", ru: "Плохая новость", emoji: "🚢",
+  note: "Nigar shares her screen. “As you can see, the port of Poti has been closed for six days because of a strike. As a result, our containers are stuck, and the delivery to Hamburg will be delayed by at least ten days.” Hans frowns. “Ten days is a lot. We have customers waiting.” “I appreciate that, and I'm afraid it's out of our control. However, we've looked at the alternatives. We could reroute the containers through Batumi. That would reduce the delay to four days, but it would increase costs by around 8%.”",
+  qs: [
+["“As a result” introduces…", ["a consequence", "a reason", "an example"], "Strike → as a result → the containers are stuck."],
+["“Out of our control” means…", ["we cannot influence it", "we are managing it badly", "we control it completely"], "Use it to explain problems caused by outside events."],
+["“To reroute” means…", ["to send by a different route", "to cancel the order", "to return to the start"], "Re- + route = a new route."],
+["What are the two options?", ["Wait about ten days, or go via Batumi: four days' delay but about 8% more cost", "Cancel the order or pay a fine", "Fly the goods or use free trucks"], "This is a classic time vs. cost decision."],
+["“I appreciate that” here means…", ["I understand your situation", "I'm grateful for your money", "I like your idea"], "In meetings, “I appreciate that” often means “I understand your concern”."]]},
+
+{ id: "styles", name: "Different Styles", az: "Fərqli üslublar", ru: "Разные стили", emoji: "🌍",
+  note: "Hans is direct: “Frankly, the 8% should not be our problem. You should pay it.” Yuki is quieter. After a pause she says, “That may be a little difficult. Perhaps we could consider it further.” Later, Nigar explains to her new assistant: “In Japanese business culture, people often avoid saying ‘no’ directly. ‘That may be difficult’ can actually mean no. Many Germans, on the other hand, prefer to say exactly what they think. Neither style is rude — they're just different. A good negotiator listens to how things are said, not only to what is said.”",
+  qs: [
+["“Frankly” means…", ["honestly and directly", "quickly", "softly and politely"], "Frankly = to be honest."],
+["What does Yuki probably mean by “That may be a little difficult”?", ["No, or it's very unlikely", "Yes, definitely", "She didn't understand"], "Indirect cultures often say no politely."],
+["According to Nigar, is Hans rude?", ["No — direct communication is normal in his culture", "Yes — he should apologise", "Yes — he insulted Yuki"], "Different styles are not the same as rudeness."],
+["“On the other hand” is used to…", ["contrast two ideas", "add the same idea", "give an example"], "On one hand… on the other hand… = contrast."],
+["The main lesson of this scene is…", ["listen to how things are said, not only what is said", "always speak like Hans", "never negotiate with indirect partners"], "Cross-cultural skills are part of Business English."]]},
+
+{ id: "deal", name: "The Negotiation", az: "Danışıqlar", ru: "Переговоры", emoji: "⚖️",
+  note: "Nigar makes a proposal. “How about this: we split the extra cost 50/50, and in return, you commit to the next two shipments with us.” Hans: “I could accept that if you guarantee the four-day delay in writing.” Yuki: “From our side, we would need a small discount on the next order.” Nigar: “I'm afraid a discount is off the table, but we could offer free storage in our Baku warehouse for a month.” Yuki nods. “That sounds reasonable.” “Then I think we've reached an agreement.”",
+  qs: [
+["“We split the cost 50/50” means…", ["each side pays half", "we pay everything", "the cost is cancelled"], "Split = divide."],
+["“In return” means…", ["as an exchange for something", "send the goods back", "once again"], "I give you X, and in return you give me Y."],
+["“I could accept that if…” shows…", ["a conditional agreement", "a refusal", "anger"], "Conditional language keeps a negotiation open: “I could…, if you…”"],
+["“Off the table” means…", ["not possible, not an option", "on the agenda", "being discussed now"], "The opposite: “on the table” = open for discussion."],
+["What does Yuki get instead of a discount?", ["One month of free storage in Baku", "Two free shipments", "A lower price"], "Nigar offers something different but still valuable — a smart trade-off."]]},
+
+{ id: "recap", name: "Wrapping Up", az: "Yekun", ru: "Подведение итогов", emoji: "📝",
+  note: "“Let me just recap what we've agreed,” says Nigar. “One: the containers go via Batumi, with a maximum delay of four days. Two: we split the extra 8% equally. Three: Hans commits to the next two shipments. Four: Yuki's company gets one month of free storage. Have I missed anything?” “No, that's everything,” says Hans. “Great. I'll circulate the minutes by the end of the day. Our next call is scheduled for Monday at the same time. Thank you all for your flexibility.”",
+  qs: [
+["“Let me recap” means…", ["let me summarise", "let me start again", "let me ask a question"], "Recap = a short summary of the main points."],
+["“Have I missed anything?” asks…", ["whether something important was forgotten", "whether someone was absent", "whether she was late"], "A good way to check everyone agrees with the summary."],
+["“I'll circulate the minutes” means…", ["I'll send the written notes of the meeting to everyone", "I'll wait a few minutes", "I'll call again in a minute"], "Minutes = the official notes of a meeting."],
+["When is the next call?", ["Monday, at the same time", "Tomorrow", "Next month"], "“Our next call is scheduled for Monday at the same time.”"],
+["“Thank you for your flexibility” thanks people for…", ["being willing to change and compromise", "joining the call early", "being physically strong"], "Flexible = able to adapt."]]},
+
+{ id: "follow", name: "The Follow-up Email", az: "Davam məktubu", ru: "Письмо по итогам", emoji: "📨",
+  note: "“Subject: Minutes and action points — shipping call, 12 June. Dear Hans and Yuki, Thank you for a productive call today. Please find the action points below: • BlueSail: reroute the containers via Batumi (by Wednesday) — Nigar • BlueSail: send the written guarantee of a maximum four-day delay — Elvin • Hamburg office: confirm the next two shipments — Hans • Osaka office: confirm the storage dates — Yuki. Should you have any questions, please do not hesitate to contact me. Best regards, Nigar”",
+  qs: [
+["“Action points” are…", ["tasks that specific people must do after a meeting", "points scored in a game", "the main problems"], "Each action point has a task, a person and a deadline."],
+["Who will send the written guarantee?", ["Elvin", "Hans", "Yuki"], "“Send the written guarantee… — Elvin”."],
+["“Should you have any questions” means…", ["If you have any questions", "You must have questions", "Why do you have questions?"], "A formal inversion: Should you… = If you…"],
+["“Please do not hesitate to contact me” means…", ["feel free to contact me", "don't contact me", "wait before contacting me"], "A polite, formal way to invite questions."],
+["“A productive call” was…", ["useful, with good results", "very long", "full of problems"], "Productive = it produced results."]]}
+]};
+
 /* ===== CORE: language, progress, router, shared quiz ===== */
 const UI = {
 en:{home:"Minaraverse",back:"Back",locked:"Locked",lockedMsg:"Finish the previous chapter and solve its riddle to open this one.",q:"Question",of:"of",right:"Correct!",wrong:"Not quite.",next:"Next",finish:"See my score",again:"Try again",copy:"Copy my result",copied:"Copied!",share:"Share it with @minaraverse",done:"done",chapters:"chapters",questions:"questions",start:"Start the story",cont:"Continue",complete:"Completed",
@@ -4926,7 +5106,7 @@ VIEWS.home = root => {
   <div class="h-wrap">
   <header class="h-top">
     <a class="h-logo" href="#">minara<i>verse</i></a>
-    <nav class="h-nav" aria-label="Menu"><a href="#" data-jump="h-level">🎯 ${L("levelK")}</a><a href="#" data-jump="h-about">${L("bioK")}</a><a href="#" data-jump="h-stories">${L("storiesK")}</a><a href="#" data-jump="h-board">🏆 ${L("bdK")}</a><a href="#club">☕ ${L("clubK")}</a><a href="#" data-jump="h-exam">💼 ${L("bizNav")}</a><a href="#" data-jump="h-lead" class="hn-cta">💬 ${L("leadK")}</a></nav>
+    <nav class="h-nav" aria-label="Menu"><a href="#" data-jump="h-level">🎯 ${L("levelK")}</a><a href="#" data-jump="h-about">${L("bioK")}</a><a href="#" data-jump="h-stories">${L("storiesK")}</a><a href="#" data-jump="h-exam">💼 ${L("bizNav")}</a><a href="#" data-jump="h-board">🏆 ${L("bdK")}</a><a href="#club">☕ ${L("clubK")}</a><a href="#" data-jump="h-lead" class="hn-cta">💬 ${L("leadK")}</a></nav>
     ${langPill()}
   </header>
   <section class="h-hero">
@@ -4979,15 +5159,16 @@ VIEWS.home = root => {
         <span class="h-card-bar"><i style="width:${d / n * 100}%"></i></span>
         <span class="h-card-go">${d === n ? L("complete") + " ✓" : d ? L("cont") + " · " + d + "/" + n : L("start")} →</span>${d === n ? `<span class="h-card-cert" data-cert="${c.id}" role="button" tabindex="0">🏅 ${L("getCert")}</span>` : ""}</span></a>`; }).join("")}</div>
   </section>
+  <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
+  <section class="h-exam" id="h-exam"><div class="h-sh"><div><p class="h-k">💼 ${L("bizK")}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
+    <div class="hx-cases">${["contract", "interview", "client", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
+      return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${k === "contract" ? `<span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span>` : WART[k]()}</span>
+        <span class="hx-t"><small>${courseEmoji(k)} ${S.level} · ${n} ${{ en: "steps", az: "addım", ru: "шагов" }[LANG]}</small><b>${esc(S.title)}</b><span>${L(k + "D")}</span><span class="hx-bar"><i style="width:${d / n * 100}%"></i></span><em>${d === n ? "✓ " + L("complete") : d ? L("cont") + " · " + d + "/" + n : L("start")} →</em></span></a>`; }).join("")}</div>
+    <div class="hx-cards hx-one"><a class="hx-card hx-err" href="#errors"><span class="hx-art" aria-hidden="true"><span class="hx-target"><i></i><i></i><i></i></span><span class="hx-words"><s>a elephant</s><b>an elephant</b></span></span>
+      <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
   ${boardHTML()}
   <p class="h-next" aria-hidden="false"><span>${L("nx4")}</span><i>↓</i></p>
   ${STORIES.club ? (() => { const w = STORIES.club.units[clubIdx()]; return `<section class="h-club"><a class="hc-box" href="#club"><span class="hc-cup" aria-hidden="true">${w.emoji || "☕"}</span><div><p class="h-k">☕ ${L("clubK")} · ${L("clubNew")}</p><span class="hc-fmt">${esc(w.format)}</span><h2 class="h-h2">${esc(w.title)}</h2><p>${L("fm_clubP")}</p><em>${L("clubOpen")} →</em></div></a></section>`; })() : ""}
-  <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
-  <section class="h-exam" id="h-exam"><div class="h-sh"><div><p class="h-k">${L("bizK")}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
-    <div class="hx-cards"><a class="hx-card hx-biz" href="#contract"><span class="hx-art" aria-hidden="true"><span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span></span>
-      <span class="hx-t"><small>Business English · ${STORIES.contract.units.length} ${{ en: "chapters", az: "fəsil", ru: "глав" }[LANG]} · ${STORIES.contract.level}</small><b>${esc(STORIES.contract.title)}</b><span>${L("contractD")}</span><em>${doneCount("contract") ? L("cont") : L("start")} →</em></span></a>
-      <a class="hx-card hx-err" href="#errors"><span class="hx-art" aria-hidden="true"><span class="hx-target"><i></i><i></i><i></i></span><span class="hx-words"><s>a elephant</s><b>an elephant</b></span></span>
-      <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
   <p class="h-next" aria-hidden="false"><span>${L("nx6")}</span><i>↓</i></p>
   ${leadHTML()}
   <footer class="h-foot"><p class="h-k">${L("follow")}</p><a class="h-big" href="${IG}" target="_blank" rel="noopener">${[..."@minaraverse"].map((ch, i) => `<span class="fl" style="--i:${i}">${ch}</span>`).join("")}<span class="h-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></a>
@@ -6236,20 +6417,21 @@ VIEWS.club = root => {
   return {};
 };
 
-Object.assign(UI.en, { bizNav: "Business English", bizK: "Business English", bizH: "Talk business — through a mystery", fm_biz: "Business English", fm_bizP: "A mystery at a Baku company: emails, meetings, calls and the deal." });
-Object.assign(UI.az, { bizNav: "Business English", bizK: "Business English", bizH: "Biznes dilində danış — sirr hekayəsi ilə", fm_biz: "Business English", fm_bizP: "Bakı şirkətində sirr: məktublar, iclaslar, zənglər və sövdə." });
-Object.assign(UI.ru, { bizNav: "Business English", bizK: "Деловой английский", bizH: "Говори на языке бизнеса — через детектив", fm_biz: "Деловой английский", fm_bizP: "Загадка в бакинской компании: письма, встречи, звонки и сделка." });
+Object.assign(UI.en, { bizNav: "Business English", bizK: "Business English", bizH: "Talk business — through real work cases", fm_biz: "Business English", fm_bizP: "A mystery at a Baku company: emails, meetings, calls and the deal." });
+Object.assign(UI.az, { bizNav: "Business English", bizK: "Business English", bizH: "Biznes dilində danış — real iş hallarında", fm_biz: "Business English", fm_bizP: "Bakı şirkətində sirr: məktublar, iclaslar, zənglər və sövdə." });
+Object.assign(UI.ru, { bizNav: "Business English", bizK: "Деловой английский", bizH: "Говори на языке бизнеса — в реальных рабочих ситуациях", fm_biz: "Деловой английский", fm_bizP: "Загадка в бакинской компании: письма, встречи, звонки и сделка." });
 
 /* ===== v3: advanced worlds, exams and games for every level, lead form ===== */
 Object.assign(UI.en, {
   exV_basic: "Basic", exV_std: "Standard", exV_adv: "Advanced",
   cafeD: "Leyla opens a little café near Fountain Square. Order, chat and make plans in simple English.",
   businessD: "A Baku team builds a startup and pitches to investors in Dubai. Emails, meetings, numbers and the deal.",
+  interviewD: "Aysel wants her first office job. Read the ad, write the cover letter, take the call and survive the interview — step by step to the job offer.", clientD: "A hotel owner is furious: late towels, wrong colour. Apologise, call, find a solution and turn an angry client into a loyal one.", callD: "A video call with partners in Hamburg and Osaka. A port strike, bad news, different cultures — negotiate, recap and follow up like a pro.",
   contractD: "Five hours before a big signing, the contract disappears. Read the emails, run the meeting, make the calls and save the deal — Business English as a mystery.",
   debateD: "An international debate tournament in Baku. Argue, concede, rebut and win the final.",
   ieltsD: "Seven rooms of the IELTS Speaking test: Part 1, the cue card, Part 3 and a full mock with feedback.",
   heistD: "A medieval manuscript vanishes from the Shirvanshahs' Palace. Follow it from Baku to Venice and London.",
-  nx1: "First, find out where you are", nx2: "Now meet the teacher and the method", nx3: "Next: the stories. Pick yours", nx4: "Every week something new", nx5: "Practise like it's the real exam", nx6: "And the best part: learn with Minara",
+  nx1: "First, find out where you are", nx2: "Now meet the teacher and the method", nx3: "Next: the stories. Pick yours", nx4: "Every week something new", nx5: "Next: English for work", nx6: "And the best part: learn with Minara",
   leadK: "Lessons with Minara", leadH: "Want to speak English like a native speaker?", leadP: "Fluent, proficient English, Business English, IELTS or English for your child. Leave your details and Minara will contact you.",
   leadB1: "Speak confidently and naturally: General English, Business English, IELTS and more", leadB3: "Stories, mysteries and debates in every lesson (speaking, reading, writing, listening, vocabulary and more)", leadB4: "For adults and kids, online",
   leadInd: "Individual lessons", leadIndP: "One-to-one, your goals, your pace.", leadGrp: "Group lessons", leadGrpP: "Small online groups, lots of speaking.",
@@ -6262,11 +6444,12 @@ Object.assign(UI.az, {
   exV_basic: "Başlanğıc", exV_std: "Standart", exV_adv: "İrəli",
   cafeD: "Leyla Fəvvarələr meydanının yanında kiçik kafe açır. Sadə ingilis dilində sifariş ver, söhbət et, plan qur.",
   businessD: "Bakılı komanda startap qurur və Dubayda investorlara təqdim edir. Məktublar, görüşlər, rəqəmlər və müqavilə.",
+  interviewD: "Aysel ilk ofis işini istəyir. Elanı oxu, müraciət məktubu yaz, zəngə cavab ver və müsahibədən keç — addım-addım iş təklifinə qədər.", clientD: "Otel sahibi qəzəblidir: dəsmallar gecikib, rəngi səhvdir. Üzr istə, zəng et, həll tap və qəzəbli müştərini sadiq müştəriyə çevir.", callD: "Hamburq və Osakadakı tərəfdaşlarla video zəng. Liman tətili, pis xəbər, fərqli mədəniyyətlər — peşəkar kimi danış, yekunlaşdır və məktub yaz.",
   contractD: "Böyük imzadan beş saat əvvəl müqavilə yoxa çıxır. Məktubları oxu, iclası apar, zəngləri et və sövdəni xilas et — sirr kimi Business English.",
   debateD: "Bakıda beynəlxalq debat turniri. Mübahisə et, razılaş, təkzib et və finalı qazan.",
   ieltsD: "IELTS danışıq imtahanının yeddi otağı: 1-ci hissə, kart, 3-cü hissə və rəylə tam sınaq.",
   heistD: "Şirvanşahlar sarayından orta əsr əlyazması yoxa çıxır. Onun izi ilə Bakıdan Venesiya və Londona get.",
-  nx1: "Əvvəlcə harada olduğunu öyrən", nx2: "İndi müəllim və metodla tanış ol", nx3: "Sonra hekayələr. Özününkünü seç", nx4: "Hər həftə yeni bir şey", nx5: "Real imtahan kimi məşq et", nx6: "Ən maraqlısı: Minara ilə öyrən",
+  nx1: "Əvvəlcə harada olduğunu öyrən", nx2: "İndi müəllim və metodla tanış ol", nx3: "Sonra hekayələr. Özününkünü seç", nx4: "Hər həftə yeni bir şey", nx5: "Sonra: iş üçün ingilis dili", nx6: "Ən maraqlısı: Minara ilə öyrən",
   leadK: "Minara ilə dərslər", leadH: "İngilis dilində daşıyıcı kimi danışmaq istəyirsən?", leadP: "Sərbəst, mükəmməl ingilis dili, Business English, IELTS və ya uşağın üçün ingilis dili. Məlumatlarını yaz, Minara səninlə əlaqə saxlayacaq.",
   leadB1: "Özünəinamlı və təbii danış: General English, Business English, IELTS və s.", leadB3: "Hər dərsdə hekayələr, sirlər və debatlar (danışıq, oxu, yazı, dinləmə, söz ehtiyatı və s.)", leadB4: "Böyüklər və uşaqlar üçün, onlayn",
   leadInd: "Fərdi dərslər", leadIndP: "Təkbətək, sənin məqsədin, sənin tempin.", leadGrp: "Qrup dərsləri", leadGrpP: "Kiçik onlayn qruplar, çox danışıq.",
@@ -6279,11 +6462,12 @@ Object.assign(UI.ru, {
   exV_basic: "Базовый", exV_std: "Стандарт", exV_adv: "Продвинутый",
   cafeD: "Лейла открывает маленькое кафе у Площади фонтанов. Заказывай, болтай и строй планы на простом английском.",
   businessD: "Команда из Баку создаёт стартап и презентует его инвесторам в Дубае. Письма, встречи, цифры и сделка.",
+  interviewD: "Айсель хочет первую офисную работу. Прочитай вакансию, напиши письмо, ответь на звонок и пройди собеседование — шаг за шагом к предложению.", clientD: "Владелец отеля в ярости: полотенца опоздали и не того цвета. Извинись, позвони, найди решение и преврати злого клиента в лояльного.", callD: "Видеозвонок с партнёрами в Гамбурге и Осаке. Забастовка в порту, плохие новости, разные культуры — договорись, подведи итоги и отправь письмо.",
   contractD: "За пять часов до подписания пропадает контракт. Прочитай письма, проведи встречу, сделай звонки и спаси сделку — деловой английский как детектив.",
   debateD: "Международный турнир по дебатам в Баку. Спорь, уступай, опровергай и выиграй финал.",
   ieltsD: "Семь комнат устной части IELTS: Part 1, карточка, Part 3 и полный пробный экзамен с разбором.",
   heistD: "Из Дворца Ширваншахов исчезает средневековая рукопись. Иди по её следу из Баку в Венецию и Лондон.",
-  nx1: "Сначала узнай, где ты сейчас", nx2: "Теперь познакомься с преподавателем и методом", nx3: "Дальше истории. Выбери свою", nx4: "Каждую неделю что-то новое", nx5: "Тренируйся как на настоящем экзамене", nx6: "И самое интересное: учись с Минарой",
+  nx1: "Сначала узнай, где ты сейчас", nx2: "Теперь познакомься с преподавателем и методом", nx3: "Дальше истории. Выбери свою", nx4: "Каждую неделю что-то новое", nx5: "Дальше: английский для работы", nx6: "И самое интересное: учись с Минарой",
   leadK: "Уроки с Минарой", leadH: "Хочешь говорить по-английски как носитель?", leadP: "Свободный, уверенный английский, Business English, IELTS или английский для ребёнка. Оставь свои данные, и Минара свяжется с тобой.",
   leadB1: "Говори уверенно и естественно: General English, Business English, IELTS и другое", leadB3: "Истории, детективы и дебаты на каждом уроке (speaking, reading, writing, listening, vocabulary и другое)", leadB4: "Для взрослых и детей, онлайн",
   leadInd: "Индивидуальные уроки", leadIndP: "Один на один, твои цели, твой темп.", leadGrp: "Групповые уроки", leadGrpP: "Небольшие онлайн-группы, много разговорной практики.",
@@ -6321,6 +6505,20 @@ Object.assign(WART, {
     ${[[260, "#f6efe3"], [520, "#c96a3a"], [800, "#f6efe3"]].map(([x, c]) => `<g transform="translate(${x} 330)"><path d="M-28 0H28L22 50H-22Z" fill="${c}"/><path d="M28 12Q50 14 46 32Q42 44 24 40" stroke="${c}" stroke-width="7" fill="none"/>${[0, 1, 2].map(s => `<path d="M${-10 + s * 10} -10Q${-18 + s * 10} -30 ${-8 + s * 10} -46" stroke="#f6efe3" stroke-width="3" fill="none" opacity=".5"/>`).join("")}</g>`).join("")}
     <g transform="translate(1000 300)"><path d="M-30 80L-24 -20Q0 -36 24 -20L30 80Z" fill="#b4542f"/><path d="M-24 -20Q0 -6 24 -20" fill="none" stroke="#7a2e15" stroke-width="4"/><ellipse cy="-24" rx="26" ry="8" fill="#7a2e15"/></g></svg>`,
   contract: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><defs><linearGradient id="ctg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d2238"/><stop offset="1" stop-color="#14304f"/></linearGradient></defs><rect width="1200" height="600" fill="url(#ctg)"/>${Array.from({ length: 9 }, (_, k) => `<rect x="${60 + k * 125}" y="${250 - (k * 53) % 140}" width="90" height="${350 + (k * 53) % 140}" fill="#0a1a2b"/>${Array.from({ length: 6 }, (_, r) => `<rect x="${72 + k * 125 + (r % 2) * 40}" y="${280 - (k * 53) % 140 + r * 45}" width="22" height="14" fill="${(k + r) % 3 ? "#1d3a5c" : "#f2c14e"}" opacity=".8"/>`).join("")}`).join("")}<g transform="translate(600 330) rotate(-6)"><rect x="-150" y="-110" width="300" height="220" rx="10" fill="#f4efe4"/><path d="M-115 -70 h230 M-115 -40 h200 M-115 -10 h230 M-115 20 h160" stroke="#9aa7b8" stroke-width="8" stroke-linecap="round"/><g transform="translate(70 60) rotate(-14)"><rect x="-80" y="-26" width="160" height="52" rx="8" fill="none" stroke="#e0245e" stroke-width="7"/><text x="0" y="12" text-anchor="middle" font-family="Special Elite, monospace" font-size="30" fill="#e0245e">MISSING</text></g></g><circle cx="980" cy="110" r="46" fill="#f2c14e" opacity=".9"/></svg>`,
+  interview: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><rect width="1200" height="600" fill="#1b2a3a"/><rect y="0" width="1200" height="380" fill="#24384d"/>
+    ${[160, 420, 680, 940].map(x => `<rect x="${x}" y="60" width="200" height="240" rx="6" fill="#2f4a66"/><rect x="${x + 14}" y="74" width="172" height="212" fill="#9fc3e6" opacity=".35"/>`).join("")}
+    <rect y="380" width="1200" height="220" fill="#3a2b22"/><rect x="250" y="360" width="700" height="34" rx="6" fill="#6b4a33"/>
+    <g transform="translate(420 300)"><circle r="44" fill="#c98e62"/><path d="M-44 -6Q-40 -56 0 -56Q44 -56 44 -10Q30 -40 0 -36Q-24 -36 -44 -6Z" fill="#2a1d18"/><path d="M-70 120Q-70 50 0 50Q70 50 70 120Z" fill="#2b6cd4"/></g>
+    <g transform="translate(780 300)"><circle r="44" fill="#eab98f"/><path d="M-48 10Q-52 -60 0 -58Q52 -60 48 10Q46 -30 0 -34Q-46 -30 -48 10Z" fill="#4a2e1f"/><path d="M-70 120Q-70 50 0 50Q70 50 70 120Z" fill="#e0565b"/></g>
+    <g transform="translate(600 330)"><rect x="-60" y="-40" width="120" height="80" rx="4" fill="#f4f1ea"/>${[0, 1, 2, 3].map(r => `<rect x="-44" y="${-26 + r * 16}" width="${88 - r * 14}" height="7" rx="3" fill="#9aa7b8"/>`).join("")}<text x="0" y="-52" text-anchor="middle" font-family="Bricolage Grotesque,Arial" font-weight="800" font-size="20" fill="#f2c14e">CV</text></g></svg>`,
+  client: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><rect width="1200" height="600" fill="#2a1418"/><rect y="420" width="1200" height="180" fill="#3a1d22"/>
+    ${[[0, "#f4f1ea"], [1, "#f4f1ea"], [2, "#5b8cff"], [3, "#f4f1ea"], [4, "#5b8cff"], [5, "#5b8cff"]].map(([k, c]) => `<rect x="${170 + k * 150}" y="${300 - (k % 2) * 30}" width="130" height="${120 + (k % 2) * 30}" rx="14" fill="${c}"/><rect x="${170 + k * 150}" y="${330 - (k % 2) * 30}" width="130" height="10" fill="rgba(0,0,0,.12)"/>`).join("")}
+    <g transform="translate(600 150)"><circle r="96" fill="#ffcc4d"/><path d="M-50 -30L-14 -14M50 -30L14 -14" stroke="#5a2a0a" stroke-width="10" stroke-linecap="round"/><circle cx="-30" cy="0" r="10" fill="#5a2a0a"/><circle cx="30" cy="0" r="10" fill="#5a2a0a"/><path d="M-40 52Q0 22 40 52" stroke="#5a2a0a" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+    <g transform="translate(940 120) rotate(10)"><rect x="-70" y="-40" width="140" height="80" rx="10" fill="#e0565b"/><text y="12" text-anchor="middle" font-family="Special Elite,monospace" font-size="30" fill="#fff">#4471</text></g></svg>`,
+  call: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><rect width="1200" height="600" fill="#0e1626"/>
+    <rect x="140" y="50" width="920" height="470" rx="22" fill="#1a2438" stroke="#33415e" stroke-width="6"/>
+    ${[[160, 70, "#2b6cd4", "Nigar · Baku"], [610, 70, "#e0a24f", "Hans · Hamburg"], [160, 300, "#c77dff", "Yuki · Osaka"], [610, 300, "#3fbf6a", "You"]].map(([x, y, c, t]) => `<g transform="translate(${x} ${y})"><rect width="430" height="210" rx="14" fill="#232f48"/><circle cx="215" cy="92" r="46" fill="${c}"/><path d="M135 210Q135 150 215 150Q295 150 295 210Z" fill="${c}" opacity=".85"/><rect x="12" y="172" width="${t.length * 11 + 20}" height="28" rx="8" fill="rgba(0,0,0,.45)"/><text x="22" y="192" font-family="Bricolage Grotesque,Arial" font-weight="700" font-size="17" fill="#fff">${t}</text></g>`).join("")}
+    <g transform="translate(600 548)">${[["#e0565b", -90], ["#33415e", -30], ["#33415e", 30], ["#33415e", 90]].map(([c, x]) => `<circle cx="${x}" r="22" fill="${c}"/>`).join("")}</g></svg>`,
   business: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><defs><linearGradient id="bzS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1a2e"/><stop offset="1" stop-color="#25466b"/></linearGradient></defs>
     <rect width="1200" height="600" fill="url(#bzS)"/>${Array.from({ length: 22 }, (_, k) => { const h = 120 + ((k * 71) % 260), x = k * 56; return `<rect x="${x}" y="${600 - h}" width="50" height="${h}" fill="#0e2238"/>${Array.from({ length: Math.floor(h / 30) }, (_, r) => `<rect x="${x + 8 + (r % 2) * 18}" y="${612 - h + r * 30}" width="10" height="14" fill="#ffd27a" opacity="${(k + r) % 3 ? .15 : .7}"/>`).join("")}`; }).join("")}
     <g transform="translate(600 300)"><rect x="-300" y="-170" width="600" height="300" rx="16" fill="#f4f1ea" opacity=".96"/><path d="M-250 80L-150 30L-60 50L40 -40L140 -10L250 -110" stroke="#2b6cd4" stroke-width="10" fill="none" stroke-linecap="round"/>
@@ -6344,9 +6542,9 @@ Object.assign(WART, {
     <g transform="translate(600 160) rotate(-8)"><rect x="-120" y="-80" width="240" height="160" rx="6" fill="#d9c49a"/><rect x="-104" y="-64" width="208" height="128" fill="none" stroke="#8a6a3a" stroke-width="3"/>${[0, 1, 2, 3, 4].map(r => `<path d="M-84 ${-40 + r * 20}H84" stroke="#6b5230" stroke-width="3" stroke-dasharray="6 4"/>`).join("")}<circle cx="70" cy="40" r="18" fill="#8e1f22"/></g>
     <path d="M1200 0L760 600H1200Z" fill="url(#hsB)" opacity=".5"/></svg>`
 });
-const NEW_WORLDS = { cafe: "qz-cf", business: "qz-bz", contract: "qz-bz", debate: "qz-db", ielts: "qz-ie", heist: "qz-hs" };
+const NEW_WORLDS = { cafe: "qz-cf", business: "qz-bz", contract: "qz-bz", interview: "qz-bz", client: "qz-bz", call: "qz-bz", debate: "qz-db", ielts: "qz-ie", heist: "qz-hs" };
 Object.entries(NEW_WORLDS).forEach(([k, cls]) => { if (STORIES[k]) makeWorld(k, cls); });
-WORLD_ORDER.length = 0; ["kids", "cafe", "tapes", "wild", "travel", "voyage", "mystery", "movie", "business", "contract", "ielts", "debate", "heist"].forEach(k => STORIES[k] && WORLD_ORDER.push(k));
+WORLD_ORDER.length = 0; ["kids", "cafe", "tapes", "wild", "travel", "voyage", "mystery", "movie", "business", "contract", "interview", "client", "call", "ielts", "debate", "heist"].forEach(k => STORIES[k] && WORLD_ORDER.push(k));
 
 /* ---------- lead form (bottom of home) ---------- */
 function leadHTML() {
@@ -6610,7 +6808,7 @@ function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { cons
 
 /* ---------- course choice ---------- */
 document.addEventListener("click", e => { if (e.target.closest(".ap-flag[data-go='pick']")) { e.stopPropagation(); Router.go(/app-world-/.test(location.hash) ? "app-practice" : "app-pick"); } }, true);
-const COURSE_EMOJI = { milingo: "🌱", kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", ielts: "🎙", debate: "⚖️", heist: "🗝" };
+const COURSE_EMOJI = { milingo: "🌱", kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", contract: "📁", interview: "🎤", client: "😠", call: "💻", ielts: "🎙", debate: "⚖️", heist: "🗝" };
 const courseEmoji = k => COURSE_EMOJI[k] || "📘";
 if (!lsGet("mv-course2", null)) { lsSet("mv-course", "milingo"); lsSet("mv-course2", 1); }
 const curCourse = () => { const c = lsGet("mv-course", null); if (!c || c === "milingo") return "milingo"; if (STORIES[c]) return c; const l = myLevel(); return WORLD_ORDER.find(k => fitsLevel(STORIES[k].level, l)) || "tapes"; };

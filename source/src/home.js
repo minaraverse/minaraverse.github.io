@@ -21,7 +21,7 @@ VIEWS.home = root => {
   <div class="h-wrap">
   <header class="h-top">
     <a class="h-logo" href="#">minara<i>verse</i></a>
-    <nav class="h-nav" aria-label="Menu"><a href="#" data-jump="h-level">🎯 ${L("levelK")}</a><a href="#" data-jump="h-about">${L("bioK")}</a><a href="#" data-jump="h-stories">${L("storiesK")}</a><a href="#" data-jump="h-board">🏆 ${L("bdK")}</a><a href="#club">☕ ${L("clubK")}</a><a href="#" data-jump="h-exam">💼 ${L("bizNav")}</a><a href="#" data-jump="h-lead" class="hn-cta">💬 ${L("leadK")}</a></nav>
+    <nav class="h-nav" aria-label="Menu"><a href="#" data-jump="h-level">🎯 ${L("levelK")}</a><a href="#" data-jump="h-about">${L("bioK")}</a><a href="#" data-jump="h-stories">${L("storiesK")}</a><a href="#" data-jump="h-exam">💼 ${L("bizNav")}</a><a href="#" data-jump="h-board">🏆 ${L("bdK")}</a><a href="#club">☕ ${L("clubK")}</a><a href="#" data-jump="h-lead" class="hn-cta">💬 ${L("leadK")}</a></nav>
     ${langPill()}
   </header>
   <section class="h-hero">
@@ -74,15 +74,16 @@ VIEWS.home = root => {
         <span class="h-card-bar"><i style="width:${d / n * 100}%"></i></span>
         <span class="h-card-go">${d === n ? L("complete") + " ✓" : d ? L("cont") + " · " + d + "/" + n : L("start")} →</span>${d === n ? `<span class="h-card-cert" data-cert="${c.id}" role="button" tabindex="0">🏅 ${L("getCert")}</span>` : ""}</span></a>`; }).join("")}</div>
   </section>
+  <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
+  <section class="h-exam" id="h-exam"><div class="h-sh"><div><p class="h-k">💼 ${L("bizK")}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
+    <div class="hx-cases">${["contract", "interview", "client", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
+      return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${k === "contract" ? `<span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span>` : WART[k]()}</span>
+        <span class="hx-t"><small>${courseEmoji(k)} ${S.level} · ${n} ${{ en: "steps", az: "addım", ru: "шагов" }[LANG]}</small><b>${esc(S.title)}</b><span>${L(k + "D")}</span><span class="hx-bar"><i style="width:${d / n * 100}%"></i></span><em>${d === n ? "✓ " + L("complete") : d ? L("cont") + " · " + d + "/" + n : L("start")} →</em></span></a>`; }).join("")}</div>
+    <div class="hx-cards hx-one"><a class="hx-card hx-err" href="#errors"><span class="hx-art" aria-hidden="true"><span class="hx-target"><i></i><i></i><i></i></span><span class="hx-words"><s>a elephant</s><b>an elephant</b></span></span>
+      <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
   ${boardHTML()}
   <p class="h-next" aria-hidden="false"><span>${L("nx4")}</span><i>↓</i></p>
   ${STORIES.club ? (() => { const w = STORIES.club.units[clubIdx()]; return `<section class="h-club"><a class="hc-box" href="#club"><span class="hc-cup" aria-hidden="true">${w.emoji || "☕"}</span><div><p class="h-k">☕ ${L("clubK")} · ${L("clubNew")}</p><span class="hc-fmt">${esc(w.format)}</span><h2 class="h-h2">${esc(w.title)}</h2><p>${L("fm_clubP")}</p><em>${L("clubOpen")} →</em></div></a></section>`; })() : ""}
-  <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
-  <section class="h-exam" id="h-exam"><div class="h-sh"><div><p class="h-k">${L("bizK")}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
-    <div class="hx-cards"><a class="hx-card hx-biz" href="#contract"><span class="hx-art" aria-hidden="true"><span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span></span>
-      <span class="hx-t"><small>Business English · ${STORIES.contract.units.length} ${{ en: "chapters", az: "fəsil", ru: "глав" }[LANG]} · ${STORIES.contract.level}</small><b>${esc(STORIES.contract.title)}</b><span>${L("contractD")}</span><em>${doneCount("contract") ? L("cont") : L("start")} →</em></span></a>
-      <a class="hx-card hx-err" href="#errors"><span class="hx-art" aria-hidden="true"><span class="hx-target"><i></i><i></i><i></i></span><span class="hx-words"><s>a elephant</s><b>an elephant</b></span></span>
-      <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
   <p class="h-next" aria-hidden="false"><span>${L("nx6")}</span><i>↓</i></p>
   ${leadHTML()}
   <footer class="h-foot"><p class="h-k">${L("follow")}</p><a class="h-big" href="${IG}" target="_blank" rel="noopener">${[..."@minaraverse"].map((ch, i) => `<span class="fl" style="--i:${i}">${ch}</span>`).join("")}<span class="h-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></a>

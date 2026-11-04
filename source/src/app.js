@@ -73,7 +73,7 @@ function refreshHud() { document.querySelectorAll(".ap-hud").forEach(h => { cons
 
 /* ---------- course choice ---------- */
 document.addEventListener("click", e => { if (e.target.closest(".ap-flag[data-go='pick']")) { e.stopPropagation(); Router.go(/app-world-/.test(location.hash) ? "app-practice" : "app-pick"); } }, true);
-const COURSE_EMOJI = { milingo: "🌱", kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", ielts: "🎙", debate: "⚖️", heist: "🗝" };
+const COURSE_EMOJI = { milingo: "🌱", kids: "🧸", cafe: "☕", tapes: "📼", wild: "🐘", travel: "✈️", voyage: "🏴‍☠️", mystery: "🔎", movie: "🎬", business: "💼", contract: "📁", interview: "🎤", client: "😠", call: "💻", ielts: "🎙", debate: "⚖️", heist: "🗝" };
 const courseEmoji = k => COURSE_EMOJI[k] || "📘";
 if (!lsGet("mv-course2", null)) { lsSet("mv-course", "milingo"); lsSet("mv-course2", 1); }
 const curCourse = () => { const c = lsGet("mv-course", null); if (!c || c === "milingo") return "milingo"; if (STORIES[c]) return c; const l = myLevel(); return WORLD_ORDER.find(k => fitsLevel(STORIES[k].level, l)) || "tapes"; };

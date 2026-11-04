@@ -158,6 +158,6 @@ VIEWS.club = root => {
   return {};
 };
 
-Object.assign(UI.en, { bizNav: "Business English", bizK: "Business English", bizH: "Talk business — through a mystery", fm_biz: "Business English", fm_bizP: "A mystery at a Baku company: emails, meetings, calls and the deal." });
-Object.assign(UI.az, { bizNav: "Business English", bizK: "Business English", bizH: "Biznes dilində danış — sirr hekayəsi ilə", fm_biz: "Business English", fm_bizP: "Bakı şirkətində sirr: məktublar, iclaslar, zənglər və sövdə." });
-Object.assign(UI.ru, { bizNav: "Business English", bizK: "Деловой английский", bizH: "Говори на языке бизнеса — через детектив", fm_biz: "Деловой английский", fm_bizP: "Загадка в бакинской компании: письма, встречи, звонки и сделка." });
+Object.assign(UI.en, { bizNav: "Business English", bizK: "Business English", bizH: "Talk business — through real work cases", fm_biz: "Business English", fm_bizP: "A mystery at a Baku company: emails, meetings, calls and the deal." });
+Object.assign(UI.az, { bizNav: "Business English", bizK: "Business English", bizH: "Biznes dilində danış — real iş hallarında", fm_biz: "Business English", fm_bizP: "Bakı şirkətində sirr: məktublar, iclaslar, zənglər və sövdə." });
+Object.assign(UI.ru, { bizNav: "Business English", bizK: "Деловой английский", bizH: "Говори на языке бизнеса — в реальных рабочих ситуациях", fm_biz: "Деловой английский", fm_bizP: "Загадка в бакинской компании: письма, встречи, звонки и сделка." });
