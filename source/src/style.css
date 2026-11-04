@@ -2400,3 +2400,10 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 @media (max-width:380px){.av-row{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 .av-tabs{overflow-x:auto;scrollbar-width:none}
 .dr:has(.dr-foot.show) .dr-skip{visibility:hidden}
+/* stars for beating the teacher's target */
+.lg-nm{display:grid;gap:3px;min-width:0}
+.lg-stars{display:flex;gap:3px;line-height:1}
+.lg-stars i{font-style:normal;font-size:12px;color:#FFD15C;text-shadow:0 0 6px rgba(255,201,77,.7);animation:lgstar 2.6s ease-in-out infinite;animation-delay:calc(var(--s,0) * .18s)}
+.lg-stars i:nth-child(2){--s:1}.lg-stars i:nth-child(3){--s:2}.lg-stars i:nth-child(4){--s:3}.lg-stars i:nth-child(5){--s:4}
+@keyframes lgstar{0%,70%,100%{transform:none;opacity:1}80%{transform:scale(1.35) rotate(15deg);opacity:.85}}
+@media (prefers-reduced-motion:reduce){.lg-stars i{animation:none}}

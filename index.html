@@ -2406,6 +2406,13 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 @media (max-width:380px){.av-row{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 .av-tabs{overflow-x:auto;scrollbar-width:none}
 .dr:has(.dr-foot.show) .dr-skip{visibility:hidden}
+/* stars for beating the teacher's target */
+.lg-nm{display:grid;gap:3px;min-width:0}
+.lg-stars{display:flex;gap:3px;line-height:1}
+.lg-stars i{font-style:normal;font-size:12px;color:#FFD15C;text-shadow:0 0 6px rgba(255,201,77,.7);animation:lgstar 2.6s ease-in-out infinite;animation-delay:calc(var(--s,0) * .18s)}
+.lg-stars i:nth-child(2){--s:1}.lg-stars i:nth-child(3){--s:2}.lg-stars i:nth-child(4){--s:3}.lg-stars i:nth-child(5){--s:4}
+@keyframes lgstar{0%,70%,100%{transform:none;opacity:1}80%{transform:scale(1.35) rotate(15deg);opacity:.85}}
+@media (prefers-reduced-motion:reduce){.lg-stars i{animation:none}}
 
 </style>
 <div id="view"></div>
@@ -8842,11 +8849,14 @@ async function lgSync(name) {
   const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 9000);
   try { const r = await fetch(ADMIN_API + "?" + q, { redirect: "follow", signal: ctl.signal }); const d = await r.json(); if (!d.ok) throw new Error(d.err || "x"); lsSet("mv-lg", d); return d; } finally { clearTimeout(tm); }
 }
+/* a neat row of small gold stars under the name of everyone who beat the teacher's weekly target */
+function lgStars(d, p) { const t = d && d.teacher; if (!t || !t.target || (Number(p.xp) || 0) < t.target) return "";
+  return `<span class="lg-stars" role="img" aria-label="${esc(L("tcDone"))}">${"<i>★</i>".repeat(5)}</span>`; }
 function lgListHTML(d) {
   const z = d.zones || { up: 0, down: 0 }, n = d.players.length;
   return `<ol class="lg-list">${d.players.map((p, i) => `${i === z.up && z.up > 0 && i > 0 ? `<li class="lg-zone up">⬆ ${L("lgUp")} ⬆</li>` : ""}${i === n - z.down && z.down > 0 ? `<li class="lg-zone down">⬇ ${L("lgDown")} ⬇</li>` : ""}
     <li class="lg-row ${p.me ? "me" : ""} ${i < z.up ? "pz" : i >= n - z.down ? "dz" : ""}" style="--k:${i}"><span class="lg-rk">${i < 3 ? `<i class="m${i + 1}">${i + 1}</i>` : i + 1}</span><span class="lg-av">${avOf(p.av, p.name)}</span>
-    <b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
+    <span class="lg-nm"><b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b>${lgStars(d, p)}</span><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
 }
 function leagueView(root, shell) {
   if (typeof svOn === "function" && svOn() && !ACCT()) { root.innerHTML = shell("league", `<h1 class="ap-h">${esc(L("lgName")(0))}</h1><div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === 0 ? "on" : "lk"}">${trophySVG(i)}</span>`).join("")}</div><div class="ap-card lg-join"><b>${L("lgJoin")}</b><p class="ap-p">${L("svLgReg")}</p><button class="ap-cta" data-sreg>${L("svReg")}</button></div>`); root.onclick = e => { if (e.target.closest("[data-sreg]")) regScreen(root, "new"); }; return; }

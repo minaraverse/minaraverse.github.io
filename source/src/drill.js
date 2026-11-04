@@ -630,11 +630,14 @@ async function lgSync(name) {
   const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 9000);
   try { const r = await fetch(ADMIN_API + "?" + q, { redirect: "follow", signal: ctl.signal }); const d = await r.json(); if (!d.ok) throw new Error(d.err || "x"); lsSet("mv-lg", d); return d; } finally { clearTimeout(tm); }
 }
+/* a neat row of small gold stars under the name of everyone who beat the teacher's weekly target */
+function lgStars(d, p) { const t = d && d.teacher; if (!t || !t.target || (Number(p.xp) || 0) < t.target) return "";
+  return `<span class="lg-stars" role="img" aria-label="${esc(L("tcDone"))}">${"<i>★</i>".repeat(5)}</span>`; }
 function lgListHTML(d) {
   const z = d.zones || { up: 0, down: 0 }, n = d.players.length;
   return `<ol class="lg-list">${d.players.map((p, i) => `${i === z.up && z.up > 0 && i > 0 ? `<li class="lg-zone up">⬆ ${L("lgUp")} ⬆</li>` : ""}${i === n - z.down && z.down > 0 ? `<li class="lg-zone down">⬇ ${L("lgDown")} ⬇</li>` : ""}
     <li class="lg-row ${p.me ? "me" : ""} ${i < z.up ? "pz" : i >= n - z.down ? "dz" : ""}" style="--k:${i}"><span class="lg-rk">${i < 3 ? `<i class="m${i + 1}">${i + 1}</i>` : i + 1}</span><span class="lg-av">${avOf(p.av, p.name)}</span>
-    <b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
+    <span class="lg-nm"><b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b>${lgStars(d, p)}</span><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
 }
 function leagueView(root, shell) {
   if (typeof svOn === "function" && svOn() && !ACCT()) { root.innerHTML = shell("league", `<h1 class="ap-h">${esc(L("lgName")(0))}</h1><div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === 0 ? "on" : "lk"}">${trophySVG(i)}</span>`).join("")}</div><div class="ap-card lg-join"><b>${L("lgJoin")}</b><p class="ap-p">${L("svLgReg")}</p><button class="ap-cta" data-sreg>${L("svReg")}</button></div>`); root.onclick = e => { if (e.target.closest("[data-sreg]")) regScreen(root, "new"); }; return; }
