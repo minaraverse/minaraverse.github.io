@@ -633,11 +633,14 @@ async function lgSync(name) {
 /* a neat row of small gold stars under the name of everyone who beat the teacher's weekly target */
 function lgStars(d, p) { const t = d && d.teacher; if (!t || !(p.star === undefined ? t.target && (Number(p.xp) || 0) >= t.target : p.star)) return "";
   return `<span class="lg-stars" role="img" aria-label="${esc(L("tcDone"))}">${"<i>★</i>".repeat(5)}</span>`; }
+/* under each name: the language they learn, their level and the unit they are on */
+function lgCourse(p) { const cu = p.cu == null ? -1 : +p.cu; if (cu < 0) return ""; const U = UNITS[Math.min(cu, UNITS.length - 1)];
+  return `<small class="lg-course">🇬🇧 <em>${SECTIONS[U.sec].lv}</em> · ${L("dUnit")} ${Math.min(cu, UNITS.length - 1) + 1}</small>`; }
 function lgListHTML(d) {
   const z = d.zones || { up: 0, down: 0 }, n = d.players.length;
   return `<ol class="lg-list">${d.players.map((p, i) => `${i === z.up && z.up > 0 && i > 0 ? `<li class="lg-zone up">⬆ ${L("lgUp")} ⬆</li>` : ""}${i === n - z.down && z.down > 0 ? `<li class="lg-zone down">⬇ ${L("lgDown")} ⬇</li>` : ""}
     <li class="lg-row ${p.me ? "me" : ""} ${i < z.up ? "pz" : i >= n - z.down ? "dz" : ""}" style="--k:${i}"><span class="lg-rk">${i < 3 ? `<i class="m${i + 1}">${i + 1}</i>` : i + 1}</span><span class="lg-av">${avOf(p.av, p.name)}</span>
-    <span class="lg-nm"><b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b>${lgStars(d, p)}</span><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
+    <span class="lg-nm"><b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b>${lgCourse(p)}${lgStars(d, p)}</span><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
 }
 function leagueView(root, shell) {
   if (typeof svOn === "function" && svOn() && !ACCT()) { root.innerHTML = shell("league", `<h1 class="ap-h">${esc(L("lgName")(0))}</h1><div class="lg-tiers">${LG_C.map((_, i) => `<span class="${i === 0 ? "on" : "lk"}">${trophySVG(i)}</span>`).join("")}</div><div class="ap-card lg-join"><b>${L("lgJoin")}</b><p class="ap-p">${L("svLgReg")}</p><button class="ap-cta" data-sreg>${L("svReg")}</button></div>`); root.onclick = e => { if (e.target.closest("[data-sreg]")) regScreen(root, "new"); }; return; }
@@ -700,7 +703,19 @@ const kidHTML = U => { const k = KID_AT[U.n]; if (!k) return "";
   return `<button class="dr-pix dr-kid ${U.n % 2 ? "l" : "r"} kid-${k[2]}" data-kid="${U.n}" aria-label="${L("avFam")}"><span class="dr-ch"><img src="${KIDS[k[0]]}" alt="" loading="lazy"><i class="dr-kprop">${k[1]}</i></span></button>`; };
 const racerHTML = U => { const ri = RACER_AT.indexOf(U.n); if (ri < 0) return ""; const R = RACERS[ri];
   return `<button class="dr-pix dr-racer ${U.n % 2 ? "l" : "r"}" data-racer="${ri}" aria-label="${esc(R.n)}"><span class="dr-ch">${personSVG(R)}<i class="dr-flag">🏁</i></span><small class="dr-nm">${esc(R.n)}</small></button>`; };
+/* mural animals painted for Safiverse: one per unit (no repeats); after they run out the people come back */
+const ANIMALS = [["bunny-balloon", "Sky Bunny", "Uçan Dovşan", "Летучий зайка"], ["owl", "Owl", "Bayquş", "Совёнок"], ["wolf", "Fox Cub", "Tülkü balası", "Лисёнок"],
+  ["squirrel", "Squirrel", "Dələ", "Бельчонок"], ["hedgehog", "Hedgehog", "Kirpi", "Ёжик"], ["bunny-swing", "Swing Bunny", "Yellənən Dovşan", "Зайка на качелях"],
+  ["raccoon", "Raccoon", "Yenot", "Енотик"], ["giraffe", "Giraffe", "Zürafə", "Жирафик"], ["squirrel-moon", "Moon Squirrel", "Ay Dələsi", "Лунная белочка"],
+  ["fawn", "Fawn", "Maral balası", "Оленёнок"], ["bear-bunny", "Bear & Bunny", "Ayı və Dovşan", "Мишка и зайка"]];
+const animalOf = n => { const a = ANIMALS[n]; return a ? { k: a[0], n: LANG === "az" ? a[2] : LANG === "ru" ? a[3] : a[1] } : null; };
+const animalImg = A => `<img class="dr-animal" src="img/av-${A.k}.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`;
 function sideHTML(U, open) {
+  const A = animalOf(U.n);
+  if (A) { const st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
+    return `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-animal an-${A.k}" data-side="${U.n}" aria-label="${esc(A.n)} ★ ${st.filter(Boolean).length}/3">
+    <span class="dr-ch">${animalImg(A)}</span><small class="dr-nm">${esc(A.n)}</small>
+    <span class="dr-st3">${st.map((s, i) => `<i class="${s ? "on" : ""} ${s && i >= seen ? "new" : ""}" style="--k:${i}">★</i>`).join("")}</span></button>`; }
   const P = PEOPLE[U.n % PEOPLE.length], pose = P.pose, st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
   return racerHTML(U) + kidHTML(U) + `<button class="dr-pix ${U.n % 2 ? "l" : "r"} pose-${pose}" data-side="${U.n}" aria-label="★ ${st.filter(Boolean).length}/3">
     <span class="dr-ch">${personSVG(P)}${pose === "sleep" ? `<i class="dr-z">z</i><i class="dr-z z2">z</i>` : ""}</span><small class="dr-nm">${esc(P.n)}</small>
@@ -710,9 +725,9 @@ Object.assign(UI.en, { smT: "Side missions", smP: "Complete all three to fill th
 Object.assign(UI.az, { smT: "Əlavə missiyalar", smP: "Üç ulduzu doldurmaq üçün hamısını tamamla.", sm1: "Bir hissəni səhvsiz bitir", sm2: "5 ardıcıl düzgün cavab ver", sm3: "Bu bölmənin bütün səviyyələrini bitir" });
 Object.assign(UI.ru, { smT: "Доп. задания", smP: "Выполни все три, чтобы зажечь звёзды.", sm1: "Пройди одну часть без ошибок", sm2: "Дай 5 правильных ответов подряд", sm3: "Пройди все уровни этого раздела" });
 function sideSheet(U) {
-  const st = unitStars(U.n), P = PEOPLE[U.n % PEOPLE.length];
+  const st = unitStars(U.n), P = PEOPLE[U.n % PEOPLE.length], A = animalOf(U.n);
   const ov = document.createElement("div"); ov.className = "dr-ov"; ov.style.setProperty("--uc", U.c);
-  ov.innerHTML = `<div class="dr-card sm-card"><div class="sm-ch">${personSVG(P)}</div><h2>${esc(P.n)} · ${L("smT")}</h2><p>${U.e} ${esc(T3(U.t))} · ${L("smP")}</p>
+  ov.innerHTML = `<div class="dr-card sm-card"><div class="sm-ch">${A ? animalImg(A) : personSVG(P)}</div><h2>${esc(A ? A.n : P.n)} · ${L("smT")}</h2><p>${U.e} ${esc(T3(U.t))} · ${L("smP")}</p>
     <ul class="sm-list">${["sm1", "sm2", "sm3"].map((m, i) => `<li class="${st[i] ? "on" : ""}"><span>★</span><b>${L(m)}</b><em>${st[i] ? "✓" : ""}</em></li>`).join("")}</ul>
     <a class="ap-cta" href="#drill-${U.n}-${Math.min(uDone(U.n), LPU - 1)}">${L("dCont")}</a></div>`;
   if (!unitOpen(U.n)) ov.querySelector(".ap-cta").remove();

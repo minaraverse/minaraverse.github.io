@@ -151,6 +151,12 @@ function teacherCheck_(v, okIds, T, cur) {
   P.setProperty("TEACHER_BEAT", JSON.stringify(B));
   return { target: target, ids: B.ids };
 }
+/* where each student is in the course: index of the unit they are on (from their synced progress) */
+function curUnits_() { const st = students_().getDataRange().getValues(), o = {};
+  for (let i = 1; i < st.length; i++) { if (!st[i][0]) continue; let d = {}; try { d = prog_(st[i])["mv-drill"] || {}; } catch (e) {} let cu = 0;
+    Object.keys(d).forEach(k => { const m = /^u(\d+)$/.exec(k), n = m ? Number(m[1]) : -1, c = Number(d[k]) || 0; if (n >= 0 && c > 0) cu = Math.max(cu, c >= 5 ? n + 1 : n); });
+    if (Number(d.jump) > cu) cu = Number(d.jump); o[uidOf_(st[i][0])] = cu; }
+  return o; }
 function league_(p) {
   const a = authOk_(p); if (!a) return { ok: false, err: auth_(p) ? "pending" : "auth" };
   const id = hash_(a.email).slice(0, 24), sh = lgSheet_(), cur = wk_(); roll_(sh, cur); const okIds = enrolAll_(sh, cur);
@@ -159,8 +165,8 @@ function league_(p) {
   if (row < 0) { sh.appendRow([id, name, av, 0, cur, xp, new Date(), ""]); v = sh.getDataRange().getValues(); row = v.length - 1; }
   else { const r = v[row]; r[1] = name; if (av) r[2] = av; r[5] = Math.max(Number(r[5]) || 0, xp); r[6] = new Date(); sh.getRange(row + 1, 1, 1, 8).setValues([r]); }
   const g = groups_(v).filter(x => x.rows.indexOf(row) > -1)[0], t = g.t;
-  const T = teacher_(), TB = teacherCheck_(v, okIds, T, cur);
-  const players = g.rows.filter(i => (i === row || okIds[v[i][0]]) && !(T && v[i][0] === T.id)).map(i => ({ name: String(v[i][1]), av: String(v[i][2]), xp: Number(v[i][5]) || 0, me: i === row, star: TB.ids.indexOf(v[i][0]) > -1 })).sort((a, b) => b.xp - a.xp);
+  const T = teacher_(), TB = teacherCheck_(v, okIds, T, cur), CU = curUnits_();
+  const players = g.rows.filter(i => (i === row || okIds[v[i][0]]) && !(T && v[i][0] === T.id)).map(i => ({ name: String(v[i][1]), av: String(v[i][2]), xp: Number(v[i][5]) || 0, me: i === row, star: TB.ids.indexOf(v[i][0]) > -1, cu: CU[v[i][0]] == null ? -1 : CU[v[i][0]] })).sort((a, b) => b.xp - a.xp);
   let prev = null; try { prev = v[row][7] ? JSON.parse(v[row][7]) : null; } catch (e) {}
   return { ok: true, tier: t, week: cur, days: 8 - day_(), players: players, zones: zones_(t, players.length), prev: prev, teacher: T ? { name: T.name, av: T.av, target: TB.target, me: T.id === id, done: TB.ids.indexOf(id) > -1, beat: TB.ids.length } : null };
 }

@@ -2412,3 +2412,14 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .ap-tabs a span svg.tab,.ap-tabs a span .tab{width:46px;height:46px;display:block;margin:-10px auto -8px}
 .ap-tabs a span:has(svg.tab){filter:none;line-height:0}
 .ap-tabs a:not(.on) span:has(svg.tab){opacity:.75}
+/* mural animals beside the path */
+.pose-animal .dr-ch{width:112px;height:120px;display:grid;place-items:end center}
+.pose-animal .dr-ch::after{bottom:-2px}
+.dr-animal{max-width:112px;max-height:120px;width:auto;height:auto;display:block;filter:drop-shadow(0 8px 16px rgba(0,0,0,.35));animation:bob 2.6s ease-in-out infinite}
+.an-giraffe .dr-ch{height:150px}.an-giraffe .dr-animal{max-height:150px}
+.an-bunny-swing .dr-animal{transform-origin:50% 0;animation:swing 3s ease-in-out infinite}@keyframes swing{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.an-bunny-balloon .dr-animal{animation:float 3.4s ease-in-out infinite}@keyframes float{50%{transform:translateY(-8px) rotate(2deg)}}
+.an-fawn .dr-animal,.an-squirrel-moon .dr-animal{animation:breathe2 3.6s ease-in-out infinite}@keyframes breathe2{50%{transform:scale(1.03)}}
+.sm-ch .dr-animal{max-width:150px;max-height:150px;margin:0 auto;animation:none}
+.lg-course{display:block;color:var(--mut);font:700 12.5px var(--bf);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lg-course em{font-style:normal;color:var(--acc)}
+@media (prefers-reduced-motion:reduce){.dr-animal{animation:none!important}}
