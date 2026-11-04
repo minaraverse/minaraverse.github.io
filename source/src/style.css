@@ -2240,3 +2240,4 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 .hx-case .hx-t b{font-size:25px}.hx-case .hx-t>span:not(.hx-bar){font-size:14.5px}
 .hx-one{grid-template-columns:1fr}
 @media (max-width:640px){.hx-cases{grid-template-columns:1fr}}
+.dx-hard{display:inline-block;margin:0 8px 6px 0;padding:3px 9px;border-radius:999px;background:#ff9f4322;border:1px solid #ff9f43;color:#ffb36b;font:800 12px var(--bf);letter-spacing:.02em;vertical-align:middle}

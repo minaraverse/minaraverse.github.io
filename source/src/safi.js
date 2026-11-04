@@ -38,6 +38,7 @@ function pushSync(now) {
   SYNC_T = setTimeout(async () => { try {
     const u = UNITS[curUnit()], d = await sPost("sync", { email: a.email, token: a.token, progress: gatherProgress(), xp: XP().total, streak: streak(), lessons: drillLessons(), unit: u ? T3(u.t) : "", name: a.name, av: avStr() });
     if (d && d.err === "auth") { lsSet("mv-acct", null); return; }
+    if (d && "hard" in d && ACCT() && !!ACCT().hard !== !!d.hard) { const x = ACCT(); x.hard = !!d.hard; lsSet("mv-acct", x); }
     if (d && d.status && ACCT() && ACCT().status !== d.status) { const x = ACCT(); x.status = d.status; lsSet("mv-acct", x); if (d.status === "pending") Router.remount(); }
     if (d && d.progress) { applyProgress(d.progress); Router.remount(); } } catch (e) {} }, now ? 0 : 1500);
 }
@@ -145,7 +146,7 @@ function regScreen(root, mode) {
   const errOf = d => L({ wait: "svWait", email: "svEmailBad", taken: "svTaken", user: "svUserBad", pin: "svPinBad", bad: "svLoginBad", locked: "svLocked", expired: "svExp", code: "svBad", blocked: "svBlocked" }[d && d.err] || "svErr");
   const send = async () => { try { const d = await sPost("send", { email: st.email }); if (d.ok) return true; err(errOf(d)); } catch (e) { err(L("svErr")); } return false; };
   const finish = d => {
-    lsSet("mv-acct", { email: d.email || st.email, token: d.token, name: d.student.name, age: d.student.age, user: d.student.user || "", status: d.student.status || "ok" }); lsSet("mv-lgname", d.student.name); NAME = d.student.name; try { localStorage.setItem("mv-name", NAME); } catch (er) {}
+    lsSet("mv-acct", { email: d.email || st.email, token: d.token, name: d.student.name, age: d.student.age, user: d.student.user || "", status: d.student.status || "ok", hard: !!d.student.hard }); lsSet("mv-lgname", d.student.name); NAME = d.student.name; try { localStorage.setItem("mv-name", NAME); } catch (er) {}
     lsSet("mv-guest", null); const sp = d.progress; if (sp && sp["mv-xp"] && sp["mv-xp"].total >= XP().total) applyProgress(sp); else pushSync(true);
     if (!d.student.user) { st.mode = "set"; st.step = 1; st.user = ""; draw(); return; }
     if (d.student.status === "pending") { pendingScreen(root); return; }
@@ -199,7 +200,7 @@ function pendingScreen(root) {
     <div class="sv-btns"><button class="ap-cta" data-chk>${L("svPendCheck")}</button><button class="dr-link" data-out>${L("svOut")}</button></div><p class="sv-err" role="status"></p><div class="sv-lang">${langPill()}</div></main></div>`;
   const check = async quiet => { const b = root.querySelector("[data-chk]"); if (b) { b.disabled = true; b.textContent = "…"; }
     let d = {}; try { d = await sPost("st", { email: a.email, token: a.token }); } catch (e) {}
-    if (d.ok && d.status === "ok") { const x = ACCT(); x.status = "ok"; lsSet("mv-acct", x); sfx("win"); toast("✅ " + L("svSaved"), "gold"); Router.go("app-learn"); Router.remount(); return; }
+    if (d.ok && d.status === "ok") { const x = ACCT(); x.status = "ok"; x.hard = !!d.hard; lsSet("mv-acct", x); sfx("win"); toast("✅ " + L("svSaved"), "gold"); Router.go("app-learn"); Router.remount(); return; }
     if (d.err === "blocked" || d.err === "auth") { lsSet("mv-acct", null); if (d.err === "blocked") toast(L("svBlocked")); Router.remount(); return; }
     if (b) { b.disabled = false; b.textContent = L("svPendCheck"); } if (!quiet) { const e = root.querySelector(".sv-err"); if (e) e.textContent = L("svPendStill"); } };
   root.onclick = e => { if (e.target.closest("[data-chk]")) check(false); else if (e.target.closest("[data-out]")) { lsSet("mv-acct", null); Router.remount(); } };
@@ -222,7 +223,7 @@ VIEWS.sadmin = root => {
     e2.onsubmit = async e => { e.preventDefault(); const d = await sPost("ad_set", { otp: e2.otp.value, key: e2.nk.value }).catch(() => ({})); if (d.ok) { try { sessionStorage.setItem("sv-key", e2.nk.value); } catch (x) {} load(); } else er("✗ " + (d.err || "error")); }; };
   const AT = { pending: ["⏳", { en: "Waiting", az: "Gözləyənlər", ru: "Ожидают" }], ok: ["✅", { en: "Approved", az: "Təsdiqlənmiş", ru: "Подтверждены" }], blocked: ["🚫", { en: "Blocked", az: "Bloklanmış", ru: "Заблокированы" }] };
   const AB = { ok: { en: "Approve", az: "Təsdiq et", ru: "Подтвердить" }, reject: { en: "Reject", az: "Rədd et", ru: "Отклонить" }, blocked: { en: "Block", az: "Blokla", ru: "Заблокировать" },
-    unblock: { en: "Unblock", az: "Blokdan çıxar", ru: "Разблокировать" }, sure: { en: "Sure? Tap again", az: "Əminsən? Yenə bas", ru: "Точно? Нажми ещё" }, none: { en: "Nobody here", az: "Burada heç kim yoxdur", ru: "Здесь никого нет" } };
+    unblock: { en: "Unblock", az: "Blokdan çıxar", ru: "Разблокировать" }, sure: { en: "Sure? Tap again", az: "Əminsən? Yenə bas", ru: "Точно? Нажми ещё" }, hard: { en: "Hard mode", az: "Çətin rejim", ru: "Сложный режим" }, on: { en: "On", az: "Açıq", ru: "Вкл" }, off: { en: "Off", az: "Bağlı", ru: "Выкл" }, none: { en: "Nobody here", az: "Burada heç kim yoxdur", ru: "Здесь никого нет" } };
   const T = o => o[LANG] || o.en; let tab = null;
   const load = async () => { let d = {}; try { d = await sPost("ad_rows", { key: key() }); } catch (e) {} if (!d.ok) return login();
     const all = (d.rows || []), dt = s => s ? new Date(s).toLocaleDateString("az-AZ") : "—", cnt = k => all.filter(r => (r.status || "ok") === k).length;
@@ -231,7 +232,7 @@ VIEWS.sadmin = root => {
     let vt = {}; try { vt = await sPost("votes", {}); } catch (e) {}
     const vbox = vt.ok && typeof VL !== "undefined" ? `<div class="sv-adv"><b>🗳️ ${VL.map(([k, f]) => `${f} ${(vt.counts || {})[k] || 0}`).join(" · ")}</b><form data-goal><label>🎯 100% =<input name="g" inputmode="numeric" value="${vt.goal}"></label><button class="sv-ghost"><b>✓</b></button></form></div>` : "";
     const acts = r => tab === "pending" ? `<button class="fr-b go" data-st="ok" data-e="${esc(r.email)}">✅ ${T(AB.ok)}</button><button class="fr-b" data-st="reject" data-e="${esc(r.email)}">❌ ${T(AB.reject)}</button><button class="fr-b" data-st="blocked" data-e="${esc(r.email)}">🚫</button>`
-      : tab === "ok" ? `<button class="fr-b" data-st="blocked" data-e="${esc(r.email)}">🚫 ${T(AB.blocked)}</button>` : `<button class="fr-b go" data-st="ok" data-e="${esc(r.email)}">↩️ ${T(AB.unblock)}</button>`;
+      : tab === "ok" ? `<button class="fr-b ${r.hard ? "go" : ""}" data-hard="${r.hard ? 0 : 1}" data-e="${esc(r.email)}" aria-pressed="${!!r.hard}">💪 ${T(AB.hard)}: ${r.hard ? T(AB.on) : T(AB.off)}</button><button class="fr-b" data-st="blocked" data-e="${esc(r.email)}">🚫 ${T(AB.blocked)}</button>` : `<button class="fr-b go" data-st="ok" data-e="${esc(r.email)}">↩️ ${T(AB.unblock)}</button>`;
     root.innerHTML = shell(`${vbox}<h1 class="ap-h">👥 ${all.length}</h1>
       <div class="ad-tabs" role="tablist">${Object.keys(AT).map(k => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? "on" : ""}" data-tab="${k}"><span>${AT[k][0]} <em>${cnt(k)}</em></span><small>${T(AT[k][1])}</small></button>`).join("")}</div>
       <input class="lg-in sv-q" placeholder="🔍"><div class="sv-tbl">${rows.length ? rows.map(r => `<div class="sv-row ${tab === "pending" ? "pend" : ""}" data-q="${esc((r.name + " " + r.email + " " + (r.user || "") + " " + (r.group || "")).toLowerCase())}">
@@ -240,6 +241,7 @@ VIEWS.sadmin = root => {
     const gf = root.querySelector("[data-goal]"); if (gf) gf.onsubmit = async e => { e.preventDefault(); const d = await sPost("ad_goal", { key: key(), goal: gf.g.value }).catch(() => ({})); toast(d.ok ? "✓ " + d.goal : "✗"); };
     root.querySelector(".sv-q").oninput = e => { const q = e.target.value.toLowerCase(); root.querySelectorAll(".sv-row").forEach(x => x.hidden = q && !x.dataset.q.includes(q)); };
     root.onclick = async e => { const tb = e.target.closest("[data-tab]"); if (tb) { tab = tb.dataset.tab; sfx("tap"); return load(); }
+      const hb = e.target.closest("[data-hard]"); if (hb && !hb.disabled) { hb.disabled = true; hb.textContent = "…"; const r = await sPost("ad_hard", { key: key(), email: hb.dataset.e, on: hb.dataset.hard === "1" }).catch(() => ({})); toast(r.ok ? "✓ 💪 " + (r.hard ? T(AB.on) : T(AB.off)) : "✗"); return load(); }
       const b = e.target.closest("[data-st]"); if (!b || b.disabled) return;
       if (b.dataset.st !== "ok" && !b.dataset.sure) { b.dataset.sure = 1; b.dataset.t = b.textContent; b.textContent = T(AB.sure); b.classList.add("warn"); setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = b.dataset.t; b.classList.remove("warn"); } }, 3000); return; }
       b.disabled = true; b.textContent = "…"; const r = await sPost("ad_st", { key: key(), email: b.dataset.e, st: b.dataset.st }).catch(() => ({}));

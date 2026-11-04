@@ -1,5 +1,5 @@
 /* ===== MILINGO COURSE ENGINE: path, Duolingo-style exercises, hearts, combo, sounds ===== */
-Object.assign(UI.en, { dImg: "Select the correct picture", dMean: "What does this mean?", dRmean: "How do you say this in English?", dPairs: "Tap the matching pairs",
+Object.assign(UI.en, { dWrite: "Write it in English", dHard: "💪 Hard exercise", dImg: "Select the correct picture", dMean: "What does this mean?", dRmean: "How do you say this in English?", dPairs: "Tap the matching pairs",
   dHear: "What do you hear?", dType: "Type what you hear", dBuild: "Write this in English", dBuildR: "Translate this sentence", dListen: "Tap what you hear",
   dFill: "Fill in the blank", dSmean: "Choose the correct meaning", dCheck: "Check", dCont: "Continue", dRight: ["Great!", "Excellent!", "Nice!", "Amazing!", "Perfect!", "Well done!"],
   dWrongT: "Correct answer:", dTypo: "Watch your spelling:", dPrev: "Previous mistake", dCombo: "in a row!", dNoHearts: "You ran out of hearts",
@@ -10,7 +10,7 @@ Object.assign(UI.en, { dImg: "Select the correct picture", dMean: "What does thi
   dFailed: "Not this time. Practise and try again!", dLessonOf: "Lesson {a} of {b}", dReview: "Unit review", dLocked: "Finish the levels above to unlock this",
   dStartXp: "Start +10 XP", dPracticeAll: "Practice everything", dPracticeAllP: "Mixed exercises from your units · +1 ❤️", dHearts: "Hearts", dFull: "Full",
   dSlow: "Slow", dJumpHere: "Jump here!", dNode: ["New words", "More words", "Listen & build", "Grammar & writing", "Unit review"], dNodeDone: "Completed — practise again", dPracticeXp: "Practise +5 XP", dAfill: "Find the missing word", dSkip: "Can't listen now", dWin: ["Well done!", "Great work!", "You did it!", "Brilliant!"], dWinP: "Every lesson brings you closer to your goal.", dPerfect: "Perfect lesson — no mistakes!", dAccA: "Excellent", dAccB: "Good", dFast: "Speedy", dTypeHere: "Type in English", dCourseName: "English step by step", dStories: "Story courses", dFirst: "Start here" });
-Object.assign(UI.az, { dImg: "Düzgün şəkli seç", dMean: "Bu nə deməkdir?", dRmean: "İngiliscə necə deyilir?", dPairs: "Uyğun cütləri tap",
+Object.assign(UI.az, { dWrite: "İngiliscə yaz", dHard: "💪 Çətin tapşırıq", dImg: "Düzgün şəkli seç", dMean: "Bu nə deməkdir?", dRmean: "İngiliscə necə deyilir?", dPairs: "Uyğun cütləri tap",
   dHear: "Nə eşidirsən?", dType: "Eşitdiyini yaz", dBuild: "İngiliscə yaz", dBuildR: "Cümləni tərcümə et", dListen: "Eşitdiyini yığ",
   dFill: "Boşluğu doldur", dSmean: "Düzgün mənanı seç", dCheck: "Yoxla", dCont: "Davam et", dRight: ["Əla!", "Mükəmməl!", "Çox yaxşı!", "Super!", "Düzdür!", "Afərin!"],
   dWrongT: "Düzgün cavab:", dTypo: "Yazılışa diqqət et:", dPrev: "Əvvəlki səhv", dCombo: "ardıcıl!", dNoHearts: "Ürəklərin bitdi",
@@ -21,7 +21,7 @@ Object.assign(UI.az, { dImg: "Düzgün şəkli seç", dMean: "Bu nə deməkdir?"
   dFailed: "Bu dəfə alınmadı. Məşq et və yenə yoxla!", dLessonOf: "Dərs {a} / {b}", dReview: "Bölmə təkrarı", dLocked: "Açmaq üçün yuxarıdakı səviyyələri bitir",
   dStartXp: "Başla +10 XP", dPracticeAll: "Hamısını məşq et", dPracticeAllP: "Keçdiyin bölmələrdən qarışıq tapşırıqlar · +1 ❤️", dHearts: "Ürəklər", dFull: "Dolu",
   dSlow: "Yavaş", dJumpHere: "Bura keç!", dNode: ["Yeni sözlər", "Daha çox söz", "Dinlə və qur", "Qrammatika və yazı", "Bölmə təkrarı"], dNodeDone: "Tamamlanıb — yenidən məşq et", dPracticeXp: "Məşq et +5 XP", dAfill: "Çatışmayan sözü tap", dSkip: "İndi dinləyə bilmirəm", dWin: ["Əlinə sağlıq!", "Əla iş!", "Bacardın!", "Möhtəşəm!"], dWinP: "Hər dərs səni hədəfinə bir az da yaxınlaşdırır.", dPerfect: "Səhvsiz dərs!", dAccA: "Əla", dAccB: "Yaxşı", dFast: "Sürətli", dTypeHere: "İngiliscə yaz", dCourseName: "Addım-addım ingilis dili", dStories: "Hekayə kursları", dFirst: "Buradan başla" });
-Object.assign(UI.ru, { dImg: "Выбери правильную картинку", dMean: "Что это значит?", dRmean: "Как сказать по-английски?", dPairs: "Найди пары",
+Object.assign(UI.ru, { dWrite: "Напиши по-английски", dHard: "💪 Сложное задание", dImg: "Выбери правильную картинку", dMean: "Что это значит?", dRmean: "Как сказать по-английски?", dPairs: "Найди пары",
   dHear: "Что ты слышишь?", dType: "Напиши, что слышишь", dBuild: "Напиши по-английски", dBuildR: "Переведи предложение", dListen: "Собери то, что слышишь",
   dFill: "Заполни пропуск", dSmean: "Выбери правильный перевод", dCheck: "Проверить", dCont: "Продолжить", dRight: ["Отлично!", "Превосходно!", "Здорово!", "Супер!", "Верно!", "Молодец!"],
   dWrongT: "Правильный ответ:", dTypo: "Обрати внимание на написание:", dPrev: "Прошлая ошибка", dCombo: "подряд!", dNoHearts: "Сердечки закончились",
@@ -105,6 +105,23 @@ function sfx(kind) {
 }
 
 /* ---------- exercise builders ---------- */
+/* Duolingo-like distractors: similar words (shared words, same start, similar length) from this and the previous unit */
+function simW(w, U, n) {
+  const pool = [...U.W, ...((UNITS[U.n - 1] || {}).W || [])].filter(x => x !== w && x.en !== w.en), a = w.en.toLowerCase(), aw = a.split(/\s+/);
+  const sc = x => { const b = x.en.toLowerCase(), bw = b.split(/\s+/); let s = 0; if (bw.some(t => aw.includes(t))) s += 3; if (b[0] === a[0]) s += 2; if (Math.abs(b.length - a.length) <= 2) s += 1.5; if (bw.length === aw.length) s += 1; return s + Math.random() * 1.2; };
+  return pool.map(x => [x, sc(x)]).sort((p, q) => q[1] - p[1]).slice(0, n).map(p => p[0]); }
+/* harder / easier version of an exercise (adaptive difficulty) */
+const HARDER = { img: "mean", mean: "writew", rmean: "writew", hearw: "typew", smean: "build", buildr: "build", build: "listen", afill: "fill" };
+const EASIER = { writew: "rmean", typew: "hearw", listen: "build", fill: "afill", build: "smean" };
+function morph(x, to) {
+  const U = x.U; if (!U || !to) return x; let y = null;
+  if (["mean", "rmean", "hearw"].includes(to) && x.w) y = { k: to, w: x.w, opts: shuffle([x.w, ...simW(x.w, U, 3)]) };
+  else if ((to === "writew" || to === "typew") && x.w) y = { k: to, w: x.w };
+  else if (["build", "listen", "smean"].includes(to) && x.s) { const i = U.S.indexOf(x.s); y = i > -1 ? makeEx(to, U, "s" + i, {}) : null; }
+  else if (to === "fill" && x.f) y = { k: "fill", f: x.f, opts: shuffle([x.f.a, ...x.f.w]) };
+  else if (to === "afill" && x.f) y = { k: "afill", f: x.f, opts: shuffle([x.f.a, x.f.w[0]]) };
+  if (!y) return x; y.U = U; return noListen() ? unListen(y) : y; }
+const hardMode = () => { const a = typeof ACCT === "function" && ACCT(); return !!(a && a.hard); };
 function makeEx(kind, U, ref, ctx) {
   const W = U.W, S = U.S, F = U.F, rnd = a => a[(Math.random() * a.length) | 0];
   const word = r => r === "r" ? rnd(W) : r[0] === "a" ? W[+r.slice(1) % Math.min(6, W.length)] : r[0] === "b" ? W[5 + (+r.slice(1) % Math.max(1, W.length - 5))] || rnd(W) : rnd(W);
@@ -116,10 +133,11 @@ function makeEx(kind, U, ref, ctx) {
     return pickN(pool, n); };
   const tiles = (s, key) => { const ans = toks(s[key]); return { ans, bank: shuffle([...ans, ...distract(s, key, Math.min(4, Math.max(2, 7 - ans.length)))]) }; };
   switch (kind) {
-    case "img": case "mean": case "rmean": case "hearw": { const w = word(ref); return { k: kind, w, opts: shuffle([w, ...pickN(W, kind === "img" || kind === "hearw" ? 3 : 2, [w])]) }; }
+    case "img": case "mean": case "rmean": case "hearw": { const w = word(ref); return { k: kind, w, opts: shuffle([w, ...simW(w, U, 3)]) }; }
+    case "writew": return { k: kind, w: word(ref) };
     case "typew": return { k: kind, w: word(ref) };
     case "pairs": return { k: kind, ws: words(ref) };
-    case "smean": { const s = sent(ref); return { k: kind, s, opts: shuffle([s, ...pickN(S, 2, [s])]) }; }
+    case "smean": { const s = sent(ref); return { k: kind, s, opts: shuffle([s, ...pickN(S, S.length >= 4 ? 3 : 2, [s])]) }; }
     case "build": case "listen": { const s = sent(ref); return { k: kind, s, ...tiles(s, "en") }; }
     case "buildr": { const s = sent(ref); return { k: kind, s, ...tiles(s, NATK()) }; }
     case "fill": { const f = fill(ref); return { k: kind, f, opts: shuffle([f.a, ...f.w]) }; }
@@ -128,17 +146,22 @@ function makeEx(kind, U, ref, ctx) {
 }
 /* each star = a node made of short parts (6 questions each); trophy = one long unit review */
 const NODE_PARTS = [
-  ["img:a0 img:a1 mean:a0 img:a2 mean:a1 rmean:a2", "img:a3 img:a4 mean:a3 hearw:a0 pairs:A rmean:a4", "img:a5 mean:a5 hearw:a2 rmean:a3 typew:a1 pairs:A", "hearw:a4 mean:a2 rmean:a5 typew:a3 img:a1 pairs:A"],
-  ["img:b0 img:b1 mean:b0 rmean:b1 img:b2 mean:b2", "img:b3 mean:b3 hearw:b1 pairs:B rmean:b0 img:b4", "mean:b4 hearw:b2 smean:s0 build:s0 rmean:b3 pairs:B", "typew:b0 smean:s1 build:s1 hearw:b4 mean:r pairs:M"],
-  ["smean:s0 build:s0 listen:s0 fill:f0 hearw:r afill:f1", "smean:s2 build:s2 listen:s1 buildr:s1 pairs:M fill:f1", "listen:s2 build:s3 afill:f0 buildr:s2 smean:s3 build:s1"],
-  ["fill:f1 build:s4 fill:f2 smean:s4 buildr:s3 listen:s4", "fill:f3 build:s5 afill:f2 listen:s5 buildr:s4 pairs:M", "build:s6 fill:f0 smean:s6 listen:s6 buildr:s5 typew:r"],
-  ["build:R listen:R fill:f0 buildr:R afill:f3 build:R fill:f1 typew:r listen:R pairs:M smean:R fill:f2 build:R"]];
+  /* 1 · introduce: pictures only here */
+  ["img:a0 img:a1 mean:a0 img:a2 mean:a1 rmean:a2", "img:a3 img:a4 mean:a3 hearw:a0 pairs:A rmean:a4", "mean:a5 rmean:a1 hearw:a2 pairs:A mean:a4 writew:a0", "hearw:a4 mean:a2 rmean:a5 writew:a3 pairs:A typew:a1"],
+  /* 2 · recognise: 4 similar options, first recall */
+  ["mean:b0 rmean:b1 hearw:b0 mean:b2 smean:s0 rmean:b2", "mean:b3 hearw:b1 rmean:b0 pairs:B smean:s1 writew:b1", "rmean:b4 hearw:b2 smean:s0 build:s0 writew:b3 pairs:B", "writew:b0 smean:s1 build:s1 typew:b4 rmean:r pairs:M"],
+  /* 3 · listen & build (extra words in the tile bank) */
+  ["smean:s0 build:s0 listen:s0 fill:f0 hearw:r afill:f1", "smean:s2 build:s2 listen:s1 buildr:s1 writew:r fill:f1", "listen:s2 build:s3 afill:f0 buildr:s2 typew:r build:s1"],
+  /* 4 · recall from memory: writing, grammar */
+  ["fill:f1 build:s4 writew:r listen:s4 buildr:s3 typew:r", "fill:f3 build:s5 writew:r listen:s5 buildr:s4 fill:f2", "build:s6 writew:r listen:s6 buildr:s5 typew:r fill:f0"],
+  /* trophy · unit review */
+  ["build:R listen:R fill:f0 writew:r buildr:R afill:f3 build:R fill:f1 typew:r listen:R writew:r smean:R fill:f2 build:R"]];
 const partsOf = j => NODE_PARTS[j].length;
 const partDone = (u, j) => uDone(u) > j ? partsOf(j) : uDone(u) === j ? Math.min(partsOf(j) - 1, DP()["p" + u] || 0) : 0;
 const MIXED = "build:R fill:F listen:R mean:r img:r buildr:R pairs:M hearw:r smean:R build:R";
 const JUMPR = "build:R fill:F listen:R smean:R build:R fill:F buildr:R listen:R build:R fill:F";
 function buildQueue(recipe, unitsPick) { const ctx = {};
-  return recipe.split(" ").map(p => { const [k, r] = p.split(":"); const U = unitsPick(); const c = U.ctx || (U.ctx = {}); const x = makeEx(k, U, r, c); if (x) x.U = U; return x; }).filter(Boolean).map(x => noListen() ? unListen(x) : x); }
+  return recipe.split(" ").map(p => { const [k, r] = p.split(":"); const U = unitsPick(); const c = U.ctx || (U.ctx = {}); const x = makeEx(k, U, r, c); if (x) x.U = U; return x; }).filter(Boolean).map(x => noListen() ? unListen(x) : x).map(x => hardMode() && x.k !== "pairs" ? Object.assign(morph(x, HARDER[x.k]), { hard: !!HARDER[x.k] }) : x); }
 const LISTEN_K = ["hearw", "typew", "listen", "afill"];
 const noListen = () => +(sessionStorage.getItem("mv-nolisten") || 0) > Date.now();
 function unListen(x) { if (!LISTEN_K.includes(x.k)) return x;
@@ -151,7 +174,7 @@ const pixMini = () => `<span class="dx-pix">${mascot("")}</span>`;
 const bigSay = (text, slow) => TTS ? `<div class="dx-spk"><button class="dx-sp" data-sp="${esc(text)}" aria-label="Listen">🔊</button>${slow ? `<button class="dx-sp sm" data-sp="${esc(text)}" data-slow="1" aria-label="${L("dSlow")}">🐢</button>` : ""}</div>` : `<p class="dx-big">${esc(text)}</p>`;
 function sayRate(text, rate) { if (!TTS) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = VOICE ? VOICE.lang : "en-GB"; if (VOICE) u.voice = VOICE; u.rate = rate; speechSynthesis.speak(u); }
 function exHTML(x) {
-  const T = k => `<h2 class="dx-t">${x.prev ? `<small class="dx-prev">↺ ${L("dPrev")}</small>` : ""}${L(k)}</h2>`;
+  const T = k => `<h2 class="dx-t">${x.prev ? `<small class="dx-prev">↺ ${L("dPrev")}</small>` : ""}${x.hard ? `<small class="dx-hard">${L("dHard")}</small>` : ""}${L(k)}</h2>`;
   const opts = (arr, lab, cls = "") => `<div class="dx-opts ${cls}">${arr.map((o, i) => `<button class="dx-opt" data-i="${i}" style="--k:${i}"><kbd>${i + 1}</kbd>${lab(o)}</button>`).join("")}</div>`;
   const tileRow = (bank, speak) => `<div class="dx-line" aria-live="polite"></div><div class="dx-bank">${bank.map((t, i) => `<button class="dx-tile" data-ti="${i}" ${speak ? `data-en="${esc(t)}"` : ""} style="--k:${i}">${esc(t)}</button>`).join("")}</div>`;
   switch (x.k) {
@@ -160,6 +183,7 @@ function exHTML(x) {
     case "rmean": return T("dRmean") + `<div class="dx-word"><span>${x.w.e}</span><b>${esc(nat(x.w))}</b></div>` + opts(x.opts, o => esc(o.en));
     case "hearw": return T("dHear") + bigSay(x.w.en, false) + opts(x.opts, o => esc(o.en), "two");
     case "typew": return T("dType") + bigSay(x.w.en, true) + `<input class="dx-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${L("dTypeHere")}">`;
+    case "writew": return T("dWrite") + `<div class="dx-word"><b>${esc(nat(x.w))}</b></div><input class="dx-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${L("dTypeHere")}">`;
     case "pairs": { const L1 = shuffle(x.ws), R1 = shuffle(x.ws);
       return T("dPairs") + `<div class="dx-pairs"><div>${L1.map((w, i) => `<button class="dx-pr" data-side="l" data-id="${x.ws.indexOf(w)}" data-en="${esc(w.en)}" style="--k:${i}">${esc(w.en)}</button>`).join("")}</div>
         <div>${R1.map((w, i) => `<button class="dx-pr" data-side="r" data-id="${x.ws.indexOf(w)}" style="--k:${i + 5}">${esc(nat(w))}</button>`).join("")}</div></div>`; }
@@ -171,7 +195,7 @@ function exHTML(x) {
     case "fill": return T("dFill") + `<div class="dx-fill">${x.f.e ? `<span class="dx-hint">${x.f.e}</span>` : ""}<p>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</p></div>` + opts(x.opts, o => esc(o), "row");
   }
 }
-const answerOf = x => ({ img: () => x.w.en, mean: () => nat(x.w), rmean: () => x.w.en, hearw: () => x.w.en, typew: () => x.w.en, smean: () => nat(x.s),
+const answerOf = x => ({ img: () => x.w.en, mean: () => nat(x.w), rmean: () => x.w.en, hearw: () => x.w.en, typew: () => x.w.en, writew: () => x.w.en, smean: () => nat(x.s),
   build: () => x.s.en, listen: () => x.s.en, buildr: () => nat(x.s), fill: () => x.f.q.replace("___", x.f.a), afill: () => x.f.q.replace("___", x.f.a), pairs: () => "" })[x.k]();
 const lev = (a, b) => { const m = a.length, n = b.length, d = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]); for (let j = 1; j <= n; j++) d[0][j] = j;
   for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[m][n]; };
@@ -210,14 +234,14 @@ VIEWS.drill = root => {
     box.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { b.classList.add("on"); setTimeout(() => b.classList.remove("on"), 600); sayRate(b.dataset.sp, b.dataset.slow ? .55 : .9); });
     if (x.k === "hearw" || x.k === "typew" || x.k === "listen") setTimeout(() => sayRate(x.k === "listen" ? x.s.en : x.w.en, .9), 350);
     if (x.k === "mean" || x.k === "smean") setTimeout(() => say(x.k === "mean" ? x.w.en : x.s.en), 350);
-    if (x.k === "typew") { const inp = box.querySelector(".dx-in"); inp.oninput = () => ready(inp.value.trim().length > 0); setTimeout(() => inp.focus(), 400); }
+    if (x.k === "typew" || x.k === "writew") { const inp = box.querySelector(".dx-in"); inp.oninput = () => ready(inp.value.trim().length > 0); setTimeout(() => inp.focus(), 400); }
     if (x.bank) wireTiles(x);
     if (x.k === "pairs") wirePairs(x);
     judge = () => { switch (x.k) {
       case "img": case "mean": case "rmean": case "hearw": return { ok: x.opts[sel] === x.w };
       case "smean": return { ok: x.opts[sel] === x.s };
       case "fill": case "afill": return { ok: x.opts[sel] === x.f.a };
-      case "typew": { const v = dNorm(box.querySelector(".dx-in").value), a = dNorm(x.w.en); if (v === a) return { ok: true }; return { ok: a.length > 4 && lev(v, a) === 1, typo: true }; }
+      case "typew": case "writew": { const v = dNorm(box.querySelector(".dx-in").value), a = dNorm(x.w.en); if (v === a) return { ok: true }; return { ok: a.length > 4 && lev(v, a) === 1, typo: true }; }
       case "build": case "listen": case "buildr": return { ok: dNorm([...box.querySelectorAll(".dx-line .dx-tile")].map(t => t.textContent).join(" ")) === dNorm(x.ans.join(" ")) };
     } };
   }
@@ -244,6 +268,11 @@ VIEWS.drill = root => {
     const ico = foot.querySelector(".dr-ic"), tb = foot.querySelector("b"), tp = foot.querySelector("p");
     box.querySelectorAll(".dx-opt.sel").forEach(o => o.classList.add(r.ok ? "good" : "bad"));
     const line = box.querySelector(".dx-line"); line && line.classList.add(r.ok ? "good" : "bad");
+    /* adaptive difficulty: 4 right in a row → next one is harder; 2 wrong in a row → next one is easier */
+    st.run = r.ok ? (st.run || 0) + 1 : 0; st.bad = r.ok ? 0 : (st.bad || 0) + 1;
+    if (mode !== "jump" && queue[0] && !queue[0].prev && queue[0].k !== "pairs") {
+      if (st.run >= 4 && HARDER[queue[0].k]) { queue[0] = Object.assign(morph(queue[0], HARDER[queue[0].k]), { hard: true }); st.run = 2; }
+      else if (st.bad >= 2 && !hardMode() && EASIER[queue[0].k]) { queue[0] = morph(queue[0], EASIER[queue[0].k]); st.bad = 0; } }
     if (r.ok) {
       if (LISTEN_K.includes(x.k)) st.lisOk = (st.lisOk || 0) + 1;
       st.ok++; st.solved++; st.combo++; st.maxCombo = Math.max(st.maxCombo, st.combo);

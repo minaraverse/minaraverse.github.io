@@ -20,7 +20,7 @@ function ss_() {
 }
 /* Run once from the editor (▶ setup) to create/check the sheet and grant permissions. */
 function setup() { const s = ss_(); students_(); lgSheet_(); votesSh_(); Logger.log(s.getUrl()); }
-const SH = ["email", "name", "age", "avatar", "created", "last", "xp", "streak", "lessons", "unit", "token", "progress", "parent_ok", "username", "pin", "mail_off", "last_rem", "status", "group"];
+const SH = ["email", "name", "age", "avatar", "created", "last", "xp", "streak", "lessons", "unit", "token", "progress", "parent_ok", "username", "pin", "mail_off", "last_rem", "status", "group", "hard"];
 function students_() { let sh = ss_().getSheetByName("Tələbələr"); if (!sh) { sh = ss_().insertSheet("Tələbələr"); sh.appendRow(SH); sh.setFrozenRows(1); }
   else if (sh.getLastColumn() < SH.length) sh.getRange(1, 1, 1, SH.length).setValues([SH]); return sh; }
 function findUser_(sh, u) { const v = sh.getDataRange().getValues(); for (let i = 1; i < v.length; i++) if (String(v[i][13] || "").toLowerCase() === u) return { row: i + 1, v: v[i] }; return null; }
@@ -53,7 +53,7 @@ function verify_(p) {
   if (f) { sh.getRange(f.row, 6).setValue(new Date()); sh.getRange(f.row, 11).setValue(hash_(token));
     let u = String(f.v[13] || "");
     if (!u && withCred && (!other || other.row === f.row)) { sh.getRange(f.row, 14, 1, 2).setValues([[user, pinHash(user, p.pin)]]); u = user; }
-    return { ok: true, token: token, email: email, student: { name: f.v[1], age: f.v[2], avatar: f.v[3], user: u, status: stOf_(f.v) }, progress: f.v[11] ? JSON.parse(f.v[11]) : null }; }
+    return { ok: true, token: token, email: email, student: { name: f.v[1], age: f.v[2], avatar: f.v[3], user: u, status: stOf_(f.v), hard: !!f.v[19] }, progress: f.v[11] ? JSON.parse(f.v[11]) : null }; }
   const name = clean(p.name, 30); if (!name) return { ok: false, err: "name" };
   if (withCred && other) return { ok: false, err: "taken" };
   const group = clean(p.group, 40);
@@ -80,11 +80,11 @@ function login_(p) {
   if (stOf_(f.v) === "blocked") return { ok: false, err: "blocked" };
   const token = Utilities.getUuid().replace(/-/g, "") + Utilities.getUuid().replace(/-/g, "");
   sh.getRange(f.row, 6).setValue(new Date()); sh.getRange(f.row, 11).setValue(hash_(token));
-  return { ok: true, token: token, email: String(f.v[0]).toLowerCase(), student: { name: f.v[1], age: f.v[2], avatar: f.v[3], user: u, status: stOf_(f.v) }, progress: f.v[11] ? JSON.parse(f.v[11]) : null };
+  return { ok: true, token: token, email: String(f.v[0]).toLowerCase(), student: { name: f.v[1], age: f.v[2], avatar: f.v[3], user: u, status: stOf_(f.v), hard: !!f.v[19] }, progress: f.v[11] ? JSON.parse(f.v[11]) : null };
 }
 /* the app asks "am I approved yet?" */
 function st_(p) { const email = String(p.email || "").trim().toLowerCase(), f = find_(students_(), email);
-  if (f && stOf_(f.v) === "blocked") return { ok: false, err: "blocked" }; const a = auth_(p); if (!a) return { ok: false, err: "auth" }; return { ok: true, status: a.st }; }
+  if (f && stOf_(f.v) === "blocked") return { ok: false, err: "blocked" }; const a = auth_(p); if (!a) return { ok: false, err: "auth" }; return { ok: true, status: a.st, hard: !!a.f.v[19] }; }
 function setcred_(p) {
   const a = auth_(p); if (!a) return { ok: false, err: "auth" };
   const u = normUser(p.user); if (!okUser(u)) return { ok: false, err: "user" }; if (!okPin(p.pin)) return { ok: false, err: "pin" };
@@ -101,7 +101,7 @@ function sync_(p) {
   if (inc && xp >= curXp) a.sh.getRange(r, 4, 1, 9).setValues([[clean(p.av, 30) || a.f.v[3], a.f.v[4], new Date(), xp, Number(p.streak) || 0, Number(p.lessons) || 0, clean(p.unit, 60), a.f.v[10], JSON.stringify(inc).slice(0, 45000)]]);
   else a.sh.getRange(r, 6).setValue(new Date());
   if (p.name) a.sh.getRange(r, 2).setValue(clean(p.name, 30));
-  return { ok: true, progress: xp >= curXp ? null : cur, status: a.st };
+  return { ok: true, progress: xp >= curXp ? null : cur, status: a.st, hard: !!a.f.v[19] };
 }
 
 /* ---------- leagues: 10 cosmic tiers, weekly groups of up to 30 ---------- */
@@ -184,9 +184,11 @@ function admin_(p) {
         body: "Safiverse: hesabın təsdiqləndi / account approved. " + APP_URL }); } catch (e) {}
       return { ok: true }; }
     return { ok: false }; }
+  if (p.a === "ad_hard") { if (!P.getProperty("KEY") || hash_(String(p.key || "")) !== P.getProperty("KEY")) return { ok: false };
+    const sh = students_(), f = find_(sh, String(p.email || "").toLowerCase()); if (!f) return { ok: false, err: "nf" }; sh.getRange(f.row, 20).setValue(p.on ? "yes" : ""); return { ok: true, hard: !!p.on }; }
   if (p.a === "ad_rows") { if (!P.getProperty("KEY") || hash_(String(p.key || "")) !== P.getProperty("KEY")) return { ok: false };
     const v = students_().getDataRange().getValues(); v.shift();
-    return { ok: true, rows: v.filter(r => r[0]).map(r => ({ email: r[0], name: r[1], age: r[2], avatar: r[3], created: r[4] instanceof Date ? r[4].toISOString() : String(r[4]), last: r[5] instanceof Date ? r[5].toISOString() : String(r[5]), xp: r[6], streak: r[7], lessons: r[8], unit: r[9], parent_ok: r[12], user: r[13] || "", status: stOf_(r), group: String(r[18] || "") })) }; }
+    return { ok: true, rows: v.filter(r => r[0]).map(r => ({ email: r[0], name: r[1], age: r[2], avatar: r[3], created: r[4] instanceof Date ? r[4].toISOString() : String(r[4]), last: r[5] instanceof Date ? r[5].toISOString() : String(r[5]), xp: r[6], streak: r[7], lessons: r[8], unit: r[9], parent_ok: r[12], user: r[13] || "", status: stOf_(r), group: String(r[18] || ""), hard: !!r[19] })) }; }
   return { ok: false };
 }
 

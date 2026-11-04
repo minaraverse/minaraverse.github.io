@@ -447,7 +447,7 @@ const Router = {
     if (this.cur && this.cur.unmount) this.cur.unmount();
     document.querySelectorAll(".cert-ov").forEach(o => o.remove()); if (TTS) speechSynthesis.cancel();
     const root = document.getElementById("view");
-    root.className = "view v-" + view; root.innerHTML = "";
+    root.className = "view v-" + view; root.innerHTML = ""; root.onclick = null; /* the previous screen's tap handler must not leak into the next one */
     document.body.dataset.view = view;
     window.scrollTo(0, 0); root.scrollTop = 0;
     this.name = view; this.cur = VIEWS[view](root) || {};
