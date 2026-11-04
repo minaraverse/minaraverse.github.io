@@ -14,7 +14,7 @@ Object.assign(UI.ru, { invT: "Пригласи друзей", invP: "Отпра�
 
 const frAuth = () => { const a = ACCT() || {}; return { email: a.email, token: a.token }; };
 const frCall = (a, extra) => sPost(a, Object.assign(frAuth(), extra || {}), 12000);
-const frCount = () => (lsGet("mv-fr", null) || { incoming: [] }).incoming.length;
+const frCount = () => (lsGet("mv-fr", null) || { incoming: [] }).incoming.length + (typeof soCount === "function" ? soCount() : 0);
 async function frRefresh() { if (!svOn() || !ACCT()) return null; try { const d = await frCall("fr_list"); if (d.ok) { lsSet("mv-fr", d); return d; } if (d.err === "auth") lsSet("mv-acct", null); } catch (e) {} return null; }
 
 /* ---------- invites: personal link safiverse.github.io/#invite=<username>, share sheet, copy, QR ---------- */
@@ -65,7 +65,8 @@ function friendsView(root, shell) {
       <form class="fr-find" novalidate><b>${L("frFind")}</b><small class="fr-hint">${L("frFindP")}</small><div class="fr-in"><input name="q" maxlength="24" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="@username" aria-label="${L("frFindP")}" value="${esc(st.q)}"><button class="ap-cta fr-go">${L("frGo")}</button></div>
         <div class="fr-res" role="status">${st.found === undefined ? "" : st.found === null ? `<p class="ap-p">${L("frNone")}</p>` : row(st.found, stateBtns(st.fstate, st.found.user))}</div><p class="sv-err" role="alert"></p></form>
       ${(d.incoming || []).length ? `<h2 class="ap-h2">${L("frIn")} <em class="fr-n">${d.incoming.length}</em></h2>${d.incoming.map(c => row(c, btn("yes", c.user, L("frAccept"), "go") + btn("no", c.user, L("frDecline")))).join("")}` : ""}
-      <h2 class="ap-h2">${L("frList")}</h2>${(d.friends || []).length ? `<small class="fr-wk">🏆 ${L("frWeek")}</small><ol class="fr-board">${board.map((c, i) => `<li class="${c.me ? "me" : ""}"><span class="fr-rk">${i + 1}</span>${row(c, c.me ? "" : btn("rm", c.user, "✕", "x"))}<b class="fr-x">⚡ ${c.wk}</b></li>`).join("")}</ol>`
+      ${typeof soHTML === "function" ? soHTML(d) : ""}
+      <h2 class="ap-h2">${L("frList")}</h2>${(d.friends || []).length ? `<small class="fr-wk">🏆 ${L("frWeek")}</small><ol class="fr-board">${board.map((c, i) => `<li class="${c.me ? "me" : ""}"><div class="fr-line"><span class="fr-rk">${i + 1}</span>${row(c, c.me ? "" : btn("rm", c.user, "✕", "x"))}<b class="fr-x">⚡ ${c.wk}</b></div>${!c.me && typeof soActs === "function" ? soActs(c) : ""}</li>`).join("")}</ol>`
         : `<p class="ap-p">${L("frEmpty")}</p>`}
       ${(d.outgoing || []).length ? `<h2 class="ap-h2">${L("frOut")}</h2>${d.outgoing.map(c => row(c, btn("del", c.user, L("frCancel")))).join("")}` : ""}`);
     wire(); };
@@ -92,4 +93,5 @@ function friendsView(root, shell) {
   /* inline two-tap confirm (no browser dialogs) */
   const confirmSheetless = (msg, el) => { const b = el.closest("[data-rm]"); if (b.dataset.sure) return true; b.dataset.sure = 1; b.textContent = msg; b.classList.add("warn"); setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = "✕"; b.classList.remove("warn"); } }, 3000); return false; };
   draw(); frRefresh().then(r => { if (r && root.isConnected && /app-friends/.test(location.hash)) { st.data = r; draw(); } });
+  if (typeof soRefresh === "function") soRefresh().then(ch => { if (ch && root.isConnected && /app-friends/.test(location.hash)) draw(); });
 }

@@ -122,9 +122,10 @@ let DAYS = lsGet("mv-days", []);
 function markDay() { const t = dayStr(new Date()); if (!DAYS.includes(t)) { DAYS.push(t); DAYS = DAYS.slice(-400); lsSet("mv-days", DAYS); } }
 function streak() {
   const d = new Date(); if (!DAYS.includes(dayStr(d))) d.setDate(d.getDate() - 1);
-  let n = 0, lastFreeze = -99;
+  let n = 0, lastFreeze = -99; const shield = lsGet("mv-shield", []); /* days a friend protected with a gift */
   for (let k = 0; k < 400; k++) {
     if (DAYS.includes(dayStr(d))) n++;
+    else if (shield.includes(dayStr(d))) { /* gifted shield: the streak survives this day */ }
     else { const p = new Date(d); p.setDate(p.getDate() - 1); if (n > 0 && k - lastFreeze >= 7 && DAYS.includes(dayStr(p))) lastFreeze = k; else break; }
     d.setDate(d.getDate() - 1);
   }

@@ -2160,11 +2160,11 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .fr-tag{font:700 12.5px var(--bf);color:var(--mut);white-space:nowrap}.fr-tag.ok{color:var(--acc)}
 .fr-n{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#ff5a5f;color:#fff;font:800 12px var(--bf);font-style:normal;vertical-align:middle}
 .fr-wk{display:block;color:var(--mut);font:700 13px var(--bf);margin:-4px 0 4px;text-align:left}
-.fr-board{list-style:none;margin:0;padding:0}.fr-board li{display:flex;align-items:center;gap:6px}.fr-board li .fr-row{flex:1;min-width:0}
+.fr-board{list-style:none;margin:0;padding:0}.fr-board li{display:block;margin:0 0 4px}.fr-line{display:flex;align-items:center;gap:6px}.fr-line .fr-row{flex:1;min-width:0}
 .fr-rk{width:22px;flex:none;text-align:center;font:800 15px var(--bf);color:var(--mut)}.fr-board li:first-child .fr-rk{color:#ffc94d}
 .fr-x{flex:none;min-width:52px;text-align:right;font:800 14px var(--bf);color:#ffc94d}.fr-board li.me .fr-row{border-color:var(--acc)}
 .fr-hint{color:var(--mut);font:600 13px var(--bf);margin-top:-4px}
-.fr-find,.fr-me,.fr-board,.fr-row{width:100%;max-width:520px;box-sizing:border-box}.fr-board li{width:100%;max-width:520px}.fr-board li .fr-row{width:auto}
+.fr-find,.fr-me,.fr-board,.fr-row{width:100%;max-width:520px;box-sizing:border-box}.fr-board li{width:100%;max-width:520px}.fr-line .fr-row{width:auto}
 .fr-find{grid-template-columns:minmax(0,1fr)}.fr-in input{width:0}
 /* ---- invites ---- */
 .inv-p{margin:4px 0 2px;color:var(--mut);font:600 13.5px/1.4 var(--bf)}
@@ -2175,6 +2175,34 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .inv-card h2{margin:6px 0 0;font:800 21px var(--bf)}.inv-card small{color:var(--mut);font:600 13px var(--bf)}.inv-card p{margin:2px 0 6px;color:var(--mut);font:600 14px/1.4 var(--bf)}.inv-card .ap-cta{width:100%}
 @keyframes invIn{from{opacity:0}to{opacity:1}}
 .inv-card{background:#12201a!important;box-shadow:0 -10px 40px rgba(0,0,0,.5)}.inv-card .dr-link{font:800 14px var(--bf,system-ui);letter-spacing:.06em;text-transform:uppercase;background:none;border:0;color:var(--mut,#9fb3a8);padding:10px}
+/* ---- social: duels, goal, feed, gifts ---- */
+.so-acts{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px 28px;align-items:center}.so-acts .fr-b{padding:6px 11px;font-size:12.5px}.so-gp{width:100%;color:var(--mut);font:700 12.5px var(--bf)}
+.so-duel.turn{border-color:#ffc94d;box-shadow:0 0 0 1px #ffc94d33 inset}.so-res{font:800 17px var(--bf)}.so-res.w{color:var(--acc)}.so-res.l{color:#ff8a7a}.so-duel .fr-btns small{color:var(--mut);font:700 12.5px var(--bf)}
+.so-goal{width:100%;max-width:520px;box-sizing:border-box;display:grid;gap:8px;text-align:left;margin:12px 0}.so-goal small{color:var(--mut);font:700 12px var(--bf);text-transform:uppercase;letter-spacing:.06em}.so-goal b{font:800 17px var(--bf)}
+.so-goal.won{border-color:#ffc94d}.so-bar{height:14px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;display:flex}.so-bar i{height:100%;transition:width .6s}.so-bar .me{background:var(--acc)}.so-bar .them{background:#7cb7ff}
+.so-gl{display:flex;gap:14px;flex-wrap:wrap;color:var(--mut);font:700 13px var(--bf)}.so-gl span{display:inline-flex;align-items:center;gap:5px}.dot{width:10px;height:10px;border-radius:50%;display:inline-block}.dot.me{background:var(--acc)}.dot.them{background:#7cb7ff}
+.so-feed{width:100%;max-width:520px;display:grid;gap:6px}.so-ev{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:var(--card);border:1px solid var(--line);text-align:left}
+.so-ev .lg-av{flex:none;transform:scale(.85)}.so-ev p{flex:1;margin:0;font:600 14px/1.35 var(--bf);color:var(--ink)}.so-ev p small{color:var(--mut)}
+.so-clap{flex:none;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:6px 11px;font:800 14px var(--bf);cursor:pointer}.so-clap.on{background:#ffc94d22;border-color:#ffc94d}.so-ch{flex:none;font:800 13px var(--bf);color:#ffc94d;font-style:normal}
+.so-qn{display:block;color:var(--mut);font:700 13px var(--bf);margin:4px 0}
+.so-word{display:flex;align-items:center;justify-content:center;gap:12px;margin:18px 0 22px;flex-wrap:wrap}.so-word span{font-size:44px}.so-word b{font:800 30px var(--bf)}
+.so-opts{display:grid;gap:10px;width:100%;max-width:460px;margin:0 auto}.so-opt{padding:16px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:800 17px var(--bf);cursor:pointer;text-align:center}.so-opt.pick{border-color:var(--acc);background:#6fcf8e22}
+.so-end{display:grid;justify-items:center;gap:10px}.so-score{display:flex;align-items:baseline;gap:8px;font:800 20px var(--bf)}.so-score b{font-size:48px}.so-score em{font-style:normal;font-size:40px;color:var(--mut)}
+.so-rev{width:100%;max-width:440px;display:grid;gap:4px;text-align:left;font:600 14px var(--bf)}.so-rev .ok{color:var(--acc)}.so-rev .no{color:#ff8a7a}
+/* ---- speaking ---- */
+.sp-card{width:100%;max-width:520px;box-sizing:border-box;display:grid;justify-items:center;gap:8px;text-align:center;margin:10px 0 18px}.sp-card small{color:var(--mut);font:700 12px var(--bf);text-transform:uppercase;letter-spacing:.06em}
+.sp-en{font:800 24px/1.3 var(--bf)}.sp-tr{margin:0;color:var(--mut);font:600 15px var(--bf)}
+.sp-mic{width:96px;height:96px;border-radius:50%;border:0;background:var(--acc);color:#0d1a15;font-size:42px;cursor:pointer;box-shadow:0 6px 0 #3e8e5a}.sp-mic.on{animation:spPulse 1s infinite;background:#ff8a7a;box-shadow:0 6px 0 #b9584c}.sp-mic:active{transform:translateY(3px)}
+@keyframes spPulse{50%{transform:scale(1.08)}}
+.sp-st{margin:12px 0 4px;font-weight:800}.sp-heard{color:var(--mut);font:600 14px var(--bf);margin:0}.sp-marks{font:800 18px var(--bf);margin:8px 0}.sp-marks .ok{color:var(--acc)}.sp-marks .no{color:#ff8a7a;text-decoration:underline wavy}
+.sp-row{margin-top:16px;width:100%;max-width:420px}.sp-no{color:#ffc94d}
+/* ---- certificate ---- */
+.ce-card{max-height:92vh;overflow:auto}.ce-card>b{font:800 18px var(--bf)}.ce-img{width:100%;display:grid;place-items:center;min-height:120px}.ce-img img{width:100%;max-width:380px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+/* one look for the Safiverse name and the back button on every screen (admin included) */
+html .ap-hud .ap-brand.sv{font:800 19px "Nunito",system-ui,sans-serif!important;letter-spacing:-.01em;display:inline-flex;align-items:baseline;line-height:1;color:var(--ink,#eef6f0)}
+html .ap-hud .ap-brand.sv i{font:600 19px "Nunito",system-ui,sans-serif!important;font-style:normal;color:var(--acc,#6fcf8e);margin-left:0}
+html .ap-hud .ap-back b{font-family:"Nunito",system-ui,sans-serif}
+@media (max-width:430px){html .ap-hud:not(.slim) .ap-brand.sv,html .ap-hud:not(.slim) .ap-brand.sv i{font-size:15px!important}}
 
 </style>
 <div id="view"></div>
@@ -4129,9 +4157,10 @@ let DAYS = lsGet("mv-days", []);
 function markDay() { const t = dayStr(new Date()); if (!DAYS.includes(t)) { DAYS.push(t); DAYS = DAYS.slice(-400); lsSet("mv-days", DAYS); } }
 function streak() {
   const d = new Date(); if (!DAYS.includes(dayStr(d))) d.setDate(d.getDate() - 1);
-  let n = 0, lastFreeze = -99;
+  let n = 0, lastFreeze = -99; const shield = lsGet("mv-shield", []); /* days a friend protected with a gift */
   for (let k = 0; k < 400; k++) {
     if (DAYS.includes(dayStr(d))) n++;
+    else if (shield.includes(dayStr(d))) { /* gifted shield: the streak survives this day */ }
     else { const p = new Date(d); p.setDate(p.getDate() - 1); if (n > 0 && k - lastFreeze >= 7 && DAYS.includes(dayStr(p))) lastFreeze = k; else break; }
     d.setDate(d.getDate() - 1);
   }
@@ -6560,6 +6589,8 @@ VIEWS.app = root => {
   if (typeof safiGate === "function" && safiGate(root)) return {};
   if (typeof pushSync === "function" && ACCT() && !window.__svPulled) { window.__svPulled = 1; pushSync(true); }
   if (typeof invPrompt === "function" && ACCT()) setTimeout(invPrompt, 700);
+  if (typeof certCheck === "function") setTimeout(certCheck, 1100);
+  if (typeof soRefresh === "function" && ACCT() && !window.__soPulled) { window.__soPulled = 1; soRefresh().then(ch => { if (ch && /app-profile/.test(location.hash)) Router.remount(); }); }
   if (typeof apTheme === "function") apTheme(myThemeSec());
   const sub = (location.hash.match(/app-(\w+)/) || [])[1] || (lsGet("mv-goal", null) ? "learn" : "goal");
   setTimeout(() => { riseLetters(root, ".ap-h .ch", { stagger: 28, dur: 800 }); root.querySelectorAll(".ap-item,.ap-course,.ap-badges>div,.ap-stats>div,.ap-card").forEach((el, k) => el.animate([{ transform: "translateY(24px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: REDUCED ? 1 : 600, delay: REDUCED ? 0 : 60 + k * 45, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" })); }, 0);
@@ -6596,7 +6627,7 @@ VIEWS.app = root => {
   if (sub === "quests") { root.innerHTML = shell("quests", questsHTML()); wireQuests(root); return {}; }
   if (sub === "practice") {
     const due = dueKeys().length;
-    const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
+    const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ...(typeof speakView === "function" ? [["#app-speak", "🎙", L("spT"), L("spP")]] : []), ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
       ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#contract", "💼", "Business English", "B1–C1"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
     const worlds = typeof SK === "object" ? `<div class="wd-grid">${["math", "music", "chess"].map((k, i) => { const done = skLessons(k), all = SK[k].U.length * SKL;
       return `<button class="wd-card wd-${k}" data-world="${k}" style="--k:${i}"><span class="wd-e">${SK[k].e}</span><b>${L(SK[k].n)}</b><small>${L(SK[k].p)}</small><div class="wd-bar"><i style="width:${Math.round(done / all * 100)}%"></i></div><em>${done}/${all}</em></button>`; }).join("")}</div><h2 class="ap-h2">🇬🇧 ${L("apEnPrac")}</h2>` : "";
@@ -6605,7 +6636,8 @@ VIEWS.app = root => {
     return {};
   }
   if (sub === "league") { leagueView(root, shell); return {}; }
-  if (sub === "friends" && typeof friendsView === "function") { friendsView(root, shell); return {}; }
+  if ((sub === "friends" || sub === "duel") && typeof friendsView === "function") { friendsView(root, shell); return {}; }
+  if (sub === "speak" && typeof speakView === "function") { speakView(root, shell); return {}; }
   if (typeof frRefresh === "function" && ACCT() && !window.__frPulled) { window.__frPulled = 1; frRefresh().then(r => { if (r && r.incoming.length && /app-profile/.test(location.hash)) Router.remount(); }); }
   /* profile */
   const b = lsGet("mv-badges", {}), x = XP(), lv = myLevel();
@@ -6614,7 +6646,7 @@ VIEWS.app = root => {
   root.innerHTML = shell("profile", `<div class="ap-prof"><button class="ap-av ${myAvatar() ? "has" : ""}" data-av aria-label="${L("avEdit")}">${myAvatar() ? avatarSVG() : esc((NAME || "M")[0].toUpperCase())}<em>✎</em></button><div><input class="ap-name" value="${esc(NAME)}" placeholder="${L("apName")}"><small>${lv ? lv + " · " + lvName(lv) : L("findLevel")}</small></div></div>
     <div class="ap-stats"><div><b>🔥 ${streak()}</b><small>${L("apDays")}</small></div><div><b>⚡ ${x.total}</b><small>${L("apTotal")}</small></div><div><b>🎯 ${goal()}</b><small>${L("apGoal")}</small></div><div><b>📚 ${drillLessons() + WORLD_ORDER.reduce((a, k) => a + doneCount(k), 0)}</b><small>${L("chapters")}</small></div></div>
     <h2 class="ap-h2">${L("apBadges")}</h2><div class="ap-badges">${BADGES.map(([k, e, t]) => `<div class="${b[k] ? "on" : ""}"><span>${e}</span><small>${esc(t)}</small></div>`).join("")}</div>
-    <div class="ap-set"><div class="ap-item"><span>❤️</span><b>${L("dHearts")}</b><small>${hearts()} / 5${hearts() >= 5 ? " · " + L("dFull") : ""}</small></div>${typeof friendsView === "function" && typeof ACCT === "function" && ACCT() ? `<a href="#app-friends" class="ap-item"><span>👥</span><b>${L("frT")}</b><small>${frCount() ? `<em class="fr-n">${frCount()}</em>` : ""}</small><i>›</i></a>${ACCT().user ? `<button class="ap-item" data-inv><span>📨</span><b>${L("invT")}</b><small>📤</small><i>›</i></button>` : ""}` : ""}<a href="#app-goal" class="ap-item"><span>🎯</span><b>${L("apGoal")}</b><small>${goal()} XP</small><i>›</i></a>
+    <div class="ap-set"><div class="ap-item"><span>❤️</span><b>${L("dHearts")}</b><small>${hearts()} / 5${hearts() >= 5 ? " · " + L("dFull") : ""}</small></div>${typeof friendsView === "function" && typeof ACCT === "function" && ACCT() ? `<a href="#app-friends" class="ap-item"><span>👥</span><b>${L("frT")}</b><small>${frCount() ? `<em class="fr-n">${frCount()}</em>` : ""}</small><i>›</i></a>${typeof certItems === "function" ? certItems() : ""}${typeof mailItem === "function" ? mailItem() : ""}${ACCT().user ? `<button class="ap-item" data-inv><span>📨</span><b>${L("invT")}</b><small>📤</small><i>›</i></button>` : ""}` : ""}<a href="#app-goal" class="ap-item"><span>🎯</span><b>${L("apGoal")}</b><small>${goal()} XP</small><i>›</i></a>
       <button class="ap-item" data-snd><span>🔊</span><b>${L("apSound")}</b><small>${soundOn() ? L("apOn") : L("apOff")}</small><i>›</i></button>
       <div class="ap-item"><span>🌐</span><b>EN · AZ · RU</b>${langPill()}</div>
       <a href="#" class="ap-item"><span>🌍</span><b>${L("apSite")}</b><small>minaraverse.github.io</small><i>›</i></a>
@@ -8367,7 +8399,7 @@ async function sPost(a, data, ms = 15000) {
   const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), ms);
   try { const r = await fetch(SAFI_API, { method: "POST", body: JSON.stringify(Object.assign({ a }, data)), redirect: "follow", signal: ctl.signal }); return await r.json(); } finally { clearTimeout(tm); }
 }
-const SYNC_KEYS = ["mv-drill", "mv-xp", "mv-days", "mv-badges", "mv-goal", "mv-avatar", "mv-qday", "mv-qmonth", "mv-level", "mv-hearts", "mv-course", "mv-family", "mv-subj", "mv-sk", "mv-onb"];
+const SYNC_KEYS = ["mv-drill", "mv-xp", "mv-days", "mv-badges", "mv-goal", "mv-avatar", "mv-qday", "mv-qmonth", "mv-level", "mv-hearts", "mv-course", "mv-family", "mv-subj", "mv-sk", "mv-onb", "mv-shield", "mv-soxp", "mv-certs"];
 const gatherProgress = () => { const o = {}; SYNC_KEYS.forEach(k => { const v = lsGet(k, null); if (v != null) o[k] = v; }); return o; };
 function applyProgress(p) { if (!p) return; SYNC_KEYS.forEach(k => { if (k in p) lsSet(k, p[k]); }); try { DAYS = lsGet("mv-days", []); } catch (e) {} }
 let SYNC_T = 0;
@@ -8564,7 +8596,7 @@ Object.assign(UI.ru, { invT: "Пригласи друзей", invP: "Отпра�
 
 const frAuth = () => { const a = ACCT() || {}; return { email: a.email, token: a.token }; };
 const frCall = (a, extra) => sPost(a, Object.assign(frAuth(), extra || {}), 12000);
-const frCount = () => (lsGet("mv-fr", null) || { incoming: [] }).incoming.length;
+const frCount = () => (lsGet("mv-fr", null) || { incoming: [] }).incoming.length + (typeof soCount === "function" ? soCount() : 0);
 async function frRefresh() { if (!svOn() || !ACCT()) return null; try { const d = await frCall("fr_list"); if (d.ok) { lsSet("mv-fr", d); return d; } if (d.err === "auth") lsSet("mv-acct", null); } catch (e) {} return null; }
 
 /* ---------- invites: personal link safiverse.github.io/#invite=<username>, share sheet, copy, QR ---------- */
@@ -8615,7 +8647,8 @@ function friendsView(root, shell) {
       <form class="fr-find" novalidate><b>${L("frFind")}</b><small class="fr-hint">${L("frFindP")}</small><div class="fr-in"><input name="q" maxlength="24" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="@username" aria-label="${L("frFindP")}" value="${esc(st.q)}"><button class="ap-cta fr-go">${L("frGo")}</button></div>
         <div class="fr-res" role="status">${st.found === undefined ? "" : st.found === null ? `<p class="ap-p">${L("frNone")}</p>` : row(st.found, stateBtns(st.fstate, st.found.user))}</div><p class="sv-err" role="alert"></p></form>
       ${(d.incoming || []).length ? `<h2 class="ap-h2">${L("frIn")} <em class="fr-n">${d.incoming.length}</em></h2>${d.incoming.map(c => row(c, btn("yes", c.user, L("frAccept"), "go") + btn("no", c.user, L("frDecline")))).join("")}` : ""}
-      <h2 class="ap-h2">${L("frList")}</h2>${(d.friends || []).length ? `<small class="fr-wk">🏆 ${L("frWeek")}</small><ol class="fr-board">${board.map((c, i) => `<li class="${c.me ? "me" : ""}"><span class="fr-rk">${i + 1}</span>${row(c, c.me ? "" : btn("rm", c.user, "✕", "x"))}<b class="fr-x">⚡ ${c.wk}</b></li>`).join("")}</ol>`
+      ${typeof soHTML === "function" ? soHTML(d) : ""}
+      <h2 class="ap-h2">${L("frList")}</h2>${(d.friends || []).length ? `<small class="fr-wk">🏆 ${L("frWeek")}</small><ol class="fr-board">${board.map((c, i) => `<li class="${c.me ? "me" : ""}"><div class="fr-line"><span class="fr-rk">${i + 1}</span>${row(c, c.me ? "" : btn("rm", c.user, "✕", "x"))}<b class="fr-x">⚡ ${c.wk}</b></div>${!c.me && typeof soActs === "function" ? soActs(c) : ""}</li>`).join("")}</ol>`
         : `<p class="ap-p">${L("frEmpty")}</p>`}
       ${(d.outgoing || []).length ? `<h2 class="ap-h2">${L("frOut")}</h2>${d.outgoing.map(c => row(c, btn("del", c.user, L("frCancel")))).join("")}` : ""}`);
     wire(); };
@@ -8642,7 +8675,219 @@ function friendsView(root, shell) {
   /* inline two-tap confirm (no browser dialogs) */
   const confirmSheetless = (msg, el) => { const b = el.closest("[data-rm]"); if (b.dataset.sure) return true; b.dataset.sure = 1; b.textContent = msg; b.classList.add("warn"); setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = "✕"; b.classList.remove("warn"); } }, 3000); return false; };
   draw(); frRefresh().then(r => { if (r && root.isConnected && /app-friends/.test(location.hash)) { st.data = r; draw(); } });
+  if (typeof soRefresh === "function") soRefresh().then(ch => { if (ch && root.isConnected && /app-friends/.test(location.hash)) draw(); });
 }
+
+/* ===== Safiverse social: duels, shared weekly goal, friends' feed + cheers, streak-shield gifts ===== */
+Object.assign(UI.en, { soDuels: "Duels", soDuel: "Duel", soPlay: "Play", soYourTurn: n => `${n} challenges you!`, soWaitThem: n => `Waiting for ${n}`, soWin: "You won!", soLose: "You lost", soDraw: "Draw",
+  soExpired: "Expired", soDeclined: "Declined", soDecline: "Decline", soDuelSent: "Duel sent ⚔️ — now it's your turn", soOpen: "You already have an open duel with this friend", soQ: (i, n) => `Question ${i} of ${n}`,
+  soPickMeaning: "What does it mean?", soPickEn: "How do you say it in English?", soResultWait: "Done! The result appears when your friend plays.", soXp: n => `+${n} XP`,
+  soGoal: "Weekly goal together", soGoalT: (n, t) => `You + ${n}: ${t} XP this week`, soGoalWon: "Goal reached! 🏅", soGoalDays: d => `${d} days left`, soGoalNew: "Goal together",
+  soGoalBusy: "You or your friend already have a goal this week", soGoalPick: "Choose a goal for this week", soFeed: "Friends' news", soFeedNone: "No news yet",
+  soEvStreak: n => `reached a ${n}-day streak 🔥`, soEvLessons: n => `finished ${n} lessons 📚`, soEvLevel: v => `completed level ${v} 🏅`, soEvTier: () => `moved up to a new league 🚀`,
+  soGift: "Gift", soGiftSent: "Gift sent 🎁 — their streak is safe today", soGiftWeek: "You can send one gift a week", soGiftPlayed: "Your friend already played today",
+  soGiftGot: n => `🎁 ${n} protected your streak today!`, soAgo: "ago", soCheers: n => `${n} 👏`, soNotFriend: "You can only do this with friends" });
+Object.assign(UI.az, { soDuels: "Duellər", soDuel: "Duel", soPlay: "Oyna", soYourTurn: n => `${n} səni duelə çağırır!`, soWaitThem: n => `${n} cavab gözlənilir`, soWin: "Qalib gəldin!", soLose: "Uduzdun", soDraw: "Bərabər",
+  soExpired: "Vaxtı bitdi", soDeclined: "Rədd edildi", soDecline: "Rədd et", soDuelSent: "Duel göndərildi ⚔️ — indi sənin növbəndir", soOpen: "Bu dostla artıq açıq duelin var", soQ: (i, n) => `Sual ${i} / ${n}`,
+  soPickMeaning: "Mənası nədir?", soPickEn: "İngiliscə necə deyilir?", soResultWait: "Hazırdır! Nəticə dostun oynayanda görünəcək.", soXp: n => `+${n} XP`,
+  soGoal: "Birgə həftəlik hədəf", soGoalT: (n, t) => `Sən + ${n}: bu həftə ${t} XP`, soGoalWon: "Hədəfə çatdınız! 🏅", soGoalDays: d => `${d} gün qalıb`, soGoalNew: "Birgə hədəf",
+  soGoalBusy: "Sənin və ya dostunun bu həftə artıq hədəfi var", soGoalPick: "Bu həftə üçün hədəf seç", soFeed: "Dostların xəbərləri", soFeedNone: "Hələ xəbər yoxdur",
+  soEvStreak: n => `${n} günlük seriyaya çatdı 🔥`, soEvLessons: n => `${n} dərsi bitirdi 📚`, soEvLevel: v => `${v} səviyyəsini bitirdi 🏅`, soEvTier: () => `yeni liqaya keçdi 🚀`,
+  soGift: "Hədiyyə", soGiftSent: "Hədiyyə göndərildi 🎁 — bu gün seriyası qorunur", soGiftWeek: "Həftədə bir hədiyyə göndərmək olar", soGiftPlayed: "Dostun bu gün artıq dərs keçib",
+  soGiftGot: n => `🎁 ${n} bu gün seriyanı qorudu!`, soAgo: "əvvəl", soCheers: n => `${n} 👏`, soNotFriend: "Bunu yalnız dostlarla etmək olar" });
+Object.assign(UI.ru, { soDuels: "Дуэли", soDuel: "Дуэль", soPlay: "Играть", soYourTurn: n => `${n} вызывает тебя на дуэль!`, soWaitThem: n => `Ждём ${n}`, soWin: "Ты победил(а)!", soLose: "Ты проиграл(а)", soDraw: "Ничья",
+  soExpired: "Время вышло", soDeclined: "Отклонено", soDecline: "Отклонить", soDuelSent: "Дуэль отправлена ⚔️ — теперь твой ход", soOpen: "С этим другом уже есть открытая дуэль", soQ: (i, n) => `Вопрос ${i} из ${n}`,
+  soPickMeaning: "Что это значит?", soPickEn: "Как сказать по-английски?", soResultWait: "Готово! Результат появится, когда друг сыграет.", soXp: n => `+${n} XP`,
+  soGoal: "Общая цель недели", soGoalT: (n, t) => `Ты + ${n}: ${t} XP за неделю`, soGoalWon: "Цель достигнута! 🏅", soGoalDays: d => `осталось дней: ${d}`, soGoalNew: "Общая цель",
+  soGoalBusy: "У тебя или друга уже есть цель на эту неделю", soGoalPick: "Выбери цель на неделю", soFeed: "Новости друзей", soFeedNone: "Пока новостей нет",
+  soEvStreak: n => `достиг(ла) серии ${n} дней 🔥`, soEvLessons: n => `прошёл(ла) ${n} уроков 📚`, soEvLevel: v => `завершил(а) уровень ${v} 🏅`, soEvTier: () => `перешёл(ла) в новую лигу 🚀`,
+  soGift: "Подарок", soGiftSent: "Подарок отправлен 🎁 — сегодня серия друга защищена", soGiftWeek: "Можно дарить один подарок в неделю", soGiftPlayed: "Друг уже занимался сегодня",
+  soGiftGot: n => `🎁 ${n} защитил(а) твою серию сегодня!`, soAgo: "назад", soCheers: n => `${n} 👏`, soNotFriend: "Это можно делать только с друзьями" });
+
+const SO = () => lsGet("mv-so", null);
+function soCount() { const s = SO(); return s ? (s.duels || []).filter(d => d.myTurn).length : 0; }
+const soCall = (a, extra) => sPost(a, Object.assign(frAuth(), extra || {}), 15000);
+const soErr = d => L({ open: "soOpen", busy: "soGoalBusy", week: "soGiftWeek", played: "soGiftPlayed", notfriend: "soNotFriend" }[d && d.err] || "svErr");
+
+/* fetch state; deliver gifts and XP rewards exactly once. Returns true when something changed. */
+async function soRefresh() {
+  if (!svOn() || !ACCT()) return false; let d;
+  try { d = await soCall("so_state"); } catch (e) { return false; }
+  if (!d || !d.ok) { if (d && d.err === "auth") lsSet("mv-acct", null); return false; }
+  (d.gifts || []).forEach(g => { const sh = lsGet("mv-shield", []); if (!sh.includes(g.day)) { sh.push(g.day); lsSet("mv-shield", sh.slice(-60)); } if (g.from) toast(L("soGiftGot")(g.from.name), "gold"); });
+  const got = lsGet("mv-soxp", []); let add = 0;
+  (d.duels || []).forEach(x => { if (x.status !== "done" || got.includes("d" + x.id)) return; got.push("d" + x.id); add += x.my > x.their ? 20 : x.my === x.their ? 10 : 5; });
+  if (d.goal && d.goal.won && !got.includes("g" + d.goal.id)) { got.push("g" + d.goal.id); add += 50; }
+  if (add) { lsSet("mv-soxp", got.slice(-200)); addXp(add); toast("⚡ " + L("soXp")(add), "gold"); if (typeof pushSync === "function") pushSync(); }
+  if ((d.gifts || []).length && typeof pushSync === "function") pushSync();
+  const before = JSON.stringify(SO()); delete d.gifts; lsSet("mv-so", d); return before !== JSON.stringify(d);
+}
+
+/* ---------- blocks inside the Friends screen ---------- */
+const soAgo = t => { const m = Math.max(1, Math.round((Date.now() - t) / 6e4)); return m < 60 ? m + "′" : m < 1440 ? Math.round(m / 60) + "h" : Math.round(m / 1440) + "d"; };
+function soHTML() {
+  const s = SO(); if (!s) return "";
+  const nm = c => esc(c ? c.name : "?");
+  const duelRow = x => { const o = x.other || { name: "?", av: "" };
+    const res = x.status === "done" ? `<b class="so-res ${x.my > x.their ? "w" : x.my < x.their ? "l" : ""}">${x.my} : ${x.their}</b><small>${x.my > x.their ? L("soWin") : x.my < x.their ? L("soLose") : L("soDraw")}</small>`
+      : x.status === "expired" ? `<small>${L("soExpired")}</small>` : x.status === "declined" ? `<small>${L("soDeclined")}</small>`
+      : x.myTurn ? `<button class="fr-b go" data-so-play="${x.id}">⚔️ ${L("soPlay")}</button>${x.mine ? "" : `<button class="fr-b" data-so-dno="${x.id}">${L("soDecline")}</button>`}` : `<small>⏳ ${L("soWaitThem")(nm(o))}</small>`;
+    return `<div class="fr-row so-duel ${x.myTurn ? "turn" : ""}"><span class="lg-av">${avOf(o.av, o.name)}</span><div class="fr-who"><b>${x.myTurn && !x.mine ? esc(L("soYourTurn")(o.name)) : nm(o)}</b><small>⚔️ ${x.n} · ${soAgo(x.at)}</small></div><div class="fr-btns">${res}</div></div>`; };
+  const duels = (s.duels || []).filter(x => x.status === "wait" || Date.now() - x.at < 7 * 864e5).slice(0, 6);
+  const g = s.goal, pct = g ? Math.min(100, Math.round((g.me + g.them) / g.target * 100)) : 0, a = g ? Math.min(100, g.me / g.target * 100) : 0, b = g ? Math.min(100 - a, g.them / g.target * 100) : 0;
+  const goal = g ? `<div class="ap-card so-goal ${g.won ? "won" : ""}"><small>🤝 ${L("soGoal")}</small><b>${esc(L("soGoalT")(g.other ? g.other.name : "?", g.target))}</b>
+      <div class="so-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i class="me" style="width:${a}%"></i><i class="them" style="width:${b}%"></i></div>
+      <div class="so-gl"><span><i class="dot me"></i>${g.me}</span><span><i class="dot them"></i>${g.them}</span><span>${g.won ? L("soGoalWon") : L("soGoalDays")(g.days)}</span></div></div>` : "";
+  const evText = f => ({ streak: L("soEvStreak"), lessons: L("soEvLessons"), level: L("soEvLevel"), tier: L("soEvTier") }[f.type] || (() => ""))(f.val);
+  const feed = (s.feed || []).slice(0, 10).map(f => `<div class="so-ev"><span class="lg-av">${avOf(f.who && f.who.av, f.who && f.who.name)}</span><p><b>${f.me ? "⭐ " : ""}${nm(f.who)}</b> ${esc(evText(f))}<small> · ${soAgo(f.at)}</small></p>
+      ${f.me ? (f.cheers ? `<em class="so-ch">${L("soCheers")(f.cheers)}</em>` : "") : `<button class="so-clap ${f.cheered ? "on" : ""}" data-so-cheer="${f.id}" aria-pressed="${f.cheered}">👏${f.cheers ? " " + f.cheers : ""}</button>`}</div>`).join("");
+  return (duels.length ? `<h2 class="ap-h2">⚔️ ${L("soDuels")}</h2>${duels.map(duelRow).join("")}` : "") + goal
+    + `<h2 class="ap-h2">📣 ${L("soFeed")}</h2>${feed ? `<div class="so-feed">${feed}</div>` : `<p class="ap-p">${L("soFeedNone")}</p>`}`;
+}
+function soActs(c) {
+  const s = SO() || {}, open = (s.duels || []).some(x => x.status === "wait" && x.other && x.other.user === c.user);
+  return `<div class="so-acts">${open ? "" : `<button class="fr-b" data-so-duel="${esc(c.user)}">⚔️ ${L("soDuel")}</button>`}${s.goal ? "" : `<button class="fr-b" data-so-goal="${esc(c.user)}">🤝 ${L("soGoalNew")}</button>`}${s.giftLeft && !c.today ? `<button class="fr-b" data-so-gift="${esc(c.user)}">🎁 ${L("soGift")}</button>` : ""}</div>`;
+}
+
+/* ---------- duel questions from the course words (same for both players, shown in each one's language) ---------- */
+function soMakeQs() {
+  const pool = []; const top = Math.max(0, curUnit());
+  for (let u = 0; u <= top; u++) { const W = UNITS[u] && UNITS[u].W; if (W && W.length >= 4) W.forEach((_, k) => pool.push([u, k])); }
+  if (pool.length < 5) for (let u = 0; u < Math.min(3, UNITS.length); u++) UNITS[u].W.forEach((_, k) => pool.push([u, k]));
+  return pickN(pool, 5).map(([u, k], i) => { const others = pickN(UNITS[u].W.map((_, j) => j), 3, [k]), o = shuffle([k, ...others]); return { u, k, t: i % 2 ? "n" : "w", o, c: o.indexOf(k) }; });
+}
+function soPlay(id, qs, back) {
+  const root = document.getElementById("view"); document.documentElement.classList.add("ap-mode");
+  try { history.replaceState(null, "", location.pathname + location.search + "#app-duel"); } catch (e) {} /* so "✕" and "Continue" (→ #app-friends) really navigate */
+  const st = { i: 0, ans: [], t0: Date.now() }, n = qs.length;
+  const W = (u, k) => UNITS[u] && UNITS[u].W[k] || { en: "?", az: "?", ru: "?", e: "" };
+  const draw = () => { const q = qs[st.i], w = W(q.u, q.k), en = q.t === "w";
+    root.innerHTML = `<div class="ap ap-les so-play"><header class="ap-lh"><a href="#app-friends" class="ap-x" aria-label="Close">✕</a><div class="ap-lbar"><i style="width:${st.i / n * 100}%"></i></div><span class="ap-st on">⚔️</span></header>
+      <main class="ap-main"><small class="so-qn">${L("soQ")(st.i + 1, n)}</small><h2 class="ap-h2">${en ? L("soPickMeaning") : L("soPickEn")}</h2>
+      <div class="so-word">${w.e ? `<span>${w.e}</span>` : ""}<b>${esc(en ? w.en : nat(w))}</b>${en ? sayBtn(w.en) : ""}</div>
+      <div class="so-opts">${q.o.map((k, j) => `<button class="so-opt" data-o="${j}">${esc(en ? nat(W(q.u, k)) : W(q.u, k).en)}</button>`).join("")}</div></main></div>`;
+    root.querySelector(".so-opts").onclick = async e => { const b = e.target.closest("[data-o]"); if (!b || st.lock) return; st.lock = 1; sfx("tap"); b.classList.add("pick"); st.ans.push(+b.dataset.o);
+      setTimeout(async () => { st.lock = 0; st.i++; if (st.i < n) return draw(); await finish(); }, 260); }; };
+  const finish = async () => { root.innerHTML = `<div class="ap"><main class="ap-main"><div class="ap-mascot">${mascot("⚔️")}</div><p class="ap-p">…</p></main></div>`;
+    let r; try { r = await soCall("du_play", { id, ans: st.ans, ms: Date.now() - st.t0 }); } catch (e) { r = { ok: false }; }
+    const right = r && r.right, mine = r && r.ok ? r.my : st.ans.length;
+    const review = right ? `<div class="so-rev">${qs.map((q, i) => { const ok = st.ans[i] === right[i], w = W(q.u, q.k); return `<div class="${ok ? "ok" : "no"}">${ok ? "✓" : "✗"} <b>${esc(w.en)}</b> — ${esc(nat(w))}</div>`; }).join("")}</div>` : "";
+    const done = r && r.status === "done", head = !r || !r.ok ? L("svErr") : done ? (r.my > r.their ? L("soWin") : r.my < r.their ? L("soLose") : L("soDraw")) : L("soResultWait");
+    root.innerHTML = `<div class="ap"><main class="ap-main so-end"><div class="ap-mascot">${mascot(done && r.my > r.their ? "🏆" : "⚔️")}</div><h1 class="ap-h">${esc(head)}</h1>
+      <div class="so-score"><b>${mine}</b><span>/ ${n}</span>${done ? `<em>:</em><b>${r.their}</b>` : ""}</div>${review}<a class="ap-cta" href="#app-friends">${L("apContinue")}</a></main></div>`;
+    sfx(done && r.my > r.their ? "win" : "pop"); await soRefresh(); };
+  draw();
+}
+
+/* ---------- clicks (friends screen + duel) ---------- */
+document.addEventListener("click", async e => {
+  const el = e.target.closest("[data-so-duel],[data-so-play],[data-so-dno],[data-so-goal],[data-so-gift],[data-so-cheer],[data-so-gt]"); if (!el || el.disabled) return;
+  const err = m => { const x = document.querySelector(".sv-err"); toast(m); if (x) x.textContent = m; sfx("no"); };
+  const busy = () => { el.disabled = true; el.dataset.t = el.textContent; el.textContent = "…"; }, free = () => { el.disabled = false; if (el.dataset.t) el.textContent = el.dataset.t; };
+  try {
+    if (el.dataset.soDuel) { busy(); const d = await soCall("so_duel_new", { user: el.dataset.soDuel, qs: soMakeQs() }); free(); if (!d.ok) return err(soErr(d)); toast(L("soDuelSent"), "gold"); soRefresh(); soPlay(d.id, d.qs); return; }
+    if (el.dataset.soPlay) { busy(); const d = await soCall("du_get", { id: el.dataset.soPlay }); free(); if (!d.ok || d.status !== "wait") { await soRefresh(); return Router.remount(); } soPlay(el.dataset.soPlay, d.qs); return; }
+    if (el.dataset.soDno) { busy(); await soCall("du_no", { id: el.dataset.soDno }); await soRefresh(); return Router.remount(); }
+    if (el.dataset.soGoal) { const bar = el.closest(".so-acts"); bar.innerHTML = `<small class="so-gp">${L("soGoalPick")}</small>${[200, 300, 500].map(t => `<button class="fr-b ${t === 300 ? "go" : ""}" data-so-gt="${t}" data-u="${esc(el.dataset.soGoal)}">${t} XP</button>`).join("")}`; return; }
+    if (el.dataset.soGt) { busy(); const d = await soCall("go_new", { user: el.dataset.u, target: +el.dataset.soGt }); if (!d.ok) { free(); return err(soErr(d)); } sfx("unlock"); await soRefresh(); return Router.remount(); }
+    if (el.dataset.soGift) { busy(); const d = await soCall("gi_send", { user: el.dataset.soGift }); if (!d.ok) { free(); return err(soErr(d)); } sfx("win"); toast(L("soGiftSent"), "gold"); await soRefresh(); return Router.remount(); }
+    if (el.dataset.soCheer) { const on = !el.classList.contains("on"); el.classList.toggle("on", on); if (on) { sfx("pop"); el.animate([{ transform: "scale(1)" }, { transform: "scale(1.35)" }, { transform: "scale(1)" }], { duration: 320 }); }
+      const d = await soCall("so_cheer", { id: el.dataset.soCheer }); if (d.ok) { el.textContent = "👏" + (d.cheers ? " " + d.cheers : ""); el.classList.toggle("on", d.cheered); } return; }
+  } catch (x) { free(); err(L("svErr")); }
+});
+
+/* ===== Safiverse: speaking practice (phone's own speech recognition), level certificates, email on/off ===== */
+Object.assign(UI.en, { spT: "Speaking practice", spP: "Say it out loud — the phone checks", spSay: "Say this sentence", spTap: "Tap 🎙 and speak", spListen: "Listening…", spGood: "Great pronunciation!", spTry: "Almost — try again",
+  spHeard: "I heard:", spSkip: "Skip", spNext: "Next", spNo: "This phone cannot recognise speech. Try Safari or Chrome, or skip this practice.", spMicNo: "Allow the microphone to practise speaking.",
+  spDone: "Speaking practice done!", ceT: "Certificate", ceNew: "Congratulations! Your certificate is ready", ceSave: "Save / share", ceOpen: "Open certificate",
+  maT: "Email reminders", maOn: "On", maOff: "Off" });
+Object.assign(UI.az, { spT: "Danışıq məşqi", spP: "Ucadan de — telefon yoxlayır", spSay: "Bu cümləni de", spTap: "🎙 bas və danış", spListen: "Dinləyirəm…", spGood: "Əla tələffüz!", spTry: "Az qaldı — yenə cəhd et",
+  spHeard: "Eşitdiyim:", spSkip: "Keç", spNext: "Növbəti", spNo: "Bu telefon səsi tanıya bilmir. Safari və ya Chrome-da yoxla, ya da bu məşqi keç.", spMicNo: "Danışıq məşqi üçün mikrofona icazə ver.",
+  spDone: "Danışıq məşqi bitdi!", ceT: "Sertifikat", ceNew: "Təbriklər! Sertifikatın hazırdır", ceSave: "Yadda saxla / paylaş", ceOpen: "Sertifikatı aç",
+  maT: "Email xatırlatmaları", maOn: "Açıq", maOff: "Bağlı" });
+Object.assign(UI.ru, { spT: "Разговорная практика", spP: "Скажи вслух — телефон проверит", spSay: "Скажи это предложение", spTap: "Нажми 🎙 и говори", spListen: "Слушаю…", spGood: "Отличное произношение!", spTry: "Почти — попробуй ещё",
+  spHeard: "Я услышал:", spSkip: "Пропустить", spNext: "Дальше", spNo: "Этот телефон не умеет распознавать речь. Попробуй Safari или Chrome, или пропусти практику.", spMicNo: "Разреши доступ к микрофону для практики.",
+  spDone: "Разговорная практика пройдена!", ceT: "Сертификат", ceNew: "Поздравляем! Твой сертификат готов", ceSave: "Сохранить / поделиться", ceOpen: "Открыть сертификат",
+  maT: "Напоминания по email", maOn: "Вкл", maOff: "Выкл" });
+
+/* ---------- speaking practice ---------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+function speakView(root, shell) {
+  const top = Math.max(0, curUnit()), pool = [];
+  for (let u = 0; u <= top; u++) { const U = UNITS[u]; if (!U) continue; (U.S || []).forEach(x => pool.push(x)); if (!(U.S || []).length) U.W.forEach(w => pool.push({ en: w.en, az: w.az, ru: w.ru })); }
+  const items = pickN(pool.filter(x => toks(x.en).length <= 9), 6), st = { i: 0, tries: 0, got: 0, heard: "", res: null, on: false };
+  const words = s => dNorm(s).split(" ").filter(Boolean);
+  const check = (target, heard) => { const h = words(heard); return words(target).map(w => ({ w, ok: h.includes(w) || h.some(x => x.replace(/'/g, "") === w.replace(/'/g, "")) })); };
+  const draw = () => { const it = items[st.i];
+    if (!it) { root.innerHTML = shell("practice", `<div class="ap-mascot">${mascot("🎉")}</div><h1 class="ap-h">${L("spDone")}</h1><p class="ap-p">✓ ${st.got} / ${items.length}</p><a class="ap-cta" href="#app-practice">${L("apContinue")}</a>`); sfx("win"); return; }
+    const marks = st.res ? `<p class="sp-marks">${st.res.map(x => `<span class="${x.ok ? "ok" : "no"}">${esc(x.w)}</span>`).join(" ")}</p>` : "";
+    root.innerHTML = shell("practice", `<a href="#app-practice" class="fr-back">← ${L("apPractice")}</a><h1 class="ap-h">🎙 ${L("spT")}</h1><small class="so-qn">${st.i + 1} / ${items.length}</small>
+      <div class="ap-card sp-card"><small>${L("spSay")}</small><b class="sp-en">${esc(it.en)}</b>${sayBtn(it.en)}<p class="sp-tr">${esc(nat(it) || "")}</p></div>
+      ${SR ? `<button class="sp-mic ${st.on ? "on" : ""}" data-mic aria-label="${L("spTap")}">🎙</button><p class="ap-p sp-st" role="status">${st.on ? L("spListen") : st.res ? (st.ok ? "✅ " + L("spGood") : "🔁 " + L("spTry")) : L("spTap")}</p>${st.heard ? `<p class="sp-heard">${L("spHeard")} «${esc(st.heard)}»</p>` : ""}${marks}`
+        : `<p class="ap-p sp-no">${L("spNo")}</p>`}
+      <div class="sp-row">${st.ok ? `<button class="ap-cta" data-next>${L("spNext")} →</button>` : `<button class="dr-link" data-skip>${L("spSkip")}</button>`}</div>`);
+    wire(); };
+  const listen = () => { const it = items[st.i]; let rec; try { rec = new SR(); } catch (e) { st.on = false; return draw(); }
+    rec.lang = "en-US"; rec.interimResults = false; rec.maxAlternatives = 3; st.on = true; st.heard = ""; draw();
+    rec.onresult = ev => { const alts = [...ev.results[0]].map(a => a.transcript); let best = null, bestN = -1;
+      alts.forEach(t => { const r = check(it.en, t), n = r.filter(x => x.ok).length; if (n > bestN) { bestN = n; best = { t, r }; } });
+      st.heard = best.t; st.res = best.r; st.tries++; st.ok = bestN / best.r.length >= 0.8;
+      if (st.ok) { st.got++; addXp(2); sfx("ok"); if (typeof buzz === "function") buzz(20); } else sfx("no"); };
+    rec.onerror = ev => { st.on = false; if (ev.error === "not-allowed" || ev.error === "service-not-allowed") toast(L("spMicNo")); draw(); };
+    rec.onend = () => { st.on = false; if (st.tries >= 3 && !st.ok) st.ok = true; draw(); };
+    try { rec.start(); } catch (e) { st.on = false; draw(); } };
+  const wire = () => { root.onclick = e => {
+    if (e.target.closest("[data-mic]") && !st.on) listen();
+    if (e.target.closest("[data-skip]") || e.target.closest("[data-next]")) { st.i++; st.tries = 0; st.heard = ""; st.res = null; st.ok = false; draw(); } }; };
+  draw();
+}
+
+/* ---------- certificates (drawn on the phone, no server) ---------- */
+const CE_LV = [["A1", ["Beginner", "Başlanğıc", "Начальный"]], ["A2", ["Elementary", "Elementar", "Элементарный"]], ["B1", ["Intermediate", "Orta", "Средний"]]];
+const certEarned = () => { const b = lsGet("mv-badges", {}); return SECTIONS.map((s, i) => b["sec" + i] ? i : -1).filter(i => i > -1 && i < CE_LV.length); };
+async function certCanvas(i) {
+  const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const c = cv.getContext("2d");
+  try { await document.fonts.load('80px "Great Vibes"'); await document.fonts.load('800 60px "Nunito"'); } catch (e) {}
+  const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#0f241b"); g.addColorStop(1, "#0a1611"); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  c.strokeStyle = "#d9b45a"; c.lineWidth = 6; c.strokeRect(40, 40, W - 80, H - 80); c.lineWidth = 2; c.strokeRect(62, 62, W - 124, H - 124);
+  for (let k = 0; k < 4; k++) { const x = k % 2 ? W - 62 : 62, y = k > 1 ? H - 62 : 62; c.fillStyle = "#d9b45a"; c.beginPath(); c.arc(x, y, 10, 0, 7); c.fill(); }
+  const T = (t, y, f, col = "#eef6f0") => { c.font = f; c.fillStyle = col; c.textAlign = "center"; c.fillText(t, W / 2, y); };
+  T("Safiverse", 180, '800 64px "Nunito", Arial', "#ffffff"); c.font = '800 64px "Nunito", Arial'; const sw = c.measureText("Safiverse").width;
+  T("CERTIFICATE · SERTİFİKAT · СЕРТИФИКАТ", 270, '800 30px "Nunito", Arial', "#d9b45a");
+  T("This certifies that · Təsdiq edilir ki · Настоящим подтверждается, что", 360, '600 25px "Nunito", Arial', "#a9bfb3");
+  const name = (ACCT() && ACCT().name) || NAME || "Safiverse"; let fs = 104; c.font = `${fs}px "Great Vibes", cursive`; while (c.measureText(name).width > W - 220 && fs > 50) { fs -= 6; c.font = `${fs}px "Great Vibes", cursive`; }
+  T(name, 500, `${fs}px "Great Vibes", cursive`, "#ffffff"); c.strokeStyle = "#d9b45a"; c.lineWidth = 2; c.beginPath(); c.moveTo(220, 535); c.lineTo(W - 220, 535); c.stroke();
+  const [lv, nm] = CE_LV[i];
+  T("has completed the level · səviyyəsini bitirdi · завершил(а) уровень", 610, '600 25px "Nunito", Arial', "#a9bfb3");
+  c.fillStyle = "#6fcf8e"; c.beginPath(); c.arc(W / 2, 760, 112, 0, 7); c.fill(); c.fillStyle = "#0d1a15"; c.beginPath(); c.arc(W / 2, 760, 98, 0, 7); c.fill();
+  T(lv, 790, '800 92px "Nunito", Arial', "#6fcf8e"); T(nm.join(" · "), 935, '800 34px "Nunito", Arial', "#ffffff");
+  const d = new Date(), ds = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`;
+  c.textAlign = "left"; c.fillStyle = "#a9bfb3"; c.font = '600 22px "Nunito", Arial'; c.fillText("📅 " + ds, 130, 1080);
+  c.font = '72px "Great Vibes", cursive'; c.fillStyle = "#ffffff"; c.fillText("Minara", 120, 1175); c.strokeStyle = "#a9bfb3"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(120, 1192); c.lineTo(470, 1192); c.stroke();
+  c.font = '600 21px "Nunito", Arial'; c.fillStyle = "#a9bfb3"; c.fillText("Teacher · Müəllim · Преподаватель", 120, 1225);
+  if (window.qrcode) { const q = qrcode(0, "M"); q.addData("https://safiverse.github.io/"); q.make(); const n = q.getModuleCount(), sz = 170, cs = sz / n, qx = W - 130 - sz, qy = 1050;
+    c.fillStyle = "#fff"; c.fillRect(qx - 12, qy - 12, sz + 24, sz + 24); c.fillStyle = "#0d1a15"; for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) c.fillRect(qx + k * cs, qy + r * cs, cs + .4, cs + .4); }
+  T("Safiverse course certificate — not an official exam certificate", H - 92, '600 18px "Nunito", Arial', "#7f968a");
+  return cv;
+}
+async function certOpen(i) {
+  const ov = document.createElement("div"); ov.className = "inv-sheet ce-ov"; ov.innerHTML = `<div class="inv-card ce-card"><b>🏅 ${L("ceT")} · ${CE_LV[i][0]}</b><div class="ce-img">…</div><button class="ap-cta" data-ce-save>${L("ceSave")}</button><button class="dr-link" data-ce-x>✕</button></div>`;
+  document.body.appendChild(ov); const cv = await certCanvas(i); const img = new Image(); img.alt = L("ceT"); img.src = cv.toDataURL("image/png"); ov.querySelector(".ce-img").replaceChildren(img);
+  ov.onclick = e => { if (e.target === ov || e.target.closest("[data-ce-x]")) ov.remove(); else if (e.target.closest("[data-ce-save]")) saveCanvas(cv, `Safiverse-certificate-${CE_LV[i][0]}.png`); };
+}
+function certCheck() { const seen = lsGet("mv-certs", []), nw = certEarned().find(i => !seen.includes(i)); if (nw == null || document.querySelector(".inv-sheet")) return;
+  lsSet("mv-certs", [...seen, nw]); sfx("win"); toast("🏅 " + L("ceNew"), "gold"); certOpen(nw); }
+const certItems = () => certEarned().map(i => `<button class="ap-item" data-cert="${i}"><span>🏅</span><b>${L("ceT")} ${CE_LV[i][0]}</b><small>${esc(T3(CE_LV[i][1]))}</small><i>›</i></button>`).join("");
+
+/* ---------- email reminders on/off (profile) ---------- */
+const mailItem = () => { if (typeof svOn !== "function" || !svOn() || !ACCT() || typeof SO !== "function") return ""; const s = SO(); const off = s && s.mailOff;
+  return `<button class="ap-item" data-mail><span>📧</span><b>${L("maT")}</b><small>${off ? L("maOff") : L("maOn")}</small><i>›</i></button>`; };
+document.addEventListener("click", async e => {
+  const ce = e.target.closest("[data-cert]"); if (ce) { certOpen(+ce.dataset.cert); return; }
+  const m = e.target.closest("[data-mail]"); if (!m || m.disabled) return; m.disabled = true;
+  const s = SO() || {}; try { const d = await soCall("so_mail", { off: !s.mailOff }); if (d.ok) { s.mailOff = d.mailOff; lsSet("mv-so", s); } } catch (x) { toast(L("svErr")); }
+  m.disabled = false; Router.remount();
+});
 
 document.documentElement.lang = LANG;
 Router.mount();

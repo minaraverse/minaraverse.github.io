@@ -88,6 +88,8 @@ VIEWS.app = root => {
   if (typeof safiGate === "function" && safiGate(root)) return {};
   if (typeof pushSync === "function" && ACCT() && !window.__svPulled) { window.__svPulled = 1; pushSync(true); }
   if (typeof invPrompt === "function" && ACCT()) setTimeout(invPrompt, 700);
+  if (typeof certCheck === "function") setTimeout(certCheck, 1100);
+  if (typeof soRefresh === "function" && ACCT() && !window.__soPulled) { window.__soPulled = 1; soRefresh().then(ch => { if (ch && /app-profile/.test(location.hash)) Router.remount(); }); }
   if (typeof apTheme === "function") apTheme(myThemeSec());
   const sub = (location.hash.match(/app-(\w+)/) || [])[1] || (lsGet("mv-goal", null) ? "learn" : "goal");
   setTimeout(() => { riseLetters(root, ".ap-h .ch", { stagger: 28, dur: 800 }); root.querySelectorAll(".ap-item,.ap-course,.ap-badges>div,.ap-stats>div,.ap-card").forEach((el, k) => el.animate([{ transform: "translateY(24px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: REDUCED ? 1 : 600, delay: REDUCED ? 0 : 60 + k * 45, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" })); }, 0);
@@ -124,7 +126,7 @@ VIEWS.app = root => {
   if (sub === "quests") { root.innerHTML = shell("quests", questsHTML()); wireQuests(root); return {}; }
   if (sub === "practice") {
     const due = dueKeys().length;
-    const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
+    const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ...(typeof speakView === "function" ? [["#app-speak", "🎙", L("spT"), L("spP")]] : []), ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
       ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#contract", "💼", "Business English", "B1–C1"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
     const worlds = typeof SK === "object" ? `<div class="wd-grid">${["math", "music", "chess"].map((k, i) => { const done = skLessons(k), all = SK[k].U.length * SKL;
       return `<button class="wd-card wd-${k}" data-world="${k}" style="--k:${i}"><span class="wd-e">${SK[k].e}</span><b>${L(SK[k].n)}</b><small>${L(SK[k].p)}</small><div class="wd-bar"><i style="width:${Math.round(done / all * 100)}%"></i></div><em>${done}/${all}</em></button>`; }).join("")}</div><h2 class="ap-h2">🇬🇧 ${L("apEnPrac")}</h2>` : "";
@@ -133,7 +135,8 @@ VIEWS.app = root => {
     return {};
   }
   if (sub === "league") { leagueView(root, shell); return {}; }
-  if (sub === "friends" && typeof friendsView === "function") { friendsView(root, shell); return {}; }
+  if ((sub === "friends" || sub === "duel") && typeof friendsView === "function") { friendsView(root, shell); return {}; }
+  if (sub === "speak" && typeof speakView === "function") { speakView(root, shell); return {}; }
   if (typeof frRefresh === "function" && ACCT() && !window.__frPulled) { window.__frPulled = 1; frRefresh().then(r => { if (r && r.incoming.length && /app-profile/.test(location.hash)) Router.remount(); }); }
   /* profile */
   const b = lsGet("mv-badges", {}), x = XP(), lv = myLevel();
@@ -142,7 +145,7 @@ VIEWS.app = root => {
   root.innerHTML = shell("profile", `<div class="ap-prof"><button class="ap-av ${myAvatar() ? "has" : ""}" data-av aria-label="${L("avEdit")}">${myAvatar() ? avatarSVG() : esc((NAME || "M")[0].toUpperCase())}<em>✎</em></button><div><input class="ap-name" value="${esc(NAME)}" placeholder="${L("apName")}"><small>${lv ? lv + " · " + lvName(lv) : L("findLevel")}</small></div></div>
     <div class="ap-stats"><div><b>🔥 ${streak()}</b><small>${L("apDays")}</small></div><div><b>⚡ ${x.total}</b><small>${L("apTotal")}</small></div><div><b>🎯 ${goal()}</b><small>${L("apGoal")}</small></div><div><b>📚 ${drillLessons() + WORLD_ORDER.reduce((a, k) => a + doneCount(k), 0)}</b><small>${L("chapters")}</small></div></div>
     <h2 class="ap-h2">${L("apBadges")}</h2><div class="ap-badges">${BADGES.map(([k, e, t]) => `<div class="${b[k] ? "on" : ""}"><span>${e}</span><small>${esc(t)}</small></div>`).join("")}</div>
-    <div class="ap-set"><div class="ap-item"><span>❤️</span><b>${L("dHearts")}</b><small>${hearts()} / 5${hearts() >= 5 ? " · " + L("dFull") : ""}</small></div>${typeof friendsView === "function" && typeof ACCT === "function" && ACCT() ? `<a href="#app-friends" class="ap-item"><span>👥</span><b>${L("frT")}</b><small>${frCount() ? `<em class="fr-n">${frCount()}</em>` : ""}</small><i>›</i></a>${ACCT().user ? `<button class="ap-item" data-inv><span>📨</span><b>${L("invT")}</b><small>📤</small><i>›</i></button>` : ""}` : ""}<a href="#app-goal" class="ap-item"><span>🎯</span><b>${L("apGoal")}</b><small>${goal()} XP</small><i>›</i></a>
+    <div class="ap-set"><div class="ap-item"><span>❤️</span><b>${L("dHearts")}</b><small>${hearts()} / 5${hearts() >= 5 ? " · " + L("dFull") : ""}</small></div>${typeof friendsView === "function" && typeof ACCT === "function" && ACCT() ? `<a href="#app-friends" class="ap-item"><span>👥</span><b>${L("frT")}</b><small>${frCount() ? `<em class="fr-n">${frCount()}</em>` : ""}</small><i>›</i></a>${typeof certItems === "function" ? certItems() : ""}${typeof mailItem === "function" ? mailItem() : ""}${ACCT().user ? `<button class="ap-item" data-inv><span>📨</span><b>${L("invT")}</b><small>📤</small><i>›</i></button>` : ""}` : ""}<a href="#app-goal" class="ap-item"><span>🎯</span><b>${L("apGoal")}</b><small>${goal()} XP</small><i>›</i></a>
       <button class="ap-item" data-snd><span>🔊</span><b>${L("apSound")}</b><small>${soundOn() ? L("apOn") : L("apOff")}</small><i>›</i></button>
       <div class="ap-item"><span>🌐</span><b>EN · AZ · RU</b>${langPill()}</div>
       <a href="#" class="ap-item"><span>🌍</span><b>${L("apSite")}</b><small>minaraverse.github.io</small><i>›</i></a>
