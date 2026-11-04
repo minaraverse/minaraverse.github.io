@@ -29,7 +29,7 @@ VIEWS.home = root => {
       <p class="h-eyebrow">${L("eyebrow")}</p>
       <h1 class="h-h1"><span class="ln">${letters(L("h1a"))}</span><span class="ln">${letters(L("h1b"))} <em>${letters(L("h1c"))}</em></span></h1>
       <p class="h-lead">${L("lead")}</p>
-      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><a class="h-cta2 h-app" href="https://safiverse.github.io/">📱 Safiverse</a></div>
+      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><a class="h-cta2 h-app" href="#app">📱 Safiverse</a></div>
     </div>
     <div class="h-hero-r" aria-hidden="true">
       <svg class="h-badge" viewBox="0 0 200 200"><defs><path id="bc" d="M100 100 m-78 0 a78 78 0 1 1 156 0 a78 78 0 1 1 -156 0"/></defs><text font-family="Bricolage Grotesque,Arial,sans-serif" font-size="13.5" font-weight="600" letter-spacing="3.2"><textPath href="#bc">MINARAVERSE ✦ ENGLISH THROUGH STORIES ✦ A1–B2 ✦ </textPath></text><text x="100" y="112" text-anchor="middle" font-family="'Fraunces',Georgia,serif" font-size="40" font-style="italic">mv</text></svg>

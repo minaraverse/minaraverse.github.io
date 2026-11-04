@@ -1,11 +1,5 @@
 /* SAFI: the same app served as its own product at /safiverse/ */
 const SAFI = /\/safiverse(\/|$)/.test(location.pathname) || /safiverse/i.test(location.hostname);
-/* one Safiverse app with one memory: every way into the app on minaraverse.github.io goes to safiverse.github.io */
-const SV_HOME = "https://safiverse.github.io/";
-const svOut = () => { if (!/(^|\.)minaraverse\.github\.io$/i.test(location.hostname)) return false;
-  if (SAFI) { location.replace(SV_HOME + (location.hash || "")); return true; }
-  if (/^#(app|lesson|drill|sadmin)/.test(location.hash)) { location.replace(SV_HOME + location.hash); return true; } return false; };
-svOut(); addEventListener("hashchange", svOut);
 const brandHTML = () => `<span class="ap-brand sv">Safi<i>verse</i></span>`;
 /* ===== APP MODE (Duolingo-style): learning path, XP, daily goal, hearts-free practice, profile, badges ===== */
 Object.assign(UI.en, { apLearn: "Learn", apPractice: "Worlds", apEnPrac: "English practice", apLeague: "Leaderboard", apProfile: "Profile", apXp: "XP", apGoal: "Daily goal", apGoalDone: "Daily goal reached!",
