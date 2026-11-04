@@ -2241,3 +2241,8 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 .hx-one{grid-template-columns:1fr}
 @media (max-width:640px){.hx-cases{grid-template-columns:1fr}}
 .dx-hard{display:inline-block;margin:0 8px 6px 0;padding:3px 9px;border-radius:999px;background:#ff9f4322;border:1px solid #ff9f43;color:#ffb36b;font:800 12px var(--bf);letter-spacing:.02em;vertical-align:middle}
+/* ---- level picker ---- */
+.lv-card{max-height:90vh;overflow:auto}.lv-card h2{margin:0;font:800 21px var(--bf)}.lv-card>p{margin:0 0 6px}
+.lv-list{display:grid;gap:8px;width:100%}.lv-it{display:flex;align-items:center;gap:12px;width:100%;padding:11px 14px;border-radius:16px;border:2px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink,#eef6f0);text-align:left;cursor:pointer}
+.lv-it.on{border-color:var(--acc);background:#6fcf8e1f}.lv-e{font-size:26px;flex:none}.lv-tx{display:grid;gap:2px;flex:1;min-width:0}.lv-tx b{font:800 15.5px "Nunito",system-ui,sans-serif}.lv-tx small{color:var(--mut,#9fb3a8);font:600 12.5px "Nunito",system-ui,sans-serif}
+.lv-it i{font-style:normal;color:var(--acc);font-weight:900}.lv-test{display:block;margin-top:6px;color:var(--acc);font:800 14px "Nunito",system-ui,sans-serif;text-decoration:none;padding:8px}

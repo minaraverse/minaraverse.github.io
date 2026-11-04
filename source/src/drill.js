@@ -34,7 +34,8 @@ Object.assign(UI.ru, { dWrite: "Напиши по-английски", dHard: "�
   dSlow: "Медленно", dJumpHere: "Перейти сюда!", dNode: ["Новые слова", "Ещё слова", "Слушай и собирай", "Грамматика и письмо", "Повторение раздела"], dNodeDone: "Пройдено — повторить", dPracticeXp: "Повторить +5 XP", dAfill: "Найди пропущенное слово", dSkip: "Не могу сейчас слушать", dWin: ["Так держать!", "Отличная работа!", "Получилось!", "Блестяще!"], dWinP: "Каждый урок приближает тебя к цели.", dPerfect: "Урок без ошибок!", dAccA: "Отлично", dAccB: "Хорошо", dFast: "Быстро", dTypeHere: "Пиши по-английски", dCourseName: "Английский шаг за шагом", dStories: "Курсы-истории", dFirst: "Начни здесь" });
 
 /* ---------- course data ---------- */
-const UCOLS = [["#6FCF8E", "#8FD9B6", "#B5E3A1", "#7CC7A8", "#9BD88A"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#6FFF00", "#7CF6FF", "#B724FF", "#EFF4FF", "#9DFFB0"]];
+const UCOLS = [["#6FCF8E", "#8FD9B6", "#B5E3A1", "#7CC7A8", "#9BD88A"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#6FFF00", "#7CF6FF", "#B724FF", "#EFF4FF", "#9DFFB0"],
+  ["#4FC3F7", "#29B6F6", "#81D4FA", "#4DD0E1", "#80DEEA"], ["#FFB74D", "#FF8A65", "#FFD54F", "#F06292", "#FFAB91"], ["#E1BEE7", "#CE93D8", "#FFD700", "#B39DDB", "#F8BBD0"]];
 const UNITS = [];
 const SECTIONS = COURSE_SECTIONS.map((sec, si) => { const from = UNITS.length;
   sec.units.forEach(u => { const rows = s => String(s || "").trim().split("\n").map(x => x.trim()).filter(Boolean).map(x => x.split("|").map(y => y.trim()));
@@ -54,9 +55,9 @@ const LPU = 5; /* lessons per unit (last = unit review) */
 /* ---------- progress ---------- */
 const DP = () => lsGet("mv-drill", {});
 const uDone = i => DP()["u" + i] || 0;
-const startUnit = () => { const l = myLevel(); return !l || l === "A1" ? 0 : l === "A2" ? SECTIONS[1].from : SECTIONS[2].from; };
+const startUnit = () => { const l = myLevel(), i = SECTIONS.findIndex(s => s.lv === l); return i > 0 ? SECTIONS[i].from : 0; };
 const unitOpen = i => i === 0 || i <= startUnit() || uDone(i - 1) >= LPU || (DP().jump || 0) >= i;
-const curUnit = () => { for (let i = 0; i < UNITS.length; i++) if (unitOpen(i) && uDone(i) < LPU) return i; return UNITS.length - 1; };
+const curUnit = () => { for (let i = startUnit(); i < UNITS.length; i++) if (unitOpen(i) && uDone(i) < LPU) return i; for (let i = 0; i < UNITS.length; i++) if (unitOpen(i) && uDone(i) < LPU) return i; return UNITS.length - 1; }; /* start where the chosen level starts */
 const drillLessons = () => UNITS.reduce((a, u) => a + uDone(u.n), 0);
 
 /* ---------- hearts ---------- */
@@ -161,7 +162,10 @@ const partDone = (u, j) => uDone(u) > j ? partsOf(j) : uDone(u) === j ? Math.min
 const MIXED = "build:R fill:F listen:R mean:r img:r buildr:R pairs:M hearw:r smean:R build:R";
 const JUMPR = "build:R fill:F listen:R smean:R build:R fill:F buildr:R listen:R build:R fill:F";
 function buildQueue(recipe, unitsPick) { const ctx = {};
-  return recipe.split(" ").map(p => { const [k, r] = p.split(":"); const U = unitsPick(); const c = U.ctx || (U.ctx = {}); const x = makeEx(k, U, r, c); if (x) x.U = U; return x; }).filter(Boolean).map(x => noListen() ? unListen(x) : x).map(x => hardMode() && x.k !== "pairs" ? Object.assign(morph(x, HARDER[x.k]), { hard: !!HARDER[x.k] }) : x); }
+  return recipe.split(" ").map(p => { const [k, r] = p.split(":"); const U = unitsPick(); const c = U.ctx || (U.ctx = {}); const x = makeEx(k, U, r, c); if (x) x.U = U; return x; }).filter(Boolean).map(x => noListen() ? unListen(x) : x).map(x => hardMode() && x.k !== "pairs" ? Object.assign(morph(x, HARDER[x.k]), { hard: !!HARDER[x.k] }) : x).map(lvlBoost); }
+/* the level a learner chose sets the base difficulty: A2 → no picture hints, B1+ → recall and listening versions */
+function lvlBoost(x) { if (hardMode() || x.k === "pairs" || x.prev) return x; const i = ["A1", "A2", "B1", "B2", "C1", "C2"].indexOf(myLevel() || "A1");
+  if (i >= 2 && HARDER[x.k]) return morph(x, HARDER[x.k]); if (i === 1 && x.k === "img") return morph(x, "mean"); return x; }
 const LISTEN_K = ["hearw", "typew", "listen", "afill"];
 const noListen = () => +(sessionStorage.getItem("mv-nolisten") || 0) > Date.now();
 function unListen(x) { if (!LISTEN_K.includes(x.k)) return x;

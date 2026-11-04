@@ -242,7 +242,7 @@ function feedFromSync_(email, oldP, newP, s0, s1, l0, l1) {
   [7, 30, 100, 365].forEach(n => { if (s0 < n && s1 >= n) evt_(uid, "streak", n); });
   [10, 50, 100, 250].forEach(n => { if (l0 < n && l1 >= n) evt_(uid, "lessons", n); });
   const b0 = (oldP || {})["mv-badges"] || {}, b1 = (newP || {})["mv-badges"] || {};
-  ["sec0", "sec1", "sec2"].forEach((k, i) => { if (b1[k] && !b0[k]) evt_(uid, "level", ["A1", "A2", "B1"][i]); });
+  ["sec0", "sec1", "sec2", "sec3", "sec4", "sec5"].forEach((k, i) => { if (b1[k] && !b0[k]) evt_(uid, "level", ["A1", "A2", "B1", "B2", "C1", "C2"][i]); });
 }
 function isFriend_(me, other) { const v = frSheet_().getDataRange().getValues(); for (let i = 1; i < v.length; i++) if (v[i][2] === "ok" && ((v[i][0] === me && v[i][1] === other) || (v[i][0] === other && v[i][1] === me))) return true; return false; }
 function friendIds_(me) { const v = frSheet_().getDataRange().getValues(), o = []; for (let i = 1; i < v.length; i++) if (v[i][2] === "ok") { if (v[i][0] === me) o.push(v[i][1]); else if (v[i][1] === me) o.push(v[i][0]); } return o; }

@@ -45,7 +45,7 @@ function speakView(root, shell) {
 }
 
 /* ---------- certificates (drawn on the phone, no server) ---------- */
-const CE_LV = [["A1", ["Beginner", "Başlanğıc", "Начальный"]], ["A2", ["Elementary", "Elementar", "Элементарный"]], ["B1", ["Intermediate", "Orta", "Средний"]]];
+const CE_LV = [["A1", ["Beginner", "Başlanğıc", "Начальный"]], ["A2", ["Elementary", "Elementar", "Элементарный"]], ["B1", ["Intermediate", "Orta", "Средний"]], ["B2", ["Upper-Intermediate", "Orta-yuxarı", "Выше среднего"]], ["C1", ["Advanced", "Qabaqcıl", "Продвинутый"]], ["C2", ["Proficiency", "Peşəkar", "Профессиональный"]]];
 const certEarned = () => { const b = lsGet("mv-badges", {}); return SECTIONS.map((s, i) => b["sec" + i] ? i : -1).filter(i => i > -1 && i < CE_LV.length); };
 async function certCanvas(i) {
   const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const c = cv.getContext("2d");

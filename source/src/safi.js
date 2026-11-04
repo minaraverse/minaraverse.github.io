@@ -61,7 +61,7 @@ function voteCards() { const v = voteState(), g = v.goal || 100;
       <button class="sv-vote ${me ? "on" : ""}" data-vote="${k}" ${me ? "disabled" : ""}>${me ? L("svVoted") : L("svVote")}</button></div>`; }).join(""); }
 function drawVotes(root) { const b = root.querySelector(".sv-votes"); if (b) b.innerHTML = voteCards(); }
 function pickHTML() { const s = typeof subj === "function" ? subj() : "en", card = (k, e, t, p) => `<button class="sv-sub ${s === k ? "on" : ""}" data-subj="${k}"><span>${e}</span><b>${t}</b><small>${p}</small><i>›</i></button>`;
-  return `<div class="sv-pick">${card("en", "🇬🇧", L("skEnglish"), "A1 → B1 · " + drillLessons() + "/" + UNITS.length * LPU)}
+  return `<div class="sv-pick">${card("en", "🇬🇧", L("skEnglish"), "A1 → C2 · " + drillLessons() + "/" + UNITS.length * LPU)}
     <h2 class="ap-h2">${L("svSoon")}</h2><p class="sv-soonp">${L("svSoonP")}</p><div class="sv-votes">${voteCards()}</div></div>`; }
 function wirePick(root, after) {
   root.onclick = async e => {
@@ -82,7 +82,7 @@ function onbScreen(root, step = 1) {
     return;
   }
   root.innerHTML = head + `<h1 class="ap-h">${L("svLearn")}</h1>${pickHTML()}</main></div>`;
-  wirePick(root, () => { lsSet("mv-onb", 1); welcomeScreen(root); });
+  wirePick(root, () => { const go = () => { lsSet("mv-onb", 1); welcomeScreen(root); }; if (typeof levelSheet === "function" && !myLevel()) levelSheet(go); else go(); });
 }
 
 /* ---------- gate: welcome → guest (1 lesson) → required sign-up ---------- */
