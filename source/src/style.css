@@ -2441,3 +2441,16 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .sh-b.wa span{background:#25D366}.sh-b.tg span{background:#2AABEE}.sh-b.cp span{background:#5b6b8f}.sh-b.more span{background:#7a5cff}
 .sh-b.ok{border-color:#6FCF8E;background:rgba(111,207,142,.15)}.sh-b:active{transform:scale(.96)}
 .dr-animal.live{animation:none!important;filter:drop-shadow(0 8px 16px rgba(0,0,0,.35))}
+/* animals: hop in on scroll, lean with the scroll, tap reaction */
+.pose-animal .dr-ch{transform:rotate(var(--lean,0deg));transform-origin:50% 100%;transition:transform .45s cubic-bezier(.2,1.6,.4,1)}
+.pose-animal.an-wait .dr-ch{opacity:0;transform:translateY(46px) scale(.55)}
+.pose-animal.an-in .dr-ch{animation:anHop 1s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes anHop{0%{opacity:0;transform:translateY(46px) scale(.55) rotate(-8deg)}45%{opacity:1;transform:translateY(-16px) scale(1.06) rotate(4deg)}70%{transform:translateY(3px) scale(.97,1.03)}100%{opacity:1;transform:none}}
+.pose-animal.an-tap .dr-ch{animation:anTap .8s cubic-bezier(.2,1.4,.4,1)}
+@keyframes anTap{0%{transform:none}25%{transform:translateY(-26px) scale(1.1) rotate(-10deg)}50%{transform:translateY(-30px) scale(1.12) rotate(10deg)}75%{transform:translateY(2px) scale(1.04,.95)}100%{transform:none}}
+.an-spark{position:absolute;left:50%;top:45%;font-style:normal;font-size:24px;pointer-events:none;z-index:3;text-shadow:0 0 8px currentColor;animation:anSpark .9s ease-out forwards}
+@keyframes anSpark{0%{transform:translate(-50%,-50%) scale(.3);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.1) rotate(90deg);opacity:0}}
+.an-z{position:absolute;right:6px;top:4px;font:900 18px var(--bf);font-style:normal;color:#FFE29A;opacity:0;pointer-events:none;animation:anZ 3s ease-in-out infinite}
+.an-z.z2{animation-delay:1s;font-size:14px}.an-z.z3{animation-delay:2s;font-size:11px}
+@keyframes anZ{0%{transform:translate(0,10px);opacity:0}30%{opacity:.95}100%{transform:translate(18px,-34px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pose-animal .dr-ch{transform:none!important;animation:none!important}.an-z{display:none}}

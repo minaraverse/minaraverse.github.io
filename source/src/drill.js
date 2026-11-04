@@ -402,7 +402,7 @@ function drillPathHTML() {
   }).join("") + `</div>`).join("") + `<button class="dr-tocur" aria-label="Current lesson">↑</button>`;
 }
 function wireDrillPath(root) {
-  apReveal(root);
+  apReveal(root); animalFx(root);
   const sio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) apTheme(+e.target.dataset.th); }), { rootMargin: "-48% 0px -48% 0px" });
   root.querySelectorAll(".dr-sb").forEach(s => sio.observe(s)); root._sio && root._sio.disconnect(); root._sio = sio;
   /* sticky banner follows the unit in view */
@@ -422,7 +422,7 @@ function wireDrillPath(root) {
     if (e.target.closest("[data-go='course']")) { Router.go("app-pick"); return; }
     const n = e.target.closest(".dr-node"), g = e.target.closest("[data-guide]"), c = e.target.closest("[data-chest]");
     if (g) { guideSheet(UNITS[+g.dataset.guide]); return; }
-    const sd = e.target.closest("[data-side]"); if (sd) { sideSheet(UNITS[+sd.dataset.side]); return; }
+    const sd = e.target.closest("[data-side]"); if (sd) { if (sd.classList.contains("pose-animal")) { animalTap(sd); setTimeout(() => sideSheet(UNITS[+sd.dataset.side]), 650); } else sideSheet(UNITS[+sd.dataset.side]); return; }
     const kd = e.target.closest("[data-kid]"); if (kd) { sfx("pop"); buzz(15); kd.classList.remove("zoom"); void kd.offsetWidth; kd.classList.add("zoom"); toast("🌟 " + L("rcCheer")[(Math.random() * 3) | 0]); return; }
     const rc = e.target.closest("[data-racer]"); if (rc) { const R = RACERS[+rc.dataset.racer]; sfx("combo"); buzz(20); rc.classList.remove("zoom"); void rc.offsetWidth; rc.classList.add("zoom"); toast("🏁 " + R.n.split(" ")[0] + ": " + L("rcCheer")[(Math.random() * 3) | 0]); return; }
     if (c) { const u = +c.dataset.chest, p = DP(); p.chest = p.chest || [];
@@ -734,4 +734,33 @@ function sideSheet(U) {
   if (!unitOpen(U.n)) ov.querySelector(".ap-cta").remove();
   document.body.appendChild(ov); sfx("pop"); ov.onclick = e => { if (e.target === ov) ov.remove(); };
   addEventListener("hashchange", () => ov.remove(), { once: true });
+}
+
+/* ---------- mural animals come alive: hop in when they scroll into view, lean with the scroll, react to a tap ---------- */
+const SLEEPERS = ["fawn", "squirrel-moon"];
+function animalFx(root) {
+  const els = [...root.querySelectorAll(".pose-animal")]; if (!els.length) return;
+  els.forEach(el => { const k = (el.className.match(/an-([\w-]+)/) || [])[1]; if (SLEEPERS.includes(k) && !el.querySelector(".an-z")) el.querySelector(".dr-ch").insertAdjacentHTML("beforeend", `<i class="an-z">z</i><i class="an-z z2">z</i><i class="an-z z3">z</i>`); });
+  if (REDUCED) return;
+  if ("IntersectionObserver" in window) {
+    els.forEach(el => el.classList.add("an-wait"));
+    const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; const el = e.target; el.classList.remove("an-wait"); el.classList.add("an-in");
+      io.unobserve(el); setTimeout(() => el.classList.remove("an-in"), 1100); }), { rootMargin: "0px 0px -12% 0px", threshold: .25 });
+    els.forEach(el => io.observe(el)); root._aio && root._aio.disconnect(); root._aio = io;
+    setTimeout(() => els.forEach(el => { const r = el.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) el.classList.remove("an-wait"); }), 1500); /* never stay hidden */
+  }
+  /* lean with the scroll speed, settle back when the scrolling stops */
+  let lastY = scrollY, lastT = performance.now(), raf = 0, idle = 0;
+  const onScroll = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const now = performance.now(), v = (scrollY - lastY) / Math.max(16, now - lastT) * 16; lastY = scrollY; lastT = now;
+      const tilt = Math.max(-12, Math.min(12, v * .9)); els.forEach(el => el.style.setProperty("--lean", (el.classList.contains("l") ? -tilt : tilt).toFixed(2) + "deg"));
+      clearTimeout(idle); idle = setTimeout(() => els.forEach(el => el.style.setProperty("--lean", "0deg")), 120); }); };
+  removeEventListener("scroll", window.__anScroll || (() => {})); window.__anScroll = onScroll; addEventListener("scroll", onScroll, { passive: true });
+}
+function animalTap(el) {
+  sfx("combo"); buzz([15, 30, 15]); el.classList.remove("an-tap"); void el.offsetWidth; el.classList.add("an-tap");
+  const ch = el.querySelector(".dr-ch"); const cols = ["#FFD15C", "#FFF4C2", "#B49CFF", "#FF9EC4"];
+  for (let i = 0; i < 10; i++) { const s = document.createElement("i"); s.className = "an-spark"; s.textContent = i % 3 ? "✦" : "★";
+    const a = (i / 10) * Math.PI * 2, r = 55 + Math.random() * 30; s.style.setProperty("--dx", (Math.cos(a) * r).toFixed(0) + "px"); s.style.setProperty("--dy", (Math.sin(a) * r - 20).toFixed(0) + "px"); s.style.color = cols[i % 4];
+    ch.appendChild(s); setTimeout(() => s.remove(), 900); }
+  setTimeout(() => el.classList.remove("an-tap"), 800);
 }
