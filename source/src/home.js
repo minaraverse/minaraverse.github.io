@@ -29,7 +29,7 @@ VIEWS.home = root => {
       <p class="h-eyebrow">${L("eyebrow")}</p>
       <h1 class="h-h1"><span class="ln">${letters(L("h1a"))}</span><span class="ln">${letters(L("h1b"))} <em>${letters(L("h1c"))}</em></span></h1>
       <p class="h-lead">${L("lead")}</p>
-      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><a class="h-cta2 h-app" href="#app" aria-label="Safiverse"><img class="h-app-ic" src="safiverse/icon-192.png" alt="" width="34" height="34"><span class="h-app-w"><b>Safi</b><i>verse</i></span></a></div>
+      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><button class="h-cta2 h-share" data-siteshare><span aria-hidden="true">📤</span> ${L("shBtn")}</button><a class="h-cta2 h-app" href="#app" aria-label="Safiverse"><img class="h-app-ic" src="safiverse/icon-192.png" alt="" width="34" height="34"><span class="h-app-w"><b>Safi</b><i>verse</i></span></a></div>
     </div>
     <div class="h-hero-r" aria-hidden="true">
       <svg class="h-badge" viewBox="0 0 200 200"><defs><path id="bc" d="M100 100 m-78 0 a78 78 0 1 1 156 0 a78 78 0 1 1 -156 0"/></defs><text font-family="Bricolage Grotesque,Arial,sans-serif" font-size="13.5" font-weight="600" letter-spacing="3.2"><textPath href="#bc">MINARAVERSE ✦ ENGLISH THROUGH STORIES ✦ A1–B2 ✦ </textPath></text><text x="100" y="112" text-anchor="middle" font-family="'Fraunces',Georgia,serif" font-size="40" font-style="italic">mv</text></svg>
@@ -86,6 +86,8 @@ VIEWS.home = root => {
   ${STORIES.club ? (() => { const w = STORIES.club.units[clubIdx()]; return `<section class="h-club"><a class="hc-box" href="#club"><span class="hc-cup" aria-hidden="true">${w.emoji || "☕"}</span><div><p class="h-k">☕ ${L("clubK")} · ${L("clubNew")}</p><span class="hc-fmt">${esc(w.format)}</span><h2 class="h-h2">${esc(w.title)}</h2><p>${L("fm_clubP")}</p><em>${L("clubOpen")} →</em></div></a></section>`; })() : ""}
   <p class="h-next" aria-hidden="false"><span>${L("nx6")}</span><i>↓</i></p>
   ${leadHTML()}
+  <section class="h-sharef"><div><p class="h-k">📤 ${L("shBtn")}</p><h2 class="h-h2">${L("shH")}</h2><p class="h-about-p">${L("shP")}</p></div>
+    <div class="h-shb"><button class="h-cta" data-siteshare>📤 ${L("shBtn")}</button><span class="h-shurl">minaraverse.github.io</span></div></section>
   <footer class="h-foot"><p class="h-k">${L("follow")}</p><a class="h-big" href="${IG}" target="_blank" rel="noopener">${[..."@minaraverse"].map((ch, i) => `<span class="fl" style="--i:${i}">${ch}</span>`).join("")}<span class="h-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></a>
     <div class="h-fbar"><span class="h-fmv" aria-hidden="true">M<i>V</i></span><p class="h-small">© ${new Date().getFullYear()} Minaraverse<br><span>English beyond the classroom</span></p><a class="h-adminbtn" href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Minaraverse giriş</a></div></footer>
   </div>`;

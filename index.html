@@ -2430,6 +2430,23 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .lg-course{display:block;color:var(--mut);font:700 12.5px var(--bf);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lg-course em{font-style:normal;color:var(--acc)}
 @media (prefers-reduced-motion:reduce){.dr-animal{animation:none!important}}
 
+/* ===== share the site ===== */
+.h-share{cursor:pointer;font:inherit;background:transparent;color:inherit}
+.h-sharef{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;margin:0 0 80px;padding:34px;border-radius:24px;background:linear-gradient(135deg,rgba(111,207,142,.14),rgba(157,176,255,.10));border:1px solid rgba(157,176,255,.25)}
+.h-sharef .h-h2{margin:6px 0 8px}.h-sharef .h-about-p{margin:0;max-width:520px}
+.h-shb{display:grid;gap:10px;justify-items:center}.h-shb .h-cta{cursor:pointer;border:0;font:inherit}.h-shurl{color:var(--mv-muted);font-size:13px;letter-spacing:.02em}
+.sh-ov{position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-end;justify-content:center;background:rgba(5,6,12,.55);backdrop-filter:blur(6px);opacity:0;transition:opacity .25s}
+.sh-ov.in{opacity:1}.sh-ov.in .sh-card{transform:none}
+.sh-card{position:relative;width:min(100%,460px);margin:0 auto;padding:26px 20px calc(24px + env(safe-area-inset-bottom));border-radius:26px 26px 0 0;background:#1b1d2a;color:#f3efe6;box-shadow:0 -20px 60px rgba(0,0,0,.5);transform:translateY(40px);transition:transform .3s cubic-bezier(.2,.9,.25,1.1);font-family:"Bricolage Grotesque",system-ui,sans-serif}
+@media (min-width:700px){.sh-ov{align-items:center}.sh-card{border-radius:26px}}
+.sh-card h3{margin:0 34px 4px 0;font:500 26px/1.15 "Fraunces",serif}.sh-url{margin:0 0 18px;color:#9DB0FF;font-size:14px}
+.sh-x{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.08);color:#fff;font-size:16px;cursor:pointer}
+.sh-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:12px}
+.sh-b{display:grid;justify-items:center;gap:8px;padding:14px 6px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;text-decoration:none;cursor:pointer;font:600 13.5px "Bricolage Grotesque",system-ui,sans-serif}
+.sh-b span{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;font-size:24px;background:rgba(255,255,255,.1)}.sh-b svg{width:28px;height:28px}
+.sh-b.wa span{background:#25D366}.sh-b.tg span{background:#2AABEE}.sh-b.cp span{background:#5b6b8f}.sh-b.more span{background:#7a5cff}
+.sh-b.ok{border-color:#6FCF8E;background:rgba(111,207,142,.15)}.sh-b:active{transform:scale(.96)}
+
 </style>
 <div id="view"></div>
 <script>
@@ -5370,7 +5387,7 @@ VIEWS.home = root => {
       <p class="h-eyebrow">${L("eyebrow")}</p>
       <h1 class="h-h1"><span class="ln">${letters(L("h1a"))}</span><span class="ln">${letters(L("h1b"))} <em>${letters(L("h1c"))}</em></span></h1>
       <p class="h-lead">${L("lead")}</p>
-      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><a class="h-cta2 h-app" href="#app" aria-label="Safiverse"><img class="h-app-ic" src="safiverse/icon-192.png" alt="" width="34" height="34"><span class="h-app-w"><b>Safi</b><i>verse</i></span></a></div>
+      <div class="h-ctas"><a class="h-cta" href="#level">${LV ? L("yourLevel") + ": " + LV + " · " + L("lvlAgain") : L("findLevel")} →</a><a class="h-cta2" href="#" data-jump="h-stories">${L("cta")} ↘</a><button class="h-cta2 h-share" data-siteshare><span aria-hidden="true">📤</span> ${L("shBtn")}</button><a class="h-cta2 h-app" href="#app" aria-label="Safiverse"><img class="h-app-ic" src="safiverse/icon-192.png" alt="" width="34" height="34"><span class="h-app-w"><b>Safi</b><i>verse</i></span></a></div>
     </div>
     <div class="h-hero-r" aria-hidden="true">
       <svg class="h-badge" viewBox="0 0 200 200"><defs><path id="bc" d="M100 100 m-78 0 a78 78 0 1 1 156 0 a78 78 0 1 1 -156 0"/></defs><text font-family="Bricolage Grotesque,Arial,sans-serif" font-size="13.5" font-weight="600" letter-spacing="3.2"><textPath href="#bc">MINARAVERSE ✦ ENGLISH THROUGH STORIES ✦ A1–B2 ✦ </textPath></text><text x="100" y="112" text-anchor="middle" font-family="'Fraunces',Georgia,serif" font-size="40" font-style="italic">mv</text></svg>
@@ -5427,6 +5444,8 @@ VIEWS.home = root => {
   ${STORIES.club ? (() => { const w = STORIES.club.units[clubIdx()]; return `<section class="h-club"><a class="hc-box" href="#club"><span class="hc-cup" aria-hidden="true">${w.emoji || "☕"}</span><div><p class="h-k">☕ ${L("clubK")} · ${L("clubNew")}</p><span class="hc-fmt">${esc(w.format)}</span><h2 class="h-h2">${esc(w.title)}</h2><p>${L("fm_clubP")}</p><em>${L("clubOpen")} →</em></div></a></section>`; })() : ""}
   <p class="h-next" aria-hidden="false"><span>${L("nx6")}</span><i>↓</i></p>
   ${leadHTML()}
+  <section class="h-sharef"><div><p class="h-k">📤 ${L("shBtn")}</p><h2 class="h-h2">${L("shH")}</h2><p class="h-about-p">${L("shP")}</p></div>
+    <div class="h-shb"><button class="h-cta" data-siteshare>📤 ${L("shBtn")}</button><span class="h-shurl">minaraverse.github.io</span></div></section>
   <footer class="h-foot"><p class="h-k">${L("follow")}</p><a class="h-big" href="${IG}" target="_blank" rel="noopener">${[..."@minaraverse"].map((ch, i) => `<span class="fl" style="--i:${i}">${ch}</span>`).join("")}<span class="h-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></a>
     <div class="h-fbar"><span class="h-fmv" aria-hidden="true">M<i>V</i></span><p class="h-small">© ${new Date().getFullYear()} Minaraverse<br><span>English beyond the classroom</span></p><a class="h-adminbtn" href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Minaraverse giriş</a></div></footer>
   </div>`;
@@ -5523,6 +5542,33 @@ VIEWS.home = root => {
   if (!REDUCED) tick(); else root.querySelectorAll(".mt-type").forEach(el => el.textContent = prompts[0]);
   return { unmount() { clearTimeout(tm); cancelAnimationFrame(raf); removeEventListener("scroll", tt); top.remove(); } };
 };
+
+/* ===== Share the site: WhatsApp, Telegram, copy link, or the phone's own share menu ===== */
+Object.assign(UI.en, { shBtn: "Share the site", shH: "Send Minaraverse to a friend", shP: "Learning English together is more fun. Send the link in one tap.", shTxt: "Minaraverse — learn English through stories and games 👇", shCopy: "Copy link", shCopied: "Link copied ✓", shMore: "More…", shWa: "WhatsApp", shTg: "Telegram" });
+Object.assign(UI.az, { shBtn: "Saytı paylaş", shH: "Minaraverse-i dostuna göndər", shP: "İngilis dilini birlikdə öyrənmək daha maraqlıdır. Linki bir toxunuşla göndər.", shTxt: "Minaraverse — ingilis dilini hekayələr və oyunlarla öyrən 👇", shCopy: "Linki kopyala", shCopied: "Link kopyalandı ✓", shMore: "Digər…", shWa: "WhatsApp", shTg: "Telegram" });
+Object.assign(UI.ru, { shBtn: "Поделиться сайтом", shH: "Отправь Minaraverse другу", shP: "Учить английский вместе интереснее. Отправь ссылку в одно касание.", shTxt: "Minaraverse — учи английский через истории и игры 👇", shCopy: "Скопировать ссылку", shCopied: "Ссылка скопирована ✓", shMore: "Ещё…", shWa: "WhatsApp", shTg: "Telegram" });
+const SITE_URL = "https://minaraverse.github.io";
+function openShare() {
+  document.querySelectorAll(".sh-ov").forEach(o => o.remove());
+  const url = SITE_URL, txt = L("shTxt"), enc = encodeURIComponent;
+  const ov = document.createElement("div"); ov.className = "sh-ov";
+  ov.innerHTML = `<div class="sh-card" role="dialog" aria-label="${esc(L("shBtn"))}"><button class="sh-x" aria-label="Close">✕</button><h3>${L("shH")}</h3><p class="sh-url">${url.replace("https://", "")}</p>
+    <div class="sh-grid"><a class="sh-b wa" href="https://wa.me/?text=${enc(txt + "\n" + url)}" target="_blank" rel="noopener"><span><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg></span><b>${L("shWa")}</b></a>
+      <a class="sh-b tg" href="https://t.me/share/url?url=${enc(url)}&text=${enc(txt)}" target="_blank" rel="noopener"><span><svg viewBox="0 0 24 24" fill="#fff"><path d="M21.9 4.3 18.7 19c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9-8.2c.4-.4-.1-.6-.6-.2L6.3 12.6l-4.8-1.5c-1-.3-1-1 .2-1.5L20.4 2.9c.9-.3 1.7.2 1.5 1.4z"/></svg></span><b>${L("shTg")}</b></a>
+      <button class="sh-b cp" data-shcopy><span>🔗</span><b>${L("shCopy")}</b></button>
+      ${navigator.share ? `<button class="sh-b more" data-shmore><span>📤</span><b>${L("shMore")}</b></button>` : ""}</div></div>`;
+  document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add("in"));
+  const close = () => { ov.classList.remove("in"); setTimeout(() => ov.remove(), 250); };
+  ov.onclick = async e => {
+    if (e.target === ov || e.target.closest(".sh-x")) return close();
+    const c = e.target.closest("[data-shcopy]"); if (c) { const b = c.querySelector("b");
+      try { await navigator.clipboard.writeText(url); } catch (er) { const t = document.createElement("textarea"); t.value = url; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch (x) {} t.remove(); }
+      b.textContent = L("shCopied"); c.classList.add("ok"); setTimeout(close, 1100); return; }
+    if (e.target.closest("[data-shmore]")) { try { await navigator.share({ title: "Minaraverse", text: txt, url }); } catch (er) {} close(); return; }
+    if (e.target.closest(".sh-b")) setTimeout(close, 300); };
+  addEventListener("hashchange", close, { once: true });
+}
+document.addEventListener("click", e => { if (e.target.closest("[data-siteshare]")) { e.preventDefault(); openShare(); } });
 
 /* ===== THE ENGLISH TAPE CLUB — VHS shelf (Leon Vasari prompt) ===== */
 VIEWS.tapes = root => {
