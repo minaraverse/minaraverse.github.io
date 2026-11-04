@@ -80,7 +80,7 @@ const curCourse = () => { const c = lsGet("mv-course", null); if (!c || c === "m
 const noteOf = u => u.note || u.notes || u.log || u.syn || u.statement || u.prompt || "";
 
 /* ---------- views ---------- */
-const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], ["practice", "🪐", L("apPractice")], ["quests", "🎯", L("qTitle")], ["league", "🏆", L("apLeague")], ["profile", "👤", L("apProfile")]]
+const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], ["practice", "🪐", L("apPractice")], ["quests", "🎯", L("qTitle")], ["league", typeof trophySVG === "function" ? trophySVG(Math.max(0, Math.min(9, +((lsGet("mv-lg", null) || {}).tier) || 0)), "tab") : "🏆", L("apLeague")], ["profile", "👤", L("apProfile")]]
   .map(([k, e, t]) => `<a href="#app-${k}" class="${k === act ? "on" : ""}"><span>${e}</span><small>${t}</small></a>`).join("")}</nav>`;
 
 VIEWS.app = root => {

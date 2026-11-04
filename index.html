@@ -2414,6 +2414,10 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 @keyframes lgstar{0%,70%,100%{transform:none;opacity:1}80%{transform:scale(1.35) rotate(15deg);opacity:.85}}
 @media (prefers-reduced-motion:reduce){.lg-stars i{animation:none}}
 .tc-up{margin:2px 0 0;color:#FFB27A;font-weight:800;font-size:13.5px}
+/* league tab shows the planet of your current league */
+.ap-tabs a span svg.tab,.ap-tabs a span .tab{width:46px;height:46px;display:block;margin:-10px auto -8px}
+.ap-tabs a span:has(svg.tab){filter:none;line-height:0}
+.ap-tabs a:not(.on) span:has(svg.tab){opacity:.75}
 
 </style>
 <div id="view"></div>
@@ -7056,7 +7060,7 @@ const curCourse = () => { const c = lsGet("mv-course", null); if (!c || c === "m
 const noteOf = u => u.note || u.notes || u.log || u.syn || u.statement || u.prompt || "";
 
 /* ---------- views ---------- */
-const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], ["practice", "🪐", L("apPractice")], ["quests", "🎯", L("qTitle")], ["league", "🏆", L("apLeague")], ["profile", "👤", L("apProfile")]]
+const tabbar = act => `<nav class="ap-tabs">${[["learn", "🏠", L("apLearn")], ["practice", "🪐", L("apPractice")], ["quests", "🎯", L("qTitle")], ["league", typeof trophySVG === "function" ? trophySVG(Math.max(0, Math.min(9, +((lsGet("mv-lg", null) || {}).tier) || 0)), "tab") : "🏆", L("apLeague")], ["profile", "👤", L("apProfile")]]
   .map(([k, e, t]) => `<a href="#app-${k}" class="${k === act ? "on" : ""}"><span>${e}</span><small>${t}</small></a>`).join("")}</nav>`;
 
 VIEWS.app = root => {
