@@ -2215,6 +2215,9 @@ html.ap-mode .ap-main{overflow-x:clip}
 .sv-btns .sv-guest-b{padding:11px 14px}.sv-btns .sv-guest-b b{font-size:15px}.sv-btns .sv-guest-b small{font-size:12.5px}
 .sv-btns .sv-new-b{display:block;width:100%;max-width:420px;margin:2px auto 0;padding:10px 14px;border-radius:14px;border:1.5px dashed var(--line);background:transparent;color:var(--acc);font:800 14px var(--bf);letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
 .sv-btns .sv-new-b:active{transform:scale(.98)}
+.ad-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.ad-tabs button{display:grid;justify-items:center;gap:3px;padding:9px 4px;white-space:normal;min-width:0}
+.ad-tabs button span{display:inline-flex;align-items:center;gap:6px;font-size:16px}.ad-tabs button small{font:800 12.5px/1.15 var(--bf);text-align:center;overflow-wrap:anywhere}
 
 </style>
 <div id="view"></div>
@@ -8615,7 +8618,7 @@ VIEWS.sadmin = root => {
     const acts = r => tab === "pending" ? `<button class="fr-b go" data-st="ok" data-e="${esc(r.email)}">✅ ${T(AB.ok)}</button><button class="fr-b" data-st="reject" data-e="${esc(r.email)}">❌ ${T(AB.reject)}</button><button class="fr-b" data-st="blocked" data-e="${esc(r.email)}">🚫</button>`
       : tab === "ok" ? `<button class="fr-b" data-st="blocked" data-e="${esc(r.email)}">🚫 ${T(AB.blocked)}</button>` : `<button class="fr-b go" data-st="ok" data-e="${esc(r.email)}">↩️ ${T(AB.unblock)}</button>`;
     root.innerHTML = shell(`${vbox}<h1 class="ap-h">👥 ${all.length}</h1>
-      <div class="ad-tabs" role="tablist">${Object.keys(AT).map(k => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? "on" : ""}" data-tab="${k}">${AT[k][0]} ${T(AT[k][1])} <em>${cnt(k)}</em></button>`).join("")}</div>
+      <div class="ad-tabs" role="tablist">${Object.keys(AT).map(k => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? "on" : ""}" data-tab="${k}"><span>${AT[k][0]} <em>${cnt(k)}</em></span><small>${T(AT[k][1])}</small></button>`).join("")}</div>
       <input class="lg-in sv-q" placeholder="🔍"><div class="sv-tbl">${rows.length ? rows.map(r => `<div class="sv-row ${tab === "pending" ? "pend" : ""}" data-q="${esc((r.name + " " + r.email + " " + (r.user || "") + " " + (r.group || "")).toLowerCase())}">
       <span class="lg-av">${avOf(r.avatar, r.name)}</span><div><b>${esc(r.name)}</b> <small>👤 ${r.user ? esc(r.user) : "—"}</small><small>${r.age === "kid" ? "👧" : "🧑"} ${esc(r.email)}</small>${r.group ? `<small>👥 ${esc(r.group)}</small>` : ""}
       ${tab === "pending" ? "" : `<small>⚡ ${r.xp} · 🔥 ${r.streak} · 📚 ${r.lessons} · ${esc(r.unit || "")}</small>`}<small>🕒 ${dt(r.last)} · ✨ ${dt(r.created)}</small><div class="ad-acts">${acts(r)}</div></div></div>`).join("") : `<p class="ap-p">${T(AB.none)}</p>`}</div>`);
