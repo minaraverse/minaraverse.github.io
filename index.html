@@ -2447,19 +2447,6 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .sh-b.wa span{background:#25D366}.sh-b.tg span{background:#2AABEE}.sh-b.cp span{background:#5b6b8f}.sh-b.more span{background:#7a5cff}
 .sh-b.ok{border-color:#6FCF8E;background:rgba(111,207,142,.15)}.sh-b:active{transform:scale(.96)}
 .dr-animal.live{animation:none!important;filter:drop-shadow(0 8px 16px rgba(0,0,0,.35))}
-/* animals: hop in on scroll, lean with the scroll, tap reaction */
-.pose-animal .dr-ch{transform:rotate(var(--lean,0deg));transform-origin:50% 100%;transition:transform .45s cubic-bezier(.2,1.6,.4,1)}
-.pose-animal.an-wait .dr-ch{opacity:0;transform:translateY(46px) scale(.55)}
-.pose-animal.an-in .dr-ch{animation:anHop 1s cubic-bezier(.2,1.5,.4,1) both}
-@keyframes anHop{0%{opacity:0;transform:translateY(46px) scale(.55) rotate(-8deg)}45%{opacity:1;transform:translateY(-16px) scale(1.06) rotate(4deg)}70%{transform:translateY(3px) scale(.97,1.03)}100%{opacity:1;transform:none}}
-.pose-animal.an-tap .dr-ch{animation:anTap .8s cubic-bezier(.2,1.4,.4,1)}
-@keyframes anTap{0%{transform:none}25%{transform:translateY(-26px) scale(1.1) rotate(-10deg)}50%{transform:translateY(-30px) scale(1.12) rotate(10deg)}75%{transform:translateY(2px) scale(1.04,.95)}100%{transform:none}}
-.an-spark{position:absolute;left:50%;top:45%;font-style:normal;font-size:24px;pointer-events:none;z-index:3;text-shadow:0 0 8px currentColor;animation:anSpark .9s ease-out forwards}
-@keyframes anSpark{0%{transform:translate(-50%,-50%) scale(.3);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.1) rotate(90deg);opacity:0}}
-.an-z{position:absolute;right:6px;top:4px;font:900 18px var(--bf);font-style:normal;color:#FFE29A;opacity:0;pointer-events:none;animation:anZ 3s ease-in-out infinite}
-.an-z.z2{animation-delay:1s;font-size:14px}.an-z.z3{animation-delay:2s;font-size:11px}
-@keyframes anZ{0%{transform:translate(0,10px);opacity:0}30%{opacity:.95}100%{transform:translate(18px,-34px);opacity:0}}
-@media (prefers-reduced-motion:reduce){.pose-animal .dr-ch{transform:none!important;animation:none!important}.an-z{display:none}}
 
 </style>
 <div id="view"></div>
@@ -4937,13 +4924,29 @@ function voiceFor(u, text) { const g = speakerG(text), v = g === "m" ? (VOICE_M 
   /* the phone has only the other voice: shift the pitch so it still sounds right */
   if (g === "m" && !VOICE_M) u.pitch = .8; else if (g !== "m" && !VOICE_F && v && V_M.test(v.name)) u.pitch = 1.3; }
 if (TTS) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+/* iPhone: speech only works after it was started once inside a tap — unlock it on the first touch */
+let TTS_OK = false;
+if (TTS) { const ul = () => { if (TTS_OK) return; try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); TTS_OK = true; } catch (e) {}
+  ["pointerdown", "touchend", "click", "keydown"].forEach(ev => removeEventListener(ev, ul, true)); };
+  ["pointerdown", "touchend", "click", "keydown"].forEach(ev => addEventListener(ev, ul, true)); }
+/* speak safely: iPhone swallows a speak() that comes right after cancel(); a voice that never starts falls back to the default one */
+let SPEAK_T = 0;
+function speakU(u, text) {
+  const busy = speechSynthesis.speaking || speechSynthesis.pending; if (busy) speechSynthesis.cancel(); clearTimeout(SPEAK_T);
+  let started = false; const on0 = u.onstart; u.onstart = e => { started = true; on0 && on0(e); };
+  SPEAK_T = setTimeout(() => { speechSynthesis.speak(u);
+    setTimeout(() => { if (started || speechSynthesis.speaking) return; if (u.voice) { const v = new SpeechSynthesisUtterance(u.text); v.lang = "en-GB"; v.rate = u.rate; v.pitch = u.pitch; v.onend = u.onend; v.onerror = u.onerror;
+      speechSynthesis.cancel(); speechSynthesis.speak(v); setTimeout(() => { if (!speechSynthesis.speaking) muteHint(); }, 1500); } else muteHint(); }, 1200); }, busy ? 120 : 0);
+}
+let MUTE_SHOWN = false;
+function muteHint() { if (MUTE_SHOWN || typeof toast !== "function") return; MUTE_SHOWN = true;
+  toast(LANG === "ru" ? "🔇 Нет звука? Выключи беззвучный режим и прибавь громкость" : LANG === "az" ? "🔇 Səs gəlmir? Telefonun səssiz rejimini söndür və səsi artır" : "🔇 No sound? Turn off silent mode and raise the volume"); }
 function say(text, btn) {
   if (!TTS) return;
-  speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"'));
   voiceFor(u, text); u.rate = .92;
   if (btn) { document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); btn.classList.add("on"); u.onend = u.onerror = () => btn.classList.remove("on"); }
-  speechSynthesis.speak(u);
+  speakU(u, text);
 }
 const sayBtn = (text, cls = "") => TTS ? `<span role="button" tabindex="0" class="say ${cls}" data-say="${esc(text)}" aria-label="Listen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>` : "";
 document.addEventListener("click", e => { const b = e.target.closest("[data-say]"); if (!b) return; e.preventDefault(); e.stopPropagation(); say(b.dataset.say, b); }, true);
@@ -8478,7 +8481,7 @@ function speakerChar(t) { if (typeof PEOPLE === "undefined" || !t) return null; 
   const i = PEOPLE.findIndex(p => !p.robot && P_FEM.test(p.n) === (g === "f")); return i > -1 ? "p" + i : null; }
 const pixMini = t => `<span class="dx-pix">${mascot("", speakerChar(t) || themeChar())}</span>`;
 const bigSay = (text, slow) => TTS ? `<div class="dx-spk"><button class="dx-sp" data-sp="${esc(text)}" aria-label="Listen">🔊</button>${slow ? `<button class="dx-sp sm" data-sp="${esc(text)}" data-slow="1" aria-label="${L("dSlow")}">🐢</button>` : ""}</div>` : `<p class="dx-big">${esc(text)}</p>`;
-function sayRate(text, rate) { if (!TTS) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); voiceFor(u, text); u.rate = rate; speechSynthesis.speak(u); }
+function sayRate(text, rate) { if (!TTS) return; const u = new SpeechSynthesisUtterance(text); voiceFor(u, text); u.rate = rate; speakU(u, text); }
 function exHTML(x) {
   const T = k => `<h2 class="dx-t">${x.prev ? `<small class="dx-prev">↺ ${L("dPrev")}</small>` : ""}${x.hard ? `<small class="dx-hard">${L("dHard")}</small>` : ""}${L(k)}</h2>`;
   const opts = (arr, lab, cls = "") => `<div class="dx-opts ${cls}">${arr.map((o, i) => `<button class="dx-opt" data-i="${i}" style="--k:${i}"><kbd>${i + 1}</kbd>${lab(o)}</button>`).join("")}</div>`;
@@ -8697,7 +8700,7 @@ function drillPathHTML() {
   }).join("") + `</div>`).join("") + `<button class="dr-tocur" aria-label="Current lesson">↑</button>`;
 }
 function wireDrillPath(root) {
-  apReveal(root); animalFx(root);
+  apReveal(root); wakeAnimals(root);
   const sio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) apTheme(+e.target.dataset.th); }), { rootMargin: "-48% 0px -48% 0px" });
   root.querySelectorAll(".dr-sb").forEach(s => sio.observe(s)); root._sio && root._sio.disconnect(); root._sio = sio;
   /* sticky banner follows the unit in view */
@@ -8717,7 +8720,7 @@ function wireDrillPath(root) {
     if (e.target.closest("[data-go='course']")) { Router.go("app-pick"); return; }
     const n = e.target.closest(".dr-node"), g = e.target.closest("[data-guide]"), c = e.target.closest("[data-chest]");
     if (g) { guideSheet(UNITS[+g.dataset.guide]); return; }
-    const sd = e.target.closest("[data-side]"); if (sd) { if (sd.classList.contains("pose-animal")) { animalTap(sd); setTimeout(() => sideSheet(UNITS[+sd.dataset.side]), 650); } else sideSheet(UNITS[+sd.dataset.side]); return; }
+    const sd = e.target.closest("[data-side]"); if (sd) { sideSheet(UNITS[+sd.dataset.side]); return; }
     const kd = e.target.closest("[data-kid]"); if (kd) { sfx("pop"); buzz(15); kd.classList.remove("zoom"); void kd.offsetWidth; kd.classList.add("zoom"); toast("🌟 " + L("rcCheer")[(Math.random() * 3) | 0]); return; }
     const rc = e.target.closest("[data-racer]"); if (rc) { const R = RACERS[+rc.dataset.racer]; sfx("combo"); buzz(20); rc.classList.remove("zoom"); void rc.offsetWidth; rc.classList.add("zoom"); toast("🏁 " + R.n.split(" ")[0] + ": " + L("rcCheer")[(Math.random() * 3) | 0]); return; }
     if (c) { const u = +c.dataset.chest, p = DP(); p.chest = p.chest || [];
@@ -9004,8 +9007,13 @@ const ANIMALS = [["bunny-balloon", "Sky Bunny", "Uçan Dovşan", "Летучий
   ["raccoon", "Raccoon", "Yenot", "Енотик"], ["giraffe", "Giraffe", "Zürafə", "Жирафик"], ["squirrel-moon", "Moon Squirrel", "Ay Dələsi", "Лунная белочка"],
   ["fawn", "Fawn", "Maral balası", "Оленёнок"], ["bear-bunny", "Bear & Bunny", "Ayı və Dovşan", "Мишка и зайка"]];
 const animalOf = n => { const a = ANIMALS[n]; return a ? { k: a[0], n: LANG === "az" ? a[2] : LANG === "ru" ? a[3] : a[1] } : null; };
-const ANIMALS_LIVE = ["owl", "bunny-balloon"]; /* animated with Higgsfield (transparent animated WebP) */
-const animalImg = A => `<img class="dr-animal ${ANIMALS_LIVE.includes(A.k) ? "live" : ""}" src="img/av-${A.k}${ANIMALS_LIVE.includes(A.k) ? "-live" : ""}.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`;
+const ANIMALS_LIVE = ["owl", "bunny-balloon", "wolf", "squirrel", "hedgehog", "bunny-swing", "raccoon", "giraffe", "squirrel-moon", "fawn", "bear-bunny"]; /* animated with Higgsfield (transparent animated WebP) */
+/* the fawn sleeps until you scroll to it, then wakes up and smiles (plays once) */
+const animalImg = A => A.k === "fawn" ? `<img class="dr-animal live wake" src="img/av-fawn-sleep.webp" data-live="img/av-fawn-live.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`
+  : `<img class="dr-animal ${ANIMALS_LIVE.includes(A.k) ? "live" : ""}" src="img/av-${A.k}${ANIMALS_LIVE.includes(A.k) ? "-live" : ""}.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`;
+function wakeAnimals(root) { const ws = root.querySelectorAll("img.wake[data-live]"); if (!ws.length || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; const i = e.target; io.unobserve(i); setTimeout(() => { i.src = i.dataset.live + "?t=" + Date.now(); }, 600); }), { threshold: .6 });
+  ws.forEach(i => io.observe(i)); }
 function sideHTML(U, open) {
   const A = animalOf(U.n);
   if (A) { const st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
@@ -9031,34 +9039,6 @@ function sideSheet(U) {
   addEventListener("hashchange", () => ov.remove(), { once: true });
 }
 
-/* ---------- mural animals come alive: hop in when they scroll into view, lean with the scroll, react to a tap ---------- */
-const SLEEPERS = ["fawn", "squirrel-moon"];
-function animalFx(root) {
-  const els = [...root.querySelectorAll(".pose-animal")]; if (!els.length) return;
-  els.forEach(el => { const k = (el.className.match(/an-([\w-]+)/) || [])[1]; if (SLEEPERS.includes(k) && !el.querySelector(".an-z")) el.querySelector(".dr-ch").insertAdjacentHTML("beforeend", `<i class="an-z">z</i><i class="an-z z2">z</i><i class="an-z z3">z</i>`); });
-  if (REDUCED) return;
-  if ("IntersectionObserver" in window) {
-    els.forEach(el => el.classList.add("an-wait"));
-    const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; const el = e.target; el.classList.remove("an-wait"); el.classList.add("an-in");
-      io.unobserve(el); setTimeout(() => el.classList.remove("an-in"), 1100); }), { rootMargin: "0px 0px -12% 0px", threshold: .25 });
-    els.forEach(el => io.observe(el)); root._aio && root._aio.disconnect(); root._aio = io;
-    setTimeout(() => els.forEach(el => { const r = el.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) el.classList.remove("an-wait"); }), 1500); /* never stay hidden */
-  }
-  /* lean with the scroll speed, settle back when the scrolling stops */
-  let lastY = scrollY, lastT = performance.now(), raf = 0, idle = 0;
-  const onScroll = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const now = performance.now(), v = (scrollY - lastY) / Math.max(16, now - lastT) * 16; lastY = scrollY; lastT = now;
-      const tilt = Math.max(-12, Math.min(12, v * .9)); els.forEach(el => el.style.setProperty("--lean", (el.classList.contains("l") ? -tilt : tilt).toFixed(2) + "deg"));
-      clearTimeout(idle); idle = setTimeout(() => els.forEach(el => el.style.setProperty("--lean", "0deg")), 120); }); };
-  removeEventListener("scroll", window.__anScroll || (() => {})); window.__anScroll = onScroll; addEventListener("scroll", onScroll, { passive: true });
-}
-function animalTap(el) {
-  sfx("combo"); buzz([15, 30, 15]); el.classList.remove("an-tap"); void el.offsetWidth; el.classList.add("an-tap");
-  const ch = el.querySelector(".dr-ch"); const cols = ["#FFD15C", "#FFF4C2", "#B49CFF", "#FF9EC4"];
-  for (let i = 0; i < 10; i++) { const s = document.createElement("i"); s.className = "an-spark"; s.textContent = i % 3 ? "✦" : "★";
-    const a = (i / 10) * Math.PI * 2, r = 55 + Math.random() * 30; s.style.setProperty("--dx", (Math.cos(a) * r).toFixed(0) + "px"); s.style.setProperty("--dy", (Math.sin(a) * r - 20).toFixed(0) + "px"); s.style.color = cols[i % 4];
-    ch.appendChild(s); setTimeout(() => s.remove(), 900); }
-  setTimeout(() => el.classList.remove("an-tap"), 800);
-}
 
 /* ===== 24 topic characters, drawn in code (chibi full-body). Used on the path, inside lessons and as avatars ===== */
 const PEOPLE = [

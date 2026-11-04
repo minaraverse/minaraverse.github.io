@@ -415,13 +415,29 @@ function voiceFor(u, text) { const g = speakerG(text), v = g === "m" ? (VOICE_M 
   /* the phone has only the other voice: shift the pitch so it still sounds right */
   if (g === "m" && !VOICE_M) u.pitch = .8; else if (g !== "m" && !VOICE_F && v && V_M.test(v.name)) u.pitch = 1.3; }
 if (TTS) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+/* iPhone: speech only works after it was started once inside a tap — unlock it on the first touch */
+let TTS_OK = false;
+if (TTS) { const ul = () => { if (TTS_OK) return; try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); TTS_OK = true; } catch (e) {}
+  ["pointerdown", "touchend", "click", "keydown"].forEach(ev => removeEventListener(ev, ul, true)); };
+  ["pointerdown", "touchend", "click", "keydown"].forEach(ev => addEventListener(ev, ul, true)); }
+/* speak safely: iPhone swallows a speak() that comes right after cancel(); a voice that never starts falls back to the default one */
+let SPEAK_T = 0;
+function speakU(u, text) {
+  const busy = speechSynthesis.speaking || speechSynthesis.pending; if (busy) speechSynthesis.cancel(); clearTimeout(SPEAK_T);
+  let started = false; const on0 = u.onstart; u.onstart = e => { started = true; on0 && on0(e); };
+  SPEAK_T = setTimeout(() => { speechSynthesis.speak(u);
+    setTimeout(() => { if (started || speechSynthesis.speaking) return; if (u.voice) { const v = new SpeechSynthesisUtterance(u.text); v.lang = "en-GB"; v.rate = u.rate; v.pitch = u.pitch; v.onend = u.onend; v.onerror = u.onerror;
+      speechSynthesis.cancel(); speechSynthesis.speak(v); setTimeout(() => { if (!speechSynthesis.speaking) muteHint(); }, 1500); } else muteHint(); }, 1200); }, busy ? 120 : 0);
+}
+let MUTE_SHOWN = false;
+function muteHint() { if (MUTE_SHOWN || typeof toast !== "function") return; MUTE_SHOWN = true;
+  toast(LANG === "ru" ? "🔇 Нет звука? Выключи беззвучный режим и прибавь громкость" : LANG === "az" ? "🔇 Səs gəlmir? Telefonun səssiz rejimini söndür və səsi artır" : "🔇 No sound? Turn off silent mode and raise the volume"); }
 function say(text, btn) {
   if (!TTS) return;
-  speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"'));
   voiceFor(u, text); u.rate = .92;
   if (btn) { document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); btn.classList.add("on"); u.onend = u.onerror = () => btn.classList.remove("on"); }
-  speechSynthesis.speak(u);
+  speakU(u, text);
 }
 const sayBtn = (text, cls = "") => TTS ? `<span role="button" tabindex="0" class="say ${cls}" data-say="${esc(text)}" aria-label="Listen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>` : "";
 document.addEventListener("click", e => { const b = e.target.closest("[data-say]"); if (!b) return; e.preventDefault(); e.stopPropagation(); say(b.dataset.say, b); }, true);
