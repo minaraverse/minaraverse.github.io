@@ -631,7 +631,7 @@ async function lgSync(name) {
   try { const r = await fetch(ADMIN_API + "?" + q, { redirect: "follow", signal: ctl.signal }); const d = await r.json(); if (!d.ok) throw new Error(d.err || "x"); lsSet("mv-lg", d); return d; } finally { clearTimeout(tm); }
 }
 /* a neat row of small gold stars under the name of everyone who beat the teacher's weekly target */
-function lgStars(d, p) { const t = d && d.teacher; if (!t || !t.target || (Number(p.xp) || 0) < t.target) return "";
+function lgStars(d, p) { const t = d && d.teacher; if (!t || !(p.star === undefined ? t.target && (Number(p.xp) || 0) >= t.target : p.star)) return "";
   return `<span class="lg-stars" role="img" aria-label="${esc(L("tcDone"))}">${"<i>★</i>".repeat(5)}</span>`; }
 function lgListHTML(d) {
   const z = d.zones || { up: 0, down: 0 }, n = d.players.length;

@@ -138,6 +138,19 @@ function enrolAll_(sh, cur) {
 /* the teacher is shown above the league (not ranked) with a weekly target students try to beat */
 function teacher_() { const u = String(P.getProperty("TEACHER_USER") || "minara").toLowerCase(), target = Number(P.getProperty("TEACHER_TARGET") || 150);
   const f = okUser(u) ? findUser_(students_(), u) : null; return f ? { id: uidOf_(f.v[0]), name: String(f.v[1] || "Minara"), av: String(f.v[3] || ""), user: u, target: target } : null; }
+/* every time a student beats the teacher's target, the target grows by 200–250 XP (stays raised; who beat it is remembered for the week) */
+function teacherCheck_(v, okIds, T, cur) {
+  if (!T) return { target: 0, ids: [] };
+  let B = {}; try { B = JSON.parse(P.getProperty("TEACHER_BEAT") || "{}"); } catch (e) {}
+  if (B.wk !== cur || !Array.isArray(B.ids)) B = { wk: cur, ids: [] };
+  let target = T.target; const cand = [];
+  for (let i = 1; i < v.length; i++) { const id = v[i][0]; if (!id || id === T.id || !okIds[id] || String(v[i][4]) !== cur) continue; cand.push([id, Number(v[i][5]) || 0]); }
+  cand.sort((a, b) => b[1] - a[1]);
+  cand.forEach(c => { if (B.ids.indexOf(c[0]) < 0 && c[1] >= target) { B.ids.push(c[0]); target += 200 + 10 * Math.floor(Math.random() * 6); } });
+  if (target !== T.target) P.setProperty("TEACHER_TARGET", String(target));
+  P.setProperty("TEACHER_BEAT", JSON.stringify(B));
+  return { target: target, ids: B.ids };
+}
 function league_(p) {
   const a = authOk_(p); if (!a) return { ok: false, err: auth_(p) ? "pending" : "auth" };
   const id = hash_(a.email).slice(0, 24), sh = lgSheet_(), cur = wk_(); roll_(sh, cur); const okIds = enrolAll_(sh, cur);
@@ -146,10 +159,10 @@ function league_(p) {
   if (row < 0) { sh.appendRow([id, name, av, 0, cur, xp, new Date(), ""]); v = sh.getDataRange().getValues(); row = v.length - 1; }
   else { const r = v[row]; r[1] = name; if (av) r[2] = av; r[5] = Math.max(Number(r[5]) || 0, xp); r[6] = new Date(); sh.getRange(row + 1, 1, 1, 8).setValues([r]); }
   const g = groups_(v).filter(x => x.rows.indexOf(row) > -1)[0], t = g.t;
-  const T = teacher_();
-  const players = g.rows.filter(i => (i === row || okIds[v[i][0]]) && !(T && v[i][0] === T.id)).map(i => ({ name: String(v[i][1]), av: String(v[i][2]), xp: Number(v[i][5]) || 0, me: i === row })).sort((a, b) => b.xp - a.xp);
+  const T = teacher_(), TB = teacherCheck_(v, okIds, T, cur);
+  const players = g.rows.filter(i => (i === row || okIds[v[i][0]]) && !(T && v[i][0] === T.id)).map(i => ({ name: String(v[i][1]), av: String(v[i][2]), xp: Number(v[i][5]) || 0, me: i === row, star: TB.ids.indexOf(v[i][0]) > -1 })).sort((a, b) => b.xp - a.xp);
   let prev = null; try { prev = v[row][7] ? JSON.parse(v[row][7]) : null; } catch (e) {}
-  return { ok: true, tier: t, week: cur, days: 8 - day_(), players: players, zones: zones_(t, players.length), prev: prev, teacher: T ? { name: T.name, av: T.av, target: T.target, me: T.id === id } : null };
+  return { ok: true, tier: t, week: cur, days: 8 - day_(), players: players, zones: zones_(t, players.length), prev: prev, teacher: T ? { name: T.name, av: T.av, target: TB.target, me: T.id === id, done: TB.ids.indexOf(id) > -1, beat: TB.ids.length } : null };
 }
 
 

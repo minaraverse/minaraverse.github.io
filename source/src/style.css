@@ -2407,3 +2407,4 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .lg-stars i:nth-child(2){--s:1}.lg-stars i:nth-child(3){--s:2}.lg-stars i:nth-child(4){--s:3}.lg-stars i:nth-child(5){--s:4}
 @keyframes lgstar{0%,70%,100%{transform:none;opacity:1}80%{transform:scale(1.35) rotate(15deg);opacity:.85}}
 @media (prefers-reduced-motion:reduce){.lg-stars i{animation:none}}
+.tc-up{margin:2px 0 0;color:#FFB27A;font-weight:800;font-size:13.5px}
