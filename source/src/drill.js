@@ -170,9 +170,16 @@ function unListen(x) { if (!LISTEN_K.includes(x.k)) return x;
   return { ...x, k: "fill", opts: shuffle([x.f.a, ...x.f.w]) }; }
 
 /* ---------- exercise rendering ---------- */
-const pixMini = () => `<span class="dx-pix">${mascot("")}</span>`;
+/* the person in the speech bubble matches the sentence: "I am Minara" → Ms Minara, "My name is Ali" → Detective Ali, a woman's line → a woman */
+const P_FEM = /^(Leyla|Ms Minara|Zara|Nənə|Mia|Guide Aysu|Nina|Vera|Madame Luna|Astro Ada)$/;
+function speakerChar(t) { if (typeof PEOPLE === "undefined" || !t) return null; const g = speakerG(t), m = String(t).match(/\b(?:I am|I'm|I’m|my name is|call me)\s+([A-Z][a-zəüöğşçı]+)/i);
+  if (m) { const i = PEOPLE.findIndex(p => new RegExp("\\b" + m[1] + "\\b", "i").test(p.n)); if (i > -1) return "p" + i; }
+  if (!g) return null; const cur = themeChar(), ci = /^p\d+$/.test(cur) ? +cur.slice(1) : -1;
+  if (ci > -1 && PEOPLE[ci] && !PEOPLE[ci].robot && (P_FEM.test(PEOPLE[ci].n) === (g === "f"))) return null;
+  const i = PEOPLE.findIndex(p => !p.robot && P_FEM.test(p.n) === (g === "f")); return i > -1 ? "p" + i : null; }
+const pixMini = t => `<span class="dx-pix">${mascot("", speakerChar(t) || undefined)}</span>`;
 const bigSay = (text, slow) => TTS ? `<div class="dx-spk"><button class="dx-sp" data-sp="${esc(text)}" aria-label="Listen">🔊</button>${slow ? `<button class="dx-sp sm" data-sp="${esc(text)}" data-slow="1" aria-label="${L("dSlow")}">🐢</button>` : ""}</div>` : `<p class="dx-big">${esc(text)}</p>`;
-function sayRate(text, rate) { if (!TTS) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = VOICE ? VOICE.lang : "en-GB"; if (VOICE) u.voice = VOICE; u.rate = rate; speechSynthesis.speak(u); }
+function sayRate(text, rate) { if (!TTS) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); voiceFor(u, text); u.rate = rate; speechSynthesis.speak(u); }
 function exHTML(x) {
   const T = k => `<h2 class="dx-t">${x.prev ? `<small class="dx-prev">↺ ${L("dPrev")}</small>` : ""}${x.hard ? `<small class="dx-hard">${L("dHard")}</small>` : ""}${L(k)}</h2>`;
   const opts = (arr, lab, cls = "") => `<div class="dx-opts ${cls}">${arr.map((o, i) => `<button class="dx-opt" data-i="${i}" style="--k:${i}"><kbd>${i + 1}</kbd>${lab(o)}</button>`).join("")}</div>`;
@@ -187,11 +194,11 @@ function exHTML(x) {
     case "pairs": { const L1 = shuffle(x.ws), R1 = shuffle(x.ws);
       return T("dPairs") + `<div class="dx-pairs"><div>${L1.map((w, i) => `<button class="dx-pr" data-side="l" data-id="${x.ws.indexOf(w)}" data-en="${esc(w.en)}" style="--k:${i}">${esc(w.en)}</button>`).join("")}</div>
         <div>${R1.map((w, i) => `<button class="dx-pr" data-side="r" data-id="${x.ws.indexOf(w)}" style="--k:${i + 5}">${esc(nat(w))}</button>`).join("")}</div></div>`; }
-    case "smean": return T("dSmean") + `<div class="dx-say">${pixMini()}<div class="dx-bub"><b>${esc(x.s.en)}</b>${sayBtn(x.s.en)}</div></div>` + opts(x.opts, o => esc(nat(o)), "col");
-    case "build": return T("dBuild") + `<div class="dx-say">${pixMini()}<div class="dx-bub"><b>${esc(nat(x.s))}</b></div></div>` + tileRow(x.bank, true);
-    case "buildr": return T("dBuildR") + `<div class="dx-say">${pixMini()}<div class="dx-bub"><b>${esc(x.s.en)}</b>${sayBtn(x.s.en)}</div></div>` + tileRow(x.bank, false);
+    case "smean": return T("dSmean") + `<div class="dx-say">${pixMini(x.s.en)}<div class="dx-bub"><b>${esc(x.s.en)}</b>${sayBtn(x.s.en)}</div></div>` + opts(x.opts, o => esc(nat(o)), "col");
+    case "build": return T("dBuild") + `<div class="dx-say">${pixMini(x.s.en)}<div class="dx-bub"><b>${esc(nat(x.s))}</b></div></div>` + tileRow(x.bank, true);
+    case "buildr": return T("dBuildR") + `<div class="dx-say">${pixMini(x.s.en)}<div class="dx-bub"><b>${esc(x.s.en)}</b>${sayBtn(x.s.en)}</div></div>` + tileRow(x.bank, false);
     case "listen": return T("dListen") + bigSay(x.s.en, true) + tileRow(x.bank, false);
-    case "afill": return T("dAfill") + `<div class="dx-say">${pixMini()}<div class="dx-bub"><b>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</b></div></div><div class="dx-opts col">${x.opts.map((o, i) => `<button class="dx-opt dx-aud" data-i="${i}" data-en="${esc(o)}" style="--k:${i}"><kbd>${i + 1}</kbd><span>🔊</span><span class="dx-wave">${Array.from({ length: 22 }, (_, j) => `<i style="--h:${(25 + Math.abs(Math.sin(j * 1.7 + i * 2 + o.length)) * 75).toFixed(0)}%;--j:${j}"></i>`).join("")}</span></button>`).join("")}</div>`;
+    case "afill": return T("dAfill") + `<div class="dx-say">${pixMini(x.f.q.replace("___", x.f.a))}<div class="dx-bub"><b>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</b></div></div><div class="dx-opts col">${x.opts.map((o, i) => `<button class="dx-opt dx-aud" data-i="${i}" data-en="${esc(o)}" style="--k:${i}"><kbd>${i + 1}</kbd><span>🔊</span><span class="dx-wave">${Array.from({ length: 22 }, (_, j) => `<i style="--h:${(25 + Math.abs(Math.sin(j * 1.7 + i * 2 + o.length)) * 75).toFixed(0)}%;--j:${j}"></i>`).join("")}</span></button>`).join("")}</div>`;
     case "fill": return T("dFill") + `<div class="dx-fill">${x.f.e ? `<span class="dx-hint">${x.f.e}</span>` : ""}<p>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</p></div>` + opts(x.opts, o => esc(o), "row");
   }
 }

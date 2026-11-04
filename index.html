@@ -4706,13 +4706,29 @@ async function saveCanvas(cv, fname) {
 /* ---------- pronunciation (browser English voice) ---------- */
 const TTS = "speechSynthesis" in window;
 let VOICE = null;
-const pickVoice = () => { if (!TTS) return; const vs = speechSynthesis.getVoices(); VOICE = vs.find(v => /en-GB/i.test(v.lang) && /female|Serena|Kate|Libby|Sonia|Google UK English Female/i.test(v.name)) || vs.find(v => /en-GB/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null; };
+/* voices: a woman's and a man's English voice; the sentence decides who speaks */
+const V_F = /female|Serena|Kate|Libby|Sonia|Martha|Stephanie|Samantha|Karen|Moira|Tessa|Victoria|Allison|Ava|Susan|Zoe|Nicky|Fiona|Veena|Catherine|Hazel|Zira|Aria|Jenny|Emma|Natasha|Google UK English Female|Google US English/i;
+const V_M = /\bmale\b|Daniel|Arthur|Oliver|Fred|Alex|Aaron|Tom|Rishi|Gordon|Ralph|Lee|Malcolm|George|Ryan|Guy|David|Mark|James|Google UK English Male/i;
+let VOICE_F = null, VOICE_M = null;
+const pickVoice = () => { if (!TTS) return; const vs = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang)), pref = l => (a, b) => (/en-GB/i.test(b.lang) - /en-GB/i.test(a.lang)) || (b.localService - a.localService);
+  const fem = vs.filter(v => V_F.test(v.name) && !/\bmale\b/i.test(v.name.replace(/female/i, ""))).sort(pref()), mal = vs.filter(v => V_M.test(v.name) && !/female/i.test(v.name)).sort(pref());
+  VOICE_F = fem[0] || null; VOICE_M = mal[0] || null; VOICE = VOICE_F || vs.find(v => /en-GB/i.test(v.lang)) || vs[0] || null; };
+/* who says this sentence: "I am Minara" → woman, "My name is Ali" → man, otherwise the narrator (a woman's voice) */
+const F_NAMES = /\b(Minara|Leyla|Safiya|Sofiya|Aysel|Aysu|Zara|Mia|Nina|Vera|Ada|Luna|Anna|Mary|Sara|Sarah|Kate|Emma|Lily|Nigar|Günay|Aynur|Lala|Nərgiz|Fidan|Aytən|Sevinc|Ulviyya)\b/i;
+const M_NAMES = /\b(Ali|Nurlan|Rauf|Kamal|Tariq|George|Sam|Pierre|Max|Oscar|Liam|Lewis|Charles|Tom|John|Mike|David|Elvin|Orxan|Murad|Rashad|Tural|Farid|Kenan|Ibrahim)\b/i;
+function speakerG(t) { t = String(t || ""); const me = t.match(/\b(?:I am|I'm|I’m|my name is|call me)\s+(?:a |an )?([A-Za-zƏəÜüÖöĞğŞşÇçİı]+)/i);
+  if (me) { if (F_NAMES.test(me[1]) || /^(girl|woman|mother|mum|mom|wife|sister|daughter|grandmother|actress|waitress)$/i.test(me[1])) return "f"; if (M_NAMES.test(me[1]) || /^(boy|man|father|dad|husband|brother|son|grandfather|actor|waiter)$/i.test(me[1])) return "m"; }
+  if (/\bmy (wife)\b/i.test(t)) return "m"; if (/\bmy (husband)\b/i.test(t)) return "f"; return null; }
+function voiceFor(u, text) { const g = speakerG(text), v = g === "m" ? (VOICE_M || VOICE) : (VOICE_F || VOICE);
+  u.lang = v ? v.lang : "en-GB"; if (v) u.voice = v;
+  /* the phone has only the other voice: shift the pitch so it still sounds right */
+  if (g === "m" && !VOICE_M) u.pitch = .8; else if (g !== "m" && !VOICE_F && v && V_M.test(v.name)) u.pitch = 1.3; }
 if (TTS) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
 function say(text, btn) {
   if (!TTS) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"'));
-  u.lang = VOICE ? VOICE.lang : "en-GB"; if (VOICE) u.voice = VOICE; u.rate = .92;
+  voiceFor(u, text); u.rate = .92;
   if (btn) { document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); btn.classList.add("on"); u.onend = u.onerror = () => btn.classList.remove("on"); }
   speechSynthesis.speak(u);
 }
@@ -7781,9 +7797,16 @@ function unListen(x) { if (!LISTEN_K.includes(x.k)) return x;
   return { ...x, k: "fill", opts: shuffle([x.f.a, ...x.f.w]) }; }
 
 /* ---------- exercise rendering ---------- */
-const pixMini = () => `<span class="dx-pix">${mascot("")}</span>`;
+/* the person in the speech bubble matches the sentence: "I am Minara" → Ms Minara, "My name is Ali" → Detective Ali, a woman's line → a woman */
+const P_FEM = /^(Leyla|Ms Minara|Zara|Nənə|Mia|Guide Aysu|Nina|Vera|Madame Luna|Astro Ada)$/;
+function speakerChar(t) { if (typeof PEOPLE === "undefined" || !t) return null; const g = speakerG(t), m = String(t).match(/\b(?:I am|I'm|I’m|my name is|call me)\s+([A-Z][a-zəüöğşçı]+)/i);
+  if (m) { const i = PEOPLE.findIndex(p => new RegExp("\\b" + m[1] + "\\b", "i").test(p.n)); if (i > -1) return "p" + i; }
+  if (!g) return null; const cur = themeChar(), ci = /^p\d+$/.test(cur) ? +cur.slice(1) : -1;
+  if (ci > -1 && PEOPLE[ci] && !PEOPLE[ci].robot && (P_FEM.test(PEOPLE[ci].n) === (g === "f"))) return null;
+  const i = PEOPLE.findIndex(p => !p.robot && P_FEM.test(p.n) === (g === "f")); return i > -1 ? "p" + i : null; }
+const pixMini = t => `<span class="dx-pix">${mascot("", speakerChar(t) || undefined)}</span>`;
 const bigSay = (text, slow) => TTS ? `<div class="dx-spk"><button class="dx-sp" data-sp="${esc(text)}" aria-label="Listen">🔊</button>${slow ? `<button class="dx-sp sm" data-sp="${esc(text)}" data-slow="1" aria-label="${L("dSlow")}">🐢</button>` : ""}</div>` : `<p class="dx-big">${esc(text)}</p>`;
-function sayRate(text, rate) { if (!TTS) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = VOICE ? VOICE.lang : "en-GB"; if (VOICE) u.voice = VOICE; u.rate = rate; speechSynthesis.speak(u); }
+function sayRate(text, rate) { if (!TTS) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); voiceFor(u, text); u.rate = rate; speechSynthesis.speak(u); }
 function exHTML(x) {
   const T = k => `<h2 class="dx-t">${x.prev ? `<small class="dx-prev">↺ ${L("dPrev")}</small>` : ""}${x.hard ? `<small class="dx-hard">${L("dHard")}</small>` : ""}${L(k)}</h2>`;
   const opts = (arr, lab, cls = "") => `<div class="dx-opts ${cls}">${arr.map((o, i) => `<button class="dx-opt" data-i="${i}" style="--k:${i}"><kbd>${i + 1}</kbd>${lab(o)}</button>`).join("")}</div>`;
@@ -7798,11 +7821,11 @@ function exHTML(x) {
     case "pairs": { const L1 = shuffle(x.ws), R1 = shuffle(x.ws);
       return T("dPairs") + `<div class="dx-pairs"><div>${L1.map((w, i) => `<button class="dx-pr" data-side="l" data-id="${x.ws.indexOf(w)}" data-en="${esc(w.en)}" style="--k:${i}">${esc(w.en)}</button>`).join("")}</div>
         <div>${R1.map((w, i) => `<button class="dx-pr" data-side="r" data-id="${x.ws.indexOf(w)}" style="--k:${i + 5}">${esc(nat(w))}</button>`).join("")}</div></div>`; }
-    case "smean": return T("dSmean") + `<div class="dx-say">${pixMini()}<div class="dx-bub"><b>${esc(x.s.en)}</b>${sayBtn(x.s.en)}</div></div>` + opts(x.opts, o => esc(nat(o)), "col");
-    case "build": return T("dBuild") + `<div class="dx-say">${pixMini()}<div class="dx-bub"><b>${esc(nat(x.s))}</b></div></div>` + tileRow(x.bank, true);
-    case "buildr": return T("dBuildR") + `<div class="dx-say">${pixMini()}<div class="dx-bub"><b>${esc(x.s.en)}</b>${sayBtn(x.s.en)}</div></div>` + tileRow(x.bank, false);
+    case "smean": return T("dSmean") + `<div class="dx-say">${pixMini(x.s.en)}<div class="dx-bub"><b>${esc(x.s.en)}</b>${sayBtn(x.s.en)}</div></div>` + opts(x.opts, o => esc(nat(o)), "col");
+    case "build": return T("dBuild") + `<div class="dx-say">${pixMini(x.s.en)}<div class="dx-bub"><b>${esc(nat(x.s))}</b></div></div>` + tileRow(x.bank, true);
+    case "buildr": return T("dBuildR") + `<div class="dx-say">${pixMini(x.s.en)}<div class="dx-bub"><b>${esc(x.s.en)}</b>${sayBtn(x.s.en)}</div></div>` + tileRow(x.bank, false);
     case "listen": return T("dListen") + bigSay(x.s.en, true) + tileRow(x.bank, false);
-    case "afill": return T("dAfill") + `<div class="dx-say">${pixMini()}<div class="dx-bub"><b>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</b></div></div><div class="dx-opts col">${x.opts.map((o, i) => `<button class="dx-opt dx-aud" data-i="${i}" data-en="${esc(o)}" style="--k:${i}"><kbd>${i + 1}</kbd><span>🔊</span><span class="dx-wave">${Array.from({ length: 22 }, (_, j) => `<i style="--h:${(25 + Math.abs(Math.sin(j * 1.7 + i * 2 + o.length)) * 75).toFixed(0)}%;--j:${j}"></i>`).join("")}</span></button>`).join("")}</div>`;
+    case "afill": return T("dAfill") + `<div class="dx-say">${pixMini(x.f.q.replace("___", x.f.a))}<div class="dx-bub"><b>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</b></div></div><div class="dx-opts col">${x.opts.map((o, i) => `<button class="dx-opt dx-aud" data-i="${i}" data-en="${esc(o)}" style="--k:${i}"><kbd>${i + 1}</kbd><span>🔊</span><span class="dx-wave">${Array.from({ length: 22 }, (_, j) => `<i style="--h:${(25 + Math.abs(Math.sin(j * 1.7 + i * 2 + o.length)) * 75).toFixed(0)}%;--j:${j}"></i>`).join("")}</span></button>`).join("")}</div>`;
     case "fill": return T("dFill") + `<div class="dx-fill">${x.f.e ? `<span class="dx-hint">${x.f.e}</span>` : ""}<p>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</p></div>` + opts(x.opts, o => esc(o), "row");
   }
 }

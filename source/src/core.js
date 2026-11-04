@@ -397,13 +397,29 @@ async function saveCanvas(cv, fname) {
 /* ---------- pronunciation (browser English voice) ---------- */
 const TTS = "speechSynthesis" in window;
 let VOICE = null;
-const pickVoice = () => { if (!TTS) return; const vs = speechSynthesis.getVoices(); VOICE = vs.find(v => /en-GB/i.test(v.lang) && /female|Serena|Kate|Libby|Sonia|Google UK English Female/i.test(v.name)) || vs.find(v => /en-GB/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null; };
+/* voices: a woman's and a man's English voice; the sentence decides who speaks */
+const V_F = /female|Serena|Kate|Libby|Sonia|Martha|Stephanie|Samantha|Karen|Moira|Tessa|Victoria|Allison|Ava|Susan|Zoe|Nicky|Fiona|Veena|Catherine|Hazel|Zira|Aria|Jenny|Emma|Natasha|Google UK English Female|Google US English/i;
+const V_M = /\bmale\b|Daniel|Arthur|Oliver|Fred|Alex|Aaron|Tom|Rishi|Gordon|Ralph|Lee|Malcolm|George|Ryan|Guy|David|Mark|James|Google UK English Male/i;
+let VOICE_F = null, VOICE_M = null;
+const pickVoice = () => { if (!TTS) return; const vs = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang)), pref = l => (a, b) => (/en-GB/i.test(b.lang) - /en-GB/i.test(a.lang)) || (b.localService - a.localService);
+  const fem = vs.filter(v => V_F.test(v.name) && !/\bmale\b/i.test(v.name.replace(/female/i, ""))).sort(pref()), mal = vs.filter(v => V_M.test(v.name) && !/female/i.test(v.name)).sort(pref());
+  VOICE_F = fem[0] || null; VOICE_M = mal[0] || null; VOICE = VOICE_F || vs.find(v => /en-GB/i.test(v.lang)) || vs[0] || null; };
+/* who says this sentence: "I am Minara" → woman, "My name is Ali" → man, otherwise the narrator (a woman's voice) */
+const F_NAMES = /\b(Minara|Leyla|Safiya|Sofiya|Aysel|Aysu|Zara|Mia|Nina|Vera|Ada|Luna|Anna|Mary|Sara|Sarah|Kate|Emma|Lily|Nigar|Günay|Aynur|Lala|Nərgiz|Fidan|Aytən|Sevinc|Ulviyya)\b/i;
+const M_NAMES = /\b(Ali|Nurlan|Rauf|Kamal|Tariq|George|Sam|Pierre|Max|Oscar|Liam|Lewis|Charles|Tom|John|Mike|David|Elvin|Orxan|Murad|Rashad|Tural|Farid|Kenan|Ibrahim)\b/i;
+function speakerG(t) { t = String(t || ""); const me = t.match(/\b(?:I am|I'm|I’m|my name is|call me)\s+(?:a |an )?([A-Za-zƏəÜüÖöĞğŞşÇçİı]+)/i);
+  if (me) { if (F_NAMES.test(me[1]) || /^(girl|woman|mother|mum|mom|wife|sister|daughter|grandmother|actress|waitress)$/i.test(me[1])) return "f"; if (M_NAMES.test(me[1]) || /^(boy|man|father|dad|husband|brother|son|grandfather|actor|waiter)$/i.test(me[1])) return "m"; }
+  if (/\bmy (wife)\b/i.test(t)) return "m"; if (/\bmy (husband)\b/i.test(t)) return "f"; return null; }
+function voiceFor(u, text) { const g = speakerG(text), v = g === "m" ? (VOICE_M || VOICE) : (VOICE_F || VOICE);
+  u.lang = v ? v.lang : "en-GB"; if (v) u.voice = v;
+  /* the phone has only the other voice: shift the pitch so it still sounds right */
+  if (g === "m" && !VOICE_M) u.pitch = .8; else if (g !== "m" && !VOICE_F && v && V_M.test(v.name)) u.pitch = 1.3; }
 if (TTS) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
 function say(text, btn) {
   if (!TTS) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"'));
-  u.lang = VOICE ? VOICE.lang : "en-GB"; if (VOICE) u.voice = VOICE; u.rate = .92;
+  voiceFor(u, text); u.rate = .92;
   if (btn) { document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); btn.classList.add("on"); u.onend = u.onerror = () => btn.classList.remove("on"); }
   speechSynthesis.speak(u);
 }
