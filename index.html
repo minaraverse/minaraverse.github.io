@@ -2273,6 +2273,9 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 .tc-tx p{margin:0;font:700 14px/1.35 "Nunito",system-ui,sans-serif;color:var(--ink,#eef6f0)}.tc-tx .tc-sub{color:var(--mut,#9fb3a8);font-size:13px}
 .tc-bar{height:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:4px 0 2px}.tc-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffc94d,#ffe28a);border-radius:999px}
 .ad-tch{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.ad-tch b{width:100%}.ad-tch label{display:inline-flex;align-items:center;gap:4px}.ad-tch input{width:110px}
+.tc-photo{flex:none;width:78px;height:78px;border-radius:50%;overflow:hidden;border:3px solid #ffc94d;box-shadow:0 0 0 4px #ffc94d22,0 6px 18px rgba(0,0,0,.35);background:#1b2a23}
+.tc-photo img{display:block;width:100%;height:100%;object-fit:cover;max-width:none}.tc-card.done .tc-photo{border-color:var(--acc);box-shadow:0 0 0 4px #6fcf8e22,0 6px 18px rgba(0,0,0,.35)}
+@media (max-width:380px){.tc-photo{width:66px;height:66px}}
 
 </style>
 <div id="view"></div>
@@ -9845,7 +9848,7 @@ Object.assign(UI.ru, { tcK: "Учитель", tcGoal: n => `Цель учите�
 function teacherCard(d) {
   const t = d && d.teacher; if (!t) return "";
   const mine = typeof weekXpNow === "function" ? weekXpNow() : 0, pct = Math.min(100, Math.round(mine / t.target * 100)), done = mine >= t.target;
-  return `<div class="ap-card tc-card ${done ? "done" : ""}"><span class="lg-av big tc-av">${avOf(t.av, t.name)}</span><div class="tc-tx"><small>👩‍🏫 ${L("tcK")}</small><b>${esc(t.name)}</b>
+  return `<div class="ap-card tc-card ${done ? "done" : ""}"><span class="tc-photo"><img src="img/teacher.jpg" alt="${esc(t.name)}" loading="lazy" onerror="this.parentNode.outerHTML='<span class=&quot;lg-av big tc-av&quot;></span>'"></span><div class="tc-tx"><small>👩‍🏫 ${L("tcK")}</small><b>${esc(t.name)}</b>
     <p>🎯 ${esc(L("tcGoal")(t.target))}</p>${t.me ? `<p class="tc-sub">${L("tcMe")}</p>` : `<div class="tc-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
     <p class="tc-sub">${done ? L("tcDone") : `⚡ ${mine} / ${t.target} · ${esc(L("tcLeft")(t.target - mine))} — ${L("tcBeat")}`}</p>`}</div></div>`;
 }
