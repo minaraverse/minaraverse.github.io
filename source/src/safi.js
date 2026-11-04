@@ -51,11 +51,11 @@ Object.assign(UI.az, { svSpeak: "Sən hansı dildə danışırsan?", svSpeakP: "
   svSoonP: "Dil 100%-ə çatanda onu Safiverse-ə əlavə edirik.", svVote: "Bu dili istəyirəm 👍", svVoted: "Səs verdin ✓", svWin: "🎉 Bu dil əlavə olunacaq!", svMore: "Başqa kurslar", svVotesW: "səs", svStories: "Hekayə kursları (ingilis dili)" });
 Object.assign(UI.ru, { svSpeak: "На каком языке ты говоришь?", svSpeakP: "Объяснения и кнопки будут на этом языке.", svLearn: "Какой язык ты хочешь учить?", svSoon: "Скоро — голосуй!",
   svSoonP: "Когда язык наберёт 100%, мы добавим его в Safiverse.", svVote: "Хочу этот язык 👍", svVoted: "Ты проголосовал(а) ✓", svWin: "🎉 Этот язык будет добавлен!", svMore: "Другие курсы", svVotesW: "голосов", svStories: "Курсы-истории (английский)" });
-const VL = [["es", "🇪🇸", ["Spanish", "İspan dili", "Испанский"]], ["it", "🇮🇹", ["Italian", "İtalyan dili", "Итальянский"]], ["fr", "🇫🇷", ["French", "Fransız dili", "Французский"]], ["de", "🇩🇪", ["German", "Alman dili", "Немецкий"]]];
-const voteState = () => lsGet("mv-votec", { counts: {}, goal: 100, mine: [] });
+const VL = [["es", "🇪🇸", ["Spanish", "İspan dili", "Испанский"]], ["it", "🇮🇹", ["Italian", "İtalyan dili", "Итальянский"]], ["fr", "🇫🇷", ["French", "Fransız dili", "Французский"]], ["de", "🇩🇪", ["German", "Alman dili", "Немецкий"]], ["ru", "🇷🇺", ["Russian", "Rus dili", "Русский"]]];
+const voteState = () => lsGet("mv-votec", { counts: {}, goal: 50, mine: [] });
 const voterId = () => { const a = ACCT(); return a ? a.email : uid(); };
 async function loadVotes(root) { if (!svOn()) return; try { const d = await sPost("votes", { voter: voterId() }, 10000); if (d && d.ok) { const old = voteState(); d.mine = [...new Set([...(d.mine || []), ...(old.mine || [])])]; lsSet("mv-votec", d); drawVotes(root); } } catch (e) {} }
-function voteCards() { const v = voteState(), g = v.goal || 100;
+function voteCards() { const v = voteState(), g = v.goal || 50;
   return VL.map(([k, f, n]) => { const c = (v.counts || {})[k] || 0, pc = Math.min(100, Math.round(c / g * 100)), me = (v.mine || []).includes(k), win = pc >= 100;
     return `<div class="sv-vc ${win ? "win" : ""}" data-vc="${k}"><span class="sv-flag">${f}</span><div class="sv-vb"><b>${T3(n)}</b><div class="sv-bar"><i style="width:${pc}%"></i></div><small>${win ? L("svWin") : `${pc}% · ${c}/${g} ${L("svVotesW")}`}</small></div>
       <button class="sv-vote ${me ? "on" : ""}" data-vote="${k}" ${me ? "disabled" : ""}>${me ? L("svVoted") : L("svVote")}</button></div>`; }).join(""); }

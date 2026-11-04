@@ -7,6 +7,10 @@ SV_DROP = {"home", "tapes", "voyage", "wild", "travel", "mystery", "art"}  # Min
 js = "\n".join((R / f"src/{n}.js").read_text() for n in MODS if (R / f"src/{n}.js").exists())
 js_sv = "\n".join((R / f"src/{n}.js").read_text() for n in MODS if n not in SV_DROP and (R / f"src/{n}.js").exists())
 js = js.replace("__BAND__", band); js_sv = js_sv.replace("__BAND__", band)
+# natural-voice clips available in img/tts (file name = fnv1a hash of the text)
+_tts = R / ".." / "img" / "tts"
+_clips = "".join(sorted(f.stem for f in _tts.glob("*.mp3"))) if _tts.exists() else ""
+js = 'const TTS_CLIPS = "' + _clips + '";\n' + js; js_sv = 'const TTS_CLIPS = "' + _clips + '";\n' + js_sv
 fonts = ("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100"
          "&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IM+Fell+English:ital@0;1&family=Special+Elite&family=Great+Vibes&family=Nunito:wght@500;600;700;800;900&family=Condiment&display=swap")
 def page(js, css=css):

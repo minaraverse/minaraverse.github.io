@@ -15,15 +15,15 @@ good morning|sabahınız xeyir|доброе утро|🌅
 good night|gecəniz xeyrə|спокойной ночи|🌙
 sorry|bağışlayın|извините|😔
 name|ad|имя|🏷️`,
-    s: `Hello, I am Minara.|Salam, mən Minarayam.|Привет, я Минара.
-My name is Ali.|Mənim adım Əlidir.|Меня зовут Али.
+    s: `Hello, I am Jessica.|Salam, mən Cessikayam.|Привет, я Джессика.
+My name is John.|Mənim adım Condur.|Меня зовут Джон.
 What is your name?|Sənin adın nədir?|Как тебя зовут?
 Nice to meet you.|Tanış olmağıma şadam.|Приятно познакомиться.
 How are you?|Necəsən?|Как дела?
 I am fine, thank you.|Yaxşıyam, təşəkkür edirəm.|Я в порядке, спасибо.
 Good morning, teacher!|Sabahınız xeyir, müəllim!|Доброе утро, учитель!
 Goodbye, see you tomorrow.|Sağ ol, sabah görüşərik.|До свидания, увидимся завтра.`,
-    f: `My ___ is Ali.|name|am,you|🏷️
+    f: `My ___ is Emma.|name|am,you|🏷️
 How ___ you?|are|is,am|🙂
 Nice to ___ you.|meet|name,fine|🤝
 Thank ___!|you|me,your|🙏` },
@@ -53,7 +53,7 @@ I am a woman.|Mən qadınam.|Я женщина.`,
 ___ is my mother.|She|He,It|👩
 ___ is a cat.|It|He,She|🐱
 ___ are happy.|They|He,It|👥
-___ am Minara.|I|She,We|🙋` },
+___ am Anna.|I|She,We|🙋` },
 
   { e: "🟰", t: ["am, is, are", "am, is, are (olmaq)", "am, is, are (быть)"],
     g: ["I → am, he/she/it → is, you/we/they → are. İnkar: not əlavə olunur — I am not sad. Sual: fel önə keçir — Are you hungry?",
@@ -69,10 +69,10 @@ at home|evdə|дома|🏠
 cold|soyuq|холодно|🥶
 hot|isti|жарко|🥵`,
     s: `I am happy.|Mən xoşbəxtəm.|Я счастлив.
-She is a doctor.|O həkimdir.|Она врач.
+Laura is a doctor.|Laura həkimdir.|Лаура врач.
 We are at home.|Biz evdəyik.|Мы дома.
 They are tired.|Onlar yorğundurlar.|Они устали.
-He is not a teacher.|O müəllim deyil.|Он не учитель.
+Max is not a teacher.|Maks müəllim deyil.|Макс не учитель.
 Are you hungry?|Sən acsan?|Ты голоден?
 It is cold today.|Bu gün soyuqdur.|Сегодня холодно.
 I am not sad.|Mən kədərli deyiləm.|Мне не грустно.`,
@@ -101,7 +101,7 @@ It is an umbrella.|O çətirdir.|Это зонт.
 Where is my phone?|Telefonum haradadır?|Где мой телефон?
 The bag is on the chair.|Çanta stulun üstündədir.|Сумка на стуле.
 This is a pen, not a key.|Bu qələmdir, açar deyil.|Это ручка, а не ключ.
-She has an orange.|Onun bir portağalı var.|У неё есть апельсин.`,
+Anna has an orange.|Annanın bir portağalı var.|У Анны есть апельсин.`,
     f: `This is ___ book.|a|an,am|📕
 It is ___ egg.|an|a,is|🥚
 I have ___ orange.|an|a,are|🍊
@@ -176,7 +176,7 @@ nine|doqquz|девять|9️⃣
 ten|on|десять|🔟
 hundred|yüz|сто|💯`,
     s: `I have two cats.|Mənim iki pişiyim var.|У меня две кошки.
-She is ten years old.|Onun on yaşı var.|Ей десять лет.
+Emma is ten years old.|Emmanın on yaşı var.|Эмме десять лет.
 There are seven days in a week.|Həftədə yeddi gün var.|В неделе семь дней.
 How old are you?|Neçə yaşın var?|Сколько тебе лет?
 I am twenty years old.|Mənim iyirmi yaşım var.|Мне двадцать лет.
@@ -229,7 +229,7 @@ cake|tort|торт|🎂
 juice|şirə|сок|🧃
 salad|salat|салат|🥗`,
     s: `I drink tea every morning.|Mən hər səhər çay içirəm.|Я пью чай каждое утро.
-She eats bread and cheese.|O, çörək və pendir yeyir.|Она ест хлеб и сыр.
+Bella eats bread and cheese.|Bella çörək və pendir yeyir.|Белла ест хлеб и сыр.
 Can I have some water?|Bir az su ala bilərəm?|Можно мне воды?
 The soup is hot.|Şorba istidir.|Суп горячий.
 We like cake.|Biz tortu sevirik.|Мы любим торт.
@@ -305,8 +305,8 @@ live|yaşamaq|жить|🏡
 like|xoşlamaq|нравиться|❤️
 watch|baxmaq (TV)|смотреть|📺
 study|öyrənmək|учиться|📚`,
-    s: `She works in a bank.|O, bankda işləyir.|Она работает в банке.
-He lives in Baku.|O, Bakıda yaşayır.|Он живёт в Баку.
+    s: `Jennifer works in a bank.|Cenifer bankda işləyir.|Дженнифер работает в банке.
+George lives in Baku.|Corc Bakıda yaşayır.|Джордж живёт в Баку.
 My brother watches TV every day.|Qardaşım hər gün televizora baxır.|Мой брат смотрит телевизор каждый день.
 I always drink coffee.|Mən həmişə qəhvə içirəm.|Я всегда пью кофе.
 She doesn't like milk.|O, südü sevmir.|Она не любит молоко.
@@ -333,9 +333,9 @@ children|uşaqlar|дети|🧒
 gift|hədiyyə|подарок|🎁
 car|maşın|машина|🚗`,
     s: `I have a bike.|Mənim velosipedim var.|У меня есть велосипед.
-She has a new computer.|Onun yeni kompüteri var.|У неё новый компьютер.
+Nicole has a new computer.|Nikolun yeni kompüteri var.|У Николь новый компьютер.
 Do you have a ticket?|Sənin biletin var?|У тебя есть билет?
-He doesn't have time.|Onun vaxtı yoxdur.|У него нет времени.
+Lewis doesn't have time.|Lyuisin vaxtı yoxdur.|У Льюиса нет времени.
 I have a question.|Mənim bir sualım var.|У меня есть вопрос.
 We have a good idea.|Bizim yaxşı fikrimiz var.|У нас есть хорошая идея.
 They have two children.|Onların iki uşağı var.|У них двое детей.`,
@@ -360,7 +360,7 @@ clock|saat|часы|🕐`,
     s: `I wake up at seven o'clock.|Mən saat yeddidə oyanıram.|Я просыпаюсь в семь часов.
 She has breakfast at eight.|O, saat səkkizdə səhər yeməyi yeyir.|Она завтракает в восемь.
 We go to school in the morning.|Biz səhər məktəbə gedirik.|Мы идём в школу утром.
-He takes a shower every evening.|O, hər axşam duş qəbul edir.|Он принимает душ каждый вечер.
+Oscar takes a shower every evening.|Oskar hər axşam duş qəbul edir.|Оскар принимает душ каждый вечер.
 What time is it?|Saat neçədir?|Который час?
 I go to bed at ten.|Mən saat onda yatıram.|Я ложусь спать в десять.`,
     f: `I wake up ___ seven.|at|in,on|⏰
@@ -406,8 +406,8 @@ help|kömək etmək|помогать|🤝
 fly|uçmaq|летать|🕊️
 jump|tullanmaq|прыгать|🦘`,
     s: `I can swim.|Mən üzə bilirəm.|Я умею плавать.
-She can speak three languages.|O, üç dildə danışa bilir.|Она говорит на трёх языках.
-He can't drive.|O, maşın sürə bilmir.|Он не умеет водить.
+Angelina can speak three languages.|Anjelina üç dildə danışa bilir.|Анджелина говорит на трёх языках.
+Kimi can't drive.|Kimi maşın sürə bilmir.|Кими не умеет водить.
 Can you help me?|Mənə kömək edə bilərsən?|Ты можешь мне помочь?
 Birds can fly.|Quşlar uça bilir.|Птицы умеют летать.
 I can't draw very well.|Mən yaxşı şəkil çəkə bilmirəm.|Я не очень хорошо рисую.`,
@@ -456,7 +456,7 @@ snow|qar|снег|❄️
 warm|isti (mülayim)|тепло|🌤️`,
     s: `It is sunny today.|Bu gün günəşlidir.|Сегодня солнечно.
 Put on your coat, it is cold.|Paltonu gey, soyuqdur.|Надень пальто, холодно.
-She is wearing a red dress.|O, qırmızı don geyinib.|Она в красном платье.
+Jessica is wearing a red dress.|Cessika qırmızı don geyinib.|Джессика в красном платье.
 It often snows in winter.|Qışda tez-tez qar yağır.|Зимой часто идёт снег.
 Baku is very windy.|Bakı çox küləklidir.|В Баку очень ветрено.
 I need a new shirt.|Mənə yeni köynək lazımdır.|Мне нужна новая рубашка.`,
@@ -482,7 +482,7 @@ studied|öyrəndi, oxudu|учил|📚`,
     s: `I watched a film yesterday.|Mən dünən film izlədim.|Я вчера смотрел фильм.
 She visited her grandmother last week.|O, keçən həftə nənəsinə baş çəkdi.|Она навестила бабушку на прошлой неделе.
 We played football after school.|Biz dərsdən sonra futbol oynadıq.|Мы играли в футбол после школы.
-He called me two days ago.|O, iki gün əvvəl mənə zəng etdi.|Он позвонил мне два дня назад.
+Charles called me two days ago.|Çarlz iki gün əvvəl mənə zəng etdi.|Чарльз позвонил мне два дня назад.
 Did you cook dinner?|Şam yeməyini sən bişirdin?|Ты приготовил ужин?
 I didn't study last night.|Mən dünən axşam dərs oxumadım.|Я не учился вчера вечером.`,
     f: `I ___ a film yesterday.|watched|watch,watches|📺
@@ -506,7 +506,7 @@ was|idi|был|🕰️`,
     s: `We went to the sea last summer.|Biz keçən yay dənizə getdik.|Прошлым летом мы ездили на море.
 I saw a big lion at the zoo.|Mən zooparkda böyük bir şir gördüm.|Я видел большого льва в зоопарке.
 She bought a new bag.|O, yeni çanta aldı.|Она купила новую сумку.
-He came home late.|O, evə gec gəldi.|Он поздно пришёл домой.
+Tyson came home late.|Tayson evə gec gəldi.|Тайсон поздно пришёл домой.
 The film was very good.|Film çox yaxşı idi.|Фильм был очень хорошим.
 They were at school yesterday.|Onlar dünən məktəbdə idilər.|Вчера они были в школе.
 I wrote a letter to my friend.|Mən dostuma məktub yazdım.|Я написал письмо другу.`,

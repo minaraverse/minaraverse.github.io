@@ -185,7 +185,7 @@ function speakerChar(t) { if (typeof PEOPLE === "undefined" || !t) return null; 
 let LESSON_ANIMAL = null;
 const pixMini = t => LESSON_ANIMAL ? `<span class="dx-pix dx-animal">${animalImg(LESSON_ANIMAL).replace('class="dr-animal live wake" src="img/av-fawn-sleep.webp"', 'class="dr-animal live" src="img/av-fawn-live.webp"').replace(' loading="lazy"', "")}</span>` : `<span class="dx-pix">${mascot("", speakerChar(t) || themeChar())}</span>`;
 const bigSay = (text, slow) => TTS ? `<div class="dx-spk"><button class="dx-sp" data-sp="${esc(text)}" aria-label="Listen">🔊</button>${slow ? `<button class="dx-sp sm" data-sp="${esc(text)}" data-slow="1" aria-label="${L("dSlow")}">🐢</button>` : ""}</div>` : `<p class="dx-big">${esc(text)}</p>`;
-function sayRate(text, rate) { if (!TTS) return; const u = new SpeechSynthesisUtterance(text); voiceFor(u, text); u.rate = rate; speakU(u, text); }
+function sayRate(text, rate) { if (playClip(text, rate)) return; if (!TTS) return; const u = new SpeechSynthesisUtterance(text); voiceFor(u, text); u.rate = rate; speakU(u, text); }
 function exHTML(x) {
   const T = k => `<h2 class="dx-t">${x.prev ? `<small class="dx-prev">↺ ${L("dPrev")}</small>` : ""}${x.hard ? `<small class="dx-hard">${L("dHard")}</small>` : ""}${L(k)}</h2>`;
   const opts = (arr, lab, cls = "") => `<div class="dx-opts ${cls}">${arr.map((o, i) => `<button class="dx-opt" data-i="${i}" style="--k:${i}"><kbd>${i + 1}</kbd>${lab(o)}</button>`).join("")}</div>`;

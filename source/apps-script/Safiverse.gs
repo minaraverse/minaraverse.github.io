@@ -173,19 +173,26 @@ function league_(p) {
 
 
 /* ---------- language votes: es / it / fr / de, one vote per person per language ---------- */
-const VLANGS = ["es", "it", "fr", "de"];
+const VLANGS = ["es", "it", "fr", "de", "ru"];
+const VNAMES = { es: "İspan dili", it: "İtalyan dili", fr: "Fransız dili", de: "Alman dili", ru: "Rus dili" };
+const voteGoal_ = () => Number(P.getProperty("VOTE_GOAL_V2") || 50);
 function votesSh_() { let sh = ss_().getSheetByName("Səslər"); if (!sh) { sh = ss_().insertSheet("Səslər"); sh.appendRow(["voter", "lang", "at"]); sh.setFrozenRows(1); } return sh; }
 function votes_(p) {
   const v = votesSh_().getDataRange().getValues(), me = p && p.voter ? hash_("v|" + String(p.voter)).slice(0, 24) : "", counts = {}, mine = [];
   VLANGS.forEach(l => counts[l] = 0);
   for (let i = 1; i < v.length; i++) { const l = String(v[i][1]); if (l in counts) { counts[l]++; if (me && v[i][0] === me) mine.push(l); } }
-  return { ok: true, counts: counts, mine: mine, goal: Number(P.getProperty("VOTE_GOAL") || 100) };
+  return { ok: true, counts: counts, mine: mine, goal: voteGoal_() };
 }
 function vote_(p) {
   const l = String(p.lang || ""), id = String(p.voter || ""); if (VLANGS.indexOf(l) < 0 || id.length < 6) return { ok: false };
   const sh = votesSh_(), me = hash_("v|" + id).slice(0, 24), v = sh.getDataRange().getValues();
   for (let i = 1; i < v.length; i++) if (v[i][0] === me && v[i][1] === l) return votes_(p);
-  sh.appendRow([me, l, new Date()]); return votes_(p);
+  sh.appendRow([me, l, new Date()]); const r = votes_(p);
+  /* the language just reached its goal: tell the admin by email (once) */
+  if (r.counts[l] >= r.goal && !P.getProperty("VOTE_WON_" + l)) { P.setProperty("VOTE_WON_" + l, String(Date.now()));
+    try { MailApp.sendEmail({ to: ADMIN_EMAIL, name: "Safiverse", subject: "🎉 Safiverse: " + VNAMES[l] + " " + r.goal + " səsə çatdı!",
+      body: VNAMES[l] + " " + r.goal + " səs topladı (100%). Bu dili Safiverse-ə əlavə etmək vaxtıdır.\n\nSəslər: " + JSON.stringify(r.counts) }); } catch (e) {} }
+  return r;
 }
 
 /* ---------- admin: code by email, then the list of students ---------- */
@@ -199,7 +206,7 @@ function admin_(p) {
     if (hash_(String(p.otp || "")) !== P.getProperty("AOTP")) { P.setProperty("AOTP_TRIES", String(tries + 1)); return { ok: false, err: "otp" }; }
     if (String(p.key || "").length < 6) return { ok: false, err: "short" }; P.setProperty("KEY", hash_(p.key)); P.deleteProperty("AOTP"); return { ok: true }; }
   if (p.a === "ad_goal") { if (!P.getProperty("KEY") || hash_(String(p.key || "")) !== P.getProperty("KEY")) return { ok: false };
-    const g = Math.max(1, Math.min(100000, Number(p.goal) || 100)); P.setProperty("VOTE_GOAL", String(g)); return votes_({}); }
+    const g = Math.max(1, Math.min(100000, Number(p.goal) || 50)); P.setProperty("VOTE_GOAL_V2", String(g)); return votes_({}); }
   if (p.a === "ad_st") { if (!P.getProperty("KEY") || hash_(String(p.key || "")) !== P.getProperty("KEY")) return { ok: false };
     const sh = students_(), email = String(p.email || "").toLowerCase(), f = find_(sh, email); if (!f) return { ok: false, err: "nf" }; const was = stOf_(f.v);
     if (p.st === "reject") { if (was !== "pending") return { ok: false, err: "only pending" }; sh.deleteRow(f.row); return { ok: true }; }

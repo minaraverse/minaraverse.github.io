@@ -114,7 +114,7 @@ They must have forgotten the meeting.|Yəqin ki, görüşü unudublar.|Долж�
 It might rain this afternoon.|Bu gün günortadan sonra yağış yağa bilər.|Сегодня днём может пойти дождь.
 You can't be serious.|Ciddi ola bilməzsən.|Ты не можешь говорить серьёзно.`,
     f: `He's not answering. He ___ be asleep.|must|can't,mustn't|😴
-That ___ be Ali — he is in London.|can't|must,might|🇬🇧
+That ___ be Tyson — he is in London.|can't|must,might|🇬🇧
 Take an umbrella. It ___ rain.|might|can't,must not|☔
 She looks happy. She ___ have passed.|must|can't,shouldn't|🎉` },
   { e: "💭", t: ["I wish… / If only…", "Kaş ki…", "Если бы… (I wish)"],
@@ -258,8 +258,8 @@ Don't spill the ___ about the party!|beans|peas,rice|🫘
 I need to hit the ___ tonight.|books|pages,desks|📚
 Let's call it a ___ and go home.|day|night,time|🌇` },
   { e: "🔬", t: ["Emphasis: cleft sentences", "Vurğu: ayırıcı cümlələr", "Акцент: расщеплённые предложения"],
-    g: ["Ayırıcı cümlə — bir hissəni vurğulamaq üçün: It was Ali who broke the window (pəncərəni sındıran Əli idi). What I need is a holiday (mənə lazım olan istirahətdir). All I want is… The reason why… is that…",
-        "Расщеплённое предложение — чтобы выделить часть: It was Ali who broke the window (именно Али разбил окно). What I need is a holiday (что мне нужно — так это отпуск). All I want is… The reason why… is that…"],
+    g: ["Ayırıcı cümlə — bir hissəni vurğulamaq üçün: It was Bella who broke the window (pəncərəni sındıran Bella idi). What I need is a holiday (mənə lazım olan istirahətdir). All I want is… The reason why… is that…",
+        "Расщеплённое предложение — чтобы выделить часть: It was Bella who broke the window (именно Белла разбила окно). What I need is a holiday (что мне нужно — так это отпуск). All I want is… The reason why… is that…"],
     w: `research|tədqiqat|исследование|🔬
 experiment|təcrübə (elmi)|эксперимент|🧪
 discovery|kəşf|открытие|🔭

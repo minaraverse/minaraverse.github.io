@@ -405,8 +405,8 @@ const pickVoice = () => { if (!TTS) return; const vs = speechSynthesis.getVoices
   const fem = vs.filter(v => V_F.test(v.name) && !/\bmale\b/i.test(v.name.replace(/female/i, ""))).sort(pref()), mal = vs.filter(v => V_M.test(v.name) && !/female/i.test(v.name)).sort(pref());
   VOICE_F = fem[0] || null; VOICE_M = mal[0] || null; VOICE = VOICE_F || vs.find(v => /en-GB/i.test(v.lang)) || vs[0] || null; };
 /* who says this sentence: "I am Minara" → woman, "My name is Ali" → man, otherwise the narrator (a woman's voice) */
-const F_NAMES = /\b(Minara|Leyla|Safiya|Sofiya|Aysel|Aysu|Zara|Mia|Nina|Vera|Ada|Luna|Anna|Mary|Sara|Sarah|Kate|Emma|Lily|Nigar|Günay|Aynur|Lala|Nərgiz|Fidan|Aytən|Sevinc|Ulviyya)\b/i;
-const M_NAMES = /\b(Ali|Nurlan|Rauf|Kamal|Tariq|George|Sam|Pierre|Max|Oscar|Liam|Lewis|Charles|Tom|John|Mike|David|Elvin|Orxan|Murad|Rashad|Tural|Farid|Kenan|Ibrahim)\b/i;
+const F_NAMES = /\b(Minara|Jessica|Bella|Jennifer|Nicole|Angelina|Laura|Leyla|Safiya|Sofiya|Aysel|Aysu|Zara|Mia|Nina|Vera|Ada|Luna|Anna|Mary|Sara|Sarah|Kate|Emma|Lily|Nigar|Günay|Aynur|Lala|Nərgiz|Fidan|Aytən|Sevinc|Ulviyya)\b/i;
+const M_NAMES = /\b(Ali|Tyson|Kimi|Charles|Lewis|Max|Oscar|Nurlan|Rauf|Kamal|Tariq|George|Sam|Pierre|Max|Oscar|Liam|Lewis|Charles|Tom|John|Mike|David|Elvin|Orxan|Murad|Rashad|Tural|Farid|Kenan|Ibrahim)\b/i;
 function speakerG(t) { t = String(t || ""); const me = t.match(/\b(?:I am|I'm|I’m|my name is|call me)\s+(?:a |an )?([A-Za-zƏəÜüÖöĞğŞşÇçİı]+)/i);
   if (me) { if (F_NAMES.test(me[1]) || /^(girl|woman|mother|mum|mom|wife|sister|daughter|grandmother|actress|waitress)$/i.test(me[1])) return "f"; if (M_NAMES.test(me[1]) || /^(boy|man|father|dad|husband|brother|son|grandfather|actor|waiter)$/i.test(me[1])) return "m"; }
   if (/\bmy (wife)\b/i.test(t)) return "m"; if (/\bmy (husband)\b/i.test(t)) return "f"; return null; }
@@ -432,7 +432,22 @@ function speakU(u, text) {
 let MUTE_SHOWN = false;
 function muteHint() { if (MUTE_SHOWN || typeof toast !== "function") return; MUTE_SHOWN = true;
   toast(LANG === "ru" ? "🔇 Нет звука? Выключи беззвучный режим и прибавь громкость" : LANG === "az" ? "🔇 Səs gəlmir? Telefonun səssiz rejimini söndür və səsi artır" : "🔇 No sound? Turn off silent mode and raise the volume"); }
+/* natural voices: pre-recorded clips (Kokoro neural TTS, US voices "Sarah" & "Eric") for every course word/sentence; the phone's own voice is only a fallback */
+const fnv1a = str => { let h = 0x811c9dc5; for (const b of new TextEncoder().encode(str)) { h ^= b; h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); };
+const CLIPS = typeof TTS_CLIPS === "string" ? new Set(TTS_CLIPS.match(/.{8}/g) || []) : new Set();
+let AUD = null;
+const audUnlock = () => { if (AUD) return; try { AUD = new Audio(); AUD.preload = "auto"; AUD.src = "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//NwwAAAAAAAAAAAAEluZm8AAAAPAAAABgAAAykAWlpaWlpaWlpaWlpaWlpaWnt7e3t7e3t7e3t7e3t7e3t7nJycnJycnJycnJycnJycnL29vb29vb29vb29vb29vb293t7e3t7e3t7e3t7e3t7e3t7/////////////////////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQCowAAAAAAAAMpso+sIAAAAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU="; AUD.play().catch(() => {}); } catch (e) {} };
+["pointerdown", "touchend", "click"].forEach(ev => addEventListener(ev, audUnlock, { capture: true, once: true }));
+/* play a recorded clip if there is one; returns false when the phone voice must be used */
+function playClip(text, rate, btn) {
+  const t = String(text || "").trim(), h = fnv1a(t); if (!CLIPS.has(h)) return false;
+  try { AUD = AUD || new Audio(); if (TTS) speechSynthesis.cancel(); AUD.pause();
+    AUD.src = "img/tts/" + h + ".mp3"; AUD.playbackRate = rate && rate < .7 ? .7 : 1; if ("preservesPitch" in AUD) AUD.preservesPitch = true;
+    if (btn) { document.querySelectorAll(".say.on").forEach(b => b.classList.remove("on")); btn.classList.add("on"); AUD.onended = AUD.onerror = () => btn.classList.remove("on"); } else AUD.onended = null;
+    const p = AUD.play(); if (p && p.catch) p.catch(() => { if (btn) btn.classList.remove("on"); speakFallback(t, rate, btn); }); return true; } catch (e) { return false; } }
+function speakFallback(text, rate, btn) { if (!TTS) return; const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"')); voiceFor(u, text); u.rate = rate || .92; speakU(u, text); }
 function say(text, btn) {
+  if (playClip(text, .92, btn)) return;
   if (!TTS) return;
   const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, " blank ").replace(/[“”]/g, '"'));
   voiceFor(u, text); u.rate = .92;
