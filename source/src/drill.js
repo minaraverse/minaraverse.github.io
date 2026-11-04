@@ -709,7 +709,8 @@ const ANIMALS = [["bunny-balloon", "Sky Bunny", "Uçan Dovşan", "Летучий
   ["raccoon", "Raccoon", "Yenot", "Енотик"], ["giraffe", "Giraffe", "Zürafə", "Жирафик"], ["squirrel-moon", "Moon Squirrel", "Ay Dələsi", "Лунная белочка"],
   ["fawn", "Fawn", "Maral balası", "Оленёнок"], ["bear-bunny", "Bear & Bunny", "Ayı və Dovşan", "Мишка и зайка"]];
 const animalOf = n => { const a = ANIMALS[n]; return a ? { k: a[0], n: LANG === "az" ? a[2] : LANG === "ru" ? a[3] : a[1] } : null; };
-const animalImg = A => `<img class="dr-animal" src="img/av-${A.k}.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`;
+const ANIMALS_LIVE = ["owl", "bunny-balloon"]; /* animated with Higgsfield (transparent animated WebP) */
+const animalImg = A => `<img class="dr-animal ${ANIMALS_LIVE.includes(A.k) ? "live" : ""}" src="img/av-${A.k}${ANIMALS_LIVE.includes(A.k) ? "-live" : ""}.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`;
 function sideHTML(U, open) {
   const A = animalOf(U.n);
   if (A) { const st = unitStars(U.n), seen = (DP()["ss" + U.n] || 0);
