@@ -2266,6 +2266,13 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 .dr-course .dr-lv small{font:800 10px/1 "Nunito",system-ui,sans-serif!important}.dr-course .dr-lv b{font:900 15px/1.15 "Nunito",system-ui,sans-serif!important}
 .dr-course .dr-lv:first-of-type{margin-left:auto!important}
 @media (max-width:400px){.dr-course .dr-lv{width:84px!important;height:54px!important}.dr-course .dr-lv b{font-size:14px!important}}
+/* ---- league teacher card ---- */
+.tc-card{display:flex;gap:14px;align-items:center;width:100%;max-width:560px;box-sizing:border-box;margin:4px 0 14px;border:2px solid #ffc94d!important;background:linear-gradient(135deg,#ffc94d22,#ffc94d08)!important;text-align:left}
+.tc-card.done{border-color:var(--acc)!important;background:linear-gradient(135deg,#6fcf8e26,#6fcf8e08)!important}.tc-av{flex:none}
+.tc-tx{flex:1;min-width:0;display:grid;gap:3px}.tc-tx small{color:#ffd77a;font:800 11px "Nunito",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}.tc-tx b{font:900 18px "Nunito",system-ui,sans-serif}
+.tc-tx p{margin:0;font:700 14px/1.35 "Nunito",system-ui,sans-serif;color:var(--ink,#eef6f0)}.tc-tx .tc-sub{color:var(--mut,#9fb3a8);font-size:13px}
+.tc-bar{height:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:4px 0 2px}.tc-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffc94d,#ffe28a);border-radius:999px}
+.ad-tch{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.ad-tch b{width:100%}.ad-tch label{display:inline-flex;align-items:center;gap:4px}.ad-tch input{width:110px}
 
 </style>
 <div id="view"></div>
@@ -6970,7 +6977,7 @@ VIEWS.app = root => {
   if (typeof frRefresh === "function" && ACCT() && !window.__frPulled) { window.__frPulled = 1; frRefresh().then(r => { if (r && (r.incoming || []).length && /app-profile/.test(location.hash)) Router.remount(); }); }
   /* profile */
   const b = lsGet("mv-badges", {}), x = XP(), lv = myLevel();
-  const BADGES = [["first", "🌱", "First lesson"], ...SECTIONS.map((s, i) => ["sec" + i, ["🥉", "🥈", "🥇", "🏆", "💎", "👑"][i] || "🎖️", T3(s.t) + " · " + s.lv]), ["perfect", "👑", "Perfect lesson"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],
+  const BADGES = [["first", "🌱", "First lesson"], ...SECTIONS.map((s, i) => ["sec" + i, ["🥉", "🥈", "🥇", "🏆", "💎", "👑"][i] || "🎖️", T3(s.t) + " · " + s.lv]), ["perfect", "👑", "Perfect lesson"], ["tch", "⭐", typeof L === "function" && UI[LANG] && UI[LANG].tcBadge ? L("tcBadge") : "Beat the teacher"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],
     ...WORLD_ORDER.map(k => ["w_" + k, courseEmoji(k), STORIES[k].title])];
   root.innerHTML = shell("profile", `<div class="ap-prof"><button class="ap-av ${myAvatar() ? "has" : ""}" data-av aria-label="${L("avEdit")}">${myAvatar() ? avatarSVG() : esc((NAME || "M")[0].toUpperCase())}<em>✎</em></button><div><input class="ap-name" value="${esc(NAME)}" placeholder="${L("apName")}"><small>${lv ? lv + " · " + lvName(lv) : L("findLevel")}</small></div></div>
     <div class="ap-stats"><div><b>🔥 ${streak()}</b><small>${L("apDays")}</small></div><div><b>⚡ ${x.total}</b><small>${L("apTotal")}</small></div><div><b>🎯 ${goal()}</b><small>${L("apGoal")}</small></div><div><b>📚 ${drillLessons() + WORLD_ORDER.reduce((a, k) => a + doneCount(k), 0)}</b><small>${L("chapters")}</small></div></div>
@@ -8715,10 +8722,11 @@ function leagueView(root, shell) {
       catch (e) { msg.textContent = L("lgErr"); go.disabled = false; go.textContent = L("lgJoinB"); } };
     return;
   }
-  root.innerHTML = shell("league", head(t0) + `<div class="lg-body">${cached ? lgListHTML(cached) : `<p class="ap-p">…</p>`}</div>`);
+  const tc = d => typeof teacherCard === "function" ? teacherCard(d) : "";
+  root.innerHTML = shell("league", head(t0) + `<div class="lg-body">${cached ? tc(cached) + lgListHTML(cached) : `<p class="ap-p">…</p>`}</div>`);
   setTimeout(() => { const on = root.querySelector(".lg-tiers .on"); on && on.scrollIntoView({ inline: "center", block: "nearest" }); }, 50);
   lgSync().then(d => { if (Router.name !== "app" || !/league/.test(location.hash)) return; const body = root.querySelector(".lg-body"); if (!body) return;
-    if (d.tier !== t0) { Router.remount(); return; } body.innerHTML = lgListHTML(d); lgResult(d); })
+    if (d.tier !== t0) { Router.remount(); return; } body.innerHTML = tc(d) + lgListHTML(d); lgResult(d); if (typeof teacherAward === "function") teacherAward(d); })
     .catch(() => { const body = root.querySelector(".lg-body"); body && !cached && (body.innerHTML = `<p class="ap-p">${L("lgErr")}</p>`); });
 }
 function lgResult(d) { /* once per week: show last week's promotion/demotion */
@@ -9400,11 +9408,14 @@ VIEWS.sadmin = root => {
     const vbox = vt.ok && typeof VL !== "undefined" ? `<div class="sv-adv"><b>🗳️ ${VL.map(([k, f]) => `${f} ${(vt.counts || {})[k] || 0}`).join(" · ")}</b><form data-goal><label>🎯 100% =<input name="g" inputmode="numeric" value="${vt.goal}"></label><button class="sv-ghost"><b>✓</b></button></form></div>` : "";
     const acts = r => tab === "pending" ? `<button class="fr-b go" data-st="ok" data-e="${esc(r.email)}">✅ ${T(AB.ok)}</button><button class="fr-b" data-st="reject" data-e="${esc(r.email)}">❌ ${T(AB.reject)}</button><button class="fr-b" data-st="blocked" data-e="${esc(r.email)}">🚫</button>`
       : tab === "ok" ? `<button class="fr-b ${r.hard ? "go" : ""}" data-hard="${r.hard ? 0 : 1}" data-e="${esc(r.email)}" aria-pressed="${!!r.hard}">💪 ${T(AB.hard)}: ${r.hard ? T(AB.on) : T(AB.off)}</button><button class="fr-b" data-st="blocked" data-e="${esc(r.email)}">🚫 ${T(AB.blocked)}</button>` : `<button class="fr-b go" data-st="ok" data-e="${esc(r.email)}">↩️ ${T(AB.unblock)}</button>`;
-    root.innerHTML = shell(`${vbox}<h1 class="ap-h">👥 ${all.length}</h1>
+    const tch = d.teacher || { user: "minara", target: 150 };
+    const tbox = `<form class="sv-adv ad-tch" data-tch><b>👩‍🏫 ${T({ en: "Teacher card in the league", az: "Liqada müəllim kartı", ru: "Карточка учителя в лиге" })}</b><label>@<input name="u" value="${esc(tch.user)}" autocapitalize="none" spellcheck="false"></label><label>🎯 <input name="t" inputmode="numeric" value="${tch.target}"> XP</label><button class="sv-ghost"><b>✓</b></button></form>`;
+    root.innerHTML = shell(`${vbox}${tbox}<h1 class="ap-h">👥 ${all.length}</h1>
       <div class="ad-tabs" role="tablist">${Object.keys(AT).map(k => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? "on" : ""}" data-tab="${k}"><span>${AT[k][0]} <em>${cnt(k)}</em></span><small>${T(AT[k][1])}</small></button>`).join("")}</div>
       <input class="lg-in sv-q" placeholder="🔍"><div class="sv-tbl">${rows.length ? rows.map(r => `<div class="sv-row ${tab === "pending" ? "pend" : ""}" data-q="${esc((r.name + " " + r.email + " " + (r.user || "") + " " + (r.group || "")).toLowerCase())}">
       <span class="lg-av">${avOf(r.avatar, r.name)}</span><div><b>${esc(r.name)}</b> <small>👤 ${r.user ? esc(r.user) : "—"}</small><small>${r.age === "kid" ? "👧" : "🧑"} ${esc(r.email)}</small>${r.group ? `<small>👥 ${esc(r.group)}</small>` : ""}
       ${tab === "pending" ? "" : `<small>⚡ ${r.xp} · 🔥 ${r.streak} · 📚 ${r.lessons} · ${esc(r.unit || "")}</small>`}<small>🕒 ${dt(r.last)} · ✨ ${dt(r.created)}</small><div class="ad-acts">${acts(r)}</div></div></div>`).join("") : `<p class="ap-p">${T(AB.none)}</p>`}</div>`);
+    const tf = root.querySelector("[data-tch]"); if (tf) tf.onsubmit = async e => { e.preventDefault(); const r = await sPost("ad_teacher", { key: key(), user: tf.u.value, target: tf.t.value }).catch(() => ({})); toast(r.ok ? "✓ @" + r.user + " · 🎯 " + r.target + " XP" : "✗ " + (r.err || "")); };
     const gf = root.querySelector("[data-goal]"); if (gf) gf.onsubmit = async e => { e.preventDefault(); const d = await sPost("ad_goal", { key: key(), goal: gf.g.value }).catch(() => ({})); toast(d.ok ? "✓ " + d.goal : "✗"); };
     root.querySelector(".sv-q").oninput = e => { const q = e.target.value.toLowerCase(); root.querySelectorAll(".sv-row").forEach(x => x.hidden = q && !x.dataset.q.includes(q)); };
     root.onclick = async e => { const tb = e.target.closest("[data-tab]"); if (tb) { tab = tb.dataset.tab; sfx("tap"); return load(); }
@@ -9826,6 +9837,23 @@ const levelItem = () => { const l = myLevel(), it = LV_LIST.find(x => x[0] === l
 /* level chip on the course card: its own button inside the card */
 const levelChip = () => { const l = myLevel(); return `<span class="dr-lv ${l ? "" : "none"}" data-lvpick role="button" tabindex="0" aria-label="${L("lvMine")}: ${l || "—"}"><small>${L("lvShort")}</small><b>🎯 ${l || L("lvPick")} ▾</b></span>`; };
 document.addEventListener("click", e => { if (!e.target.closest("[data-lvpick]")) return; e.preventDefault(); e.stopPropagation(); if (typeof sfx === "function") sfx("open"); levelSheet(); }, true);
+
+/* ===== League: teacher card on top (not ranked) + "Beat the teacher's target" weekly challenge ===== */
+Object.assign(UI.en, { tcK: "Teacher", tcGoal: n => `Teacher's target this week: ${n} XP`, tcBeat: "Beat it and get a ⭐ badge!", tcDone: "⭐ You beat the teacher's target!", tcLeft: n => `${n} XP to go`, tcMe: "Your students see this card. Set the target in Admin.", tcGot: "⭐ You beat the teacher's target this week!", tcBadge: "Beat the teacher" });
+Object.assign(UI.az, { tcK: "Müəllim", tcGoal: n => `Müəllimin bu həftəki hədəfi: ${n} XP`, tcBeat: "Onu keç və ⭐ nişan qazan!", tcDone: "⭐ Müəllimin hədəfini keçdin!", tcLeft: n => `${n} XP qalıb`, tcMe: "Bu kartı şagirdlərin görür. Hədəfi Admin bölməsində dəyiş.", tcGot: "⭐ Bu həftə müəllimin hədəfini keçdin!", tcBadge: "Müəllimi keçdi" });
+Object.assign(UI.ru, { tcK: "Учитель", tcGoal: n => `Цель учителя на неделю: ${n} XP`, tcBeat: "Обгони её и получи значок ⭐!", tcDone: "⭐ Ты обогнал цель учителя!", tcLeft: n => `осталось ${n} XP`, tcMe: "Эту карточку видят ученики. Цель меняется в Админке.", tcGot: "⭐ На этой неделе ты обогнал цель учителя!", tcBadge: "Обогнал учителя" });
+function teacherCard(d) {
+  const t = d && d.teacher; if (!t) return "";
+  const mine = typeof weekXpNow === "function" ? weekXpNow() : 0, pct = Math.min(100, Math.round(mine / t.target * 100)), done = mine >= t.target;
+  return `<div class="ap-card tc-card ${done ? "done" : ""}"><span class="lg-av big tc-av">${avOf(t.av, t.name)}</span><div class="tc-tx"><small>👩‍🏫 ${L("tcK")}</small><b>${esc(t.name)}</b>
+    <p>🎯 ${esc(L("tcGoal")(t.target))}</p>${t.me ? `<p class="tc-sub">${L("tcMe")}</p>` : `<div class="tc-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
+    <p class="tc-sub">${done ? L("tcDone") : `⚡ ${mine} / ${t.target} · ${esc(L("tcLeft")(t.target - mine))} — ${L("tcBeat")}`}</p>`}</div></div>`;
+}
+function teacherAward(d) {
+  const t = d && d.teacher; if (!t || t.me || typeof weekXpNow !== "function" || weekXpNow() < t.target) return;
+  const b = lsGet("mv-badges", {}), k = "tch_" + (d.week || ""); if (b[k]) return; b[k] = 1; b.tch = (b.tch || 0) + 1; lsSet("mv-badges", b);
+  sfx("win"); toast(L("tcGot"), "gold"); if (typeof pushSync === "function") pushSync();
+}
 
 document.documentElement.lang = LANG;
 Router.mount();

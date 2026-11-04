@@ -132,6 +132,9 @@ function enrolAll_(sh, cur) {
   if (dirty) { const w = Math.max(...v.map(x => x.length)); sh.getRange(1, 1, v.length, 8).setValues(v.map(x => { const y = x.slice(0, 8); while (y.length < 8) y.push(""); return y; })); }
   return okIds;
 }
+/* the teacher is shown above the league (not ranked) with a weekly target students try to beat */
+function teacher_() { const u = String(P.getProperty("TEACHER_USER") || "minara").toLowerCase(), target = Number(P.getProperty("TEACHER_TARGET") || 150);
+  const f = okUser(u) ? findUser_(students_(), u) : null; return f ? { id: uidOf_(f.v[0]), name: String(f.v[1] || "Minara"), av: String(f.v[3] || ""), user: u, target: target } : null; }
 function league_(p) {
   const a = authOk_(p); if (!a) return { ok: false, err: auth_(p) ? "pending" : "auth" };
   const id = hash_(a.email).slice(0, 24), sh = lgSheet_(), cur = wk_(); roll_(sh, cur); const okIds = enrolAll_(sh, cur);
@@ -140,9 +143,10 @@ function league_(p) {
   if (row < 0) { sh.appendRow([id, name, av, 0, cur, xp, new Date(), ""]); v = sh.getDataRange().getValues(); row = v.length - 1; }
   else { const r = v[row]; r[1] = name; if (av) r[2] = av; r[5] = Math.max(Number(r[5]) || 0, xp); r[6] = new Date(); sh.getRange(row + 1, 1, 1, 8).setValues([r]); }
   const g = groups_(v).filter(x => x.rows.indexOf(row) > -1)[0], t = g.t;
-  const players = g.rows.filter(i => i === row || okIds[v[i][0]]).map(i => ({ name: String(v[i][1]), av: String(v[i][2]), xp: Number(v[i][5]) || 0, me: i === row })).sort((a, b) => b.xp - a.xp);
+  const T = teacher_();
+  const players = g.rows.filter(i => (i === row || okIds[v[i][0]]) && !(T && v[i][0] === T.id)).map(i => ({ name: String(v[i][1]), av: String(v[i][2]), xp: Number(v[i][5]) || 0, me: i === row })).sort((a, b) => b.xp - a.xp);
   let prev = null; try { prev = v[row][7] ? JSON.parse(v[row][7]) : null; } catch (e) {}
-  return { ok: true, tier: t, week: cur, days: 8 - day_(), players: players, zones: zones_(t, players.length), prev: prev };
+  return { ok: true, tier: t, week: cur, days: 8 - day_(), players: players, zones: zones_(t, players.length), prev: prev, teacher: T ? { name: T.name, av: T.av, target: T.target, me: T.id === id } : null };
 }
 
 
@@ -184,11 +188,14 @@ function admin_(p) {
         body: "Safiverse: hesabın təsdiqləndi / account approved. " + APP_URL }); } catch (e) {}
       return { ok: true }; }
     return { ok: false }; }
+  if (p.a === "ad_teacher") { if (!P.getProperty("KEY") || hash_(String(p.key || "")) !== P.getProperty("KEY")) return { ok: false };
+    const u = normUser(p.user); if (u && !okUser(u)) return { ok: false, err: "user" }; if (u) P.setProperty("TEACHER_USER", u);
+    const tg = Math.max(10, Math.min(5000, Number(p.target) || 150)); P.setProperty("TEACHER_TARGET", String(tg)); return { ok: true, user: u || P.getProperty("TEACHER_USER") || "minara", target: tg }; }
   if (p.a === "ad_hard") { if (!P.getProperty("KEY") || hash_(String(p.key || "")) !== P.getProperty("KEY")) return { ok: false };
     const sh = students_(), f = find_(sh, String(p.email || "").toLowerCase()); if (!f) return { ok: false, err: "nf" }; sh.getRange(f.row, 20).setValue(p.on ? "yes" : ""); return { ok: true, hard: !!p.on }; }
   if (p.a === "ad_rows") { if (!P.getProperty("KEY") || hash_(String(p.key || "")) !== P.getProperty("KEY")) return { ok: false };
     const v = students_().getDataRange().getValues(); v.shift();
-    return { ok: true, rows: v.filter(r => r[0]).map(r => ({ email: r[0], name: r[1], age: r[2], avatar: r[3], created: r[4] instanceof Date ? r[4].toISOString() : String(r[4]), last: r[5] instanceof Date ? r[5].toISOString() : String(r[5]), xp: r[6], streak: r[7], lessons: r[8], unit: r[9], parent_ok: r[12], user: r[13] || "", status: stOf_(r), group: String(r[18] || ""), hard: !!r[19] })) }; }
+    return { ok: true, rows: v.filter(r => r[0]).map(r => ({ email: r[0], name: r[1], age: r[2], avatar: r[3], created: r[4] instanceof Date ? r[4].toISOString() : String(r[4]), last: r[5] instanceof Date ? r[5].toISOString() : String(r[5]), xp: r[6], streak: r[7], lessons: r[8], unit: r[9], parent_ok: r[12], user: r[13] || "", status: stOf_(r), group: String(r[18] || ""), hard: !!r[19] })), teacher: { user: P.getProperty("TEACHER_USER") || "minara", target: Number(P.getProperty("TEACHER_TARGET") || 150) } }; }
   return { ok: false };
 }
 

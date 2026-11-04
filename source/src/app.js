@@ -142,7 +142,7 @@ VIEWS.app = root => {
   if (typeof frRefresh === "function" && ACCT() && !window.__frPulled) { window.__frPulled = 1; frRefresh().then(r => { if (r && (r.incoming || []).length && /app-profile/.test(location.hash)) Router.remount(); }); }
   /* profile */
   const b = lsGet("mv-badges", {}), x = XP(), lv = myLevel();
-  const BADGES = [["first", "🌱", "First lesson"], ...SECTIONS.map((s, i) => ["sec" + i, ["🥉", "🥈", "🥇", "🏆", "💎", "👑"][i] || "🎖️", T3(s.t) + " · " + s.lv]), ["perfect", "👑", "Perfect lesson"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],
+  const BADGES = [["first", "🌱", "First lesson"], ...SECTIONS.map((s, i) => ["sec" + i, ["🥉", "🥈", "🥇", "🏆", "💎", "👑"][i] || "🎖️", T3(s.t) + " · " + s.lv]), ["perfect", "👑", "Perfect lesson"], ["tch", "⭐", typeof L === "function" && UI[LANG] && UI[LANG].tcBadge ? L("tcBadge") : "Beat the teacher"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],
     ...WORLD_ORDER.map(k => ["w_" + k, courseEmoji(k), STORIES[k].title])];
   root.innerHTML = shell("profile", `<div class="ap-prof"><button class="ap-av ${myAvatar() ? "has" : ""}" data-av aria-label="${L("avEdit")}">${myAvatar() ? avatarSVG() : esc((NAME || "M")[0].toUpperCase())}<em>✎</em></button><div><input class="ap-name" value="${esc(NAME)}" placeholder="${L("apName")}"><small>${lv ? lv + " · " + lvName(lv) : L("findLevel")}</small></div></div>
     <div class="ap-stats"><div><b>🔥 ${streak()}</b><small>${L("apDays")}</small></div><div><b>⚡ ${x.total}</b><small>${L("apTotal")}</small></div><div><b>🎯 ${goal()}</b><small>${L("apGoal")}</small></div><div><b>📚 ${drillLessons() + WORLD_ORDER.reduce((a, k) => a + doneCount(k), 0)}</b><small>${L("chapters")}</small></div></div>

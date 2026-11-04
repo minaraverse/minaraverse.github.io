@@ -2260,3 +2260,10 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 .dr-course .dr-lv small{font:800 10px/1 "Nunito",system-ui,sans-serif!important}.dr-course .dr-lv b{font:900 15px/1.15 "Nunito",system-ui,sans-serif!important}
 .dr-course .dr-lv:first-of-type{margin-left:auto!important}
 @media (max-width:400px){.dr-course .dr-lv{width:84px!important;height:54px!important}.dr-course .dr-lv b{font-size:14px!important}}
+/* ---- league teacher card ---- */
+.tc-card{display:flex;gap:14px;align-items:center;width:100%;max-width:560px;box-sizing:border-box;margin:4px 0 14px;border:2px solid #ffc94d!important;background:linear-gradient(135deg,#ffc94d22,#ffc94d08)!important;text-align:left}
+.tc-card.done{border-color:var(--acc)!important;background:linear-gradient(135deg,#6fcf8e26,#6fcf8e08)!important}.tc-av{flex:none}
+.tc-tx{flex:1;min-width:0;display:grid;gap:3px}.tc-tx small{color:#ffd77a;font:800 11px "Nunito",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}.tc-tx b{font:900 18px "Nunito",system-ui,sans-serif}
+.tc-tx p{margin:0;font:700 14px/1.35 "Nunito",system-ui,sans-serif;color:var(--ink,#eef6f0)}.tc-tx .tc-sub{color:var(--mut,#9fb3a8);font-size:13px}
+.tc-bar{height:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:4px 0 2px}.tc-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffc94d,#ffe28a);border-radius:999px}
+.ad-tch{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.ad-tch b{width:100%}.ad-tch label{display:inline-flex;align-items:center;gap:4px}.ad-tch input{width:110px}

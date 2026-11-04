@@ -645,10 +645,11 @@ function leagueView(root, shell) {
       catch (e) { msg.textContent = L("lgErr"); go.disabled = false; go.textContent = L("lgJoinB"); } };
     return;
   }
-  root.innerHTML = shell("league", head(t0) + `<div class="lg-body">${cached ? lgListHTML(cached) : `<p class="ap-p">…</p>`}</div>`);
+  const tc = d => typeof teacherCard === "function" ? teacherCard(d) : "";
+  root.innerHTML = shell("league", head(t0) + `<div class="lg-body">${cached ? tc(cached) + lgListHTML(cached) : `<p class="ap-p">…</p>`}</div>`);
   setTimeout(() => { const on = root.querySelector(".lg-tiers .on"); on && on.scrollIntoView({ inline: "center", block: "nearest" }); }, 50);
   lgSync().then(d => { if (Router.name !== "app" || !/league/.test(location.hash)) return; const body = root.querySelector(".lg-body"); if (!body) return;
-    if (d.tier !== t0) { Router.remount(); return; } body.innerHTML = lgListHTML(d); lgResult(d); })
+    if (d.tier !== t0) { Router.remount(); return; } body.innerHTML = tc(d) + lgListHTML(d); lgResult(d); if (typeof teacherAward === "function") teacherAward(d); })
     .catch(() => { const body = root.querySelector(".lg-body"); body && !cached && (body.innerHTML = `<p class="ap-p">${L("lgErr")}</p>`); });
 }
 function lgResult(d) { /* once per week: show last week's promotion/demotion */
