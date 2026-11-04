@@ -2261,6 +2261,11 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 .dr-course > span:first-child{flex:1;min-width:0}.dr-course > span:first-child b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:400px){.dr-course{gap:7px;padding-left:14px;padding-right:12px}.dr-course > span:first-child b{font-size:17px}.dr-course .dr-lv{padding:5px 8px}.dr-course .dr-lv b{font-size:13px}.dr-course > i{font-size:13px;padding:6px 10px}}
 .dr-course .dr-lv + .dr-lang{margin-left:0}.dr-course .dr-lv{min-width:74px}
+/* Level and Language chips: exactly the same box */
+.dr-course .dr-lv{box-sizing:border-box!important;width:94px!important;height:58px!important;padding:4px 6px!important;align-content:center!important;justify-items:center!important;margin:0!important}
+.dr-course .dr-lv small{font:800 10px/1 "Nunito",system-ui,sans-serif!important}.dr-course .dr-lv b{font:900 15px/1.15 "Nunito",system-ui,sans-serif!important}
+.dr-course .dr-lv:first-of-type{margin-left:auto!important}
+@media (max-width:400px){.dr-course .dr-lv{width:84px!important;height:54px!important}.dr-course .dr-lv b{font-size:14px!important}}
 
 </style>
 <div id="view"></div>
