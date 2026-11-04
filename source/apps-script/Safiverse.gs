@@ -122,15 +122,25 @@ function roll_(sh, cur) {
   if (v.length > 1) sh.getRange(1, 1, v.length, 8).setValues(v);
   P.setProperty("LG_WK", cur);
 }
+/* every approved student is in the league automatically; weekly XP comes from their real progress (not only from opening the leaderboard) */
+function enrolAll_(sh, cur) {
+  const st = students_().getDataRange().getValues(), v = sh.getDataRange().getValues(), at = {}, okIds = {}; let dirty = false;
+  for (let i = 1; i < v.length; i++) if (v[i][0]) at[v[i][0]] = i;
+  for (let i = 1; i < st.length; i++) { const r = st[i]; if (!r[0] || stOf_(r) !== "ok") continue; const id = uidOf_(r[0]), wx = Math.min(5000, wkXpRow_(r)); okIds[id] = 1;
+    if (at[id] == null) { v.push([id, clean(r[1], 24), String(r[3] || ""), 0, cur, wx, new Date(), ""]); at[id] = v.length - 1; dirty = true; }
+    else { const L = v[at[id]]; if (String(L[4]) === cur && wx > (Number(L[5]) || 0)) { L[5] = wx; dirty = true; } if (!L[1] && r[1]) { L[1] = clean(r[1], 24); dirty = true; } if (!L[2] && r[3]) { L[2] = String(r[3]); dirty = true; } } }
+  if (dirty) { const w = Math.max(...v.map(x => x.length)); sh.getRange(1, 1, v.length, 8).setValues(v.map(x => { const y = x.slice(0, 8); while (y.length < 8) y.push(""); return y; })); }
+  return okIds;
+}
 function league_(p) {
   const a = authOk_(p); if (!a) return { ok: false, err: auth_(p) ? "pending" : "auth" };
-  const id = hash_(a.email).slice(0, 24), sh = lgSheet_(), cur = wk_(); roll_(sh, cur);
+  const id = hash_(a.email).slice(0, 24), sh = lgSheet_(), cur = wk_(); roll_(sh, cur); const okIds = enrolAll_(sh, cur);
   let v = sh.getDataRange().getValues(); let row = -1; for (let i = 1; i < v.length; i++) if (v[i][0] === id) { row = i; break; }
   const name = clean(p.name, 24) || a.f.v[1], av = String(p.av || "").replace(/[^a-z0-9,]/gi, "").slice(0, 30), xp = Math.max(0, Math.min(5000, Number(p.xp) || 0));
   if (row < 0) { sh.appendRow([id, name, av, 0, cur, xp, new Date(), ""]); v = sh.getDataRange().getValues(); row = v.length - 1; }
   else { const r = v[row]; r[1] = name; if (av) r[2] = av; r[5] = Math.max(Number(r[5]) || 0, xp); r[6] = new Date(); sh.getRange(row + 1, 1, 1, 8).setValues([r]); }
   const g = groups_(v).filter(x => x.rows.indexOf(row) > -1)[0], t = g.t;
-  const players = g.rows.map(i => ({ name: String(v[i][1]), av: String(v[i][2]), xp: Number(v[i][5]) || 0, me: i === row })).sort((a, b) => b.xp - a.xp);
+  const players = g.rows.filter(i => i === row || okIds[v[i][0]]).map(i => ({ name: String(v[i][1]), av: String(v[i][2]), xp: Number(v[i][5]) || 0, me: i === row })).sort((a, b) => b.xp - a.xp);
   let prev = null; try { prev = v[row][7] ? JSON.parse(v[row][7]) : null; } catch (e) {}
   return { ok: true, tier: t, week: cur, days: 8 - day_(), players: players, zones: zones_(t, players.length), prev: prev };
 }
