@@ -2271,3 +2271,4 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 .tc-photo img{display:block;width:100%;height:100%;object-fit:cover;max-width:none}.tc-card.done .tc-photo{border-color:var(--acc);box-shadow:0 0 0 4px #6fcf8e22,0 6px 18px rgba(0,0,0,.35)}
 @media (max-width:380px){.tc-photo{width:66px;height:66px}}
 .dr-foot.auto .dr-go{visibility:hidden}
+.lg-after{position:relative;z-index:2}.lg-after .ap-cta{position:relative;z-index:5;touch-action:manipulation}
