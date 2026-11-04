@@ -8508,8 +8508,8 @@ VIEWS.sadmin = root => {
     const rows = (d.rows || []).sort((a, b) => String(b.last).localeCompare(String(a.last))), dt = s => s ? new Date(s).toLocaleDateString("az-AZ") : "—";
     let vt = {}; try { vt = await sPost("votes", {}); } catch (e) {}
     const vbox = vt.ok ? `<div class="sv-adv"><b>🗳️ ${VL.map(([k, f]) => `${f} ${(vt.counts || {})[k] || 0}`).join(" · ")}</b><form data-goal><label>🎯 100% =<input name="g" inputmode="numeric" value="${vt.goal}"></label><button class="sv-ghost"><b>✓</b></button></form></div>` : "";
-    root.innerHTML = shell(`${vbox}<h1 class="ap-h">👥 ${rows.length}</h1><input class="lg-in sv-q" placeholder="🔍"><div class="sv-tbl">${rows.map(r => `<div class="sv-row" data-q="${esc((r.name + " " + r.email).toLowerCase())}">
-      <span class="lg-av">${avOf(r.avatar, r.name)}</span><div><b>${esc(r.name)}</b> <small>${r.age === "kid" ? "👧" : "🧑"} ${esc(r.email)}</small><small>⚡ ${r.xp} · 🔥 ${r.streak} · 📚 ${r.lessons} · ${esc(r.unit || "")}</small><small>🕒 ${dt(r.last)} · ✨ ${dt(r.created)}</small></div></div>`).join("")}</div>`);
+    root.innerHTML = shell(`${vbox}<h1 class="ap-h">👥 ${rows.length}</h1><input class="lg-in sv-q" placeholder="🔍"><div class="sv-tbl">${rows.map(r => `<div class="sv-row" data-q="${esc((r.name + " " + r.email + " " + (r.user || "")).toLowerCase())}">
+      <span class="lg-av">${avOf(r.avatar, r.name)}</span><div><b>${esc(r.name)}</b> <small>👤 ${r.user ? esc(r.user) : "—"}</small><small>${r.age === "kid" ? "👧" : "🧑"} ${esc(r.email)}</small><small>⚡ ${r.xp} · 🔥 ${r.streak} · 📚 ${r.lessons} · ${esc(r.unit || "")}</small><small>🕒 ${dt(r.last)} · ✨ ${dt(r.created)}</small></div></div>`).join("")}</div>`);
     const gf = root.querySelector("[data-goal]"); if (gf) gf.onsubmit = async e => { e.preventDefault(); const d = await sPost("ad_goal", { key: key(), goal: gf.g.value }).catch(() => ({})); toast(d.ok ? "✓ " + d.goal : "✗"); };
     root.querySelector(".sv-q").oninput = e => { const q = e.target.value.toLowerCase(); root.querySelectorAll(".sv-row").forEach(x => x.hidden = q && !x.dataset.q.includes(q)); }; };
   key() ? load() : login();
