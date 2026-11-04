@@ -6841,7 +6841,7 @@ VIEWS.admin = root => {
 /* SAFI: the same app served as its own product at /safiverse/ */
 const SAFI = /\/safiverse(\/|$)/.test(location.pathname) || /safiverse/i.test(location.hostname);
 const brandHTML = () => `<span class="ap-brand sv">Safi<i>verse</i></span>`;
-/* ===== APP MODE (Duolingo-style): learning path, XP, daily goal, hearts-free practice, profile, badges ===== */
+/* ===== APP MODE (game-style): learning path, XP, daily goal, hearts-free practice, profile, badges ===== */
 Object.assign(UI.en, { apLearn: "Learn", apPractice: "Worlds", apEnPrac: "English practice", apLeague: "Leaderboard", apProfile: "Profile", apXp: "XP", apGoal: "Daily goal", apGoalDone: "Daily goal reached!",
   apStart: "START", apCourse: "Course", apChange: "Change", apUnit: "Unit", apLesson: "Lesson", apContinue: "Continue", apCheck: "Check", apGreat: ["Great job!", "Excellent!", "Nicely done!", "Amazing!", "You got it!"],
   apNo: "Correct answer:", apDone: "Lesson complete!", apEarned: "XP earned", apAccuracy: "Accuracy", apTime: "Time", apBack: "Back to path", apPick: "Pick your daily goal",
@@ -8080,7 +8080,7 @@ Her story ___ millions of people.|inspired|inspire,inspiring|✨
 It is fast, simple ___ free.|and|but,or|🚀` } ] }
 );
 
-/* ===== MILINGO COURSE ENGINE: path, Duolingo-style exercises, hearts, combo, sounds ===== */
+/* ===== MILINGO COURSE ENGINE: path, game-style exercises, hearts, combo, sounds ===== */
 Object.assign(UI.en, { dWrite: "Write it in English", dHard: "💪 Hard exercise", dImg: "Select the correct picture", dMean: "What does this mean?", dRmean: "How do you say this in English?", dPairs: "Tap the matching pairs",
   dHear: "What do you hear?", dType: "Type what you hear", dBuild: "Write this in English", dBuildR: "Translate this sentence", dListen: "Tap what you hear",
   dFill: "Fill in the blank", dSmean: "Choose the correct meaning", dCheck: "Check", dCont: "Continue", dRight: ["Great!", "Excellent!", "Nice!", "Amazing!", "Perfect!", "Well done!"],
@@ -8149,7 +8149,7 @@ function hearts() { const h = lsGet("mv-hearts", { n: HMAX, t: Date.now() });
   return h.n; }
 function setHearts(n) { const h = lsGet("mv-hearts", { n: HMAX, t: Date.now() }); hearts(); if (h.n >= HMAX && n < HMAX) h.t = Date.now(); h.n = Math.max(0, Math.min(HMAX, n)); lsSet("mv-hearts", h); }
 
-/* ---------- sounds (WebAudio synth, Duolingo-like feel, no files) ---------- */
+/* ---------- sounds (WebAudio synth, playful feel, no files) ---------- */
 let SAC = null;
 function sfx(kind) {
   if (!soundOn()) return;
@@ -8167,7 +8167,7 @@ function sfx(kind) {
     f.frequency.setValueAtTime(from, t0 + at); f.frequency.exponentialRampToValueAtTime(to, t0 + at + dur); g.gain.setValueAtTime(.0001, t0 + at); g.gain.exponentialRampToValueAtTime(vol, t0 + at + dur * .3); g.gain.exponentialRampToValueAtTime(.0001, t0 + at + dur);
     s.connect(f).connect(g).connect(out); s.start(t0 + at); s.stop(t0 + at + dur); };
   switch (kind) {
-    case "ok": bell(1046.5, 0, .3, .2); bell(1568, .09, .6, .22); tone(3136, .1, .18, { type: "sine", vol: .035 }); break;   /* Duolingo-like bright ding-ding (louder on phone speakers) */
+    case "ok": bell(1046.5, 0, .3, .2); bell(1568, .09, .6, .22); tone(3136, .1, .18, { type: "sine", vol: .035 }); break;   /* playful bright ding-ding (louder on phone speakers) */
     case "no": tone(311, 0, .15, { type: "square", vol: .055, lp: 1300 }); tone(233, .13, .32, { type: "square", vol: .065, lp: 1000, to: 196 }); break; /* clear low "bzz-bzz" */
     case "tap": tone(1100, 0, .05, { type: "triangle", vol: .05, to: 700 }); break;
     case "pop": tone(540, 0, .12, { vol: .12, to: 1050 }); tone(1600, .04, .08, { type: "triangle", vol: .04 }); break;
@@ -8188,7 +8188,7 @@ function sfx(kind) {
 }
 
 /* ---------- exercise builders ---------- */
-/* Duolingo-like distractors: similar words (shared words, same start, similar length) from this and the previous unit */
+/* playful distractors: similar words (shared words, same start, similar length) from this and the previous unit */
 function simW(w, U, n) {
   const pool = [...U.W, ...((UNITS[U.n - 1] || {}).W || [])].filter(x => x !== w && x.en !== w.en), a = w.en.toLowerCase(), aw = a.split(/\s+/);
   const sc = x => { const b = x.en.toLowerCase(), bw = b.split(/\s+/); let s = 0; if (bw.some(t => aw.includes(t))) s += 3; if (b[0] === a[0]) s += 2; if (Math.abs(b.length - a.length) <= 2) s += 1.5; if (bw.length === aw.length) s += 1; return s + Math.random() * 1.2; };
@@ -9755,7 +9755,7 @@ document.addEventListener("click", async e => {
     const b = SAC.createBuffer(1, 1, 22050), src = SAC.createBufferSource(); src.buffer = b; src.connect(SAC.destination); src.start(0); } catch (e) {}
   if (SAC && SAC.state === "running") ["pointerdown", "touchend", "keydown"].forEach(ev => removeEventListener(ev, unlock, true)); };
   ["pointerdown", "touchend", "keydown"].forEach(ev => addEventListener(ev, unlock, true)); })();
-/* ===== Duolingo-style UI sounds: one delegated listener, only on navigation/switch elements (answers, duels, gifts keep their own sounds) ===== */
+/* ===== game-style UI sounds: one delegated listener, only on navigation/switch elements (answers, duels, gifts keep their own sounds) ===== */
 document.addEventListener("click", e => {
   if (typeof sfx !== "function" || !document.documentElement.classList.contains("ap-mode")) return;
   const t = e.target;

@@ -1,7 +1,7 @@
 /* SAFI: the same app served as its own product at /safiverse/ */
 const SAFI = /\/safiverse(\/|$)/.test(location.pathname) || /safiverse/i.test(location.hostname);
 const brandHTML = () => `<span class="ap-brand sv">Safi<i>verse</i></span>`;
-/* ===== APP MODE (Duolingo-style): learning path, XP, daily goal, hearts-free practice, profile, badges ===== */
+/* ===== APP MODE (game-style): learning path, XP, daily goal, hearts-free practice, profile, badges ===== */
 Object.assign(UI.en, { apLearn: "Learn", apPractice: "Worlds", apEnPrac: "English practice", apLeague: "Leaderboard", apProfile: "Profile", apXp: "XP", apGoal: "Daily goal", apGoalDone: "Daily goal reached!",
   apStart: "START", apCourse: "Course", apChange: "Change", apUnit: "Unit", apLesson: "Lesson", apContinue: "Continue", apCheck: "Check", apGreat: ["Great job!", "Excellent!", "Nicely done!", "Amazing!", "You got it!"],
   apNo: "Correct answer:", apDone: "Lesson complete!", apEarned: "XP earned", apAccuracy: "Accuracy", apTime: "Time", apBack: "Back to path", apPick: "Pick your daily goal",

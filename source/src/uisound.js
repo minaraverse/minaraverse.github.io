@@ -3,7 +3,7 @@
     const b = SAC.createBuffer(1, 1, 22050), src = SAC.createBufferSource(); src.buffer = b; src.connect(SAC.destination); src.start(0); } catch (e) {}
   if (SAC && SAC.state === "running") ["pointerdown", "touchend", "keydown"].forEach(ev => removeEventListener(ev, unlock, true)); };
   ["pointerdown", "touchend", "keydown"].forEach(ev => addEventListener(ev, unlock, true)); })();
-/* ===== Duolingo-style UI sounds: one delegated listener, only on navigation/switch elements (answers, duels, gifts keep their own sounds) ===== */
+/* ===== game-style UI sounds: one delegated listener, only on navigation/switch elements (answers, duels, gifts keep their own sounds) ===== */
 document.addEventListener("click", e => {
   if (typeof sfx !== "function" || !document.documentElement.classList.contains("ap-mode")) return;
   const t = e.target;
