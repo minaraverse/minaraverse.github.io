@@ -2384,6 +2384,11 @@ html.ap-mode .ap-tabs a.on{border-radius:16px 6px 16px 6px}
 @media (prefers-reduced-motion:reduce){.safi,.safi *,.safi-wrap .safi{animation:none!important}}
 .safi.sf-wave{transform-origin:60px 100px;animation:sfsway 2.4s ease-in-out infinite}
 @keyframes sfsway{25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+/* the lesson pop-up always sits above the planets & characters below it */
+html.ap-mode .dr-nw:has(.dr-pop){z-index:50!important}
+html.ap-mode .dr-unit:has(.dr-pop){position:relative;z-index:40}
+html.ap-mode .dr-pop{z-index:50}
+html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[data-kid]){z-index:0!important}
 
 </style>
 <div id="view"></div>
