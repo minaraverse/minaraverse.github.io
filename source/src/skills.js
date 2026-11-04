@@ -224,9 +224,9 @@ VIEWS.sk = root => {
     box.querySelectorAll(".sel").forEach(o => o.classList.add(ok ? "good" : "bad"));
     if (x.k === "mv" && ok) { const a = box.querySelector(`[data-sq="${st.from}"] .pc`), b = box.querySelector(`[data-sq="${sel}"]`); if (a && b) { b.querySelector(".pc") && b.querySelector(".pc").remove(); b.appendChild(a); } }
     if (ok) { st.ok++; st.solved++; st.combo++; st.maxCombo = Math.max(st.maxCombo, st.combo); const big = st.combo >= 5 && st.combo % 5 === 0; sfx(big ? "combo" : "ok"); buzz(15);
-      ico.textContent = "✓"; tb.textContent = L("dRight")[(Math.random() * 6) | 0]; tp.textContent = ""; foot.className = "dr-foot show ok";
+      ico.innerHTML = safiSVG("happy"); tb.textContent = L("dRight")[(Math.random() * 6) | 0]; tp.textContent = ""; foot.className = "dr-foot show ok";
       if (big) { const cb = root.querySelector(".dr-cb"); cb.textContent = `🔥 ${st.combo} ${L("dCombo")}`; cb.classList.remove("pop"); void cb.offsetWidth; cb.classList.add("pop"); } }
-    else { st.miss++; st.combo = 0; sfx("no"); buzz([30, 40, 30]); ico.textContent = "✕"; tb.textContent = L("dWrongT"); tp.innerHTML = x.ans ? `${L("skOk")} <span class="dr-ans">${esc(x.ans)}</span>` : ""; foot.className = "dr-foot show no";
+    else { st.miss++; st.combo = 0; sfx("no"); buzz([30, 40, 30]); ico.innerHTML = safiSVG("sad"); tb.textContent = L("dWrongT"); tp.innerHTML = x.ans ? `${L("skOk")} <span class="dr-ans">${esc(x.ans)}</span>` : ""; foot.className = "dr-foot show no";
       if (x.k === "key" || x.k === "seq") { const want = x.k === "key" ? [x.s] : x.seq; want.forEach(s => { const b = box.querySelector(`[data-key="${s}"]`); b && b.classList.add("mk"); }); }
       queue.push(pick1(gens)(j)); }
     setBar(); go.textContent = L("dCont"); ready(true);

@@ -1629,7 +1629,7 @@ html.ap-mode .mv-home{display:none}
 @keyframes popin{from{opacity:0;transform:translateX(calc(-50% - var(--x))) translateY(-8px) scale(.9)}}
 
 /* lesson screen */
-.dr{--ok:#9ff0c0;--okd:#2f8f5b;--no:#ff8f7a;--nod:#b8564a}
+.dr{--ok:#FFD66B;--okd:#a8730f;--no:#FF7E8E;--nod:#9e2f44}
 .dr .ap-lh{gap:12px}
 .dr-bar{position:relative;flex:1;height:16px;border-radius:99px;background:var(--line)}
 .dr-bar i{position:absolute;inset:0 auto 0 0;width:3%;border-radius:99px;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .55s cubic-bezier(.3,1.5,.5,1);box-shadow:inset 0 -4px 0 rgba(0,0,0,.12)}
@@ -1716,7 +1716,7 @@ html.ap-mode .mv-home{display:none}
 @keyframes endpix{from{transform:scale(.2) translateY(60px);opacity:0}}
 @keyframes dance{25%{transform:rotate(-6deg) translateY(-6px)}75%{transform:rotate(6deg) translateY(-6px)}}
 .dr-end .ap-res div{animation:optin .55s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(.55s + var(--k,0) * .18s)}
-.dr-end .ap-res .g{border-color:#9ff0c0}.dr-end .ap-res .g small{background:#9ff0c0}.dr-end .ap-res .g b{color:#9ff0c0}.dr-end .ap-res .y b{color:#ffcf5a}.dr-end .ap-res .b b{color:var(--acc)}
+.dr-end .ap-res .g{border-color:#B49CFF}.dr-end .ap-res .g small{background:#B49CFF}.dr-end .ap-res .g b{color:#B49CFF}.dr-end .ap-res .y b{color:#ffcf5a}.dr-end .ap-res .b b{color:var(--acc)}
 .dr-end .ap-cta{margin-top:10px}
 .dr-link{border:0;background:transparent;color:var(--mut);font:800 14px "Bricolage Grotesque";letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:10px;cursor:pointer}
 .dr-streak .dr-flame{font-size:120px;line-height:1;animation:flame 1.2s ease-in-out infinite,endpix .9s cubic-bezier(.2,1.5,.4,1) both;filter:drop-shadow(0 0 30px rgba(255,140,40,.6))}
@@ -1752,16 +1752,16 @@ html.ap-mode .mv-home{display:none}
 @property --bg{syntax:"<color>";inherits:true;initial-value:#0d1a15}
 @property --glow{syntax:"<color>";inherits:true;initial-value:rgba(88,180,120,.32)}
 @property --glow2{syntax:"<color>";inherits:true;initial-value:rgba(140,220,170,.12)}
-@property --acc{syntax:"<color>";inherits:true;initial-value:#6FCF8E}
-html.ap-mode,[data-th]{--bg:#0d1a15;--glow:rgba(88,180,120,.32);--glow2:rgba(140,220,170,.12);--ink:#EAF6EE;--mut:rgba(234,246,238,.72);--lab:rgba(234,246,238,.48);
-  --acc:#6FCF8E;--accd:#3C8F5A;--acc2:#A8E6BC;--acci:#0b1a12;--card:rgba(8,20,14,.55);--card2:rgba(234,246,238,.06);--line:rgba(234,246,238,.13);--line2:rgba(234,246,238,.06);
-  --gold:#F5B971;--goldd:#9c5a1c;--hf:"Nunito",system-ui,sans-serif;--sf:"Nunito",sans-serif;--bf:"Nunito",system-ui,-apple-system,sans-serif;--hs:1;--ok:#B5F28A;--okd:#4f8a22;--no:#FF6A4D;--nod:#9a321f}
+@property --acc{syntax:"<color>";inherits:true;initial-value:#FFC94D}
+html.ap-mode,[data-th]{--bg:#0b0a20;--glow:rgba(124,92,255,.34);--glow2:rgba(255,209,92,.12);--ink:#F6F1FF;--mut:rgba(246,241,255,.74);--lab:rgba(246,241,255,.5);
+  --acc:#FFC94D;--accd:#a8730f;--acc2:#FFE29A;--acci:#1d1404;--card:rgba(20,16,48,.58);--card2:rgba(246,241,255,.06);--line:rgba(246,241,255,.14);--line2:rgba(246,241,255,.06);
+  --gold:#FFC94D;--goldd:#a8730f;--hf:"Nunito",system-ui,sans-serif;--sf:"Nunito",sans-serif;--bf:"Nunito",system-ui,-apple-system,sans-serif;--hs:1;--ok:#FFD66B;--okd:#a8730f;--no:#FF7E8E;--nod:#9e2f44}
 [data-th="1"],html.ap-mode[data-th="1"]{--bg:#120a1e;--glow:rgba(150,62,170,.48);--glow2:rgba(255,111,181,.14);--ink:#FCE7F3;--mut:rgba(252,231,243,.72);--lab:rgba(252,231,243,.48);
   --acc:#FF6FB5;--accd:#9b2e66;--acc2:#C77DFF;--acci:#1d0b17;--card:rgba(20,10,30,.55);--card2:rgba(252,231,243,.06);--line:rgba(252,231,243,.14);--line2:rgba(252,231,243,.06);
-  --gold:#F2A65A;--goldd:#8f4f1c;--sf:"Condiment",cursive;--ok:#9FF0C0;--okd:#2f8f5b}
+  --gold:#F2A65A;--goldd:#8f4f1c;--sf:"Condiment",cursive;--ok:#FFD66B;--okd:#a8730f}
 [data-th="2"],html.ap-mode[data-th="2"]{--bg:#010828;--glow:rgba(36,64,190,.5);--glow2:rgba(111,255,0,.09);--ink:#EFF4FF;--mut:rgba(239,244,255,.72);--lab:rgba(239,244,255,.46);
-  --acc:#6FFF00;--accd:#3a8f00;--acc2:#7CF6FF;--acci:#010828;--card:rgba(255,255,255,.035);--card2:rgba(255,255,255,.06);--line:rgba(239,244,255,.14);--line2:rgba(239,244,255,.06);
-  --gold:#B724FF;--goldd:#5b1290;--sf:"Condiment",cursive;--hs:1;--ok:#6FFF00;--okd:#3a8f00}
+  --acc:#7CF6FF;--accd:#1f8f9c;--acc2:#B9F9FF;--acci:#010828;--card:rgba(255,255,255,.035);--card2:rgba(255,255,255,.06);--line:rgba(239,244,255,.14);--line2:rgba(239,244,255,.06);
+  --gold:#B724FF;--goldd:#5b1290;--sf:"Condiment",cursive;--hs:1;--ok:#FFD66B;--okd:#a8730f}
 html.ap-mode{transition:--bg 1.2s ease,--glow 1.2s ease,--glow2 1.2s ease,--acc 1.2s ease}
 html.ap-mode,html.ap-mode body,html.ap-mode body[data-view]{background:var(--bg)!important}
 html.ap-mode .ap{background:transparent!important;color:var(--ink);font-family:var(--bf)}
@@ -1797,7 +1797,7 @@ html.ap-mode .dr-end h1{font-size:32px;color:var(--acc2)}
 html.ap-mode .dr-sec>span{font:400 22px var(--sf);letter-spacing:.02em;text-transform:none;color:var(--acc);transform:rotate(-2deg)}
 html.ap-mode .dr-sb[data-th="0"] .dr-sec>span{font:800 12px var(--hf);letter-spacing:.12em;text-transform:uppercase;transform:none}
 html.ap-mode .dr-sb[data-th="1"] .dr-sec>span,html.ap-mode .dr-sb[data-th="2"] .dr-sec>span{font:400 24px "Condiment",cursive;text-transform:none;transform:rotate(-2deg)}
-html.ap-mode .dr-sb[data-th="2"] .dr-sec>span{mix-blend-mode:normal;color:#6FFF00}
+html.ap-mode .dr-sb[data-th="2"] .dr-sec>span{mix-blend-mode:normal;color:#7CF6FF}
 html.ap-mode .ap-brand{font:800 19px var(--hf);letter-spacing:-.01em;color:var(--ink)}
 html.ap-mode .ap-brand i{font:400 21px "Condiment",cursive;text-transform:none;letter-spacing:0;color:var(--acc)}
 html.ap-mode .ap-back{border-color:var(--line);background:var(--card);color:var(--ink)}html.ap-mode .ap-back span,html.ap-mode .ap-back i{color:var(--acc)}
@@ -2080,7 +2080,7 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .sv-vc{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card);border:2px dashed var(--line)}
 .sv-vc.win{border-style:solid;border-color:var(--gold,#f5c84b);box-shadow:0 0 18px rgba(245,200,75,.25)}
 .sv-flag{font-size:30px;line-height:1}.sv-vb b{font:800 16px var(--bf)}.sv-vb small{display:block;color:var(--mut);font-size:12.5px;margin-top:4px}.sv-vc.win small{color:var(--gold,#f5c84b);font-weight:800}
-.sv-bar{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:6px}.sv-bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--acc),#9ff0c0);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.sv-bar{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:6px}.sv-bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#B49CFF,var(--acc));transition:width .8s cubic-bezier(.2,.8,.2,1)}
 .sv-vc.win .sv-bar i{background:linear-gradient(90deg,#f5c84b,#ffe38a)}
 .sv-vote{padding:10px 12px;border-radius:12px;border:0;background:var(--acc);color:var(--acci,#0d1a15);font:800 13px var(--bf);cursor:pointer;white-space:nowrap;box-shadow:0 3px 0 color-mix(in srgb,var(--acc) 55%,#000)}
 .sv-vote.on{background:transparent;color:var(--acc);box-shadow:none;border:2px solid var(--acc)}
@@ -2137,9 +2137,9 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .wd-bar{grid-column:2/4;height:8px;border-radius:8px;background:rgba(0,0,0,.15);overflow:hidden}.wd-bar i{display:block;height:100%;background:#fff;border-radius:8px}
 
 /* Minaraverse hero: Safiverse button with the app's own logo */
-.h-app{display:inline-flex!important;align-items:center;gap:10px;padding-left:8px!important;font-style:normal!important;border-color:#6FCF8E!important;background:linear-gradient(135deg,rgba(111,207,142,.16),rgba(13,26,21,.6))!important}
+.h-app{display:inline-flex!important;align-items:center;gap:10px;padding-left:8px!important;font-style:normal!important;border-color:#FFC94D!important;background:linear-gradient(135deg,rgba(255,201,77,.16),rgba(11,10,32,.6))!important}
 .h-app-ic{width:34px;height:34px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.35);flex:none}
-.h-app-w{font:800 19px/1 "Nunito",system-ui,sans-serif!important;letter-spacing:-.01em;color:#fff}.h-app-w b{font-weight:900;color:#fff}.h-app-w i{font-style:normal;font-weight:700;color:#6FCF8E}
+.h-app-w{font:800 19px/1 "Nunito",system-ui,sans-serif!important;letter-spacing:-.01em;color:#fff}.h-app-w b{font-weight:900;color:#fff}.h-app-w i{font-style:normal;font-weight:700;color:#FFC94D}
 /* ---- Safiverse friends ---- */
 .fr-back{display:inline-block;margin:0 0 6px;color:var(--mut);text-decoration:none;font:700 14px var(--bf)}
 .fr-me{display:grid;gap:4px;text-align:left;margin:6px 0 14px}.fr-me small{color:var(--mut);font:700 12px var(--bf);text-transform:uppercase;letter-spacing:.06em}.fr-me b{font:800 20px var(--bf);color:var(--acc)}
@@ -2180,7 +2180,7 @@ html.ap-mode .dr-ub b,html.ap-mode .dr-ub small{color:var(--acci)!important}html
 .so-clap{flex:none;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:6px 11px;font:800 14px var(--bf);cursor:pointer}.so-clap.on{background:#ffc94d22;border-color:#ffc94d}.so-ch{flex:none;font:800 13px var(--bf);color:#ffc94d;font-style:normal}
 .so-qn{display:block;color:var(--mut);font:700 13px var(--bf);margin:4px 0}
 .so-word{display:flex;align-items:center;justify-content:center;gap:12px;margin:18px 0 22px;flex-wrap:wrap}.so-word span{font-size:44px}.so-word b{font:800 30px var(--bf)}
-.so-opts{display:grid;gap:10px;width:100%;max-width:460px;margin:0 auto}.so-opt{padding:16px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:800 17px var(--bf);cursor:pointer;text-align:center}.so-opt.pick{border-color:var(--acc);background:#6fcf8e22}
+.so-opts{display:grid;gap:10px;width:100%;max-width:460px;margin:0 auto}.so-opt{padding:16px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:800 17px var(--bf);cursor:pointer;text-align:center}.so-opt.pick{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 14%,transparent)}
 .so-end{display:grid;justify-items:center;gap:10px}.so-score{display:flex;align-items:baseline;gap:8px;font:800 20px var(--bf)}.so-score b{font-size:48px}.so-score em{font-style:normal;font-size:40px;color:var(--mut)}
 .so-rev{width:100%;max-width:440px;display:grid;gap:4px;text-align:left;font:600 14px var(--bf)}.so-rev .ok{color:var(--acc)}.so-rev .no{color:#ff8a7a}
 /* ---- speaking ---- */
@@ -2272,3 +2272,109 @@ html .ap-lh .ap-brand.sv i{font:600 16px "Nunito",system-ui,sans-serif!important
 @media (max-width:380px){.tc-photo{width:66px;height:66px}}
 .dr-foot.auto .dr-go{visibility:hidden}
 .lg-after{position:relative;z-index:2}.lg-after .ap-cta{position:relative;z-index:5;touch-action:manipulation}
+
+/* =========================================================
+   SAFIVERSE IDENTITY — gold & cosmic theme, planet path, own buttons, Safi mascot
+   ========================================================= */
+html.ap-mode,html.ap-mode[data-th="0"],html.ap-mode[data-th="3"],html.ap-mode[data-th="4"],html.ap-mode[data-th="5"]{--bg:#0b0a20;--glow:rgba(124,92,255,.34);--glow2:rgba(255,209,92,.12);--ink:#F6F1FF;--mut:rgba(246,241,255,.74);--lab:rgba(246,241,255,.5);
+  --acc:#FFC94D;--accd:#a8730f;--acc2:#FFE29A;--acci:#1d1404;--card:rgba(20,16,48,.58);--card2:rgba(246,241,255,.06);--line:rgba(246,241,255,.14);--line2:rgba(246,241,255,.06);
+  --gold:#FFC94D;--goldd:#a8730f;--ok:#FFD66B;--okd:#a8730f;--no:#FF7E8E;--nod:#9e2f44}
+html.ap-mode[data-th="2"]{--acc:#7CF6FF;--accd:#1f8f9c;--acc2:#B9F9FF;--acci:#03122a;--ok:#FFD66B;--okd:#a8730f}
+html.ap-mode[data-th="1"]{--ok:#FFD66B;--okd:#a8730f}
+html.ap-mode[data-th="2"] .dr-sb[data-th="2"] .dr-sec>span,html.ap-mode .dr-sb[data-th="2"] .dr-sec>span{color:#7CF6FF}
+/* starfield on every level */
+html.ap-mode .ap-fx .g1::after{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 18%,#fff9,transparent),radial-gradient(1px 1px at 72% 12%,#fffa,transparent),radial-gradient(1.6px 1.6px at 40% 38%,#ffe7a8,transparent),radial-gradient(1px 1px at 88% 52%,#fff8,transparent),radial-gradient(1px 1px at 22% 66%,#fff7,transparent),radial-gradient(1.6px 1.6px at 62% 80%,#d9ccff,transparent),radial-gradient(1px 1px at 8% 92%,#fff7,transparent),radial-gradient(1px 1px at 52% 6%,#fff8,transparent),radial-gradient(1.3px 1.3px at 93% 28%,#ffe7a8,transparent),radial-gradient(1px 1px at 30% 8%,#fff8,transparent);animation:twinkle 4s ease-in-out infinite alternate}
+
+/* ---- own shape language: "comet" corners (big · small · big · small) + thin gold edge, glow instead of a hard bottom shadow ---- */
+html.ap-mode{--cr:22px 8px 22px 8px}
+html.ap-mode :is(.ap-cta,.dr-go,.dr-pgo){border-radius:var(--cr)!important;border:1.5px solid color-mix(in srgb,var(--acc) 70%,#fff)!important;box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 12%,transparent),0 10px 26px color-mix(in srgb,var(--acc) 28%,transparent)!important;position:relative;overflow:hidden}
+html.ap-mode :is(.ap-cta,.dr-go.on){background:linear-gradient(135deg,var(--acc2),var(--acc) 45%,color-mix(in srgb,var(--acc) 70%,#ff9a3d))!important;color:var(--acci)!important}
+html.ap-mode :is(.ap-cta,.dr-go.on)::after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:30%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:sfshine 3.2s ease-in-out infinite}
+@keyframes sfshine{0%,60%{left:-40%}100%{left:130%}}
+html.ap-mode .dr-go:not(.on){background:var(--card2)!important;border-color:var(--line)!important;box-shadow:none!important;color:var(--lab)}
+html.ap-mode :is(.ap-cta,.dr-go,.dr-pgo):active:not(:disabled){transform:scale(.97)}
+html.ap-mode .dr-foot.ok .dr-go{background:linear-gradient(135deg,#FFF0B8,#FFD66B 50%,#F5A623)!important;color:#2a1a02!important}
+html.ap-mode .dr-foot.no .dr-go{background:linear-gradient(135deg,#FFC2CB,#FF7E8E 55%,#e0566b)!important;border-color:#ffb0bc!important;box-shadow:0 0 0 4px rgba(255,126,142,.14),0 10px 26px rgba(255,126,142,.28)!important;color:#2a0710!important}
+html.ap-mode .dr-pgo{background:linear-gradient(135deg,#fff,#FFF2C9)!important;color:#2a1a02!important}
+/* answer options & word tiles */
+html.ap-mode :is(.dx-opt,.dx-tile){border-radius:var(--cr);border-width:1.5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)!important}
+html.ap-mode :is(.dx-opt,.dx-tile):active{transform:scale(.97)}
+html.ap-mode .dx-opt kbd{border-radius:50%;border-width:1.5px}
+html.ap-mode .dx-opt.sel{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc2);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 18%,transparent),0 0 22px color-mix(in srgb,var(--acc) 25%,transparent)!important}
+html.ap-mode .dx-opt.good{border-color:var(--ok);background:rgba(255,214,107,.14);color:var(--ok);box-shadow:0 0 0 3px rgba(255,214,107,.2),0 0 24px rgba(255,214,107,.3)!important}
+html.ap-mode .dx-opt.bad{border-color:var(--no);background:rgba(255,126,142,.12);color:var(--no);box-shadow:0 0 0 3px rgba(255,126,142,.16)!important}
+html.ap-mode .dx-line.good .dx-tile{border-color:var(--ok);color:var(--ok)}
+/* feedback: a floating card with Safi instead of a full-width coloured bar */
+html.ap-mode .dr-foot{background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+html.ap-mode .dr-foot.show{margin:0 10px 10px;left:0;right:0;border-radius:28px 12px 28px 12px;border:1.5px solid}
+html.ap-mode .dr-foot.ok{background:linear-gradient(160deg,rgba(255,214,107,.16),color-mix(in srgb,var(--bg) 92%,transparent) 70%);border-color:rgba(255,214,107,.55);color:var(--ok);box-shadow:0 -10px 40px rgba(255,201,77,.18)}
+html.ap-mode .dr-foot.no{background:linear-gradient(160deg,rgba(255,126,142,.16),color-mix(in srgb,var(--bg) 92%,transparent) 70%);border-color:rgba(255,126,142,.5);color:var(--no);box-shadow:0 -10px 40px rgba(255,126,142,.15)}
+html.ap-mode .dr-foot.show .dr-ic{width:62px;height:62px;margin:-30px 0 0 -4px;background:none!important;border-radius:0;font-size:0;color:transparent}
+.dr-ic .safi{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 6px 14px rgba(255,201,77,.35))}
+.dr-foot.ok .dr-ic .safi{animation:sfjump .7s cubic-bezier(.2,1.5,.4,1)}
+.dr-foot.no .dr-ic .safi{animation:sfwob .6s ease-in-out}
+@keyframes sfjump{0%{transform:translateY(20px) scale(.5)}60%{transform:translateY(-10px) scale(1.08) rotate(8deg)}100%{transform:none}}
+@keyframes sfwob{0%,100%{transform:none}25%{transform:rotate(-10deg)}75%{transform:rotate(8deg)}}
+/* lesson progress bar: a gold comet trail */
+html.ap-mode .dr-bar i{background:linear-gradient(90deg,#9b7bff,var(--acc) 70%,#fff4c2)!important;box-shadow:0 0 12px color-mix(in srgb,var(--acc) 55%,transparent)}
+
+/* ---- unit banner & course card: same comet corners, no 3-D slab ---- */
+html.ap-mode .dr-ub{border-radius:26px 10px 26px 10px;background:linear-gradient(120deg,color-mix(in srgb,var(--uc) 88%,#fff),var(--uc) 55%,color-mix(in srgb,var(--uc) 70%,#3a1d7a));box-shadow:0 0 0 1.5px color-mix(in srgb,var(--uc) 60%,#fff),0 12px 30px color-mix(in srgb,var(--uc) 30%,transparent)!important;color:#140f2a}
+html.ap-mode .dr-unit.locked .dr-ub{background:var(--card2);box-shadow:0 0 0 1px var(--line)!important}
+html.ap-mode .dr-gb{border-radius:0 10px 26px 0}
+
+/* ---- the path becomes a map of planets ---- */
+html.ap-mode .dr-node{border-radius:50%!important;width:76px;height:76px;
+  background:radial-gradient(circle at 32% 28%,color-mix(in srgb,var(--uc) 35%,#fff) 0 8%,var(--uc) 38%,color-mix(in srgb,var(--uc) 55%,#1a0f3d) 100%)!important;
+  box-shadow:inset -10px -12px 18px rgba(10,6,40,.45),inset 6px 6px 14px rgba(255,255,255,.25),0 0 0 6px color-mix(in srgb,var(--uc) 12%,transparent),0 0 30px color-mix(in srgb,var(--uc) 40%,transparent)!important;overflow:visible}
+html.ap-mode .dr-node:active{transform:scale(.94)!important}
+/* planet ring (Saturn-style) on every 2nd planet */
+html.ap-mode .dr-nw:nth-child(odd) .dr-node:not(.lock):not(.jump)::after{content:"";position:absolute;left:-14px;right:-14px;top:50%;height:20px;margin-top:-10px;border-radius:50%;border:3px solid color-mix(in srgb,var(--uc) 45%,#fff);border-top-color:transparent;transform:rotate(-16deg);pointer-events:none;opacity:.85}
+/* surface bands */
+html.ap-mode .dr-node:not(.lock):not(.jump)::before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-linear-gradient(-20deg,transparent 0 11px,rgba(255,255,255,.08) 11px 15px);pointer-events:none}
+html.ap-mode .dr-node.done{background:radial-gradient(circle at 32% 28%,#FFF6CF 0 8%,#FFD15C 40%,#C9851A 100%)!important;box-shadow:inset -10px -12px 18px rgba(80,40,0,.35),inset 6px 6px 14px rgba(255,255,255,.35),0 0 0 6px rgba(255,201,77,.14),0 0 34px rgba(255,201,77,.45)!important}
+html.ap-mode .dr-node.done::after{border-color:#FFE6A3!important;border-top-color:transparent!important}
+html.ap-mode .dr-node em{background:#FFF2C2!important;color:#7a4a00!important;border-color:var(--bg)!important;font-size:0!important}
+html.ap-mode .dr-node em::before{content:"★";font:900 13px var(--hf)}
+/* locked: a quiet grey moon with craters */
+html.ap-mode .dr-node.lock{filter:none!important;background:radial-gradient(circle at 30% 28%,#6d6a85 0 6%,#3b3954 45%,#1d1b30 100%)!important;box-shadow:inset -8px -10px 16px rgba(0,0,0,.45),inset 4px 4px 10px rgba(255,255,255,.08)!important}
+html.ap-mode .dr-node.lock::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 66% 34%,rgba(0,0,0,.28) 0 7px,transparent 8px),radial-gradient(circle at 36% 68%,rgba(0,0,0,.25) 0 9px,transparent 10px),radial-gradient(circle at 70% 72%,rgba(0,0,0,.2) 0 5px,transparent 6px)}
+html.ap-mode .dr-node.lock span{opacity:.45!important;font-size:22px}
+/* the final node of a unit is a golden star */
+html.ap-mode .dr-node.trophy{width:90px!important;height:90px!important;border-radius:0!important;background:none!important;box-shadow:none!important}
+html.ap-mode .dr-node.trophy::before,html.ap-mode .dr-node.trophy::after{display:none!important}
+html.ap-mode .dr-node.trophy{background:radial-gradient(circle at 40% 35%,#FFF6CF,#FFD15C 45%,#D88B14)!important;clip-path:polygon(50% 0,61% 34%,98% 35%,68% 56%,79% 91%,50% 70%,21% 91%,32% 56%,2% 35%,39% 34%);filter:drop-shadow(0 0 16px rgba(255,201,77,.6))}
+html.ap-mode .dr-node.trophy.lock{background:radial-gradient(circle at 40% 35%,#77748f,#3b3954 60%,#1d1b30)!important;filter:none}
+html.ap-mode .dr-node.trophy span{margin-top:8px;font-size:24px}
+/* current planet pulses with an orbit */
+html.ap-mode .dr-node.now{box-shadow:inset -10px -12px 18px rgba(10,6,40,.45),inset 6px 6px 14px rgba(255,255,255,.25),0 0 0 8px color-mix(in srgb,var(--uc) 22%,transparent),0 0 44px color-mix(in srgb,var(--uc) 70%,transparent)!important}
+/* dotted orbit trail linking the planets */
+html.ap-mode .dr-path{position:relative}
+html.ap-mode .dr-path::before{content:"";position:absolute;left:50%;top:10px;bottom:10px;width:2px;margin-left:-1px;background:repeating-linear-gradient(to bottom,color-mix(in srgb,var(--uc) 55%,transparent) 0 3px,transparent 3px 12px);opacity:.55;z-index:0}
+html.ap-mode .dr-nw{z-index:1}
+/* START bubble & chest */
+html.ap-mode .ap-start{border-radius:16px 6px 16px 6px;background:linear-gradient(135deg,#FFF2C9,var(--acc))!important;color:var(--acci)!important;border:0;box-shadow:0 6px 18px color-mix(in srgb,var(--acc) 35%,transparent)}
+html.ap-mode .ap-start::after{background:var(--acc)!important;border:0}
+html.ap-mode .dr-chest{border-radius:var(--cr);box-shadow:none}
+html.ap-mode .dr-chest.ready{box-shadow:0 0 22px rgba(255,201,77,.45)!important}
+html.ap-mode .dr-pop{border-radius:24px 10px 24px 10px}
+html.ap-mode .ap-tabs a.on{border-radius:16px 6px 16px 6px}
+
+/* ---- Safi mascot ---- */
+.safi{display:block;overflow:visible}
+.safi .sf-tw{transform-origin:105px 26px;animation:sftw 2.2s ease-in-out infinite}
+@keyframes sftw{50%{transform:scale(.4) rotate(45deg);opacity:.4}}
+.safi.sf-wave .sf-arm{transform-origin:98px 52px;animation:sfwave 1.4s ease-in-out infinite}
+@keyframes sfwave{50%{transform:rotate(24deg)}}
+.safi-wrap{position:relative;display:inline-grid;justify-items:center}
+.safi-wrap .safi{width:110px;height:110px;animation:sffloat 3s ease-in-out infinite;filter:drop-shadow(0 10px 24px rgba(255,201,77,.4))}
+@keyframes sffloat{50%{transform:translateY(-6px)}}
+.safi-wrap i{font-style:normal;margin-top:4px;padding:7px 14px;border-radius:16px 6px 16px 6px;background:var(--card);border:1px solid color-mix(in srgb,var(--acc) 45%,transparent);color:var(--ink);font:700 14px var(--hf,system-ui)}
+.dr-safi{position:absolute;z-index:2;width:84px;pointer-events:none}
+.dr-safi .safi{width:84px;height:84px}
+.sv-safi{display:flex;justify-content:center;margin:4px 0 -6px}
+.sv-safi .safi{width:128px;height:128px}
+.dr-endpix .safi-wrap .safi{width:150px;height:150px}
+@media (prefers-reduced-motion:reduce){.safi,.safi *,.safi-wrap .safi{animation:none!important}}
+.safi.sf-wave{transform-origin:60px 100px;animation:sfsway 2.4s ease-in-out infinite}
+@keyframes sfsway{25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}

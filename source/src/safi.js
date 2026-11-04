@@ -76,7 +76,7 @@ function onbScreen(root, step = 1) {
   document.documentElement.classList.add("ap-mode");
   const head = `<div class="ap sv-onb"><div class="ap-hud slim">${apBack()}${brandHTML()}</div><main class="ap-main sv-main">`;
   if (step === 1) {
-    root.innerHTML = head + `<div class="sv-crew small">${mascot("👋")}</div><h1 class="ap-h">${L("svSpeak")}</h1><p class="sv-tri">${["az", "ru", "en"].filter(k => k !== LANG).map(k => UI[k].svSpeak).join("<br>")}</p>
+    root.innerHTML = head + `<div class="sv-safi">${safiSVG("wave")}</div><h1 class="ap-h">${L("svSpeak")}</h1><p class="sv-tri">${["az", "ru", "en"].filter(k => k !== LANG).map(k => UI[k].svSpeak).join("<br>")}</p>
       <div class="sv-langs">${[["az", "🇦🇿", "Azərbaycanca"], ["ru", "🇷🇺", "Русский"], ["en", "🇬🇧", "English"]].map(([k, f, n]) => `<button class="sv-sub ${LANG === k ? "on" : ""}" data-sp="${k}"><span>${f}</span><b>${n}</b><i>›</i></button>`).join("")}</div></main></div>`;
     root.onclick = e => { const b = e.target.closest("[data-sp]"); if (!b) return; LANG = b.dataset.sp; try { localStorage.setItem("mv-lang", LANG); } catch (er) {} document.documentElement.lang = LANG; sfx("tap"); onbScreen(root, 2); };
     return;
@@ -103,7 +103,7 @@ function safiAfterLesson(mode) {
 function welcomeScreen(root) {
   document.documentElement.classList.add("ap-mode");
   root.innerHTML = `<div class="ap sv-wel"><div class="ap-hud slim">${apBack()}${brandHTML()}</div><main class="ap-main sv-main">
-    <div class="sv-crew">${["p0", "p23", "r3", "p8"].map((k, i) => `<span style="--i:${i}">${charSVG(k)}</span>`).join("")}</div>
+    <div class="sv-safi">${safiSVG("wave")}</div>
     <h1 class="ap-h">${L("svWelcome")}</h1><p class="ap-p">${L("svWelcomeP")}</p>
     <div class="sv-btns"><button class="ap-cta sv-main-b" data-login>🔑 ${L("svHave")}</button><button class="sv-ghost sv-guest-b" data-guest><b>👀 ${L("svGuest")}</b><small>${L("svGuestP")}</small></button>
     <button class="sv-new-b" data-reg>✨ ${L("svReg")}</button></div><div class="sv-lang">${langPill()}</div></main></div>`;

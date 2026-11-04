@@ -34,7 +34,7 @@ Object.assign(UI.ru, { dWrite: "Напиши по-английски", dHard: "�
   dSlow: "Медленно", dJumpHere: "Перейти сюда!", dNode: ["Новые слова", "Ещё слова", "Слушай и собирай", "Грамматика и письмо", "Повторение раздела"], dNodeDone: "Пройдено — повторить", dPracticeXp: "Повторить +5 XP", dAfill: "Найди пропущенное слово", dSkip: "Не могу сейчас слушать", dWin: ["Так держать!", "Отличная работа!", "Получилось!", "Блестяще!"], dWinP: "Каждый урок приближает тебя к цели.", dPerfect: "Урок без ошибок!", dAccA: "Отлично", dAccB: "Хорошо", dFast: "Быстро", dTypeHere: "Пиши по-английски", dCourseName: "Английский шаг за шагом", dStories: "Курсы-истории", dFirst: "Начни здесь" });
 
 /* ---------- course data ---------- */
-const UCOLS = [["#6FCF8E", "#8FD9B6", "#B5E3A1", "#7CC7A8", "#9BD88A"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#6FFF00", "#7CF6FF", "#B724FF", "#EFF4FF", "#9DFFB0"],
+const UCOLS = [["#FFC94D", "#B49CFF", "#FF9EC4", "#7CC8FF", "#FFB27A"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#7CF6FF", "#B724FF", "#FFD166", "#EFF4FF", "#9DB0FF"],
   ["#4FC3F7", "#29B6F6", "#81D4FA", "#4DD0E1", "#80DEEA"], ["#FFB74D", "#FF8A65", "#FFD54F", "#F06292", "#FFAB91"], ["#E1BEE7", "#CE93D8", "#FFD700", "#B39DDB", "#F8BBD0"]];
 const UNITS = [];
 const SECTIONS = COURSE_SECTIONS.map((sec, si) => { const from = UNITS.length;
@@ -290,14 +290,14 @@ VIEWS.drill = root => {
       if (LISTEN_K.includes(x.k)) st.lisOk = (st.lisOk || 0) + 1;
       st.ok++; st.solved++; st.combo++; st.maxCombo = Math.max(st.maxCombo, st.combo);
       const big = st.combo >= 5 && st.combo % 5 === 0; sfx(big ? "combo" : "ok"); buzz(15);
-      ico.textContent = "✓"; tb.textContent = L("dRight")[(Math.random() * 6) | 0];
+      ico.innerHTML = safiSVG("happy"); tb.textContent = L("dRight")[(Math.random() * 6) | 0];
       tp.innerHTML = r.typo ? `${L("dTypo")} <u>${esc(x.w.en)}</u>` : "";
       foot.className = "dr-foot show ok"; joy(true);
       if (big) { const cb = root.querySelector(".dr-cb"); cb.textContent = `🔥 ${st.combo} ${L("dCombo")}`; cb.classList.remove("pop"); void cb.offsetWidth; cb.classList.add("pop"); bar.parentNode.classList.add("hot"); }
       if (x.k === "fill" || x.k === "build" || x.k === "listen") say(x.k === "fill" ? answerOf(x) : x.s.en);
     } else {
       st.miss++; st.combo = 0; bar.parentNode.classList.remove("hot"); sfx("no"); buzz([30, 40, 30]);
-      ico.textContent = "✕"; tb.textContent = L("dWrongT"); tp.innerHTML = `<span class="dr-ans">${esc(answerOf(x))}</span>${x.k === "build" || x.k === "listen" || x.k === "fill" ? sayBtn(answerOf(x)) : ""}`;
+      ico.innerHTML = safiSVG("sad"); tb.textContent = L("dWrongT"); tp.innerHTML = `<span class="dr-ans">${esc(answerOf(x))}</span>${x.k === "build" || x.k === "listen" || x.k === "fill" ? sayBtn(answerOf(x)) : ""}`;
       foot.className = "dr-foot show no"; joy(false);
       if (mode !== "jump") queue.push({ ...x, prev: true, bank: x.bank && shuffle(x.bank), opts: x.opts && shuffle(x.opts) });
       if (mode === "lesson") { setHearts(hearts() - 1); const hb = hbox(); if (hb) { hb.innerHTML = `❤️ <b>${hearts()}</b>`; hb.classList.remove("hurt"); void hb.offsetWidth; hb.classList.add("hurt"); setTimeout(() => sfx("heart"), 280); } }
@@ -356,7 +356,7 @@ function dDoneScreen(root, { xp, acc, sec, perfect, title, back = "app-learn" })
   sfx("win"); buzz([60, 50, 60, 50, 160]);
   title = title === L("apDone") ? L("dWin")[(Math.random() * L("dWin").length) | 0] : title;
   root.innerHTML = `<div class="ap dr-end"><div class="ap-cf">${Array.from({ length: 46 }, (_, j) => `<i style="left:${Math.random() * 100}%;--d:${(Math.random() * .8).toFixed(2)}s;--c:${["#ffcf5a", "#9ff0c0", "#9DB0FF", "#ff9fb0", "#c9a7ff"][j % 5]}"></i>`).join("")}</div>
-    <div class="dr-endpix">${mascot(perfect ? "👑" : "🎉")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>
+    <div class="dr-endpix">${safiSay(perfect ? "👑" : "🎉", "happy")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>
     <div class="ap-res"><div class="y" style="--k:0"><small>${L("apEarned")}</small><b>⚡ <span data-n="${xp}">0</span></b></div><div class="g" style="--k:1"><small>${acc >= 90 ? L("dAccA") : acc >= 70 ? L("dAccB") : L("apAccuracy")}</small><b>🎯 <span data-n="${acc}">0</span>%</b></div><div class="b" style="--k:2"><small>${sec < 150 ? L("dFast") : L("apTime")}</small><b>⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}</b></div></div>
     <div class="ap-goalbar"><span>${L("apGoal")}</span><div><i style="width:${Math.min(100, xpToday() / goal() * 100)}%"></i></div><b>${xpToday()}/${goal()}</b></div>
     <a class="ap-cta dr-cont" href="#${back}">${L("dCont")}</a></div>`;
