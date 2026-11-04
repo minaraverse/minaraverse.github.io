@@ -213,7 +213,8 @@ VIEWS.sadmin = root => {
   const key = () => { try { return sessionStorage.getItem("sv-key") || ""; } catch (e) { return ""; } };
   const shell = body => `<div class="ap"><div class="ap-hud slim"><a class="ap-back" href="#app-profile" aria-label="Back"><span>←</span><b>${L("apProfile")}</b></a>${brandHTML()}</div><main class="ap-main sv-adm">${body}</main></div>`;
   if (!svOn()) { root.innerHTML = shell(`<h1 class="ap-h">Admin</h1><p class="ap-p">Safiverse server is not connected yet.</p>`); return {}; }
-  const login = async () => { let s = {}; try { s = await sPost("ad_status", {}); } catch (e) {}
+  const wait = () => { if (!root.querySelector(".sv-adm > :not(.sv-load)")) root.innerHTML = shell(loadBox()); };
+  const login = async () => { wait(); let s = {}; try { s = await sPost("ad_status", {}); } catch (e) {}
     root.innerHTML = shell(`<h1 class="ap-h">🔐 Safiverse admin</h1>${s.hasCode ? `<form class="sv-form" data-in><label>Admin code<input type="password" name="k" autocomplete="current-password"></label><button class="ap-cta">→</button></form>` : ""}
       <form class="sv-form" data-set><p class="ap-p">${s.hasCode ? "Change code" : "Set a code"} — a 6-digit confirmation goes to ${esc(s.email || "admin email")}.</p><button type="button" class="sv-ghost" data-otp><b>📧 Send confirmation</b></button>
       <label>Confirmation<input name="otp" inputmode="numeric"></label><label>New admin code (6+)<input type="password" name="nk"></label><button class="ap-cta">Save</button></form><p class="sv-err"></p>`);
@@ -225,7 +226,7 @@ VIEWS.sadmin = root => {
   const AB = { ok: { en: "Approve", az: "Təsdiq et", ru: "Подтвердить" }, reject: { en: "Reject", az: "Rədd et", ru: "Отклонить" }, blocked: { en: "Block", az: "Blokla", ru: "Заблокировать" },
     unblock: { en: "Unblock", az: "Blokdan çıxar", ru: "Разблокировать" }, sure: { en: "Sure? Tap again", az: "Əminsən? Yenə bas", ru: "Точно? Нажми ещё" }, hard: { en: "Hard mode", az: "Çətin rejim", ru: "Сложный режим" }, on: { en: "On", az: "Açıq", ru: "Вкл" }, off: { en: "Off", az: "Bağlı", ru: "Выкл" }, none: { en: "Nobody here", az: "Burada heç kim yoxdur", ru: "Здесь никого нет" } };
   const T = o => o[LANG] || o.en; let tab = null;
-  const load = async () => { let d = {}; try { d = await sPost("ad_rows", { key: key() }); } catch (e) {} if (!d.ok) return login();
+  const load = async () => { wait(); let d = {}; try { d = await sPost("ad_rows", { key: key() }); } catch (e) {} if (!d.ok) return login();
     const all = (d.rows || []), dt = s => s ? new Date(s).toLocaleDateString("az-AZ") : "—", cnt = k => all.filter(r => (r.status || "ok") === k).length;
     if (!tab) tab = cnt("pending") ? "pending" : "ok";
     const rows = all.filter(r => (r.status || "ok") === tab).sort((a, b) => tab === "pending" ? String(b.created).localeCompare(String(a.created)) : String(b.last).localeCompare(String(a.last)));
@@ -252,3 +253,9 @@ VIEWS.sadmin = root => {
   key() ? load() : login();
   return {};
 };
+
+/* small status strings */
+Object.assign(UI.en, { svLoading: "Loading…", netOff: "No connection — check the internet and try again.", svOuting: "Signing out…" });
+Object.assign(UI.az, { svLoading: "Yüklənir…", netOff: "Bağlantı yoxdur — interneti yoxla və yenidən cəhd et.", svOuting: "Çıxılır…" });
+Object.assign(UI.ru, { svLoading: "Загрузка…", netOff: "Нет связи — проверь интернет и попробуй снова.", svOuting: "Выходим…" });
+const loadBox = () => `<div class="sv-load" role="status"><span class="sv-spin"></span><p>${L("svLoading")}</p></div>`;

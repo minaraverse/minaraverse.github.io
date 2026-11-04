@@ -50,7 +50,7 @@ function verify_(p) {
   const sh = students_(), f = find_(sh, email), token = Utilities.getUuid().replace(/-/g, "") + Utilities.getUuid().replace(/-/g, "");
   const user = normUser(p.user), withCred = okUser(user) && okPin(p.pin), other = withCred ? findUser_(sh, user) : null;
   if (f && stOf_(f.v) === "blocked") return { ok: false, err: "blocked" };
-  if (f) { sh.getRange(f.row, 6).setValue(new Date()); sh.getRange(f.row, 11).setValue(hash_(token));
+  if (f) { sh.getRange(f.row, 6).setValue(new Date()); sh.getRange(f.row, 11).setValue(tokAdd_(f.v[10], token));
     let u = String(f.v[13] || "");
     if (!u && withCred && (!other || other.row === f.row)) { sh.getRange(f.row, 14, 1, 2).setValues([[user, pinHash(user, p.pin)]]); u = user; }
     return { ok: true, token: token, email: email, student: { name: f.v[1], age: f.v[2], avatar: f.v[3], user: u, status: stOf_(f.v), hard: !!f.v[19] }, progress: f.v[11] ? JSON.parse(f.v[11]) : null }; }
@@ -66,11 +66,14 @@ function verify_(p) {
 /* account status: "" (accounts made before approval existed) or "ok" = approved, "pending" = waiting for Safiverse, "blocked" */
 const stOf_ = r => { const s = String(r[17] || ""); return s === "pending" || s === "blocked" ? s : "ok"; };
 function auth_(p) { const email = String(p.email || "").trim().toLowerCase(), sh = students_(), f = find_(sh, email);
-  if (!f || !p.token || hash_(String(p.token)) !== f.v[10] || stOf_(f.v) === "blocked") return null; return { sh: sh, f: f, email: email, st: stOf_(f.v) }; }
+  if (!f || !p.token || !tokOk_(f.v[10], p.token) || stOf_(f.v) === "blocked") return null; return { sh: sh, f: f, email: email, st: stOf_(f.v) }; }
 const authOk_ = p => { const a = auth_(p); return a && a.st === "ok" ? a : null; };
 
 /* ---------- username + personal code ---------- */
 function ucheck_(p) { const u = normUser(p.user); if (!okUser(u)) return { ok: false, err: "user" }; return { ok: true, free: !findUser_(students_(), u) }; }
+/* several devices per account: keep the hashes of the 5 newest sign-ins (phone, tablet, computer…) */
+function tokAdd_(old, token) { return [hash_(token)].concat(String(old || "").split(" ").filter(Boolean)).slice(0, 5).join(" "); }
+function tokOk_(stored, token) { return !!token && String(stored || "").split(" ").indexOf(hash_(String(token))) >= 0; }
 function login_(p) {
   const u = normUser(p.user), lk = "lt_" + hash_(u), lt = JSON.parse(P.getProperty(lk) || "{}");
   if (lt.n >= 5 && Date.now() - lt.at < 900000) return { ok: false, err: "locked" };
@@ -79,7 +82,7 @@ function login_(p) {
   P.deleteProperty(lk);
   if (stOf_(f.v) === "blocked") return { ok: false, err: "blocked" };
   const token = Utilities.getUuid().replace(/-/g, "") + Utilities.getUuid().replace(/-/g, "");
-  sh.getRange(f.row, 6).setValue(new Date()); sh.getRange(f.row, 11).setValue(hash_(token));
+  sh.getRange(f.row, 6).setValue(new Date()); sh.getRange(f.row, 11).setValue(tokAdd_(f.v[10], token));
   return { ok: true, token: token, email: String(f.v[0]).toLowerCase(), student: { name: f.v[1], age: f.v[2], avatar: f.v[3], user: u, status: stOf_(f.v), hard: !!f.v[19] }, progress: f.v[11] ? JSON.parse(f.v[11]) : null };
 }
 /* the app asks "am I approved yet?" */

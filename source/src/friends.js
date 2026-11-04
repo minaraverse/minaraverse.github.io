@@ -53,7 +53,7 @@ async function invPrompt() {
 
 function friendsView(root, shell) {
   if (!svOn() || !ACCT()) { root.innerHTML = shell("profile", `<h1 class="ap-h">👥 ${L("frT")}</h1><p class="ap-p">${L("frOff")}</p>`); return; }
-  const st = { q: "", found: undefined, fstate: "", busy: false, data: lsGet("mv-fr", null) };
+  const st = { q: "", found: undefined, fstate: "", busy: false, data: lsGet("mv-fr", null), net: "loading" };
   const row = (c, btns) => `<div class="fr-row"><span class="lg-av">${avOf(c.av, c.name)}</span><div class="fr-who"><b>${esc(c.name)}</b><small>@${esc(c.user)} · 🔥 ${c.streak} · ⚡ ${c.xp}</small></div><div class="fr-btns">${btns}</div></div>`;
   const btn = (k, u, t, cls = "") => `<button class="fr-b ${cls}" data-${k}="${esc(u)}">${t}</button>`;
   const stateBtns = (s, u) => s === "none" ? btn("req", u, "➕ " + L("frAdd"), "go") : s === "out" ? `<small class="fr-tag">⏳ ${L("frSent")}</small>` + btn("del", u, L("frCancel"))
@@ -66,8 +66,8 @@ function friendsView(root, shell) {
         <div class="fr-res" role="status">${st.found === undefined ? "" : st.found === null ? `<p class="ap-p">${L("frNone")}</p>` : row(st.found, stateBtns(st.fstate, st.found.user))}</div><p class="sv-err" role="alert"></p></form>
       ${(d.incoming || []).length ? `<h2 class="ap-h2">${L("frIn")} <em class="fr-n">${d.incoming.length}</em></h2>${d.incoming.map(c => row(c, btn("yes", c.user, L("frAccept"), "go") + btn("no", c.user, L("frDecline")))).join("")}` : ""}
       ${typeof soHTML === "function" ? soHTML(d) : ""}
-      <h2 class="ap-h2">${L("frList")}</h2>${(d.friends || []).length ? `<small class="fr-wk">🏆 ${L("frWeek")}</small><ol class="fr-board">${board.map((c, i) => `<li class="${c.me ? "me" : ""}"><div class="fr-line"><span class="fr-rk">${i + 1}</span>${row(c, c.me ? "" : btn("rm", c.user, "✕", "x"))}<b class="fr-x">⚡ ${c.wk}</b></div>${!c.me && typeof soActs === "function" ? soActs(c) : ""}</li>`).join("")}</ol>`
-        : `<p class="ap-p">${L("frEmpty")}</p>`}
+      <h2 class="ap-h2">${L("frList")}</h2>${st.net === "off" ? `<p class="fr-off" role="status">📡 ${L("netOff")}</p>` : ""}${(d.friends || []).length ? `<small class="fr-wk">🏆 ${L("frWeek")}</small><ol class="fr-board">${board.map((c, i) => `<li class="${c.me ? "me" : ""}"><div class="fr-line"><span class="fr-rk">${i + 1}</span>${row(c, c.me ? "" : btn("rm", c.user, "✕", "x"))}<b class="fr-x">⚡ ${c.wk}</b></div>${!c.me && typeof soActs === "function" ? soActs(c) : ""}</li>`).join("")}</ol>`
+        : st.net === "off" ? "" : st.net === "loading" && !st.data ? `<p class="ap-p sv-loadtxt">${L("svLoading")}</p>` : `<p class="ap-p">${L("frEmpty")}</p>`}
       ${(d.outgoing || []).length ? `<h2 class="ap-h2">${L("frOut")}</h2>${d.outgoing.map(c => row(c, btn("del", c.user, L("frCancel")))).join("")}` : ""}`);
     wire(); };
   const err = m => { const e = root.querySelector(".sv-err"); if (e) { e.textContent = m; flash(e, "shake"); } sfx("no"); };
@@ -92,6 +92,6 @@ function friendsView(root, shell) {
   };
   /* inline two-tap confirm (no browser dialogs) */
   const confirmSheetless = (msg, el) => { const b = el.closest("[data-rm]"); if (b.dataset.sure) return true; b.dataset.sure = 1; b.textContent = msg; b.classList.add("warn"); setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = "✕"; b.classList.remove("warn"); } }, 3000); return false; };
-  draw(); frRefresh().then(r => { if (r && root.isConnected && /app-friends/.test(location.hash)) { st.data = r; draw(); } });
+  draw(); frRefresh().then(r => { st.net = r ? "ok" : "off"; if (r) st.data = r; if (root.isConnected && /app-friends/.test(location.hash)) draw(); });
   if (typeof soRefresh === "function") soRefresh().then(ch => { if (ch && root.isConnected && /app-friends/.test(location.hash)) draw(); });
 }

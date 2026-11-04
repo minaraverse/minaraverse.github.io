@@ -1841,8 +1841,8 @@ html.ap-mode .dr-chest.ready{background:linear-gradient(160deg,color-mix(in srgb
 .pw{display:inline-block;opacity:0;transform:translateY(20px)}.pw:not(:last-child){margin-right:.3em}
 .wv .pw{animation:wordPullUp .55s ease forwards;animation-delay:calc(var(--w) * .1s)}
 @keyframes wordPullUp{to{opacity:1;transform:none}}
-.fu{opacity:0;transform:translateY(14px);filter:blur(8px)}
-.fu.fv{animation:fadeUpB .7s ease forwards;animation-delay:var(--fd,0s)}
+.fu{opacity:0;transform:translateY(14px);filter:blur(4px)}
+.fu.fv{animation:fadeUpB .45s ease forwards;animation-delay:var(--fd,0s)}
 @keyframes fadeUpB{to{opacity:1;transform:none;filter:blur(0)}}
 @media (prefers-reduced-motion:reduce){.pw,.fu{opacity:1!important;transform:none!important;filter:none!important;animation:none!important}}
 /* characters & avatar */
@@ -2389,6 +2389,23 @@ html.ap-mode .dr-nw:has(.dr-pop){z-index:50!important}
 html.ap-mode .dr-unit:has(.dr-pop){position:relative;z-index:40}
 html.ap-mode .dr-pop{z-index:50}
 html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[data-kid]){z-index:0!important}
+/* loading states */
+.sv-load{display:grid;justify-items:center;gap:12px;padding:60px 0;color:var(--mut)}
+.sv-spin{width:34px;height:34px;border-radius:50%;border:3px solid color-mix(in srgb,var(--acc) 25%,transparent);border-top-color:var(--acc);animation:svspin .8s linear infinite;display:inline-block}
+.sv-spin.sm{width:16px;height:16px;border-width:2px;vertical-align:middle}
+@keyframes svspin{to{transform:rotate(360deg)}}
+.ap-item.busy{opacity:.7;pointer-events:none}
+.fr-off{margin:6px 0 10px;padding:10px 14px;border-radius:14px 6px 14px 6px;background:rgba(255,126,142,.1);border:1px solid rgba(255,126,142,.35);color:var(--ink);font-weight:700}
+.q-hero .safi-wrap .safi{width:84px;height:84px}.q-hero .safi-wrap i{display:none}
+.dr-card .safi-wrap .safi,.inv-card .safi-wrap .safi{width:96px;height:96px}
+.ap-mascot .safi-wrap,.sv-crew .safi-wrap,.dr-endpix .safi-wrap{margin:0 auto}
+.dr-endpix.sad .safi-wrap .safi{filter:drop-shadow(0 8px 20px rgba(124,92,255,.35)) saturate(.85)}
+/* avatar picker: never wider than the phone */
+.av-row{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.av-row button{min-width:0}.av-row button svg{width:100%!important;max-width:64px;height:auto!important;aspect-ratio:64/74}
+@media (max-width:380px){.av-row{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+.av-tabs{overflow-x:auto;scrollbar-width:none}
+.dr:has(.dr-foot.show) .dr-skip{visibility:hidden}
 
 </style>
 <div id="view"></div>
@@ -7054,7 +7071,7 @@ VIEWS.app = root => {
   }
   if (sub === "course") {
     const lv = myLevel();
-    root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("apAllUnits"))}</h1><button class="ap-course dr-main-c ${curCourse() === "milingo" ? "on" : ""}" data-course="milingo"><span>🌱</span><b>${L("dCourseName")}</b><small>A1 → B1 · ${drillLessons()}/${UNITS.length * LPU}</small><i>★</i></button><h2 class="ap-h2">${L("dStories")}</h2><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
+    root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("apAllUnits"))}</h1><button class="ap-course dr-main-c ${curCourse() === "milingo" ? "on" : ""}" data-course="milingo"><span>🌱</span><b>${L("dCourseName")}</b><small>${SECTIONS[0].lv} → ${SECTIONS[SECTIONS.length - 1].lv} · ${drillLessons()}/${UNITS.length * LPU}</small><i>★</i></button><h2 class="ap-h2">${L("dStories")}</h2><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
       return `<button class="ap-course ${k === curCourse() ? "on" : ""} ${lv && fitsLevel(S.level, lv) ? "fit" : ""}" data-course="${k}"><span>${courseEmoji(k)}</span><b>${esc(S.title)}</b><small>${S.level} · ${d}/${S.units.length}</small>${lv && fitsLevel(S.level, lv) ? `<i>★</i>` : ""}</button>`; }).join("")}</div>`);
     root.onclick = e => { const b = e.target.closest("[data-course]"); if (!b) return; lsSet("mv-course", b.dataset.course); Router.go("app-learn"); };
     return {};
@@ -7073,7 +7090,7 @@ VIEWS.app = root => {
     root.innerHTML = shell("learn", `<button class="ap-unit" data-go="course"><span><small>${L("apCourse")} · ${S.level}</small><b>${courseEmoji(k)} ${esc(S.title)}</b></span><i>${L("apChange")} ▾</i></button>
       <div class="ap-path">${nodes}<div class="ap-mascot side">${mascot(doneCount(k) ? "💪" : "👋")}</div></div>`);
     root.onclick = e => { if (e.target.closest("[data-go='course']")) Router.go("app-course"); const l = e.target.closest(".ap-node.lock"); if (l) { e.preventDefault(); toast("🔒 " + L("apLocked")); flash(l, "shake"); } };
-    setTimeout(() => { const c = root.querySelector(".ap-node.now"); c && c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" }); }, 200);
+    { const c = root.querySelector(".ap-node.now"); c && c.scrollIntoView({ block: "center", behavior: "instant" }); }
     return {};
   }
   if (sub === "quests") { root.innerHTML = shell("quests", questsHTML()); wireQuests(root); return {}; }
@@ -7105,7 +7122,7 @@ VIEWS.app = root => {
       ${typeof ACCT === "function" && ACCT() ? `<button class="ap-item" data-out><span>👤</span><b>${esc(ACCT().user || ACCT().email)}</b><small>${L("svOut")}</small><i>›</i></button>` : ""}<a href="${typeof svOn === "function" && svOn() ? "#sadmin" : "#admin"}" class="ap-item"><span>🔐</span><b>Admin</b><small>${typeof svOn === "function" && svOn() ? "Safiverse" : "Minaraverse"}</small><i>›</i></a></div>`);
   root.querySelector(".ap-name").oninput = e => { NAME = e.target.value.trim(); try { localStorage.setItem("mv-name", NAME); } catch (er) {} };
   root.querySelector("[data-av]").onclick = () => avatarSheet();
-  const so = root.querySelector("[data-out]"); if (so) so.onclick = () => { pushSync(true); setTimeout(() => { ["mv-acct", "mv-lg", "mv-lgname", ...SYNC_KEYS].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} }); lsSet("mv-guest", null); Router.go("app-learn"); location.reload(); }, 1200); };
+  const so = root.querySelector("[data-out]"); if (so) so.onclick = () => { if (so.disabled) return; so.disabled = true; so.classList.add("busy"); so.querySelector("small").textContent = L("svOuting"); so.querySelector("i").innerHTML = `<span class="sv-spin sm"></span>`; pushSync(true); setTimeout(() => { ["mv-acct", "mv-lg", "mv-lgname", ...SYNC_KEYS].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} }); lsSet("mv-guest", null); Router.go("app-learn"); location.reload(); }, 1200); };
   const iv = root.querySelector("[data-inv]"); if (iv) iv.onclick = () => invShare(ACCT().user);
   root.querySelector("[data-snd]").onclick = () => { lsSet("mv-sound", !soundOn()); Router.remount(); };
   return {};
@@ -7140,6 +7157,8 @@ function lessonDone(k, i) {
 
 /* ---------- mascot: Pixel the cat ---------- */
 function mascot(say, k) {
+  /* no character asked for → Safi, the Safiverse mascot, with a mood that fits the message */
+  if (!k && typeof safiSay === "function") return safiSay(say, /🥺|💧|💔|😢|⏳/.test(say) ? (/⏳/.test(say) ? "idle" : "sad") : /👋/.test(say) ? "wave" : "happy");
   return `<span class="ap-pix ch-${k || themeChar()} ${/^p/.test(k || themeChar()) ? "is-p" : ""}">${charSVG(k || themeChar())}<i>${say}</i></span>`;
 }
 
@@ -8374,7 +8393,7 @@ function speakerChar(t) { if (typeof PEOPLE === "undefined" || !t) return null; 
   if (!g) return null; const cur = themeChar(), ci = /^p\d+$/.test(cur) ? +cur.slice(1) : -1;
   if (ci > -1 && PEOPLE[ci] && !PEOPLE[ci].robot && (P_FEM.test(PEOPLE[ci].n) === (g === "f"))) return null;
   const i = PEOPLE.findIndex(p => !p.robot && P_FEM.test(p.n) === (g === "f")); return i > -1 ? "p" + i : null; }
-const pixMini = t => `<span class="dx-pix">${mascot("", speakerChar(t) || undefined)}</span>`;
+const pixMini = t => `<span class="dx-pix">${mascot("", speakerChar(t) || themeChar())}</span>`;
 const bigSay = (text, slow) => TTS ? `<div class="dx-spk"><button class="dx-sp" data-sp="${esc(text)}" aria-label="Listen">🔊</button>${slow ? `<button class="dx-sp sm" data-sp="${esc(text)}" data-slow="1" aria-label="${L("dSlow")}">🐢</button>` : ""}</div>` : `<p class="dx-big">${esc(text)}</p>`;
 function sayRate(text, rate) { if (!TTS) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); voiceFor(u, text); u.rate = rate; speechSynthesis.speak(u); }
 function exHTML(x) {
@@ -8634,9 +8653,11 @@ function wireDrillPath(root) {
   if (newStars.length) { const p = DP(); root.querySelectorAll("[data-side]").forEach(b => { p["ss" + b.dataset.side] = b.querySelectorAll("i.on").length; }); lsSet("mv-drill", p);
     setTimeout(() => { newStars.forEach((s, i) => setTimeout(() => sfx("pop"), i * 160)); }, 900); }
   const nu = sessionStorage.getItem("mv-dnew"), np = sessionStorage.getItem("mv-dpart"); sessionStorage.removeItem("mv-dnew"); sessionStorage.removeItem("mv-dpart");
-  setTimeout(() => { const c = cur(); if (c) { c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" });
+  /* open already at the current lesson (instant jump, no visible scrolling under the finger) */
+  const jump = () => { const c = cur(); c && c.scrollIntoView({ block: "center", behavior: "instant" }); }; jump(); requestAnimationFrame(jump);
+  setTimeout(() => { const c = cur(); if (c) {
     if (nu != null) { c.classList.add("born"); setTimeout(() => sfx("unlock"), 450); }
-    else if (np) { const rg = c.parentNode.querySelector(".dr-ring"); if (rg) { const ons = rg.querySelectorAll(".on"); const last = ons[ons.length - 1]; last && last.classList.add("fresh"); setTimeout(() => sfx("pop"), 500); } } } }, 250);
+    else if (np) { const rg = c.parentNode.querySelector(".dr-ring"); if (rg) { const ons = rg.querySelectorAll(".on"); const last = ons[ons.length - 1]; last && last.classList.add("fresh"); setTimeout(() => sfx("pop"), 500); } } } }, 120);
 }
 function guideSheet(U) {
   const ov = document.createElement("div"); ov.className = "dr-ov dr-guide"; ov.style.setProperty("--uc", U.c);
@@ -8664,7 +8685,8 @@ function apReveal(root) {
   const els = [...root.querySelectorAll(".dr-ub,.dr-pall,.dr-course,.dr-sec b")];
   els.forEach((el, i) => { if (!el.matches(".dr-sec b")) { el.classList.add("fu"); el.style.setProperty("--fd", (i % 3) * .08 + "s"); } });
   REV_IO && REV_IO.disconnect();
-  REV_IO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle(e.target.matches(".dr-sec b") ? "wv" : "fv", e.isIntersecting)), { threshold: .15 });
+  /* reveal once — cards must not turn blurry again each time they scroll out of view */
+  REV_IO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add(e.target.matches(".dr-sec b") ? "wv" : "fv"); REV_IO.unobserve(e.target); } }), { threshold: .15 });
   els.forEach(el => REV_IO.observe(el));
 }
 
@@ -9512,7 +9534,8 @@ VIEWS.sadmin = root => {
   const key = () => { try { return sessionStorage.getItem("sv-key") || ""; } catch (e) { return ""; } };
   const shell = body => `<div class="ap"><div class="ap-hud slim"><a class="ap-back" href="#app-profile" aria-label="Back"><span>←</span><b>${L("apProfile")}</b></a>${brandHTML()}</div><main class="ap-main sv-adm">${body}</main></div>`;
   if (!svOn()) { root.innerHTML = shell(`<h1 class="ap-h">Admin</h1><p class="ap-p">Safiverse server is not connected yet.</p>`); return {}; }
-  const login = async () => { let s = {}; try { s = await sPost("ad_status", {}); } catch (e) {}
+  const wait = () => { if (!root.querySelector(".sv-adm > :not(.sv-load)")) root.innerHTML = shell(loadBox()); };
+  const login = async () => { wait(); let s = {}; try { s = await sPost("ad_status", {}); } catch (e) {}
     root.innerHTML = shell(`<h1 class="ap-h">🔐 Safiverse admin</h1>${s.hasCode ? `<form class="sv-form" data-in><label>Admin code<input type="password" name="k" autocomplete="current-password"></label><button class="ap-cta">→</button></form>` : ""}
       <form class="sv-form" data-set><p class="ap-p">${s.hasCode ? "Change code" : "Set a code"} — a 6-digit confirmation goes to ${esc(s.email || "admin email")}.</p><button type="button" class="sv-ghost" data-otp><b>📧 Send confirmation</b></button>
       <label>Confirmation<input name="otp" inputmode="numeric"></label><label>New admin code (6+)<input type="password" name="nk"></label><button class="ap-cta">Save</button></form><p class="sv-err"></p>`);
@@ -9524,7 +9547,7 @@ VIEWS.sadmin = root => {
   const AB = { ok: { en: "Approve", az: "Təsdiq et", ru: "Подтвердить" }, reject: { en: "Reject", az: "Rədd et", ru: "Отклонить" }, blocked: { en: "Block", az: "Blokla", ru: "Заблокировать" },
     unblock: { en: "Unblock", az: "Blokdan çıxar", ru: "Разблокировать" }, sure: { en: "Sure? Tap again", az: "Əminsən? Yenə bas", ru: "Точно? Нажми ещё" }, hard: { en: "Hard mode", az: "Çətin rejim", ru: "Сложный режим" }, on: { en: "On", az: "Açıq", ru: "Вкл" }, off: { en: "Off", az: "Bağlı", ru: "Выкл" }, none: { en: "Nobody here", az: "Burada heç kim yoxdur", ru: "Здесь никого нет" } };
   const T = o => o[LANG] || o.en; let tab = null;
-  const load = async () => { let d = {}; try { d = await sPost("ad_rows", { key: key() }); } catch (e) {} if (!d.ok) return login();
+  const load = async () => { wait(); let d = {}; try { d = await sPost("ad_rows", { key: key() }); } catch (e) {} if (!d.ok) return login();
     const all = (d.rows || []), dt = s => s ? new Date(s).toLocaleDateString("az-AZ") : "—", cnt = k => all.filter(r => (r.status || "ok") === k).length;
     if (!tab) tab = cnt("pending") ? "pending" : "ok";
     const rows = all.filter(r => (r.status || "ok") === tab).sort((a, b) => tab === "pending" ? String(b.created).localeCompare(String(a.created)) : String(b.last).localeCompare(String(a.last)));
@@ -9551,6 +9574,12 @@ VIEWS.sadmin = root => {
   key() ? load() : login();
   return {};
 };
+
+/* small status strings */
+Object.assign(UI.en, { svLoading: "Loading…", netOff: "No connection — check the internet and try again.", svOuting: "Signing out…" });
+Object.assign(UI.az, { svLoading: "Yüklənir…", netOff: "Bağlantı yoxdur — interneti yoxla və yenidən cəhd et.", svOuting: "Çıxılır…" });
+Object.assign(UI.ru, { svLoading: "Загрузка…", netOff: "Нет связи — проверь интернет и попробуй снова.", svOuting: "Выходим…" });
+const loadBox = () => `<div class="sv-load" role="status"><span class="sv-spin"></span><p>${L("svLoading")}</p></div>`;
 
 /* ===== Safiverse friends: find by exact username → request → accept. No browsing of users, no emails shown. ===== */
 Object.assign(UI.en, { invT: "Invite friends", invP: "Send your link — your friend opens it and sends you a friend request.", invShare: "Invite", invCopy: "Copy link", invQR: "QR code", invCopied: "Link copied ✓", invQRP: "Let your friend scan it with the phone camera", invMsg: u => `Learn English with me on Safiverse! 🚀 My username: @${u}`, invHi: n => `${n} invites you to be friends`, invHiP: "Send a friend request — they confirm with one tap.", invSend: "Send friend request", invLater: "Later", invDone: "Request sent ✓ — wait for the answer", invNeedU: "Choose your username first to invite friends", frT: "Friends", frFind: "Find a friend", frFindP: "Type your friend's exact username", frGo: "Search", frNone: "No one with this username", frSelf: "This is you 🙂",
@@ -9607,7 +9636,7 @@ async function invPrompt() {
 
 function friendsView(root, shell) {
   if (!svOn() || !ACCT()) { root.innerHTML = shell("profile", `<h1 class="ap-h">👥 ${L("frT")}</h1><p class="ap-p">${L("frOff")}</p>`); return; }
-  const st = { q: "", found: undefined, fstate: "", busy: false, data: lsGet("mv-fr", null) };
+  const st = { q: "", found: undefined, fstate: "", busy: false, data: lsGet("mv-fr", null), net: "loading" };
   const row = (c, btns) => `<div class="fr-row"><span class="lg-av">${avOf(c.av, c.name)}</span><div class="fr-who"><b>${esc(c.name)}</b><small>@${esc(c.user)} · 🔥 ${c.streak} · ⚡ ${c.xp}</small></div><div class="fr-btns">${btns}</div></div>`;
   const btn = (k, u, t, cls = "") => `<button class="fr-b ${cls}" data-${k}="${esc(u)}">${t}</button>`;
   const stateBtns = (s, u) => s === "none" ? btn("req", u, "➕ " + L("frAdd"), "go") : s === "out" ? `<small class="fr-tag">⏳ ${L("frSent")}</small>` + btn("del", u, L("frCancel"))
@@ -9620,8 +9649,8 @@ function friendsView(root, shell) {
         <div class="fr-res" role="status">${st.found === undefined ? "" : st.found === null ? `<p class="ap-p">${L("frNone")}</p>` : row(st.found, stateBtns(st.fstate, st.found.user))}</div><p class="sv-err" role="alert"></p></form>
       ${(d.incoming || []).length ? `<h2 class="ap-h2">${L("frIn")} <em class="fr-n">${d.incoming.length}</em></h2>${d.incoming.map(c => row(c, btn("yes", c.user, L("frAccept"), "go") + btn("no", c.user, L("frDecline")))).join("")}` : ""}
       ${typeof soHTML === "function" ? soHTML(d) : ""}
-      <h2 class="ap-h2">${L("frList")}</h2>${(d.friends || []).length ? `<small class="fr-wk">🏆 ${L("frWeek")}</small><ol class="fr-board">${board.map((c, i) => `<li class="${c.me ? "me" : ""}"><div class="fr-line"><span class="fr-rk">${i + 1}</span>${row(c, c.me ? "" : btn("rm", c.user, "✕", "x"))}<b class="fr-x">⚡ ${c.wk}</b></div>${!c.me && typeof soActs === "function" ? soActs(c) : ""}</li>`).join("")}</ol>`
-        : `<p class="ap-p">${L("frEmpty")}</p>`}
+      <h2 class="ap-h2">${L("frList")}</h2>${st.net === "off" ? `<p class="fr-off" role="status">📡 ${L("netOff")}</p>` : ""}${(d.friends || []).length ? `<small class="fr-wk">🏆 ${L("frWeek")}</small><ol class="fr-board">${board.map((c, i) => `<li class="${c.me ? "me" : ""}"><div class="fr-line"><span class="fr-rk">${i + 1}</span>${row(c, c.me ? "" : btn("rm", c.user, "✕", "x"))}<b class="fr-x">⚡ ${c.wk}</b></div>${!c.me && typeof soActs === "function" ? soActs(c) : ""}</li>`).join("")}</ol>`
+        : st.net === "off" ? "" : st.net === "loading" && !st.data ? `<p class="ap-p sv-loadtxt">${L("svLoading")}</p>` : `<p class="ap-p">${L("frEmpty")}</p>`}
       ${(d.outgoing || []).length ? `<h2 class="ap-h2">${L("frOut")}</h2>${d.outgoing.map(c => row(c, btn("del", c.user, L("frCancel")))).join("")}` : ""}`);
     wire(); };
   const err = m => { const e = root.querySelector(".sv-err"); if (e) { e.textContent = m; flash(e, "shake"); } sfx("no"); };
@@ -9646,7 +9675,7 @@ function friendsView(root, shell) {
   };
   /* inline two-tap confirm (no browser dialogs) */
   const confirmSheetless = (msg, el) => { const b = el.closest("[data-rm]"); if (b.dataset.sure) return true; b.dataset.sure = 1; b.textContent = msg; b.classList.add("warn"); setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = "✕"; b.classList.remove("warn"); } }, 3000); return false; };
-  draw(); frRefresh().then(r => { if (r && root.isConnected && /app-friends/.test(location.hash)) { st.data = r; draw(); } });
+  draw(); frRefresh().then(r => { st.net = r ? "ok" : "off"; if (r) st.data = r; if (root.isConnected && /app-friends/.test(location.hash)) draw(); });
   if (typeof soRefresh === "function") soRefresh().then(ch => { if (ch && root.isConnected && /app-friends/.test(location.hash)) draw(); });
 }
 

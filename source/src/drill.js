@@ -181,7 +181,7 @@ function speakerChar(t) { if (typeof PEOPLE === "undefined" || !t) return null; 
   if (!g) return null; const cur = themeChar(), ci = /^p\d+$/.test(cur) ? +cur.slice(1) : -1;
   if (ci > -1 && PEOPLE[ci] && !PEOPLE[ci].robot && (P_FEM.test(PEOPLE[ci].n) === (g === "f"))) return null;
   const i = PEOPLE.findIndex(p => !p.robot && P_FEM.test(p.n) === (g === "f")); return i > -1 ? "p" + i : null; }
-const pixMini = t => `<span class="dx-pix">${mascot("", speakerChar(t) || undefined)}</span>`;
+const pixMini = t => `<span class="dx-pix">${mascot("", speakerChar(t) || themeChar())}</span>`;
 const bigSay = (text, slow) => TTS ? `<div class="dx-spk"><button class="dx-sp" data-sp="${esc(text)}" aria-label="Listen">🔊</button>${slow ? `<button class="dx-sp sm" data-sp="${esc(text)}" data-slow="1" aria-label="${L("dSlow")}">🐢</button>` : ""}</div>` : `<p class="dx-big">${esc(text)}</p>`;
 function sayRate(text, rate) { if (!TTS) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); voiceFor(u, text); u.rate = rate; speechSynthesis.speak(u); }
 function exHTML(x) {
@@ -441,9 +441,11 @@ function wireDrillPath(root) {
   if (newStars.length) { const p = DP(); root.querySelectorAll("[data-side]").forEach(b => { p["ss" + b.dataset.side] = b.querySelectorAll("i.on").length; }); lsSet("mv-drill", p);
     setTimeout(() => { newStars.forEach((s, i) => setTimeout(() => sfx("pop"), i * 160)); }, 900); }
   const nu = sessionStorage.getItem("mv-dnew"), np = sessionStorage.getItem("mv-dpart"); sessionStorage.removeItem("mv-dnew"); sessionStorage.removeItem("mv-dpart");
-  setTimeout(() => { const c = cur(); if (c) { c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" });
+  /* open already at the current lesson (instant jump, no visible scrolling under the finger) */
+  const jump = () => { const c = cur(); c && c.scrollIntoView({ block: "center", behavior: "instant" }); }; jump(); requestAnimationFrame(jump);
+  setTimeout(() => { const c = cur(); if (c) {
     if (nu != null) { c.classList.add("born"); setTimeout(() => sfx("unlock"), 450); }
-    else if (np) { const rg = c.parentNode.querySelector(".dr-ring"); if (rg) { const ons = rg.querySelectorAll(".on"); const last = ons[ons.length - 1]; last && last.classList.add("fresh"); setTimeout(() => sfx("pop"), 500); } } } }, 250);
+    else if (np) { const rg = c.parentNode.querySelector(".dr-ring"); if (rg) { const ons = rg.querySelectorAll(".on"); const last = ons[ons.length - 1]; last && last.classList.add("fresh"); setTimeout(() => sfx("pop"), 500); } } } }, 120);
 }
 function guideSheet(U) {
   const ov = document.createElement("div"); ov.className = "dr-ov dr-guide"; ov.style.setProperty("--uc", U.c);
@@ -471,7 +473,8 @@ function apReveal(root) {
   const els = [...root.querySelectorAll(".dr-ub,.dr-pall,.dr-course,.dr-sec b")];
   els.forEach((el, i) => { if (!el.matches(".dr-sec b")) { el.classList.add("fu"); el.style.setProperty("--fd", (i % 3) * .08 + "s"); } });
   REV_IO && REV_IO.disconnect();
-  REV_IO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle(e.target.matches(".dr-sec b") ? "wv" : "fv", e.isIntersecting)), { threshold: .15 });
+  /* reveal once — cards must not turn blurry again each time they scroll out of view */
+  REV_IO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add(e.target.matches(".dr-sec b") ? "wv" : "fv"); REV_IO.unobserve(e.target); } }), { threshold: .15 });
   els.forEach(el => REV_IO.observe(el));
 }
 

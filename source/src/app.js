@@ -103,7 +103,7 @@ VIEWS.app = root => {
   }
   if (sub === "course") {
     const lv = myLevel();
-    root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("apAllUnits"))}</h1><button class="ap-course dr-main-c ${curCourse() === "milingo" ? "on" : ""}" data-course="milingo"><span>🌱</span><b>${L("dCourseName")}</b><small>A1 → B1 · ${drillLessons()}/${UNITS.length * LPU}</small><i>★</i></button><h2 class="ap-h2">${L("dStories")}</h2><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
+    root.innerHTML = shell("learn", `<h1 class="ap-h">${letters(L("apAllUnits"))}</h1><button class="ap-course dr-main-c ${curCourse() === "milingo" ? "on" : ""}" data-course="milingo"><span>🌱</span><b>${L("dCourseName")}</b><small>${SECTIONS[0].lv} → ${SECTIONS[SECTIONS.length - 1].lv} · ${drillLessons()}/${UNITS.length * LPU}</small><i>★</i></button><h2 class="ap-h2">${L("dStories")}</h2><div class="ap-courses">${WORLD_ORDER.map(k => { const S = STORIES[k], d = doneCount(k);
       return `<button class="ap-course ${k === curCourse() ? "on" : ""} ${lv && fitsLevel(S.level, lv) ? "fit" : ""}" data-course="${k}"><span>${courseEmoji(k)}</span><b>${esc(S.title)}</b><small>${S.level} · ${d}/${S.units.length}</small>${lv && fitsLevel(S.level, lv) ? `<i>★</i>` : ""}</button>`; }).join("")}</div>`);
     root.onclick = e => { const b = e.target.closest("[data-course]"); if (!b) return; lsSet("mv-course", b.dataset.course); Router.go("app-learn"); };
     return {};
@@ -122,7 +122,7 @@ VIEWS.app = root => {
     root.innerHTML = shell("learn", `<button class="ap-unit" data-go="course"><span><small>${L("apCourse")} · ${S.level}</small><b>${courseEmoji(k)} ${esc(S.title)}</b></span><i>${L("apChange")} ▾</i></button>
       <div class="ap-path">${nodes}<div class="ap-mascot side">${mascot(doneCount(k) ? "💪" : "👋")}</div></div>`);
     root.onclick = e => { if (e.target.closest("[data-go='course']")) Router.go("app-course"); const l = e.target.closest(".ap-node.lock"); if (l) { e.preventDefault(); toast("🔒 " + L("apLocked")); flash(l, "shake"); } };
-    setTimeout(() => { const c = root.querySelector(".ap-node.now"); c && c.scrollIntoView({ block: "center", behavior: REDUCED ? "auto" : "smooth" }); }, 200);
+    { const c = root.querySelector(".ap-node.now"); c && c.scrollIntoView({ block: "center", behavior: "instant" }); }
     return {};
   }
   if (sub === "quests") { root.innerHTML = shell("quests", questsHTML()); wireQuests(root); return {}; }
@@ -154,7 +154,7 @@ VIEWS.app = root => {
       ${typeof ACCT === "function" && ACCT() ? `<button class="ap-item" data-out><span>👤</span><b>${esc(ACCT().user || ACCT().email)}</b><small>${L("svOut")}</small><i>›</i></button>` : ""}<a href="${typeof svOn === "function" && svOn() ? "#sadmin" : "#admin"}" class="ap-item"><span>🔐</span><b>Admin</b><small>${typeof svOn === "function" && svOn() ? "Safiverse" : "Minaraverse"}</small><i>›</i></a></div>`);
   root.querySelector(".ap-name").oninput = e => { NAME = e.target.value.trim(); try { localStorage.setItem("mv-name", NAME); } catch (er) {} };
   root.querySelector("[data-av]").onclick = () => avatarSheet();
-  const so = root.querySelector("[data-out]"); if (so) so.onclick = () => { pushSync(true); setTimeout(() => { ["mv-acct", "mv-lg", "mv-lgname", ...SYNC_KEYS].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} }); lsSet("mv-guest", null); Router.go("app-learn"); location.reload(); }, 1200); };
+  const so = root.querySelector("[data-out]"); if (so) so.onclick = () => { if (so.disabled) return; so.disabled = true; so.classList.add("busy"); so.querySelector("small").textContent = L("svOuting"); so.querySelector("i").innerHTML = `<span class="sv-spin sm"></span>`; pushSync(true); setTimeout(() => { ["mv-acct", "mv-lg", "mv-lgname", ...SYNC_KEYS].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} }); lsSet("mv-guest", null); Router.go("app-learn"); location.reload(); }, 1200); };
   const iv = root.querySelector("[data-inv]"); if (iv) iv.onclick = () => invShare(ACCT().user);
   root.querySelector("[data-snd]").onclick = () => { lsSet("mv-sound", !soundOn()); Router.remount(); };
   return {};
@@ -189,6 +189,8 @@ function lessonDone(k, i) {
 
 /* ---------- mascot: Pixel the cat ---------- */
 function mascot(say, k) {
+  /* no character asked for → Safi, the Safiverse mascot, with a mood that fits the message */
+  if (!k && typeof safiSay === "function") return safiSay(say, /🥺|💧|💔|😢|⏳/.test(say) ? (/⏳/.test(say) ? "idle" : "sad") : /👋/.test(say) ? "wave" : "happy");
   return `<span class="ap-pix ch-${k || themeChar()} ${/^p/.test(k || themeChar()) ? "is-p" : ""}">${charSVG(k || themeChar())}<i>${say}</i></span>`;
 }
 

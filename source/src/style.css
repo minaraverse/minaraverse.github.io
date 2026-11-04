@@ -1835,8 +1835,8 @@ html.ap-mode .dr-chest.ready{background:linear-gradient(160deg,color-mix(in srgb
 .pw{display:inline-block;opacity:0;transform:translateY(20px)}.pw:not(:last-child){margin-right:.3em}
 .wv .pw{animation:wordPullUp .55s ease forwards;animation-delay:calc(var(--w) * .1s)}
 @keyframes wordPullUp{to{opacity:1;transform:none}}
-.fu{opacity:0;transform:translateY(14px);filter:blur(8px)}
-.fu.fv{animation:fadeUpB .7s ease forwards;animation-delay:var(--fd,0s)}
+.fu{opacity:0;transform:translateY(14px);filter:blur(4px)}
+.fu.fv{animation:fadeUpB .45s ease forwards;animation-delay:var(--fd,0s)}
 @keyframes fadeUpB{to{opacity:1;transform:none;filter:blur(0)}}
 @media (prefers-reduced-motion:reduce){.pw,.fu{opacity:1!important;transform:none!important;filter:none!important;animation:none!important}}
 /* characters & avatar */
@@ -2383,3 +2383,20 @@ html.ap-mode .dr-nw:has(.dr-pop){z-index:50!important}
 html.ap-mode .dr-unit:has(.dr-pop){position:relative;z-index:40}
 html.ap-mode .dr-pop{z-index:50}
 html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[data-kid]){z-index:0!important}
+/* loading states */
+.sv-load{display:grid;justify-items:center;gap:12px;padding:60px 0;color:var(--mut)}
+.sv-spin{width:34px;height:34px;border-radius:50%;border:3px solid color-mix(in srgb,var(--acc) 25%,transparent);border-top-color:var(--acc);animation:svspin .8s linear infinite;display:inline-block}
+.sv-spin.sm{width:16px;height:16px;border-width:2px;vertical-align:middle}
+@keyframes svspin{to{transform:rotate(360deg)}}
+.ap-item.busy{opacity:.7;pointer-events:none}
+.fr-off{margin:6px 0 10px;padding:10px 14px;border-radius:14px 6px 14px 6px;background:rgba(255,126,142,.1);border:1px solid rgba(255,126,142,.35);color:var(--ink);font-weight:700}
+.q-hero .safi-wrap .safi{width:84px;height:84px}.q-hero .safi-wrap i{display:none}
+.dr-card .safi-wrap .safi,.inv-card .safi-wrap .safi{width:96px;height:96px}
+.ap-mascot .safi-wrap,.sv-crew .safi-wrap,.dr-endpix .safi-wrap{margin:0 auto}
+.dr-endpix.sad .safi-wrap .safi{filter:drop-shadow(0 8px 20px rgba(124,92,255,.35)) saturate(.85)}
+/* avatar picker: never wider than the phone */
+.av-row{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.av-row button{min-width:0}.av-row button svg{width:100%!important;max-width:64px;height:auto!important;aspect-ratio:64/74}
+@media (max-width:380px){.av-row{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+.av-tabs{overflow-x:auto;scrollbar-width:none}
+.dr:has(.dr-foot.show) .dr-skip{visibility:hidden}
