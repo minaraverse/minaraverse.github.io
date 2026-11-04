@@ -238,10 +238,12 @@ VIEWS.drill = root => {
 
   function render() {
     st.cur = queue.shift(); const x = st.cur; sel = null; st.phase = "answer"; window.__dx = x;
-    foot.className = "dr-foot"; go.textContent = L("dCheck"); ready(false); root.querySelector(".dr-skip").hidden = !LISTEN_K.includes(x.k);
+    foot.className = "dr-foot" + (x.opts && x.k !== "afill" ? " auto" : ""); go.textContent = L("dCheck"); ready(false); root.querySelector(".dr-skip").hidden = !LISTEN_K.includes(x.k);
     box.classList.remove("in"); box.innerHTML = exHTML(x); void box.offsetWidth; box.classList.add("in");
     const opts = [...box.querySelectorAll(".dx-opt")];
-    opts.forEach(b => b.onclick = () => { if (st.phase !== "answer") return; if (!b.classList.contains("dx-aud")) sfx("tap"); opts.forEach(o => o.classList.toggle("sel", o === b)); sel = +b.dataset.i; if (b.dataset.en) { say(b.dataset.en); b.classList.remove("play"); void b.offsetWidth; b.classList.add("play"); } ready(true); });
+    opts.forEach(b => b.onclick = () => { if (st.phase !== "answer") return; if (!b.classList.contains("dx-aud")) sfx("tap"); opts.forEach(o => o.classList.toggle("sel", o === b)); sel = +b.dataset.i; if (b.dataset.en) { say(b.dataset.en); b.classList.remove("play"); void b.offsetWidth; b.classList.add("play"); } ready(true);
+      /* multiple choice: checked automatically on tap (no "Check" step); audio options still wait for "Check" */
+      if (!b.classList.contains("dx-aud")) { const pick = sel; clearTimeout(st.autoT); st.autoT = setTimeout(() => { if (st.phase === "answer" && sel === pick) go.click(); }, 300); } });
     box.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { b.classList.add("on"); setTimeout(() => b.classList.remove("on"), 600); sayRate(b.dataset.sp, b.dataset.slow ? .55 : .9); });
     if (x.k === "hearw" || x.k === "typew" || x.k === "listen") setTimeout(() => sayRate(x.k === "listen" ? x.s.en : x.w.en, .9), 350);
     if (x.k === "mean" || x.k === "smean") setTimeout(() => say(x.k === "mean" ? x.w.en : x.s.en), 350);

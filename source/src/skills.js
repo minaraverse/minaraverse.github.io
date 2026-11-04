@@ -195,7 +195,7 @@ VIEWS.sk = root => {
   const ready = on => { go.disabled = !on; go.classList.toggle("on", !!on); };
   const setBar = () => { bar.style.width = Math.max(3, st.solved / st.total * 100) + "%"; };
   function render() {
-    const x = st.cur = queue.shift(); window.__skq = x; sel = null; st.phase = "answer"; st.from = null; st.seqIn = []; foot.className = "dr-foot"; go.textContent = L("dCheck"); ready(false);
+    const x = st.cur = queue.shift(); window.__skq = x; sel = null; st.phase = "answer"; st.from = null; st.seqIn = []; foot.className = "dr-foot" + (x.k === "opt" ? " auto" : ""); go.textContent = L("dCheck"); ready(false);
     let body = `<div class="sk-prompt">${x.p}</div>`;
     if (x.k === "opt") body += `<div class="dx-opts sk-opts ${x.o.length === 2 ? "two" : ""}">${x.o.map((o, i) => `<button class="dx-opt" data-i="${i}"><span class="dx-n">${i + 1}</span><b>${esc(o)}</b></button>`).join("")}</div>`;
     if (x.k === "key" || x.k === "seq") body += `${x.k === "seq" ? `<div class="sk-seq">${x.seq.map(() => "<i></i>").join("")}</div>` : ""}${pianoHTML(x.labels)}`;
@@ -205,7 +205,7 @@ VIEWS.sk = root => {
   }
   box.onclick = e => { const x = st.cur; if (st.phase !== "answer") return;
     const pl = e.target.closest("[data-play]"); if (pl) { playSeq(pl.dataset.play.split(",").map(Number), x.gap || .5); return; }
-    const o = e.target.closest(".dx-opt"); if (o) { sfx("tap"); box.querySelectorAll(".dx-opt").forEach(b => b.classList.toggle("sel", b === o)); sel = +o.dataset.i; ready(true); return; }
+    const o = e.target.closest(".dx-opt"); if (o) { if (st.phase !== "answer") return; sfx("tap"); box.querySelectorAll(".dx-opt").forEach(b => b.classList.toggle("sel", b === o)); sel = +o.dataset.i; ready(true); const pick = sel; clearTimeout(st.autoT); st.autoT = setTimeout(() => { if (st.phase === "answer" && sel === pick) go.click(); }, 300); return; }
     const k = e.target.closest("[data-key]"); if (k) { const s = +k.dataset.key; playSemi(s); k.classList.remove("hit"); void k.offsetWidth; k.classList.add("hit");
       if (x.k === "key") { box.querySelectorAll(".sk-key").forEach(b => b.classList.toggle("sel", b === k)); sel = s; ready(true); }
       else { st.seqIn.push(s); const dots = box.querySelectorAll(".sk-seq i"); dots.forEach((d, i) => d.classList.toggle("on", i < st.seqIn.length)); if (st.seqIn.length >= x.seq.length) { sel = 1; ready(true); check(); } }
