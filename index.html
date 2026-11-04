@@ -2218,6 +2218,12 @@ html.ap-mode .ap-main{overflow-x:clip}
 .ad-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 .ad-tabs button{display:grid;justify-items:center;gap:3px;padding:9px 4px;white-space:normal;min-width:0}
 .ad-tabs button span{display:inline-flex;align-items:center;gap:6px;font-size:16px}.ad-tabs button small{font:800 12.5px/1.15 var(--bf);text-align:center;overflow-wrap:anywhere}
+/* chess board coordinates: bigger, bold, high contrast on each square colour */
+.sk-sq em{font:900 clamp(12px,3.6vw,17px)/1 "Nunito",system-ui,sans-serif!important;opacity:1!important}
+.sk-sq.d em{color:#fff4dd!important;text-shadow:0 1px 1px rgba(0,0,0,.35)}.sk-sq.l em{color:#3b2814!important}
+.sk-sq em.rk{left:4px;top:3px}.sk-sq em.fl{right:4px;bottom:3px}
+/* lesson header back button: same font as everywhere */
+html .ap-lh .ap-back b{font-family:"Nunito",system-ui,sans-serif}
 
 </style>
 <div id="view"></div>
