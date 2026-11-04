@@ -2441,3 +2441,9 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .sh-b.wa span{background:#25D366}.sh-b.tg span{background:#2AABEE}.sh-b.cp span{background:#5b6b8f}.sh-b.more span{background:#7a5cff}
 .sh-b.ok{border-color:#6FCF8E;background:rgba(111,207,142,.15)}.sh-b:active{transform:scale(.96)}
 .dr-animal.live{animation:none!important;filter:drop-shadow(0 8px 16px rgba(0,0,0,.35))}
+/* bigger squirrel (its breath reaches toward the path) and raccoon */
+.an-squirrel .dr-ch{width:auto;height:135px}.an-squirrel .dr-animal{max-width:none;max-height:135px;height:135px;width:auto}
+.an-squirrel{width:auto!important}
+.an-raccoon .dr-ch{height:165px}.an-raccoon .dr-animal{max-width:150px;max-height:165px}
+.dr-node{transition:translate .35s cubic-bezier(.2,.9,.3,1.2)}
+.an-bunny-swing .dr-ch{height:160px}.an-bunny-swing .dr-animal{max-width:150px;max-height:160px}

@@ -402,7 +402,7 @@ function drillPathHTML() {
   }).join("") + `</div>`).join("") + `<button class="dr-tocur" aria-label="Current lesson">↑</button>`;
 }
 function wireDrillPath(root) {
-  apReveal(root); wakeAnimals(root);
+  apReveal(root); wakeAnimals(root); squirrelWind(root);
   const sio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) apTheme(+e.target.dataset.th); }), { rootMargin: "-48% 0px -48% 0px" });
   root.querySelectorAll(".dr-sb").forEach(s => sio.observe(s)); root._sio && root._sio.disconnect(); root._sio = sio;
   /* sticky banner follows the unit in view */
@@ -741,3 +741,19 @@ function sideSheet(U) {
   addEventListener("hashchange", () => ov.remove(), { once: true });
 }
 
+
+/* the squirrel's breath pushes the planet in front of it to the right, as hard as it blows; it drifts back when the blowing stops */
+const SQ_BLOW = [0, 0, 0, 0.07, 0.25, 0.46, 0.61, 0.77, 0.89, 0.95, 0.98, 1.0, 1, 1.0, 1.0, 1.0, 0.99, 0.99, 0.99, 0.97, 0.88, 0.79, 0.09, 0.07, 0.02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; /* per frame (12 fps) of av-squirrel-live.webp */
+function squirrelWind(root) {
+  const pix = root.querySelector(".an-squirrel"); if (!pix || REDUCED) return; const img = pix.querySelector("img"), unit = pix.closest(".dr-unit"); if (!img || !unit) return;
+  const nodes = [...unit.querySelectorAll(".dr-node")]; let t0 = 0, node = null;
+  const target = () => { const r = img.getBoundingClientRect(), cy = r.top + r.height * .5; let best = null, d = 1e9;
+    nodes.forEach(n => { const q = n.getBoundingClientRect(), dd = Math.abs(q.top + q.height / 2 - cy); if (dd < d) { d = dd; best = n; } }); return d < 140 ? best : null; };
+  const tick = now => { if (!root.isConnected) return; requestAnimationFrame(tick); if (!t0) return;
+    const r = img.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+    const k = SQ_BLOW[Math.floor((now - t0) / (1000 / 12)) % SQ_BLOW.length];
+    node = node || target(); if (node) node.style.translate = (k * 70).toFixed(1) + "px 0"; };
+  const start = () => { t0 = performance.now(); };
+  if (img.complete && img.naturalWidth) start(); else img.addEventListener("load", start, { once: true });
+  requestAnimationFrame(tick);
+}
