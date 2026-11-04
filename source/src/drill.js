@@ -84,8 +84,8 @@ function sfx(kind) {
     f.frequency.setValueAtTime(from, t0 + at); f.frequency.exponentialRampToValueAtTime(to, t0 + at + dur); g.gain.setValueAtTime(.0001, t0 + at); g.gain.exponentialRampToValueAtTime(vol, t0 + at + dur * .3); g.gain.exponentialRampToValueAtTime(.0001, t0 + at + dur);
     s.connect(f).connect(g).connect(out); s.start(t0 + at); s.stop(t0 + at + dur); };
   switch (kind) {
-    case "ok": bell(1318.5, 0, .32, .12); bell(1760, .085, .5, .14); break;                              /* bright ding-ding */
-    case "no": tone(330, 0, .16, { type: "sawtooth", vol: .07, lp: 900 }); tone(247, .13, .3, { type: "sawtooth", vol: .07, lp: 700, to: 220 }); break; /* soft bwomp */
+    case "ok": bell(1046.5, 0, .3, .2); bell(1568, .09, .6, .22); tone(3136, .1, .18, { type: "sine", vol: .035 }); break;   /* Duolingo-like bright ding-ding (louder on phone speakers) */
+    case "no": tone(311, 0, .15, { type: "square", vol: .055, lp: 1300 }); tone(233, .13, .32, { type: "square", vol: .065, lp: 1000, to: 196 }); break; /* clear low "bzz-bzz" */
     case "tap": tone(1100, 0, .05, { type: "triangle", vol: .05, to: 700 }); break;
     case "pop": tone(540, 0, .12, { vol: .12, to: 1050 }); tone(1600, .04, .08, { type: "triangle", vol: .04 }); break;
     case "miss": tone(200, 0, .14, { type: "square", vol: .03, lp: 600 }); break;
@@ -97,6 +97,10 @@ function sfx(kind) {
     case "win": [[523.3, 0], [659.3, .11], [784, .22], [1046.5, .33]].forEach(([f, a]) => bell(f, a, .3, .12));
       [523.3, 659.3, 784, 1046.5].forEach(f => tone(f, .48, 1.1, { type: "triangle", vol: .06 })); bell(2093, .5, 1, .07); break;
     case "fail": [392, 349.2, 311.1].forEach((f, i) => tone(f, i * .18, .3, { type: "triangle", vol: .1 })); break;
+    case "nav": tone(620, 0, .07, { vol: .085, to: 940 }); tone(1245, .045, .1, { type: "triangle", vol: .045 }); break;        /* bubbly "plink" for tab switches */
+    case "back": tone(900, 0, .085, { type: "triangle", vol: .055, to: 540 }); break;                                              /* soft step back */
+    case "toggle": tone(1250, 0, .035, { type: "square", vol: .02, lp: 2600 }); tone(1650, .03, .045, { type: "triangle", vol: .04 }); break; /* tiny click */
+    case "open": tone(500, 0, .09, { vol: .08, to: 820 }); bell(1318.5, .055, .22, .05); break;                                   /* light "open" */
   }
 }
 

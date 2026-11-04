@@ -6659,7 +6659,7 @@ VIEWS.app = root => {
   if (sub === "league") { leagueView(root, shell); return {}; }
   if ((sub === "friends" || sub === "duel") && typeof friendsView === "function") { friendsView(root, shell); return {}; }
   if (sub === "speak" && typeof speakView === "function") { speakView(root, shell); return {}; }
-  if (typeof frRefresh === "function" && ACCT() && !window.__frPulled) { window.__frPulled = 1; frRefresh().then(r => { if (r && r.incoming.length && /app-profile/.test(location.hash)) Router.remount(); }); }
+  if (typeof frRefresh === "function" && ACCT() && !window.__frPulled) { window.__frPulled = 1; frRefresh().then(r => { if (r && (r.incoming || []).length && /app-profile/.test(location.hash)) Router.remount(); }); }
   /* profile */
   const b = lsGet("mv-badges", {}), x = XP(), lv = myLevel();
   const BADGES = [["first", "🌱", "First lesson"], ...SECTIONS.map((s, i) => ["sec" + i, ["🥉", "🥈", "🥇"][i], T3(s.t) + " · " + s.lv]), ["perfect", "👑", "Perfect lesson"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],
@@ -7422,8 +7422,8 @@ function sfx(kind) {
     f.frequency.setValueAtTime(from, t0 + at); f.frequency.exponentialRampToValueAtTime(to, t0 + at + dur); g.gain.setValueAtTime(.0001, t0 + at); g.gain.exponentialRampToValueAtTime(vol, t0 + at + dur * .3); g.gain.exponentialRampToValueAtTime(.0001, t0 + at + dur);
     s.connect(f).connect(g).connect(out); s.start(t0 + at); s.stop(t0 + at + dur); };
   switch (kind) {
-    case "ok": bell(1318.5, 0, .32, .12); bell(1760, .085, .5, .14); break;                              /* bright ding-ding */
-    case "no": tone(330, 0, .16, { type: "sawtooth", vol: .07, lp: 900 }); tone(247, .13, .3, { type: "sawtooth", vol: .07, lp: 700, to: 220 }); break; /* soft bwomp */
+    case "ok": bell(1046.5, 0, .3, .2); bell(1568, .09, .6, .22); tone(3136, .1, .18, { type: "sine", vol: .035 }); break;   /* Duolingo-like bright ding-ding (louder on phone speakers) */
+    case "no": tone(311, 0, .15, { type: "square", vol: .055, lp: 1300 }); tone(233, .13, .32, { type: "square", vol: .065, lp: 1000, to: 196 }); break; /* clear low "bzz-bzz" */
     case "tap": tone(1100, 0, .05, { type: "triangle", vol: .05, to: 700 }); break;
     case "pop": tone(540, 0, .12, { vol: .12, to: 1050 }); tone(1600, .04, .08, { type: "triangle", vol: .04 }); break;
     case "miss": tone(200, 0, .14, { type: "square", vol: .03, lp: 600 }); break;
@@ -7435,6 +7435,10 @@ function sfx(kind) {
     case "win": [[523.3, 0], [659.3, .11], [784, .22], [1046.5, .33]].forEach(([f, a]) => bell(f, a, .3, .12));
       [523.3, 659.3, 784, 1046.5].forEach(f => tone(f, .48, 1.1, { type: "triangle", vol: .06 })); bell(2093, .5, 1, .07); break;
     case "fail": [392, 349.2, 311.1].forEach((f, i) => tone(f, i * .18, .3, { type: "triangle", vol: .1 })); break;
+    case "nav": tone(620, 0, .07, { vol: .085, to: 940 }); tone(1245, .045, .1, { type: "triangle", vol: .045 }); break;        /* bubbly "plink" for tab switches */
+    case "back": tone(900, 0, .085, { type: "triangle", vol: .055, to: 540 }); break;                                              /* soft step back */
+    case "toggle": tone(1250, 0, .035, { type: "square", vol: .02, lp: 2600 }); tone(1650, .03, .045, { type: "triangle", vol: .04 }); break; /* tiny click */
+    case "open": tone(500, 0, .09, { vol: .08, to: 820 }); bell(1318.5, .055, .22, .05); break;                                   /* light "open" */
   }
 }
 
@@ -8655,7 +8659,7 @@ Object.assign(UI.ru, { invT: "Пригласи друзей", invP: "Отпра�
 
 const frAuth = () => { const a = ACCT() || {}; return { email: a.email, token: a.token }; };
 const frCall = (a, extra) => sPost(a, Object.assign(frAuth(), extra || {}), 12000);
-const frCount = () => (lsGet("mv-fr", null) || { incoming: [] }).incoming.length + (typeof soCount === "function" ? soCount() : 0);
+const frCount = () => (((lsGet("mv-fr", null) || {}).incoming) || []).length + (typeof soCount === "function" ? soCount() : 0);
 async function frRefresh() { if (!svOn() || !ACCT()) return null; try { const d = await frCall("fr_list"); if (d.ok) { lsSet("mv-fr", d); return d; } if (d.err === "auth") lsSet("mv-acct", null); } catch (e) {} return null; }
 
 /* ---------- invites: personal link safiverse.github.io/#invite=<username>, share sheet, copy, QR ---------- */
@@ -8947,6 +8951,22 @@ document.addEventListener("click", async e => {
   const s = SO() || {}; try { const d = await soCall("so_mail", { off: !s.mailOff }); if (d.ok) { s.mailOff = d.mailOff; lsSet("mv-so", s); } } catch (x) { toast(L("svErr")); }
   m.disabled = false; Router.remount();
 });
+
+/* iPhone: wake the audio engine on the very first touch so every later sound plays */
+(() => { const unlock = () => { try { SAC = SAC || new (window.AudioContext || window.webkitAudioContext)(); if (SAC.state === "suspended") SAC.resume();
+    const b = SAC.createBuffer(1, 1, 22050), src = SAC.createBufferSource(); src.buffer = b; src.connect(SAC.destination); src.start(0); } catch (e) {}
+  if (SAC && SAC.state === "running") ["pointerdown", "touchend", "keydown"].forEach(ev => removeEventListener(ev, unlock, true)); };
+  ["pointerdown", "touchend", "keydown"].forEach(ev => addEventListener(ev, unlock, true)); })();
+/* ===== Duolingo-style UI sounds: one delegated listener, only on navigation/switch elements (answers, duels, gifts keep their own sounds) ===== */
+document.addEventListener("click", e => {
+  if (typeof sfx !== "function" || !document.documentElement.classList.contains("ap-mode")) return;
+  const t = e.target;
+  const tab = t.closest(".ap-tabs a"); if (tab) { if (!tab.classList.contains("on")) { sfx("nav"); if (typeof buzz === "function") buzz(8); } return; }
+  if (t.closest(".ap-back, .ap-x, .fr-back, [data-ce-x], [data-no]")) { sfx("back"); return; }
+  if (t.closest("[data-setlang], [data-snd], [data-mail], .ad-tabs button, [data-qr], [data-age]")) { sfx("toggle"); return; }
+  if (t.closest("[data-world], [data-so-duel], [data-so-play], [data-so-gift], [data-so-gt], [data-so-cheer], .so-opt, .dr-node, [data-kid], [data-racer], [data-chest]")) return; /* have their own sounds */
+  if (t.closest(".ap-item, .ap-flag, .dr-course, .ap-course, [data-go], [data-cert], [data-share], [data-copy], [data-so-goal], .sv-new-b, .sv-guest-b, .sv-main-b")) sfx("open");
+}, true);
 
 document.documentElement.lang = LANG;
 Router.mount();

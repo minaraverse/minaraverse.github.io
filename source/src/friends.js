@@ -14,7 +14,7 @@ Object.assign(UI.ru, { invT: "Пригласи друзей", invP: "Отпра�
 
 const frAuth = () => { const a = ACCT() || {}; return { email: a.email, token: a.token }; };
 const frCall = (a, extra) => sPost(a, Object.assign(frAuth(), extra || {}), 12000);
-const frCount = () => (lsGet("mv-fr", null) || { incoming: [] }).incoming.length + (typeof soCount === "function" ? soCount() : 0);
+const frCount = () => (((lsGet("mv-fr", null) || {}).incoming) || []).length + (typeof soCount === "function" ? soCount() : 0);
 async function frRefresh() { if (!svOn() || !ACCT()) return null; try { const d = await frCall("fr_list"); if (d.ok) { lsSet("mv-fr", d); return d; } if (d.err === "auth") lsSet("mv-acct", null); } catch (e) {} return null; }
 
 /* ---------- invites: personal link safiverse.github.io/#invite=<username>, share sheet, copy, QR ---------- */

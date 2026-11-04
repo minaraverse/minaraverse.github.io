@@ -137,7 +137,7 @@ VIEWS.app = root => {
   if (sub === "league") { leagueView(root, shell); return {}; }
   if ((sub === "friends" || sub === "duel") && typeof friendsView === "function") { friendsView(root, shell); return {}; }
   if (sub === "speak" && typeof speakView === "function") { speakView(root, shell); return {}; }
-  if (typeof frRefresh === "function" && ACCT() && !window.__frPulled) { window.__frPulled = 1; frRefresh().then(r => { if (r && r.incoming.length && /app-profile/.test(location.hash)) Router.remount(); }); }
+  if (typeof frRefresh === "function" && ACCT() && !window.__frPulled) { window.__frPulled = 1; frRefresh().then(r => { if (r && (r.incoming || []).length && /app-profile/.test(location.hash)) Router.remount(); }); }
   /* profile */
   const b = lsGet("mv-badges", {}), x = XP(), lv = myLevel();
   const BADGES = [["first", "🌱", "First lesson"], ...SECTIONS.map((s, i) => ["sec" + i, ["🥉", "🥈", "🥇"][i], T3(s.t) + " · " + s.lv]), ["perfect", "👑", "Perfect lesson"], ["week", "🔥", "7-day streak"], ["xp500", "⚡", "500 XP"], ["xp2000", "💎", "2000 XP"],
