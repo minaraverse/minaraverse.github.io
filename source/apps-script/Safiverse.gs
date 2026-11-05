@@ -196,7 +196,20 @@ function vote_(p) {
 }
 
 /* ---------- admin: code by email, then the list of students ---------- */
+const adOk_ = p => !!P.getProperty("KEY") && hash_(String(p.key || "")) === P.getProperty("KEY");
+const iso_ = d => d instanceof Date ? d.toISOString() : String(d || "");
 function admin_(p) {
+  if (p.a === "ad_reps") { if (!adOk_(p)) return { ok: false }; const v = repSh_().getDataRange().getValues(); v.shift();
+    return { ok: true, rows: v.filter(r => r[0] && r[11] !== "done").slice(-200).reverse().map(r => ({ id: r[0], at: iso_(r[1]), user: r[2], name: r[3], unit: r[4], kind: r[5], item: r[6], given: r[7], reason: r[8], note: r[9] })) }; }
+  if (p.a === "ad_repdone") { if (!adOk_(p)) return { ok: false }; const sh = repSh_(), v = sh.getDataRange().getValues();
+    for (let i = 1; i < v.length; i++) if (String(v[i][0]) === String(p.id)) { sh.getRange(i + 1, 12).setValue("done"); return { ok: true }; } return { ok: false, err: "nf" }; }
+  if (p.a === "ad_recs") { if (!adOk_(p)) return { ok: false }; const v = recSh_().getDataRange().getValues(); v.shift(); const js = x => { try { return JSON.parse(x || "[]"); } catch (e) { return []; } };
+    return { ok: true, rows: v.filter(r => r[0]).slice(-150).reverse().map(r => ({ id: r[0], at: iso_(r[1]), email: r[2], user: r[3], name: r[4], unit: r[5], texts: js(r[6]), files: js(r[7]), heard: r[8] === "heard" })) }; }
+  if (p.a === "ad_rec") { if (!adOk_(p)) return { ok: false }; const v = recSh_().getDataRange().getValues(), id = String(p.id || "");
+    if (!id || !v.some((r, i) => i > 0 && String(r[7]).indexOf('"' + id + '"') > -1)) return { ok: false, err: "nf" };
+    const b = DriveApp.getFileById(id).getBlob(); return { ok: true, mime: b.getContentType(), b64: Utilities.base64Encode(b.getBytes()) }; }
+  if (p.a === "ad_recdone") { if (!adOk_(p)) return { ok: false }; const sh = recSh_(), v = sh.getDataRange().getValues();
+    for (let i = 1; i < v.length; i++) if (String(v[i][0]) === String(p.id)) { sh.getRange(i + 1, 9).setValue("heard"); return { ok: true }; } return { ok: false, err: "nf" }; }
   if (p.a === "ad_status") return { ok: true, hasCode: !!P.getProperty("KEY"), email: ADMIN_EMAIL.replace(/^(.).*(@.*)$/, "$1***$2") };
   if (p.a === "ad_send") { const last = Number(P.getProperty("AOTP_AT") || 0); if (Date.now() - last < 60000) return { ok: false, err: "wait" };
     const otp = String(Math.floor(100000 + Math.random() * 900000)); P.setProperties({ AOTP: hash_(otp), AOTP_AT: String(Date.now()), AOTP_TRIES: "0" });
@@ -224,7 +237,8 @@ function admin_(p) {
     const sh = students_(), f = find_(sh, String(p.email || "").toLowerCase()); if (!f) return { ok: false, err: "nf" }; sh.getRange(f.row, 20).setValue(p.on ? "yes" : ""); return { ok: true, hard: !!p.on }; }
   if (p.a === "ad_rows") { if (!P.getProperty("KEY") || hash_(String(p.key || "")) !== P.getProperty("KEY")) return { ok: false };
     const v = students_().getDataRange().getValues(); v.shift();
-    return { ok: true, rows: v.filter(r => r[0]).map(r => ({ email: r[0], name: r[1], age: r[2], avatar: r[3], created: r[4] instanceof Date ? r[4].toISOString() : String(r[4]), last: r[5] instanceof Date ? r[5].toISOString() : String(r[5]), xp: r[6], streak: r[7], lessons: r[8], unit: r[9], parent_ok: r[12], user: r[13] || "", status: stOf_(r), group: String(r[18] || ""), hard: !!r[19] })), teacher: { user: P.getProperty("TEACHER_USER") || "minara", target: Number(P.getProperty("TEACHER_TARGET") || 150) } }; }
+    const reps = repSh_().getDataRange().getValues().filter((r, i) => i > 0 && r[0] && r[11] !== "done").length, recs = recSh_().getDataRange().getValues().filter((r, i) => i > 0 && r[0] && r[8] !== "heard").length;
+    return { ok: true, reps: reps, recs: recs, rows: v.filter(r => r[0]).map(r => ({ email: r[0], name: r[1], age: r[2], avatar: r[3], created: r[4] instanceof Date ? r[4].toISOString() : String(r[4]), last: r[5] instanceof Date ? r[5].toISOString() : String(r[5]), xp: r[6], streak: r[7], lessons: r[8], unit: r[9], parent_ok: r[12], user: r[13] || "", status: stOf_(r), group: String(r[18] || ""), hard: !!r[19] })), teacher: { user: P.getProperty("TEACHER_USER") || "minara", target: Number(P.getProperty("TEACHER_TARGET") || 150) } }; }
   return { ok: false };
 }
 
@@ -381,10 +395,10 @@ const APP_URL = "https://safiverse.github.io/";
 function unsubLink_(email) { let u = ""; try { u = ScriptApp.getService().getUrl(); } catch (e) {} return u ? u + "?a=unsub&e=" + encodeURIComponent(email) + "&k=" + hash_("unsub|" + email).slice(0, 20) : ""; }
 function mailHtml_(title, rows, cta, email) {
   const un = email ? unsubLink_(email) : "";
-  return `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;background:#0d1a15;color:#eef6f0;border-radius:18px;padding:24px">
-    <div style="font-size:22px;font-weight:800">Safi<span style="color:#6fcf8e">verse</span></div><h2 style="margin:14px 0 8px;font-size:20px">${title}</h2>${rows}
-    <p style="margin:22px 0"><a href="${APP_URL}" style="background:#6fcf8e;color:#0d1a15;padding:13px 22px;border-radius:14px;text-decoration:none;font-weight:800">${cta}</a></p>
-    <p style="font-size:12px;color:#9fb3a8">${un ? `<a href="${un}" style="color:#9fb3a8">Unsubscribe · Abunəlikdən çıx · Отписаться</a>` : ""}</p></div>`;
+  return `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;background:#0b0a20;color:#f4f0ff;border-radius:18px;padding:24px;border:1px solid #2c2660">
+    <div style="font-size:22px;font-weight:800;color:#FFD15C">✦ Safi<span style="color:#B49CFF">verse</span></div><h2 style="margin:14px 0 8px;font-size:20px">${title}</h2>${rows}
+    <p style="margin:22px 0"><a href="${APP_URL}" style="background:#FFD15C;color:#2a1804;padding:13px 22px;border-radius:14px;text-decoration:none;font-weight:800">${cta}</a></p>
+    <p style="font-size:12px;color:#a9a3c9">${un ? `<a href="${un}" style="color:#9fb3a8">Unsubscribe · Abunəlikdən çıx · Отписаться</a>` : ""}</p></div>`;
 }
 function weeklyReport() {
   const sh = students_(), v = sh.getDataRange().getValues(), wd = weekDays_();
@@ -395,23 +409,64 @@ function weeklyReport() {
     const rows = row("📅", "aktiv gün", "активных дней", "active days", days + " / 7") + row("⚡", "həftəlik XP", "XP за неделю", "XP this week", wx)
       + row("🔥", "seriya", "серия", "streak", Number(r[7]) || 0) + row("📚", "keçilən dərs (cəmi)", "уроков (всего)", "lessons total", Number(r[8]) || 0)
       + (r[9] ? row("📍", "indiki bölmə", "текущий раздел", "current unit", String(r[9]).replace(/[<>]/g, "")) : "")
-      + `<p style="margin:14px 0 0;font-size:14px;color:#c9d8cf">${days >= 4 ? "Əla həftə! · Отличная неделя! · Great week!" : days >= 1 ? "Yaxşı başlanğıc — davam! · Хорошее начало! · Good start — keep going!" : "Bu həftə dərs olmayıb — 5 dəqiqə kifayətdir. · На этой неделе уроков не было. · No lessons this week."}</p>`;
+      + shieldRow_(pr, wd, row)
+      + `<p style="margin:14px 0 0;font-size:14px;color:#cfc8ec">${days >= 4 ? "Əla həftə! · Отличная неделя! · Great week!" : days >= 1 ? "Yaxşı başlanğıc — davam! · Хорошее начало! · Good start — keep going!" : "Bu həftə dərs olmayıb — 5 dəqiqə kifayətdir. · На этой неделе уроков не было. · No lessons this week."}</p>`;
     MailApp.sendEmail({ to: String(r[0]), name: "Safiverse", subject: "Safiverse: " + name + " — həftəlik hesabat / недельный отчёт",
       htmlBody: mailHtml_(name + " — həftəlik hesabat · Недельный отчёт · Weekly report", rows, "Safiverse →", String(r[0])), body: name + ": " + days + "/7 days, " + wx + " XP this week. " + APP_URL }); }
 }
+/* 🛡 streak shield: days a friend's gift protected + the one missed day a week the app forgives */
+function shieldRow_(pr, wd, row) {
+  const days = pr["mv-days"] || [], gift = pr["mv-shield"] || [], today = today_(); let saved = 0;
+  wd.forEach((d, k) => { if (d >= today || days.indexOf(d) > -1) return; if (gift.indexOf(d) > -1) { saved++; return; }
+    const prev = Utilities.formatDate(new Date(new Date(d + "T12:00:00Z").getTime() - 864e5), TZ, "yyyy-MM-dd"), next = wd[k + 1];
+    if (days.indexOf(prev) > -1 && next && days.indexOf(next) > -1) saved++; });
+  return saved ? row("🛡", "seriya qalxanı bu həftə qorudu", "щит серии защитил", "streak shield saved", saved + (saved > 1 ? " gün · дн. · days" : " gün · день · day"))
+    : row("🛡", "seriya qalxanı hazırdır (həftədə 1 buraxılmış gün bağışlanır)", "щит готов (1 пропуск в неделю прощается)", "streak shield ready (1 missed day a week is forgiven)", "✓");
+}
 function dailyReminder() {
+  if (Number(Utilities.formatDate(new Date(), TZ, "H")) >= 21) return; /* kind reminders only before 21:00 */
   const sh = students_(), v = sh.getDataRange().getValues(), today = today_();
   for (let i = 1; i < v.length; i++) { const r = v[i]; if (!r[0] || r[15] || String(r[16]) === today) continue; const s = Number(r[7]) || 0; if (s < 2 || playedToday_(r) || stOf_(r) !== "ok") continue;
     const pr = prog_(r), days = pr["mv-days"] || [], y = Utilities.formatDate(new Date(Date.now() - 864e5), TZ, "yyyy-MM-dd"); if (days.indexOf(y) < 0) continue;
     if (MailApp.getRemainingDailyQuota() < 3) break;
-    const rows = `<p style="font-size:16px">🔥 <b>${s}</b> — seriyan yanmasın! · не дай серии сгореть! · don't lose your streak!</p><p style="font-size:14px;color:#c9d8cf">2 dəqiqəlik dərs kifayətdir · хватит 2-минутного урока · a 2-minute lesson is enough</p>`;
-    MailApp.sendEmail({ to: String(r[0]), name: "Safiverse", subject: "🔥 " + s + " — Safiverse", htmlBody: mailHtml_(String(r[1]) + ", 🔥 " + s, rows, "Dərsə başla · Начать · Start →", String(r[0])), body: "🔥 " + s + " " + APP_URL });
+    const nm = String(r[1]).replace(/[<>]/g, "");
+    const rows = `<p style="font-size:16px">🌟 Safi səni gözləyir! Bu gün cəmi 2 dəqiqəlik dərs — və <b>${s} günlük</b> seriyan 🔥 davam edir.</p>
+      <p style="font-size:15px">🌟 Сафи ждёт тебя! Всего 2 минуты сегодня — и твоя серия <b>${s} дн.</b> 🔥 продолжится.</p><p style="font-size:15px">🌟 Safi is waiting! Just 2 minutes today keeps your <b>${s}-day</b> streak 🔥 going.</p>
+      <p style="font-size:13px;color:#cfc8ec">🛡 Bir gün buraxsan da narahat olma — qalxan səni qoruyur. · Не волнуйся: щит защитит один пропуск. · Don't worry: the shield protects one missed day.</p>`;
+    MailApp.sendEmail({ to: String(r[0]), name: "Safiverse", subject: "🌟 " + nm + ", Safi səni gözləyir · Сафи ждёт · Safi is waiting", htmlBody: mailHtml_(nm + " 🌟", rows, "Dərsə başla · Начать · Start →", String(r[0])), body: "🌟 " + nm + ": 2 min today → 🔥 " + s + ". " + APP_URL });
     sh.getRange(i + 1, 17).setValue(today); }
 }
 function unsubPage_(p) {
   const email = String(p.e || "").toLowerCase(), ok = email && String(p.k || "") === hash_("unsub|" + email).slice(0, 20);
   if (ok) { const sh = students_(), f = find_(sh, email); if (f) sh.getRange(f.row, 16).setValue("yes"); }
   return HtmlService.createHtmlOutput(`<div style="font-family:Arial;text-align:center;padding:40px"><h2>${ok ? "✓" : "✗"} Safiverse</h2><p>${ok ? "Emaillər dayandırıldı · Рассылка отключена · You are unsubscribed" : "Link is not valid"}</p><p><a href="${APP_URL}">safiverse.github.io</a></p></div>`);
+}
+
+/* =================== 🚩 "Is something wrong?" reports and 🎙 "Tell what you learned today" recordings =================== */
+const repSh_ = () => sheet_("Səhv bildirişləri", ["id", "at", "user", "name", "unit", "kind", "item", "given", "reason", "note", "lang", "status", "day"]);
+const recSh_ = () => sheet_("Danışıqlar", ["id", "at", "email", "user", "name", "unit", "texts", "files", "status", "day"]);
+function report_(p) {
+  const who = clean(p.user || p.email || p.uid || "guest", 60), sh = repSh_(), v = sh.getDataRange().getValues(), today = today_();
+  let n = 0; for (let i = 1; i < v.length; i++) if (String(v[i][2]) === who && String(v[i][12]) === today) n++;
+  if (n >= 30) return { ok: false, err: "many" }; if (!clean(p.item, 300)) return { ok: false, err: "empty" };
+  sh.appendRow([newId_(), new Date(), who, clean(p.name, 40), clean(p.unit, 80), clean(p.kind, 12), clean(p.item, 300), clean(p.given, 200), clean(p.reason, 20), clean(p.note, 300), clean(p.lang, 3), "", today]);
+  return { ok: true };
+}
+function recFolder_() { const id = P.getProperty("REC_FOLDER"); if (id) { try { return DriveApp.getFolderById(id); } catch (e) {} }
+  const f = DriveApp.createFolder("Safiverse — səs yazıları"); P.setProperty("REC_FOLDER", f.getId()); return f; }
+function recUp_(p) {
+  const a = auth_(p); if (!a) return { ok: false, err: "auth" }; if (a.st !== "ok") return { ok: false, err: a.st };
+  const items = (p.items || []).slice(0, 3); if (!items.length) return { ok: false, err: "empty" };
+  const sh = recSh_(), v = sh.getDataRange().getValues(), today = today_(), user = String(a.f.v[13] || "");
+  let n = 0; for (let i = 1; i < v.length; i++) if (String(v[i][2]) === a.email && String(v[i][9]) === today) n++; if (n >= 5) return { ok: false, err: "many" };
+  const folder = recFolder_(), ids = [];
+  items.forEach((it, k) => { const b64 = String(it.b64 || ""); if (!b64 || b64.length > 1400000) return;
+    const mime = /^audio\/[\w.+-]+/.test(String(it.mime || "")) ? String(it.mime).split(";")[0] : "audio/webm";
+    const blob = Utilities.newBlob(Utilities.base64Decode(b64), mime, (user || "student") + "_" + today + "_" + (k + 1) + (mime === "audio/mp4" ? ".m4a" : ".webm"));
+    ids.push(folder.createFile(blob).getId()); });
+  if (!ids.length) return { ok: false, err: "empty" };
+  sh.appendRow([newId_(), new Date(), a.email, user, String(a.f.v[1] || ""), clean(p.unit, 80), JSON.stringify(items.map(it => clean(it.t, 160))), JSON.stringify(ids), "", today]);
+  return { ok: true };
 }
 
 function handle_(p) {
@@ -427,6 +482,8 @@ function handle_(p) {
     if (p.a === "lg") return league_(p);
     if (p.a === "votes") return votes_(p);
     if (p.a === "vote") return vote_(p);
+    if (p.a === "report") return report_(p);
+    if (p.a === "rec_up") return recUp_(p);
     if (String(p.a || "").indexOf("fr_") === 0) return friends_(p);
     if (String(p.a || "").indexOf("so_") === 0) return social_(p);
     if (String(p.a || "").indexOf("du_") === 0) return duel_(p);

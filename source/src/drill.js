@@ -48,7 +48,28 @@ const NATK = () => LANG === "ru" ? "ru" : "az";
 const nat = o => o[NATK()];
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pickN = (a, n, not = []) => shuffle(a.filter(x => !not.includes(x))).slice(0, n);
-const dNorm = s => String(s).toLowerCase().replace(/[’`]/g, "'").replace(/[.,!?;:"“”()«»—-]/g, " ").replace(/\s+/g, " ").trim();
+/* answer checking is lenient in a sensible way: case, punctuation, contractions (I'm = I am, don't = do not), US/UK spelling, digits = words */
+const D_CONTR = [[/\bi'm\b/g, "i am"], [/\b(you|we|they|who|what)'re\b/g, "$1 are"], [/\b(he|she|it|that|what|where|who|there|here|how|when|this)'s\b/g, "$1 is"],
+  [/\bcan't\b|\bcannot\b/g, "can not"], [/\bwon't\b/g, "will not"], [/\b(\w+)n't\b/g, "$1 not"], [/\b(i|you|we|they|he|she|it|that|there)'ll\b/g, "$1 will"],
+  [/\b(i|you|we|they|would|could|should|might|must)'ve\b/g, "$1 have"], [/\b(i|you|we|they|he|she|it)'d\b/g, "$1 would"], [/\blet's\b/g, "let us"], [/\bo'clock\b/g, "oclock"]];
+const D_VAR = { okay: "ok", mom: "mum", mommy: "mummy", color: "colour", colors: "colours", favorite: "favourite", favorites: "favourites", gray: "grey", center: "centre", theater: "theatre",
+  meter: "metre", neighbor: "neighbour", neighbors: "neighbours", math: "maths",
+  0: "zero", 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve", 15: "fifteen", 20: "twenty", 30: "thirty", 50: "fifty", 100: "hundred" };
+const dNorm = s => { let t = " " + String(s).toLowerCase().replace(/[’‘`´]/g, "'").replace(/[.,!?;:"“”()«»—–-]/g, " ").replace(/\s+/g, " ").trim() + " ";
+  D_CONTR.forEach(([re, to]) => { t = t.replace(re, to); });
+  return t.trim().split(" ").map(w => Object.prototype.hasOwnProperty.call(D_VAR, w) ? D_VAR[w] : w).join(" ").replace(/\s+/g, " ").trim(); };
+/* time words may stand at the start or the end of a sentence: "Today I play" = "I play today" */
+const D_FREE = ["today", "now", "tomorrow", "yesterday", "tonight", "sometimes", "usually", "often", "every day", "in the morning", "in the evening", "at night", "on monday", "on sunday", "please", "too", "also"];
+function dSame(given, ans) { const g = dNorm(given), a = dNorm(ans); if (g === a) return true;
+  for (const f of D_FREE) { const strip = t => { if (t === f) return null; if (t.startsWith(f + " ")) return t.slice(f.length + 1); if (t.endsWith(" " + f)) return t.slice(0, -f.length - 1); return null; };
+    const gs = strip(g), as = strip(a); if (gs != null && as != null && gs === as) return true; }
+  return false; }
+/* a typed word: one wrong letter is fine for words of 5+ letters, two for 10+; "a / b" in the data = either answer */
+function dTyped(given, ans) { const v = dNorm(given), alts = String(ans).split(/\s*\/\s*/).map(dNorm);
+  if (alts.includes(v)) return { ok: true };
+  if (alts.some(a => dNorm(a.replace(/^(to|a|an|the) /, "")) === v.replace(/^(to|a|an|the) /, ""))) return { ok: true };
+  const close = alts.some(a => { const d = lev(v, a); return (a.length > 4 && d === 1) || (a.length > 9 && d === 2); });
+  return { ok: close, typo: close }; }
 const toks = s => String(s).split(/\s+/).map(t => t.replace(/^[“"(«]+|[.,!?;:"”)»]+$/g, "")).filter(Boolean);
 const LPU = 5; /* lessons per unit (last = unit review) */
 
@@ -72,7 +93,7 @@ let SAC = null;
 function sfx(kind) {
   if (!soundOn()) return;
   try { SAC = SAC || new (window.AudioContext || window.webkitAudioContext)(); if (SAC.state === "suspended") SAC.resume(); } catch (e) { return; }
-  const ac = SAC, t0 = ac.currentTime + .01, out = ac.createGain(); out.gain.value = .9; out.connect(ac.destination);
+  const ac = SAC, t0 = ac.currentTime + .01, out = ac.createGain(); out.gain.value = adultOn() ? .4 : .9; out.connect(ac.destination);
   const tone = (f, at, dur, { type = "sine", vol = .14, to = null, attack = .006, lp = 0 } = {}) => {
     const o = ac.createOscillator(), g = ac.createGain(); o.type = type; o.frequency.setValueAtTime(f, t0 + at);
     if (to) o.frequency.exponentialRampToValueAtTime(to, t0 + at + dur * .9);
@@ -217,26 +238,29 @@ const lev = (a, b) => { const m = a.length, n = b.length, d = Array.from({ lengt
 VIEWS.drill = root => {
   document.documentElement.classList.add("ap-mode");
   if (typeof safiGate === "function" && safiGate(root)) return {};
-  const h = location.hash, mP = /^#drill-p/.test(h), mJ = h.match(/^#drill-j-(\d+)/), mL = h.match(/^#drill-(\d+)-(\d+)/);
-  const mode = mP ? "practice" : mJ ? "jump" : mL ? "lesson" : null;
-  const ui = mJ ? +mJ[1] : mL ? +mL[1] : 0, li = mL ? +mL[2] : 0;
-  if (!mode || (mode === "lesson" && (!UNITS[ui] || !unitOpen(ui) || li > uDone(ui) || li >= LPU)) || (mode === "jump" && (!UNITS[ui] || unitOpen(ui)))) { Router.go("app-learn"); return {}; }
-  if (mode === "lesson" && hearts() <= 0) { noHearts(root); return {}; }
-  const U = UNITS[ui]; LESSON_CHAR = "p" + (mode === "lesson" ? ui : (Math.random() * PEOPLE.length) | 0); LESSON_ANIMAL = animalOf(mode === "lesson" ? ui : (Math.random() * ANIMALS.length) | 0); if (LESSON_ANIMAL && /^kid-/.test(LESSON_ANIMAL.k)) LESSON_ANIMAL = null; apTheme(mode === "lesson" || mode === "jump" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
+  const h = location.hash, mP = /^#drill-p/.test(h), mR = h.match(/^#drill-m-(\d+)(?:-(\d+))?/), mJ = h.match(/^#drill-j-(\d+)/), mL = h.match(/^#drill-(\d+)-(\d+)/);
+  const mode = mP ? "practice" : mR ? "review" : mJ ? "jump" : mL ? "lesson" : null;
+  const ui = mR ? +mR[1] : mJ ? +mJ[1] : mL ? +mL[1] : 0, li = mR ? +(mR[2] || 0) : mL ? +mL[2] : 0;
+  if (!mode || ((mode === "lesson" || mode === "review") && (!UNITS[ui] || !unitOpen(ui) || li > uDone(ui) || li >= LPU)) || (mode === "jump" && (!UNITS[ui] || unitOpen(ui)))) { Router.go("app-learn"); return {}; }
+  if (mode === "lesson" && hearts() <= 0) { noHearts(root, ui, li); return {}; }
+  const U = UNITS[ui]; LESSON_CHAR = "p" + (mode === "lesson" || mode === "review" ? ui : (Math.random() * PEOPLE.length) | 0); LESSON_ANIMAL = animalOf(mode === "lesson" || mode === "review" ? ui : (Math.random() * ANIMALS.length) | 0); if ((LESSON_ANIMAL && /^kid-/.test(LESSON_ANIMAL.k)) || adultOn()) LESSON_ANIMAL = null; apTheme(mode === "lesson" || mode === "jump" || mode === "review" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
   const pool = mode === "practice" ? (done.length ? done : [UNITS[curUnit()]]) : mode === "jump" ? UNITS.slice(Math.max(0, ui - 3), ui) : [U];
   pool.forEach(u => u.ctx = {});
   const pi = mode === "lesson" ? (li < uDone(ui) ? (Math.random() * partsOf(li)) | 0 : partDone(ui, li)) : 0;
-  const queue = buildQueue(mode === "lesson" ? NODE_PARTS[li][pi] : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
-  const st = { total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, lives: 3, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer" };
-  const heartsBox = () => mode === "jump" ? `<span class="dr-h">${"❤️".repeat(st.lives)}${"🤍".repeat(3 - st.lives)}</span>` : mode === "lesson" ? `<span class="dr-h">❤️ <b>${hearts()}</b></span>` : `<span class="dr-h inf">❤️ ∞</span>`;
+  /* review: the mistakes from this unit first (fresh order), then a few mixed questions — every 2 right answers win a heart back */
+  const queue = mode === "review" ? dMissQueue(ui, buildQueue(REVIEWR, () => U)) : buildQueue(mode === "lesson" ? NODE_PARTS[li][pi] : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
+  const st = { won: 0, revOk: 0, total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, lives: 3, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer" };
+  const heartsBox = () => mode === "jump" ? `<span class="dr-h">${"❤️".repeat(st.lives)}${"🤍".repeat(3 - st.lives)}</span>` : mode === "lesson" ? `<span class="dr-h">❤️ <b>${hearts()}</b></span>` : mode === "review" ? `<span class="dr-h rev">❤️ <b>${hearts()}</b></span>` : `<span class="dr-h inf">❤️ ∞</span>`;
   root.innerHTML = `<div class="ap ap-les dr" style="--uc:${U.c}"><header class="ap-lh"><a href="#app-learn" class="ap-x dr-x" aria-label="Close">✕</a>${lhBrand()}<div class="dr-bar"><i></i><em class="dr-cb"></em></div>${heartsBox()}</header>
     <main class="dr-main"><div class="dx"></div></main>
-    <button class="dr-skip" hidden>${L("dSkip")}</button><footer class="dr-foot"><div class="dr-fb"><span class="dr-ic"></span><div><b></b><p></p></div></div><button class="dr-go" disabled>${L("dCheck")}</button></footer></div>`;
+    <button class="dr-skip" hidden>${L("dSkip")}</button><footer class="dr-foot"><div class="dr-fb"><span class="dr-ic"></span><div><b></b><p></p></div><button class="dr-rep" type="button" aria-label="${L("rpT")}" title="${L("rpT")}">🚩</button></div><button class="dr-go" disabled>${L("dCheck")}</button></footer></div>`;
   const box = root.querySelector(".dx"), foot = root.querySelector(".dr-foot"), go = root.querySelector(".dr-go"), bar = root.querySelector(".dr-bar i");
   let sel = null, judge = null;
   const ready = on => { go.disabled = !on; go.classList.toggle("on", !!on); };
   const setBar = () => { bar.style.width = Math.max(3, st.solved / st.total * 100) + "%"; };
   const hbox = () => root.querySelector(".dr-h");
+  const givenOf = x => x.bank ? [...box.querySelectorAll(".dx-line .dx-tile")].map(t => t.textContent).join(" ") : (x.k === "typew" || x.k === "writew") ? (box.querySelector(".dx-in") || {}).value || "" : x.opts && sel != null ? x.opts[sel] : null;
+  root.querySelector(".dr-rep").onclick = () => { if (st.phase === "fb" && st.cur && typeof reportSheet === "function") reportSheet(st.cur, st.given); };
 
   function render() {
     st.cur = queue.shift(); const x = st.cur; sel = null; st.phase = "answer"; window.__dx = x;
@@ -256,8 +280,8 @@ VIEWS.drill = root => {
       case "img": case "mean": case "rmean": case "hearw": return { ok: x.opts[sel] === x.w };
       case "smean": return { ok: x.opts[sel] === x.s };
       case "fill": case "afill": return { ok: x.opts[sel] === x.f.a };
-      case "typew": case "writew": { const v = dNorm(box.querySelector(".dx-in").value), a = dNorm(x.w.en); if (v === a) return { ok: true }; return { ok: a.length > 4 && lev(v, a) === 1, typo: true }; }
-      case "build": case "listen": case "buildr": return { ok: dNorm([...box.querySelectorAll(".dx-line .dx-tile")].map(t => t.textContent).join(" ")) === dNorm(x.ans.join(" ")) };
+      case "typew": case "writew": return dTyped(box.querySelector(".dx-in").value, x.w.en);
+      case "build": case "listen": case "buildr": return { ok: dSame([...box.querySelectorAll(".dx-line .dx-tile")].map(t => t.textContent).join(" "), x.ans.join(" ")) };
     } };
   }
   function flip(a, b) { if (REDUCED) return; const r1 = a.getBoundingClientRect(), r2 = b.getBoundingClientRect();
@@ -279,7 +303,7 @@ VIEWS.drill = root => {
       else { sfx("miss"); st.pairMiss = (st.pairMiss || 0) + 1; [pick, b].forEach(o => { o.classList.remove("sel"); o.classList.add("bad"); setTimeout(() => o.classList.remove("bad"), 450); }); pick = null; buzz(30); } };
   }
   function check() {
-    const x = st.cur, r = judge(); st.phase = "fb"; window.__dxr = r;
+    const x = st.cur, given = givenOf(x), r = judge(); st.phase = "fb"; window.__dxr = r; st.given = given;
     const ico = foot.querySelector(".dr-ic"), tb = foot.querySelector("b"), tp = foot.querySelector("p");
     box.querySelectorAll(".dx-opt.sel").forEach(o => o.classList.add(r.ok ? "good" : "bad"));
     const line = box.querySelector(".dx-line"); line && line.classList.add(r.ok ? "good" : "bad");
@@ -295,11 +319,13 @@ VIEWS.drill = root => {
       ico.innerHTML = safiSVG("happy"); tb.textContent = L("dRight")[(Math.random() * 6) | 0];
       tp.innerHTML = r.typo ? `${L("dTypo")} <u>${esc(x.w.en)}</u>` : "";
       foot.className = "dr-foot show ok"; joy(true);
+      if (mode === "review" && st.won < 3 && hearts() < HMAX && ++st.revOk % 2 === 0) { st.won++; setHearts(hearts() + 1); const hb = hbox(); if (hb) { hb.innerHTML = `❤️ <b>${hearts()}</b>`; hb.classList.remove("gain"); void hb.offsetWidth; hb.classList.add("gain"); } setTimeout(() => sfx("unlock"), 250); }
       if (big) { const cb = root.querySelector(".dr-cb"); cb.textContent = `🔥 ${st.combo} ${L("dCombo")}`; cb.classList.remove("pop"); void cb.offsetWidth; cb.classList.add("pop"); bar.parentNode.classList.add("hot"); }
       if (x.k === "fill" || x.k === "build" || x.k === "listen") say(x.k === "fill" ? answerOf(x) : x.s.en);
     } else {
       st.miss++; st.combo = 0; bar.parentNode.classList.remove("hot"); sfx("no"); buzz([30, 40, 30]);
-      ico.innerHTML = safiSVG("sad"); tb.textContent = L("dWrongT"); tp.innerHTML = `<span class="dr-ans">${esc(answerOf(x))}</span>${x.k === "build" || x.k === "listen" || x.k === "fill" ? sayBtn(answerOf(x)) : ""}`;
+      ico.innerHTML = safiSVG("sad"); tb.textContent = L("dWrongT"); const why = whyOf(x, given); tp.innerHTML = `<span class="dr-ans">${esc(answerOf(x))}</span>${x.k === "build" || x.k === "listen" || x.k === "fill" ? sayBtn(answerOf(x)) : ""}${why ? `<span class="dr-why"><b>💡 ${L("whyT")}</b> ${why}</span>` : ""}`;
+      dMissAdd(x);
       foot.className = "dr-foot show no"; joy(false);
       if (mode !== "jump") queue.push({ ...x, prev: true, bank: x.bank && shuffle(x.bank), opts: x.opts && shuffle(x.opts) });
       if (mode === "lesson") { setHearts(hearts() - 1); const hb = hbox(); if (hb) { hb.innerHTML = `❤️ <b>${hearts()}</b>`; hb.classList.remove("hurt"); void hb.offsetWidth; hb.classList.add("hurt"); setTimeout(() => sfx("heart"), 280); } }
@@ -309,7 +335,7 @@ VIEWS.drill = root => {
   }
   function joy(ok) { const p = box.querySelector(".dx-pix"); if (!p) return; p.classList.remove("joy", "sad"); void p.offsetWidth; p.classList.add(ok ? "joy" : "sad"); }
   function next() {
-    if (mode === "lesson" && hearts() <= 0) return noHearts(root);
+    if (mode === "lesson" && hearts() <= 0) return noHearts(root, ui, li);
     if (mode === "jump" && st.lives < 0) return finish(false);
     if (!queue.length) return finish(true);
     render();
@@ -340,6 +366,7 @@ VIEWS.drill = root => {
     if (mode === "lesson") { if (st.miss === 0) p["pf" + ui] = 1; if (st.maxCombo >= 5) p["cb" + ui] = 1; }
     lsSet("mv-drill", p);
     if (mode === "practice") setHearts(hearts() + 1);
+    if (mode === "review") { const left = st.won < 1 && hearts() < HMAX ? 1 : 0; if (left) { st.won++; setHearts(hearts() + 1); } dMissClear(ui); }
     /* a lesson with no mistakes earns one heart (up to the 5-heart maximum) */
     const heartWon = mode === "lesson" && st.miss === 0 && hearts() < HMAX; if (heartWon) setHearts(hearts() + 1);
     qAdd(q => { q.les++; if (st.miss === 0) q.per++; q.sec += sec; q.cmb = Math.max(q.cmb, st.maxCombo); q.lis += st.lisOk || 0; });
@@ -347,24 +374,26 @@ VIEWS.drill = root => {
     if (typeof safiAfterLesson === "function") safiAfterLesson(mode);
     const b = lsGet("mv-badges", {}); if (!b.first) b.first = dayStr(new Date()); if (st.miss === 0) b.perfect = (b.perfect || 0) + 1; if (streak() >= 7) b.week = true;
     if (XP().total >= 500) b.xp500 = true; if (XP().total >= 2000) b.xp2000 = true; SECTIONS.forEach((s, i) => { if (UNITS.slice(s.from, s.to).every(u => uDone(u.n) >= LPU)) b["sec" + i] = true; }); lsSet("mv-badges", b);
-    const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, heart: heartWon, title: mode === "jump" ? L("dPassed") : L("apDone") });
+    const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, heart: mode === "review" ? st.won : heartWon, title: mode === "jump" ? L("dPassed") : L("apDone"),
+      back: mode === "review" && hearts() > 0 ? `drill-${ui}-${li}` : "app-learn", unit: mode === "lesson" ? ui : null });
     if (!st.wasToday && playedToday()) streakScreen(root, showDone); else showDone();
   }
   render(); setBar();
+  if (mode === "lesson" && typeof ruleCard === "function") ruleCard(root, U);
   return { unmount() { LESSON_CHAR = null; LESSON_ANIMAL = null; removeEventListener("keydown", onKey); document.querySelectorAll(".dr-ov").forEach(o => o.remove()); window.__dx = null; } };
 };
 
 function countUp(el, to, ms = 900) { if (REDUCED) { el.textContent = to; return; } const t0 = performance.now(); const f = t => { const p = Math.min(1, (t - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
-function dDoneScreen(root, { xp, acc, sec, perfect, heart, title, back = "app-learn" }) {
+function dDoneScreen(root, { xp, acc, sec, perfect, heart, title, back = "app-learn", unit = null }) {
   document.querySelectorAll(".dr-ov, .inv-sheet").forEach(o => o.remove());
   sfx("win"); buzz([60, 50, 60, 50, 160]);
   title = title === L("apDone") ? L("dWin")[(Math.random() * L("dWin").length) | 0] : title;
-  root.innerHTML = `<div class="ap dr-end"><div class="ap-cf">${Array.from({ length: 46 }, (_, j) => `<i style="left:${Math.random() * 100}%;--d:${(Math.random() * .8).toFixed(2)}s;--c:${["#ffcf5a", "#9ff0c0", "#9DB0FF", "#ff9fb0", "#c9a7ff"][j % 5]}"></i>`).join("")}</div>
-    <div class="dr-endpix">${safiSay(perfect ? "👑" : "🎉", "happy")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>${heart ? `<p class="dr-heart">❤️ +1 · ${L("dHeartWon")}</p>` : ""}
+  root.innerHTML = `<div class="ap dr-end"><div class="ap-cf">${Array.from({ length: adultOn() ? 0 : 46 }, (_, j) => `<i style="left:${Math.random() * 100}%;--d:${(Math.random() * .8).toFixed(2)}s;--c:${["#ffcf5a", "#9ff0c0", "#9DB0FF", "#ff9fb0", "#c9a7ff"][j % 5]}"></i>`).join("")}</div>
+    <div class="dr-endpix">${safiSay(perfect ? "👑" : "🎉", "happy")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>${heart ? `<p class="dr-heart">❤️ +${heart === true ? 1 : heart} · ${heart === true ? L("dHeartWon") : L("rvWon")}</p>` : ""}
     <div class="ap-res"><div class="y" style="--k:0"><small>${L("apEarned")}</small><b>⚡ <span data-n="${xp}">0</span></b></div><div class="g" style="--k:1"><small>${acc >= 90 ? L("dAccA") : acc >= 70 ? L("dAccB") : L("apAccuracy")}</small><b>🎯 <span data-n="${acc}">0</span>%</b></div><div class="b" style="--k:2"><small>${sec < 150 ? L("dFast") : L("apTime")}</small><b>⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}</b></div></div>
     <div class="ap-goalbar"><span>${L("apGoal")}</span><div><i style="width:${Math.min(100, xpToday() / goal() * 100)}%"></i></div><b>${xpToday()}/${goal()}</b></div>
-    <a class="ap-cta dr-cont" href="#${back}">${L("dCont")}</a></div>`;
-  const cont = root.querySelector(".dr-cont"); cont.onclick = async e => { if (!lsGet("mv-lgname", "")) return; e.preventDefault(); cont.textContent = "…"; if (!(await lgAfterLesson(root, back))) Router.go(back); };
+    <a class="ap-cta dr-cont" href="#${back}">${/^drill-/.test(back) ? L("rvBack") : L("dCont")}</a>${unit != null && typeof tellOK === "function" && tellOK() ? `<a class="dr-link dr-tell" href="#tell-${unit}">🎙 ${L("tlBtn")}</a>` : ""}</div>`;
+  const cont = root.querySelector(".dr-cont"); cont.onclick = async e => { if (!lsGet("mv-lgname", "") || navigator.onLine === false || /^drill-/.test(back)) return; e.preventDefault(); cont.textContent = "…"; if (!(await lgAfterLesson(root, back))) Router.go(back); };
   root.querySelectorAll("[data-n]").forEach((s, i) => setTimeout(() => countUp(s, +s.dataset.n), 500 + i * 250));
 }
 function streakScreen(root, then) {
@@ -376,10 +405,13 @@ function streakScreen(root, then) {
 function failScreen(root, msg) {
   root.innerHTML = `<div class="ap dr-end"><div class="dr-endpix sad">${mascot("💧")}</div><h1>${esc(msg)}</h1><a class="ap-cta" href="#drill-p">${L("dPractice")}</a><a class="dr-link" href="#app-learn">${L("dQuit")}</a></div>`;
 }
-function noHearts(root) {
-  sfx("fail");
-  root.innerHTML = `<div class="ap dr-end"><div class="dr-endpix sad">${mascot("💔")}</div><h1>${L("dNoHearts")}</h1><p class="dr-p">${L("dNoHeartsP")}</p>
-    <div class="dr-hrow">${"🤍".repeat(HMAX)}</div><a class="ap-cta" href="#drill-p">${L("dPractice")}</a><a class="dr-link" href="#app-learn">${L("dQuit")}</a></div>`;
+/* hearts ran out: no wall — after a short, kind message the child goes straight into "review your mistakes", which wins hearts back */
+function noHearts(root, ui = curUnit(), li = 0) {
+  sfx("pop"); const to = `drill-m-${ui}-${li}`, here = location.hash;
+  root.innerHTML = `<div class="ap dr-end dr-nh"><div class="dr-endpix">${safiSay("💪", "idle")}</div><h1>${L("rvT")}</h1><p class="dr-p">${L("rvP")}</p>
+    <div class="dr-hrow">${"🤍".repeat(HMAX)}</div><a class="ap-cta dr-rvgo" href="#${to}"><i class="dr-rvbar"></i><span>${L("rvGo")}</span></a><a class="dr-link" href="#app-learn">${L("dQuit")}</a></div>`;
+  const t = setTimeout(() => { if (location.hash === here) Router.go(to); }, 3800);
+  root.querySelector(".dr-link").addEventListener("click", () => clearTimeout(t));
 }
 
 /* ---------- the path (Learn tab) ---------- */
@@ -393,7 +425,7 @@ function drillPathHTML() {
   const firstLocked = UNITS.findIndex(u => !unitOpen(u.n));
   return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🇬🇧 ${L("skEnglish")}</b></span>${typeof levelChip === "function" ? levelChip() : ""}<span class="dr-lv dr-lang" role="button" aria-label="${L("lvLang")}"><small>${L("lvLang")}</small><b>🇬🇧 EN ▾</b></span></button>
   <a class="dr-pall" href="#drill-p"><span>💪</span><b>${L("dPracticeAll")}</b><small>${L("dPracticeAllP")}</small><i>❤️ ${hearts()}</i></a>
-  <header class="dr-ub dr-top" style="--uc:${CU.c}"><div><small>${L("dSection")} ${CU.sec + 1}, ${L("dUnit")} ${CU.n + 1}</small><b>${CU.e} ${esc(T3(CU.t))}</b></div><button class="dr-gb" data-guide="${CU.n}" aria-label="${L("dGuide")}">📖<span>${L("dGuide")}</span></button></header>` +
+  <header class="dr-ub dr-top" style="--uc:${CU.c}"><div><small>${L("dSection")} ${CU.sec + 1}, ${L("dUnit")} ${CU.n + 1}</small><b>${CU.e} ${esc(T3(CU.t))}</b></div><span class="dr-gbs"><button class="dr-gb dr-units" data-units aria-label="${L("upT")}">🗺<span>${L("upT")}</span></button><button class="dr-gb" data-guide="${CU.n}" aria-label="${L("dGuide")}">📖<span>${L("dGuide")}</span></button></span></header>${typeof tchkHTML === "function" ? tchkHTML() : ""}` +
   SECTIONS.map((S, si) => `<div class="dr-sb" data-th="${si}"><div class="dr-sec"><span>${L("dSection")} ${si + 1} · ${S.lv}</span><b>${esc(T3(S.t))}</b></div>` + UNITS.slice(S.from, S.to).map(U => {
     const open = unitOpen(U.n), d = uDone(U.n), offs = side[U.n % 2], jumpHere = U.n === firstLocked;
     const nodes = Array.from({ length: LPU }, (_, j) => { const isDone = d > j, isCur = open && j === d && U.n === cu, can = open && j <= d, jump = !open && j === 0;
@@ -594,13 +626,13 @@ const LG_N = { en: ["Earth", "Moon", "Mars", "Venus", "Jupiter", "Saturn", "Nept
   ru: ["Земля", "Луна", "Марс", "Венера", "Юпитер", "Сатурн", "Нептун", "Солнце", "Туманность", "Галактика"] };
 const LG_E = ["🌍", "🌙", "🔴", "🟡", "🟠", "🪐", "🔵", "☀️", "🌫️", "🌌"];
 const LG_C = [["#E39A5B", "#A4572A"], ["#DDE3EA", "#8C98A6"], ["#FFD45A", "#C98A12"], ["#5BA8FF", "#1F5FC4"], ["#FF5C7A", "#B0163A"], ["#4FE39A", "#14965A"], ["#C489FF", "#7A3BD1"], ["#F6EEE3", "#BCA98F"], ["#5B5370", "#231E30"], ["#9FF6FF", "#2BB7D6"]];
-Object.assign(UI.en, { lgName: t => LG_E[t] + " " + LG_N.en[t] + " League", lgDays: "days left", lgUp: "PROMOTION ZONE", lgDown: "DEMOTION ZONE", lgJoin: "Join the league", lgJoinP: "Compete every week with other students. Only your first name and avatar are shown.",
+Object.assign(UI.en, { lgName: t => LG_E[t] + " " + LG_N.en[t] + " League", lgDays: "days left", lgUp: "PROMOTION ZONE", lgDown: "🌱 KEEP GOING — one lesson lifts you up", lgJoin: "Join the league", lgJoinP: "Compete every week with other students. Only your first name and avatar are shown.",
   lgJoinB: "Join", lgName2: "Your first name", lgErr: "The league can't load right now. Your XP is saved — try again later.", lgRankUp: "You moved up!", lgRank: "You're in {n} place", lgChase: "but {name} is right behind you!",
   lgLead: "You're leading the league!", lgRes: { up: "🚀 You flew up to {t}!", down: "Moved down to {t}. You'll come back!", stay: "You stayed in {t}." }, lgYou: "You", lgWeek: "Weekly XP" });
-Object.assign(UI.az, { lgName: t => LG_E[t] + " " + LG_N.az[t] + " liqası", lgDays: "gün qalıb", lgUp: "YÜKSƏLMƏ ZONASI", lgDown: "DÜŞMƏ ZONASI", lgJoin: "Liqaya qoşul", lgJoinP: "Hər həftə digər tələbələrlə yarış. Yalnız adın və avatarın görünür.",
+Object.assign(UI.az, { lgName: t => LG_E[t] + " " + LG_N.az[t] + " liqası", lgDays: "gün qalıb", lgUp: "YÜKSƏLMƏ ZONASI", lgDown: "🌱 DAVAM ET — bir dərs səni yuxarı qaldırar", lgJoin: "Liqaya qoşul", lgJoinP: "Hər həftə digər tələbələrlə yarış. Yalnız adın və avatarın görünür.",
   lgJoinB: "Qoşul", lgName2: "Adın", lgErr: "Reytinq hazırda yüklənmir. XP-n yadda qalıb — bir az sonra yenə yoxla.", lgRankUp: "Sıra atladın!", lgRank: "İndi {n} yerdəsən", lgChase: "amma {name} arxanca gəlir!",
   lgLead: "Liqada birincisən!", lgRes: { up: "🚀 {t} liqasına uçdun!", down: "{t} liqasına düşdün. Geri qayıdacaqsan!", stay: "{t} liqasında qaldın." }, lgYou: "Sən", lgWeek: "Həftəlik XP" });
-Object.assign(UI.ru, { lgName: t => LG_E[t] + " Лига «" + LG_N.ru[t] + "»", lgDays: "дн. осталось", lgUp: "ЗОНА ПОВЫШЕНИЯ", lgDown: "ЗОНА ПОНИЖЕНИЯ", lgJoin: "Вступить в лигу", lgJoinP: "Соревнуйся каждую неделю с другими учениками. Видны только имя и аватар.",
+Object.assign(UI.ru, { lgName: t => LG_E[t] + " Лига «" + LG_N.ru[t] + "»", lgDays: "дн. осталось", lgUp: "ЗОНА ПОВЫШЕНИЯ", lgDown: "🌱 ВПЕРЁД — один урок поднимет тебя выше", lgJoin: "Вступить в лигу", lgJoinP: "Соревнуйся каждую неделю с другими учениками. Видны только имя и аватар.",
   lgJoinB: "Вступить", lgName2: "Твоё имя", lgErr: "Рейтинг сейчас не загружается. XP сохранён — попробуй позже.", lgRankUp: "Ты поднялся!", lgRank: "Ты на {n} месте", lgChase: "но {name} уже догоняет!",
   lgLead: "Ты лидер лиги!", lgRes: { up: "🚀 Ты долетел до лиги «{t}»!", down: "Понижение: {t}. Ты вернёшься!", stay: "Ты остался в лиге: {t}." }, lgYou: "Ты", lgWeek: "XP за неделю" });
 const ordAz = n => { const sfx2 = { 1: "ci", 2: "ci", 3: "cü", 4: "cü", 5: "ci", 6: "cı", 7: "ci", 8: "ci", 9: "cu", 0: "cu" }, t = { 10: "cu", 20: "ci", 30: "cu", 40: "cı", 50: "ci" };
@@ -642,7 +674,7 @@ function lgCourse(p) { const cu = p.cu == null ? -1 : +p.cu; if (cu < 0) return 
   return `<small class="lg-course">🇬🇧 <em>${SECTIONS[U.sec].lv}</em> · ${L("dUnit")} ${Math.min(cu, UNITS.length - 1) + 1}</small>`; }
 function lgListHTML(d) {
   const z = d.zones || { up: 0, down: 0 }, n = d.players.length;
-  return `<ol class="lg-list">${d.players.map((p, i) => `${i === z.up && z.up > 0 && i > 0 ? `<li class="lg-zone up">⬆ ${L("lgUp")} ⬆</li>` : ""}${i === n - z.down && z.down > 0 ? `<li class="lg-zone down">⬇ ${L("lgDown")} ⬇</li>` : ""}
+  return `<ol class="lg-list">${d.players.map((p, i) => `${i === z.up && z.up > 0 && i > 0 ? `<li class="lg-zone up">⬆ ${L("lgUp")} ⬆</li>` : ""}${i === n - z.down && z.down > 0 ? `<li class="lg-zone down">${L("lgDown")}</li>` : ""}
     <li class="lg-row ${p.me ? "me" : ""} ${i < z.up ? "pz" : i >= n - z.down ? "dz" : ""}" style="--k:${i}"><span class="lg-rk">${i < 3 ? `<i class="m${i + 1}">${i + 1}</i>` : i + 1}</span><span class="lg-av">${avOf(p.av, p.name)}</span>
     <span class="lg-nm"><b>${esc(p.me ? p.name + " · " + L("lgYou") : p.name)}</b>${lgCourse(p)}${lgStars(d, p)}</span><span class="lg-xp">${p.xp} XP</span></li>`).join("")}</ol>`;
 }
@@ -672,7 +704,7 @@ function lgResult(d) { /* once per week: show last week's promotion/demotion */
   if (!d.prev || lsGet("mv-lgres", "") === d.week) return; lsSet("mv-lgres", d.week);
   const nm = LG_N[LANG === "az" ? "az" : LANG === "ru" ? "ru" : "en"][d.prev.to];
   const ov = document.createElement("div"); ov.className = "dr-ov"; ov.innerHTML = `<div class="dr-card lg-resc">${d.prev.res === "up" ? `<div class="lg-fly">${trophySVG(d.prev.from)}<i>🚀</i>${trophySVG(d.prev.to)}</div>` : trophySVG(d.prev.to, "big")}<h2>${esc(L("lgRes")[d.prev.res].replace("{t}", nm))}</h2><p>#${d.prev.rank} · ${d.prev.xp} XP</p><button class="ap-cta">${L("dCont")}</button></div>`;
-  document.body.appendChild(ov); sfx(d.prev.res === "up" ? "win" : d.prev.res === "down" ? "fail" : "pop"); ov.onclick = e => { if (e.target.closest(".ap-cta") || e.target === ov) ov.remove(); };
+  document.body.appendChild(ov); sfx(d.prev.res === "up" ? "win" : "pop"); ov.onclick = e => { if (e.target.closest(".ap-cta") || e.target === ov) ov.remove(); };
 }
 /* after a lesson: rank-change screen (like "you moved up, but X is chasing you") */
 function lgLeave(back) { document.querySelectorAll(".dr-ov, .inv-sheet, .lh-ghost, .lh-dot, .ap-cf").forEach(o => o.remove());
@@ -720,7 +752,7 @@ const ANIMALS_LIVE = ["owl", "bunny-balloon", "wolf", "squirrel", "hedgehog", "b
 const animalImg = A => /^kid-/.test(A.k) ? `<img class="dr-animal live kidp ${A.k === "kid-girl" ? "wake" : ""}" src="img/${A.k}${A.k === "kid-girl" ? "-still" : ""}.webp" ${A.k === "kid-girl" ? `data-live="img/kid-girl.webp"` : ""} alt="${esc(A.n)}" loading="lazy" decoding="async">`
   : A.k === "fawn" ? `<img class="dr-animal live wake" src="img/av-fawn-sleep.webp" data-live="img/av-fawn-live.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`
   : `<img class="dr-animal ${ANIMALS_LIVE.includes(A.k) ? "live" : ""}" src="img/av-${A.k}${ANIMALS_LIVE.includes(A.k) ? "-live" : ""}.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`;
-function wakeAnimals(root) { const ws = root.querySelectorAll("img.wake[data-live]"); if (!ws.length || !("IntersectionObserver" in window)) return;
+function wakeAnimals(root) { const ws = root.querySelectorAll("img.wake[data-live]"); if (adultOn() || !ws.length || !("IntersectionObserver" in window)) return;
   const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; const i = e.target; io.unobserve(i); setTimeout(() => { i.src = i.dataset.live + "?t=" + Date.now(); }, 600); }), { threshold: .6 });
   ws.forEach(i => io.observe(i)); }
 function sideHTML(U, open) {
@@ -752,7 +784,7 @@ function sideSheet(U) {
 /* the squirrel's breath pushes the planet in front of it to the right, as hard as it blows; it drifts back when the blowing stops */
 const SQ_BLOW = [0, 0, 0, 0.07, 0.25, 0.46, 0.61, 0.77, 0.89, 0.95, 0.98, 1.0, 1, 1.0, 1.0, 1.0, 0.99, 0.99, 0.99, 0.97, 0.88, 0.79, 0.09, 0.07, 0.02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; /* per frame (12 fps) of av-squirrel-live.webp */
 function squirrelWind(root) {
-  const pix = root.querySelector(".an-squirrel"); if (!pix || REDUCED) return; const img = pix.querySelector("img"), unit = pix.closest(".dr-unit"); if (!img || !unit) return;
+  const pix = root.querySelector(".an-squirrel"); if (!pix || REDUCED || adultOn()) return; const img = pix.querySelector("img"), unit = pix.closest(".dr-unit"); if (!img || !unit) return;
   const nodes = [...unit.querySelectorAll(".dr-node")]; let t0 = 0, node = null;
   const target = () => { const r = img.getBoundingClientRect(), cy = r.top + r.height * .5; let best = null, d = 1e9;
     nodes.forEach(n => { const q = n.getBoundingClientRect(), dd = Math.abs(q.top + q.height / 2 - cy); if (dd < d) { d = dd; best = n; } }); return d < 140 ? best : null; };
