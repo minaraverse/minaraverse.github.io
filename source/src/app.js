@@ -130,7 +130,7 @@ VIEWS.app = root => {
     const due = dueKeys().length;
     const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ...(typeof speakView === "function" ? [["#app-speak", "🎙", L("spT"), L("spP")]] : []), ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
       ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#contract", "💼", "Business English", "B1–C1"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
-    const worlds = typeof SK === "object" ? `<div class="wd-grid">${["math", "music", "chess"].map((k, i) => { const done = skLessons(k), all = SK[k].U.length * SKL;
+    const worlds = typeof SK === "object" ? `<div class="wd-grid"><a class="wd-card wd-goal" href="#goal" style="--k:0"><span class="wd-e">⚽</span><b>${L("fbT")}</b><small>${L("fbP")}</small><img class="wd-kid" src="img/kid-boy-still.webp" alt=""></a>${["math", "music", "chess"].map((k, i) => { const done = skLessons(k), all = SK[k].U.length * SKL;
       return `<button class="wd-card wd-${k}" data-world="${k}" style="--k:${i}"><span class="wd-e">${SK[k].e}</span><b>${L(SK[k].n)}</b><small>${L(SK[k].p)}</small><div class="wd-bar"><i style="width:${Math.round(done / all * 100)}%"></i></div><em>${done}/${all}</em></button>`; }).join("")}</div><h2 class="ap-h2">🇬🇧 ${L("apEnPrac")}</h2>` : "";
     root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1>${worlds}<div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
     root.onclick = e => { const w = e.target.closest("[data-world]"); if (!w) return; sfx("tap"); Router.go("app-world-" + w.dataset.world); };
@@ -196,8 +196,8 @@ function mascot(say, k) {
 
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 /* ---------- Milingo opens only from its button: the home-screen app always starts on Minaraverse ---------- */
-if (!SAFI && STANDALONE && /^#(app|lesson|drill)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
-addEventListener("hashchange", () => { if (!/^#(app|lesson|drill)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
+if (!SAFI && STANDALONE && /^#(app|lesson|drill|goal)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+addEventListener("hashchange", () => { if (!/^#(app|lesson|drill|goal)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
 
 /* Safiverse: the app itself is the home page */
 if (SAFI) { VIEWS.home = root => { Router.go("app-" + (lsGet("mv-goal", null) ? "learn" : "goal")); return {}; };
