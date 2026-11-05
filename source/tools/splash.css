@@ -1,0 +1,14 @@
+#sv-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#2e2370 0%,#16113d 45%,#0b0a20 100%);transition:opacity .6s ease,transform .6s cubic-bezier(.5,0,.2,1)}
+#sv-splash.out{opacity:0;transform:scale(1.18);pointer-events:none}
+.svs-stars{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 78% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 40% 78%,#ffe7a8,transparent),radial-gradient(1px 1px at 88% 62%,#fff,transparent),radial-gradient(1px 1px at 22% 58%,#d9ccff,transparent),radial-gradient(1.5px 1.5px at 62% 30%,#fff,transparent),radial-gradient(1px 1px at 8% 88%,#fff,transparent),radial-gradient(1px 1px at 92% 90%,#ffe7a8,transparent);opacity:0;animation:spst 1.2s ease .1s forwards}
+@keyframes spst{to{opacity:.9}}
+.svs-in{display:grid;justify-items:center;gap:18px}
+.svs-mark{width:min(46vw,210px);height:auto;overflow:visible;filter:drop-shadow(0 18px 40px rgba(124,92,255,.45));animation:spin .9s cubic-bezier(.2,1.4,.4,1) .15s both}
+@keyframes spin{from{opacity:0;transform:scale(.4) rotate(-10deg)}to{opacity:1;transform:none}}
+.svs-orb{stroke-dasharray:560;stroke-dashoffset:560;animation:sporb .9s ease-out .55s forwards}@keyframes sporb{to{stroke-dashoffset:0}}
+.svs-moon{opacity:0;animation:spmoon .4s ease-out 1.25s forwards}@keyframes spmoon{to{opacity:1}}
+.svs-name{font:900 38px/1 "Nunito",ui-rounded,system-ui,-apple-system,sans-serif;letter-spacing:-.01em;color:#fff;white-space:nowrap}
+.svs-name span,.svs-name i{display:inline-block;font-style:normal;opacity:0;transform:translateY(14px);animation:spl .45s cubic-bezier(.2,1.4,.4,1) forwards;animation-delay:calc(.75s + var(--i) * .06s)}
+.svs-name i{color:#FFC94D;background:linear-gradient(100deg,#FFC94D 30%,#fff6d6 50%,#FFC94D 70%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:spl .45s cubic-bezier(.2,1.4,.4,1) forwards,spsh 1.6s ease-in-out 1.4s infinite;animation-delay:calc(.75s + var(--i) * .06s),1.4s}
+@keyframes spl{to{opacity:1;transform:none}}@keyframes spsh{from{background-position:100% 0}to{background-position:-50% 0}}
+@media (prefers-reduced-motion:reduce){#sv-splash *{animation-duration:.01s!important;animation-delay:0s!important}}

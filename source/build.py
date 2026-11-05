@@ -17,7 +17,7 @@ def page(js, css=css):
   return f"""<title>Minaraverse 2.0</title>
 <meta name="description" content="Minaraverse: English through stories. Five story worlds, a daily word, a level test and DİM exam practice. EN · AZ · RU.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{fonts}">
+<link rel="stylesheet" href="{fonts}" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="{fonts}"></noscript>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <style>
 {css}
@@ -27,6 +27,7 @@ def page(js, css=css):
 {js}
 document.documentElement.lang = LANG;
 Router.mount();
+if (window.svSplashDone) svSplashDone();
 </script>
 """
 html = page(js)
@@ -50,6 +51,8 @@ for f in pathlib.Path("/home/claude/img").iterdir():
 # ===== Safiverse: same app as its own installable product at /safiverse/ =====
 import re as _re
 S = D / "safiverse"; (S / "img").mkdir(parents=True, exist_ok=True)
+# iPhone home-screen launch images (no black screen while the app starts)
+STARTUP = "".join(f'<link rel="apple-touch-startup-image" media="screen and (device-width: {w}px) and (device-height: {h}px) and (-webkit-device-pixel-ratio: {r}) and (orientation: portrait)" href="splash-{w*r}x{h*r}.png">' for w, h, r in [(375,667,2),(414,896,2),(375,812,3),(414,896,3),(390,844,3),(393,852,3),(428,926,3),(430,932,3),(402,874,3),(440,956,3)])
 # minified Safiverse bundle (falls back to the plain one if terser/csso are not installed)
 import subprocess, tempfile, os
 css_sv = css
@@ -66,7 +69,7 @@ sv_html = sv_html.replace('<meta name="description" content="Minaraverse: Englis
   '<meta property="og:title" content="Safiverse — English step by step"><link rel="icon" href="favicon.png">'
   '<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0b0a20"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Safiverse">'
   '<script>if(!location.hash)history.replaceState(null,"",location.pathname+"#app-learn");if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>'
-  '<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;background:#0b0a20}img{max-width:100%}[hidden]{display:none!important}</style></head><body>' + sv_html + '</body></html>')
+  '<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;background:#0b0a20}img{max-width:100%}[hidden]{display:none!important}' + (R / 'tools/splash.css').read_text() + '</style>' + STARTUP + '</head><body>' + (R / 'tools/splash.html').read_text() + sv_html + '</body></html>')
 (S / "manifest.json").write_text('{"name":"Safiverse — English step by step","short_name":"Safiverse","start_url":"./#app-learn","scope":"./","display":"standalone","background_color":"#0b0a20","theme_color":"#0b0a20","orientation":"portrait",'
   '"icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}')
 (S / "sw.js").write_text('/* Safiverse offline cache: network first (fresh version), but if the network is slow (>3.5 s) open the saved copy at once */\nconst C = "sv-v22";\n'
@@ -83,7 +86,7 @@ sv_html = sv_html.replace('<meta name="description" content="Minaraverse: Englis
 S2 = R / "dist-sv"; (S2 / "img").mkdir(parents=True, exist_ok=True)
 sv_root = (S / "index.html").read_text().replace('../img/', 'img/')
 (S2 / "index.html").write_text(sv_root)
-for f in ["manifest.json", "sw.js", "favicon.png", "icon-180.png", "icon-192.png", "icon-512.png"]:
+for f in ["manifest.json", "sw.js", "favicon.png", "icon-180.png", "icon-192.png", "icon-512.png"] + [p.name for p in S.glob("splash-*.png")]:
     if (S / f).exists(): shutil.copy(S / f, S2 / f)
 shutil.copytree(D / "img", S2 / "img", dirs_exist_ok=True)
 (S2 / ".nojekyll").write_text("")
