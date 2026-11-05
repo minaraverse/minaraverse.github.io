@@ -9,14 +9,6 @@ Object.assign(UI.ru, { kGoal: "ГОЛ! ⚽", kGoalP: "Урок без ошибо
 
 const kidImg = (k, cls = "") => `<img class="kid kid-${k} ${cls}" src="img/kid-${k}.webp?v=1" alt="" decoding="async">`;
 
-/* 2 · lesson end: perfect lesson → the boy scores a goal; otherwise the girl waves with her bunny */
-(function () {
-  if (typeof dDoneScreen !== "function") return; const orig = dDoneScreen;
-  dDoneScreen = function (root, o) { orig(root, o); const p = root.querySelector(".dr-endpix"); if (!p) return;
-    const perfect = o && o.perfect; p.classList.add("kid-end"); p.innerHTML = kidImg(perfect ? "boy" : "girl");
-    if (perfect) { const h = root.querySelector(".dr-end h1"); if (h) h.textContent = L("kGoal"); const sb = root.querySelector(".dr-sub"); if (sb) sb.textContent = "✨ " + L("kGoalP"); } };
-})();
-
 /* 5 · "Score a goal!" — a football word game in Worlds */
 const FB_GOALS = 5, FB_SHOTS = 8;
 function fbWords() { const out = [], lv = UNITS.slice(0, Math.max(6, curUnit() + 1)); lv.forEach(U => U.W.forEach(w => out.push(w))); return out; }
