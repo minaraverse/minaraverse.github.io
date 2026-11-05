@@ -2499,6 +2499,7 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .h-card.dim{opacity:.8!important;filter:none!important}
 .h-card-nx{display:none;position:absolute;top:12px;left:12px;z-index:3;padding:6px 12px;border-radius:999px;background:rgba(23,22,27,.82);color:#f2c79b;border:1px solid rgba(242,199,155,.5);font:700 11.5px "Bricolage Grotesque";letter-spacing:.04em;backdrop-filter:blur(4px)}
 .h-card.dim .h-card-nx{display:block}.h-card.dim .h-card-fy{display:none}
+.dr-heart{margin:4px 0 0;font:800 16px var(--hf);color:#FF7E8E;animation:kidpop .6s cubic-bezier(.2,1.5,.4,1) .4s both}
 
 </style>
 <div id="view"></div>
@@ -8391,7 +8392,7 @@ It is fast, simple ___ free.|and|but,or|🚀` } ] }
 Object.assign(UI.en, { dWrite: "Write it in English", dHard: "💪 Hard exercise", dImg: "Select the correct picture", dMean: "What does this mean?", dRmean: "How do you say this in English?", dPairs: "Tap the matching pairs",
   dHear: "What do you hear?", dType: "Type what you hear", dBuild: "Write this in English", dBuildR: "Translate this sentence", dListen: "Tap what you hear",
   dFill: "Fill in the blank", dSmean: "Choose the correct meaning", dCheck: "Check", dCont: "Continue", dRight: ["Great!", "Excellent!", "Nice!", "Amazing!", "Perfect!", "Well done!"],
-  dWrongT: "Correct answer:", dTypo: "Watch your spelling:", dPrev: "Previous mistake", dCombo: "in a row!", dNoHearts: "You ran out of hearts",
+  dWrongT: "Correct answer:", dTypo: "Watch your spelling:", dPrev: "Previous mistake", dCombo: "in a row!", dNoHearts: "You ran out of hearts", dHeartWon: "a heart for a perfect lesson!",
   dNoHeartsP: "Practise old lessons to win a heart back — or wait: one heart returns every 20 minutes.", dPractice: "Practice +1 ❤️", dQuit: "Quit", dStay: "Wait, don't go!",
   dStayP: "You'll lose your progress in this lesson.", dKeep: "Keep learning", dEnd: "End lesson", dGuide: "Guidebook", dPhr: "Key phrases", dWords: "Words",
   dSection: "Section", dUnit: "Unit", dJump: "Jump here?", dJumpP: "Pass a short test to skip ahead. You can make 3 mistakes.", dJumpGo: "Start test",
@@ -8402,7 +8403,7 @@ Object.assign(UI.en, { dWrite: "Write it in English", dHard: "💪 Hard exercise
 Object.assign(UI.az, { dWrite: "İngiliscə yaz", dHard: "💪 Çətin tapşırıq", dImg: "Düzgün şəkli seç", dMean: "Bu nə deməkdir?", dRmean: "İngiliscə necə deyilir?", dPairs: "Uyğun cütləri tap",
   dHear: "Nə eşidirsən?", dType: "Eşitdiyini yaz", dBuild: "İngiliscə yaz", dBuildR: "Cümləni tərcümə et", dListen: "Eşitdiyini yığ",
   dFill: "Boşluğu doldur", dSmean: "Düzgün mənanı seç", dCheck: "Yoxla", dCont: "Davam et", dRight: ["Əla!", "Mükəmməl!", "Çox yaxşı!", "Super!", "Düzdür!", "Afərin!"],
-  dWrongT: "Düzgün cavab:", dTypo: "Yazılışa diqqət et:", dPrev: "Əvvəlki səhv", dCombo: "ardıcıl!", dNoHearts: "Ürəklərin bitdi",
+  dWrongT: "Düzgün cavab:", dTypo: "Yazılışa diqqət et:", dPrev: "Əvvəlki səhv", dCombo: "ardıcıl!", dNoHearts: "Ürəklərin bitdi", dHeartWon: "səhvsiz dərs üçün ürək qazandın!",
   dNoHeartsP: "Köhnə dərsləri məşq et və ürək qazan — ya da gözlə: hər 20 dəqiqədən bir ürək qayıdır.", dPractice: "Məşq et +1 ❤️", dQuit: "Çıx", dStay: "Gözlə, getmə!",
   dStayP: "Bu dərsdəki irəliləyişin itəcək.", dKeep: "Davam edirəm", dEnd: "Dərsi bitir", dGuide: "Bələdçi", dPhr: "Əsas ifadələr", dWords: "Sözlər",
   dSection: "Hissə", dUnit: "Bölmə", dJump: "Bura keçmək?", dJumpP: "Qısa testi keç və irəli tullan. 3 səhv etmək olar.", dJumpGo: "Testə başla",
@@ -8413,7 +8414,7 @@ Object.assign(UI.az, { dWrite: "İngiliscə yaz", dHard: "💪 Çətin tapşır�
 Object.assign(UI.ru, { dWrite: "Напиши по-английски", dHard: "💪 Сложное задание", dImg: "Выбери правильную картинку", dMean: "Что это значит?", dRmean: "Как сказать по-английски?", dPairs: "Найди пары",
   dHear: "Что ты слышишь?", dType: "Напиши, что слышишь", dBuild: "Напиши по-английски", dBuildR: "Переведи предложение", dListen: "Собери то, что слышишь",
   dFill: "Заполни пропуск", dSmean: "Выбери правильный перевод", dCheck: "Проверить", dCont: "Продолжить", dRight: ["Отлично!", "Превосходно!", "Здорово!", "Супер!", "Верно!", "Молодец!"],
-  dWrongT: "Правильный ответ:", dTypo: "Обрати внимание на написание:", dPrev: "Прошлая ошибка", dCombo: "подряд!", dNoHearts: "Сердечки закончились",
+  dWrongT: "Правильный ответ:", dTypo: "Обрати внимание на написание:", dPrev: "Прошлая ошибка", dCombo: "подряд!", dNoHearts: "Сердечки закончились", dHeartWon: "сердечко за урок без ошибок!",
   dNoHeartsP: "Повтори старые уроки, чтобы вернуть сердечко, или подожди: каждые 20 минут возвращается одно.", dPractice: "Практика +1 ❤️", dQuit: "Выйти", dStay: "Подожди, не уходи!",
   dStayP: "Прогресс этого урока пропадёт.", dKeep: "Продолжить учиться", dEnd: "Завершить урок", dGuide: "Подсказки", dPhr: "Ключевые фразы", dWords: "Слова",
   dSection: "Часть", dUnit: "Раздел", dJump: "Перейти сюда?", dJumpP: "Пройди короткий тест и перескочи вперёд. Можно ошибиться 3 раза.", dJumpGo: "Начать тест",
@@ -8729,12 +8730,14 @@ VIEWS.drill = root => {
     if (mode === "lesson") { if (st.miss === 0) p["pf" + ui] = 1; if (st.maxCombo >= 5) p["cb" + ui] = 1; }
     lsSet("mv-drill", p);
     if (mode === "practice") setHearts(hearts() + 1);
+    /* a lesson with no mistakes earns one heart (up to the 5-heart maximum) */
+    const heartWon = mode === "lesson" && st.miss === 0 && hearts() < HMAX; if (heartWon) setHearts(hearts() + 1);
     qAdd(q => { q.les++; if (st.miss === 0) q.per++; q.sec += sec; q.cmb = Math.max(q.cmb, st.maxCombo); q.lis += st.lisOk || 0; });
     addXp(xp);
     if (typeof safiAfterLesson === "function") safiAfterLesson(mode);
     const b = lsGet("mv-badges", {}); if (!b.first) b.first = dayStr(new Date()); if (st.miss === 0) b.perfect = (b.perfect || 0) + 1; if (streak() >= 7) b.week = true;
     if (XP().total >= 500) b.xp500 = true; if (XP().total >= 2000) b.xp2000 = true; SECTIONS.forEach((s, i) => { if (UNITS.slice(s.from, s.to).every(u => uDone(u.n) >= LPU)) b["sec" + i] = true; }); lsSet("mv-badges", b);
-    const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, title: mode === "jump" ? L("dPassed") : L("apDone") });
+    const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, heart: heartWon, title: mode === "jump" ? L("dPassed") : L("apDone") });
     if (!st.wasToday && playedToday()) streakScreen(root, showDone); else showDone();
   }
   render(); setBar();
@@ -8742,12 +8745,12 @@ VIEWS.drill = root => {
 };
 
 function countUp(el, to, ms = 900) { if (REDUCED) { el.textContent = to; return; } const t0 = performance.now(); const f = t => { const p = Math.min(1, (t - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
-function dDoneScreen(root, { xp, acc, sec, perfect, title, back = "app-learn" }) {
+function dDoneScreen(root, { xp, acc, sec, perfect, heart, title, back = "app-learn" }) {
   document.querySelectorAll(".dr-ov, .inv-sheet").forEach(o => o.remove());
   sfx("win"); buzz([60, 50, 60, 50, 160]);
   title = title === L("apDone") ? L("dWin")[(Math.random() * L("dWin").length) | 0] : title;
   root.innerHTML = `<div class="ap dr-end"><div class="ap-cf">${Array.from({ length: 46 }, (_, j) => `<i style="left:${Math.random() * 100}%;--d:${(Math.random() * .8).toFixed(2)}s;--c:${["#ffcf5a", "#9ff0c0", "#9DB0FF", "#ff9fb0", "#c9a7ff"][j % 5]}"></i>`).join("")}</div>
-    <div class="dr-endpix">${safiSay(perfect ? "👑" : "🎉", "happy")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>
+    <div class="dr-endpix">${safiSay(perfect ? "👑" : "🎉", "happy")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>${heart ? `<p class="dr-heart">❤️ +1 · ${L("dHeartWon")}</p>` : ""}
     <div class="ap-res"><div class="y" style="--k:0"><small>${L("apEarned")}</small><b>⚡ <span data-n="${xp}">0</span></b></div><div class="g" style="--k:1"><small>${acc >= 90 ? L("dAccA") : acc >= 70 ? L("dAccB") : L("apAccuracy")}</small><b>🎯 <span data-n="${acc}">0</span>%</b></div><div class="b" style="--k:2"><small>${sec < 150 ? L("dFast") : L("apTime")}</small><b>⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}</b></div></div>
     <div class="ap-goalbar"><span>${L("apGoal")}</span><div><i style="width:${Math.min(100, xpToday() / goal() * 100)}%"></i></div><b>${xpToday()}/${goal()}</b></div>
     <a class="ap-cta dr-cont" href="#${back}">${L("dCont")}</a></div>`;

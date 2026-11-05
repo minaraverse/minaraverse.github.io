@@ -2493,3 +2493,4 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .h-card.dim{opacity:.8!important;filter:none!important}
 .h-card-nx{display:none;position:absolute;top:12px;left:12px;z-index:3;padding:6px 12px;border-radius:999px;background:rgba(23,22,27,.82);color:#f2c79b;border:1px solid rgba(242,199,155,.5);font:700 11.5px "Bricolage Grotesque";letter-spacing:.04em;backdrop-filter:blur(4px)}
 .h-card.dim .h-card-nx{display:block}.h-card.dim .h-card-fy{display:none}
+.dr-heart{margin:4px 0 0;font:800 16px var(--hf);color:#FF7E8E;animation:kidpop .6s cubic-bezier(.2,1.5,.4,1) .4s both}
