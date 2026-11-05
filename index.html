@@ -10255,37 +10255,12 @@ Object.assign(UI.ru, { kGoal: "ГОЛ! ⚽", kGoalP: "Урок без ошибо
 
 const kidImg = (k, cls = "") => `<img class="kid kid-${k} ${cls}" src="img/kid-${k}.webp?v=1" alt="" decoding="async">`;
 
-/* 1 · welcome screen: Safi plus the two kids */
-(function () {
-  if (typeof welcomeScreen !== "function") return; const orig = welcomeScreen;
-  welcomeScreen = function (root) { orig(root); const s = root.querySelector(".sv-safi"); if (!s) return;
-    s.outerHTML = `<div class="kid-wel">${kidImg("boy")}<div class="sv-safi">${safiSVG("wave")}</div>${kidImg("girl")}</div><p class="kid-hi">${L("kHi")}</p>`; };
-})();
-
-/* also on the first (language) screen of onboarding */
-(function () { if (typeof onbScreen !== "function") return; const orig = onbScreen;
-  onbScreen = function (root, step) { orig(root, step); const s = root.querySelector(".sv-safi"); if (s && !root.querySelector(".kid-wel")) s.outerHTML = `<div class="kid-wel">${kidImg("boy")}<div class="sv-safi">${safiSVG("wave")}</div>${kidImg("girl")}</div>`; };
-})();
 /* 2 · lesson end: perfect lesson → the boy scores a goal; otherwise the girl waves with her bunny */
 (function () {
   if (typeof dDoneScreen !== "function") return; const orig = dDoneScreen;
   dDoneScreen = function (root, o) { orig(root, o); const p = root.querySelector(".dr-endpix"); if (!p) return;
     const perfect = o && o.perfect; p.classList.add("kid-end"); p.innerHTML = kidImg(perfect ? "boy" : "girl");
     if (perfect) { const h = root.querySelector(".dr-end h1"); if (h) h.textContent = L("kGoal"); const sb = root.querySelector(".dr-sub"); if (sb) sb.textContent = "✨ " + L("kGoalP"); } };
-})();
-
-/* 3 · celebrations: moving up a league, and every 7-day streak */
-function kidsCelebrate(root, title) {
-  const box = document.createElement("div"); box.className = "kid-cel";
-  box.innerHTML = `<div class="kid-row">${kidImg("boy")}${kidImg("girl")}</div><b>${esc(title)}</b>`;
-  const h = root.querySelector(".dr-end h1, .lg-after h1"); (h ? h.parentNode : root).insertBefore(box, h ? h.nextSibling : null);
-}
-(function () {
-  if (typeof streakScreen === "function") { const orig = streakScreen;
-    streakScreen = function (root, then) { orig(root, then); const n = typeof streak === "function" ? streak() : 0; if (n > 0 && n % 7 === 0) kidsCelebrate(root, L("kStreak7")); }; }
-  if (typeof lgAfterLesson === "function") { const orig = lgAfterLesson;
-    lgAfterLesson = async function (root, back) { const t0 = (lsGet("mv-lg", null) || {}).tier; const r = await orig(root, back);
-      const t1 = (lsGet("mv-lg", null) || {}).tier; if (r && t0 != null && t1 > t0) kidsCelebrate(root, L("kLgUp")); return r; }; }
 })();
 
 /* 5 · "Score a goal!" — a football word game in Worlds */
