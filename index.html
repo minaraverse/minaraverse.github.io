@@ -2495,6 +2495,11 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 @media (prefers-reduced-motion:reduce){.fb-ball,.fb-keeper,.kid-cel{transition:none;animation:none}}
 .an-kid-boy .dr-ch,.an-kid-girl .dr-ch{height:190px}.dr-animal.kidp{max-width:130px;max-height:190px}
 
+/* stories filtered by level: other levels stay readable, with a label instead of a heavy fade */
+.h-card.dim{opacity:.8!important;filter:none!important}
+.h-card-nx{display:none;position:absolute;top:12px;left:12px;z-index:3;padding:6px 12px;border-radius:999px;background:rgba(23,22,27,.82);color:#f2c79b;border:1px solid rgba(242,199,155,.5);font:700 11.5px "Bricolage Grotesque";letter-spacing:.04em;backdrop-filter:blur(4px)}
+.h-card.dim .h-card-nx{display:block}.h-card.dim .h-card-fy{display:none}
+
 </style>
 <div id="view"></div>
 <script>
@@ -5465,6 +5470,10 @@ VIEWS.home = root => {
   const due = dueKeys().length, sk = streak(), dS = dailyState(), lvl = lsGet("mv-level", null);
   const TINT = { tapes: "#3a1a22", voyage: "#132a44", wild: "#2e2414", travel: "#2c2346", mystery: "#2a1c10", movie: "#3a0c12", kids: "#123c44", cafe: "#2b1d16", business: "#0e2238", debate: "#151a2e", ielts: "#1e2a36", heist: "#141220" };
   const LV = myLevel(); let FILTER = LV;
+  /* faded cards: tell whether they are the next step up or an easier level */
+  const lvIdx = l => LVLS.indexOf(String(l || "").slice(0, 2));
+  const nxLabel = lv => { const f = lvIdx(FILTER), c = lvIdx(lv); if (f < 0 || c < 0) return "";
+    return c > f ? `⬆ ${L("nxLevel")} · ${esc(lv)}` : `✓ ${L("easyLevel")} · ${esc(lv)}`; };
   root.innerHTML = `
   <div class="h-bg" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
   <div class="h-prog" aria-hidden="true"><i></i></div>
@@ -5518,7 +5527,7 @@ VIEWS.home = root => {
     <div class="h-sh"><div><p class="h-k">${L("storiesK")}</p><h2 class="h-h2">${L("storiesH")}</h2></div><p class="h-saved">${L("saved")}</p></div>
     <div class="h-chips" role="group">${[["", L("allLevels")], ...LVLS.map(l => [l, l + " " + lvName(l) + (l === LV ? " ★" : "")])].map(([l, t]) => `<button type="button" data-lvl="${l}" aria-pressed="${(FILTER || "") === l}">${t}</button>`).join("")}</div>
     <div class="h-cards">${cards.sort((a, b) => WORLD_ORDER.indexOf(a.id) - WORLD_ORDER.indexOf(b.id)).map(c => { const s = STORIES[c.id], d = doneCount(c.id), n = s.units.length;
-      return `<a class="h-card hc-${c.id} ${fitsLevel(s.level, FILTER) ? "" : "dim"}" href="#${c.id}" data-tint="${TINT[c.id]}" data-lv="${s.level}">${LV && fitsLevel(s.level, LV) ? `<span class="h-card-fy">★ ${L("forYou")}</span>` : ""}<span class="h-card-art">${c.art()}</span>
+      return `<a class="h-card hc-${c.id} ${fitsLevel(s.level, FILTER) ? "" : "dim"}" href="#${c.id}" data-tint="${TINT[c.id]}" data-lv="${s.level}">${LV && fitsLevel(s.level, LV) ? `<span class="h-card-fy">★ ${L("forYou")}</span>` : ""}<span class="h-card-nx">${nxLabel(s.level)}</span><span class="h-card-art">${c.art()}</span>
         <span class="h-card-t"><span class="h-card-k">${n} ${L("chapters")} · ${s.units.reduce((a, u) => a + u.qs.length, 0)} ${L("questions")} · ${s.level}</span>
         <b>${esc(s.title)}</b><span class="h-card-d">${L(descs[c.id])}</span>
         <span class="h-card-bar"><i style="width:${d / n * 100}%"></i></span>
@@ -5614,7 +5623,7 @@ VIEWS.home = root => {
   /* level chips: matching stories jump to the top, the rest fade */
   const cardsBox = root.querySelector(".h-cards");
   const sortCards = scroll => { const cs = [...cardsBox.children]; cs.sort((x, y) => (fitsLevel(y.dataset.lv, FILTER) - fitsLevel(x.dataset.lv, FILTER)) || (WORLD_ORDER.indexOf(x.className.match(/hc-(\w+)/)[1]) - WORLD_ORDER.indexOf(y.className.match(/hc-(\w+)/)[1])));
-    cs.forEach(c => { cardsBox.appendChild(c); c.classList.toggle("dim", !fitsLevel(c.dataset.lv, FILTER)); });
+    cs.forEach(c => { cardsBox.appendChild(c); c.classList.toggle("dim", !fitsLevel(c.dataset.lv, FILTER)); const nx = c.querySelector(".h-card-nx"); if (nx) nx.textContent = nxLabel(c.dataset.lv); });
     if (scroll) { const t = cardsBox.getBoundingClientRect().top + scrollY - 90; scrollTo({ top: t, behavior: REDUCED ? "auto" : "smooth" }); } };
   sortCards(false);
   root.addEventListener("click", e => { const b = e.target.closest("[data-lvl]"); if (!b) return; FILTER = b.dataset.lvl || null;
@@ -6664,7 +6673,7 @@ const fitsLevel = (s, l) => !l || rangeOf(s).includes(l);
 Object.assign(UI.en, {
   approach2: "My approach is a little unusual: instead of drilling rules, we step into stories: a shelf of old tapes, a pirate voyage, the animal kingdom, a detective case in Baku's Old City, a Friday film club, a trip around the world and, for kids, adventures with Pixel the talking cat. Every story has 7 chapters with 6 questions each: vocabulary, grammar, reading, listening and a riddle that opens the next chapter. Every skill lives inside the story, so you feel the atmosphere and want to come back for more.",
   advSoon: "Advanced stories (C1–C2) are coming soon. For now: Movie Night Club, the DİM test, the weekly club and lessons with Minara.",
-  startHere: "Start here", findLevel: "Find your level", yourLevel: "Your level", yourPlan: "Your plan", seePlan: "See my plan", forYou: "For your level", allLevels: "All levels", showAll: "Show all",
+  startHere: "Start here", findLevel: "Find your level", yourLevel: "Your level", yourPlan: "Your plan", seePlan: "See my plan", forYou: "For your level", nxLevel: "Next level", easyLevel: "Easier level", allLevels: "All levels", showAll: "Show all",
   bioK: "Your teacher", bio: "I'm Minara, an English teacher. I studied at ADA University (bachelor's and master's), hold IELTS, TESOL and TEFL certificates, teach at university and run English lessons for teenagers and adults.",
   approachK: "My approach", approachH: "English you live, not just learn", approach: "My approach is a little unusual: instead of drilling rules, we step into stories. A detective case in the Old City, a film club, a pirate voyage. Grammar, vocabulary and every skill live inside the story, so you feel the atmosphere and want to come back for more.",
   skillsK: "Every part of English", formatsK: "Lesson formats", formatsH: "How we learn here",
@@ -6681,7 +6690,7 @@ Object.assign(UI.en, {
 Object.assign(UI.az, {
   approach2: "Yanaşmam bir az fərqlidir: qaydaları əzbərləmək əvəzinə hekayələrin içinə giririk: köhnə kaset rəfi, pirat səyahəti, heyvanlar aləmi, İçərişəhərdə detektiv işi, cümə kino klubu, dünya səyahəti, uşaqlar üçün isə danışan pişik Pixel ilə macəralar. Hər hekayədə 7 fəsil, hər fəsildə 6 sual var: söz ehtiyatı, qrammatika, oxu, dinləmə və növbəti fəsli açan tapmaca. Bütün bacarıqlar hekayənin içindədir, ona görə atmosferi hiss edirsən və yenə qayıtmaq istəyirsən.",
   advSoon: "İrəli səviyyə (C1–C2) hekayələri tezliklə. Hələlik: Movie Night Club, DİM testi, həftənin klubu və Minara ilə dərslər.",
-  startHere: "Buradan başla", findLevel: "Səviyyəni öyrən", yourLevel: "Səviyyən", yourPlan: "Sənin planın", seePlan: "Planıma bax", forYou: "Sənin səviyyən üçün", allLevels: "Bütün səviyyələr", showAll: "Hamısını göstər",
+  startHere: "Buradan başla", findLevel: "Səviyyəni öyrən", yourLevel: "Səviyyən", yourPlan: "Sənin planın", seePlan: "Planıma bax", forYou: "Sənin səviyyən üçün", nxLevel: "Növbəti səviyyə", easyLevel: "Asan səviyyə", allLevels: "Bütün səviyyələr", showAll: "Hamısını göstər",
   bioK: "Müəllimin", bio: "Mən Minarayam, ingilis dili müəllimiyəm. ADA Universitetində bakalavr və magistr təhsili almışam, IELTS, TESOL və TEFL sertifikatlarım var. Universitetdə dərs deyirəm, yeniyetmələr və böyüklər üçün ingilis dili dərsləri keçirəm.",
   approachK: "Yanaşmam", approachH: "Sadəcə öyrəndiyin yox, yaşadığın ingilis dili", approach: "Yanaşmam bir az fərqlidir: qaydaları əzbərləmək əvəzinə hekayələrin içinə giririk. İçərişəhərdə detektiv işi, kino klubu, pirat səyahəti. Qrammatika, söz ehtiyatı və bütün bacarıqlar hekayənin içindədir. Atmosferi hiss edirsən və yenə qayıtmaq istəyirsən.",
   skillsK: "İngilis dilinin bütün hissələri", formatsK: "Dərs formatları", formatsH: "Burada necə öyrənirik",
@@ -6698,7 +6707,7 @@ Object.assign(UI.az, {
 Object.assign(UI.ru, {
   approach2: "Мой подход немного необычный: вместо зубрёжки правил мы входим в истории: полка со старыми кассетами, пиратское плавание, мир животных, детективное дело в Старом городе Баку, пятничный киноклуб, путешествие вокруг света, а для детей — приключения с говорящим котом Пикселем. В каждой истории 7 глав по 6 вопросов: лексика, грамматика, чтение, аудирование и загадка, которая открывает следующую главу. Все навыки живут внутри истории, поэтому ты чувствуешь атмосферу и хочется возвращаться снова.",
   advSoon: "Истории для продвинутого уровня (C1–C2) скоро появятся. А пока: Movie Night Club, тест DİM, клуб недели и уроки с Минарой.",
-  startHere: "Начни здесь", findLevel: "Узнай свой уровень", yourLevel: "Твой уровень", yourPlan: "Твой план", seePlan: "Мой план", forYou: "Для твоего уровня", allLevels: "Все уровни", showAll: "Показать все",
+  startHere: "Начни здесь", findLevel: "Узнай свой уровень", yourLevel: "Твой уровень", yourPlan: "Твой план", seePlan: "Мой план", forYou: "Для твоего уровня", nxLevel: "Следующий уровень", easyLevel: "Уровень полегче", allLevels: "Все уровни", showAll: "Показать все",
   bioK: "Твой преподаватель", bio: "Я Минара, преподаватель английского. Окончила бакалавриат и магистратуру ADA University, у меня есть сертификаты IELTS, TESOL и TEFL. Преподаю в университете и веду уроки английского для подростков и взрослых.",
   approachK: "Мой подход", approachH: "Английский, который проживаешь, а не просто учишь", approach: "Мой подход немного необычный: вместо зубрёжки правил мы входим в истории. Детективное дело в Старом городе, киноклуб, пиратское плавание. Грамматика, лексика и все навыки живут внутри истории, ты чувствуешь атмосферу, и тебе хочется возвращаться снова.",
   skillsK: "Все стороны английского", formatsK: "Форматы уроков", formatsH: "Как мы здесь учимся",
@@ -6892,10 +6901,17 @@ const examVersions = () => [
 /* art for the new worlds */
 Object.assign(WART, {
   cafe: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><rect width="1200" height="600" fill="#2b1d16"/>
-    <rect y="0" width="1200" height="380" fill="#3b2a20"/>${Array.from({ length: 8 }, (_, k) => `<rect x="${60 + k * 140}" y="40" width="110" height="160" rx="55" fill="#1d3f52"/><rect x="${60 + k * 140}" y="40" width="110" height="160" rx="55" fill="url(#cfW)" opacity=".5"/>`).join("")}
+    <rect y="0" width="1200" height="380" fill="#3b2a20"/>${Array.from({ length: 8 }, (_, k) => `<rect x="${60 + k * 140}" y="105" width="110" height="140" rx="55" fill="#1d3f52"/><rect x="${60 + k * 140}" y="105" width="110" height="140" rx="55" fill="url(#cfW)" opacity=".5"/><path d="M${115 + k * 140} 105V245M${60 + k * 140} 185H${170 + k * 140}" stroke="#2b1d16" stroke-width="4" opacity=".7"/>`).join("")}
     <defs><linearGradient id="cfW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6c77a"/><stop offset="1" stop-color="#1d3f52"/></linearGradient><radialGradient id="cfL"><stop offset="0" stop-color="#ffd58a" stop-opacity=".8"/><stop offset="1" stop-color="#ffd58a" stop-opacity="0"/></radialGradient></defs>
     ${[200, 600, 1000].map(x => `<circle cx="${x}" cy="250" r="140" fill="url(#cfL)"/><path d="M${x} 0V200" stroke="#120c08" stroke-width="3"/><path d="M${x - 40} 200H${x + 40}L${x + 26} 240H${x - 26}Z" fill="#e8b25a"/>`).join("")}
     <rect y="380" width="1200" height="30" fill="#6b4a33"/><rect y="410" width="1200" height="190" fill="#4a3324"/>
+    ${Array.from({ length: 10 }, (_, k) => `<rect x="${18 + k * 120}" y="432" width="96" height="150" rx="6" fill="none" stroke="#3a281c" stroke-width="5"/><rect x="${28 + k * 120}" y="442" width="76" height="130" rx="4" fill="#523a29" opacity=".55"/>`).join("")}
+    <g transform="translate(600 505) rotate(-2)"><rect x="-118" y="-62" width="236" height="124" rx="10" fill="#7a5638"/><rect x="-106" y="-50" width="212" height="100" rx="6" fill="#1f2a24"/>
+      <text y="-14" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="30" fill="#f6efe3">Menu</text>
+      <text y="16" text-anchor="middle" font-family="Bricolage Grotesque,Arial" font-size="17" fill="#f6efe3" opacity=".85">tea · coffee · pakhlava</text>
+      <path d="M-70 32H70" stroke="#e8b25a" stroke-width="3" stroke-dasharray="6 6"/></g>
+    <g transform="translate(360 372)"><ellipse rx="54" ry="10" fill="#f6efe3"/><path d="M-30 -2L0 -26L30 -2Z" fill="#d89b4a"/><path d="M-30 -2L0 -26L30 -2" fill="none" stroke="#a5652a" stroke-width="3"/><path d="M-16 -8H16M-8 -15H8" stroke="#a5652a" stroke-width="2"/></g>
+    <g transform="translate(690 372)"><path d="M-22 0Q-24 -30 0 -30Q24 -30 22 0Z" fill="#e9e1d3"/><ellipse cy="-30" rx="18" ry="5" fill="#cfc4b2"/><circle cy="-38" r="5" fill="#cfc4b2"/><ellipse rx="26" ry="5" fill="#cfc4b2"/></g>
     ${[[260, "#f6efe3"], [520, "#c96a3a"], [800, "#f6efe3"]].map(([x, c]) => `<g transform="translate(${x} 330)"><path d="M-28 0H28L22 50H-22Z" fill="${c}"/><path d="M28 12Q50 14 46 32Q42 44 24 40" stroke="${c}" stroke-width="7" fill="none"/>${[0, 1, 2].map(s => `<path d="M${-10 + s * 10} -10Q${-18 + s * 10} -30 ${-8 + s * 10} -46" stroke="#f6efe3" stroke-width="3" fill="none" opacity=".5"/>`).join("")}</g>`).join("")}
     <g transform="translate(1000 300)"><path d="M-30 80L-24 -20Q0 -36 24 -20L30 80Z" fill="#b4542f"/><path d="M-24 -20Q0 -6 24 -20" fill="none" stroke="#7a2e15" stroke-width="4"/><ellipse cy="-24" rx="26" ry="8" fill="#7a2e15"/></g></svg>`,
   contract: () => `<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="gw-svg" aria-hidden="true"><defs><linearGradient id="ctg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d2238"/><stop offset="1" stop-color="#14304f"/></linearGradient></defs><rect width="1200" height="600" fill="url(#ctg)"/>${Array.from({ length: 9 }, (_, k) => `<rect x="${60 + k * 125}" y="${250 - (k * 53) % 140}" width="90" height="${350 + (k * 53) % 140}" fill="#0a1a2b"/>${Array.from({ length: 6 }, (_, r) => `<rect x="${72 + k * 125 + (r % 2) * 40}" y="${280 - (k * 53) % 140 + r * 45}" width="22" height="14" fill="${(k + r) % 3 ? "#1d3a5c" : "#f2c14e"}" opacity=".8"/>`).join("")}`).join("")}<g transform="translate(600 330) rotate(-6)"><rect x="-150" y="-110" width="300" height="220" rx="10" fill="#f4efe4"/><path d="M-115 -70 h230 M-115 -40 h200 M-115 -10 h230 M-115 20 h160" stroke="#9aa7b8" stroke-width="8" stroke-linecap="round"/><g transform="translate(70 60) rotate(-14)"><rect x="-80" y="-26" width="160" height="52" rx="8" fill="none" stroke="#e0245e" stroke-width="7"/><text x="0" y="12" text-anchor="middle" font-family="Special Elite, monospace" font-size="30" fill="#e0245e">MISSING</text></g></g><circle cx="980" cy="110" r="46" fill="#f2c14e" opacity=".9"/></svg>`,

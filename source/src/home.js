@@ -15,6 +15,10 @@ VIEWS.home = root => {
   const due = dueKeys().length, sk = streak(), dS = dailyState(), lvl = lsGet("mv-level", null);
   const TINT = { tapes: "#3a1a22", voyage: "#132a44", wild: "#2e2414", travel: "#2c2346", mystery: "#2a1c10", movie: "#3a0c12", kids: "#123c44", cafe: "#2b1d16", business: "#0e2238", debate: "#151a2e", ielts: "#1e2a36", heist: "#141220" };
   const LV = myLevel(); let FILTER = LV;
+  /* faded cards: tell whether they are the next step up or an easier level */
+  const lvIdx = l => LVLS.indexOf(String(l || "").slice(0, 2));
+  const nxLabel = lv => { const f = lvIdx(FILTER), c = lvIdx(lv); if (f < 0 || c < 0) return "";
+    return c > f ? `⬆ ${L("nxLevel")} · ${esc(lv)}` : `✓ ${L("easyLevel")} · ${esc(lv)}`; };
   root.innerHTML = `
   <div class="h-bg" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
   <div class="h-prog" aria-hidden="true"><i></i></div>
@@ -68,7 +72,7 @@ VIEWS.home = root => {
     <div class="h-sh"><div><p class="h-k">${L("storiesK")}</p><h2 class="h-h2">${L("storiesH")}</h2></div><p class="h-saved">${L("saved")}</p></div>
     <div class="h-chips" role="group">${[["", L("allLevels")], ...LVLS.map(l => [l, l + " " + lvName(l) + (l === LV ? " ★" : "")])].map(([l, t]) => `<button type="button" data-lvl="${l}" aria-pressed="${(FILTER || "") === l}">${t}</button>`).join("")}</div>
     <div class="h-cards">${cards.sort((a, b) => WORLD_ORDER.indexOf(a.id) - WORLD_ORDER.indexOf(b.id)).map(c => { const s = STORIES[c.id], d = doneCount(c.id), n = s.units.length;
-      return `<a class="h-card hc-${c.id} ${fitsLevel(s.level, FILTER) ? "" : "dim"}" href="#${c.id}" data-tint="${TINT[c.id]}" data-lv="${s.level}">${LV && fitsLevel(s.level, LV) ? `<span class="h-card-fy">★ ${L("forYou")}</span>` : ""}<span class="h-card-art">${c.art()}</span>
+      return `<a class="h-card hc-${c.id} ${fitsLevel(s.level, FILTER) ? "" : "dim"}" href="#${c.id}" data-tint="${TINT[c.id]}" data-lv="${s.level}">${LV && fitsLevel(s.level, LV) ? `<span class="h-card-fy">★ ${L("forYou")}</span>` : ""}<span class="h-card-nx">${nxLabel(s.level)}</span><span class="h-card-art">${c.art()}</span>
         <span class="h-card-t"><span class="h-card-k">${n} ${L("chapters")} · ${s.units.reduce((a, u) => a + u.qs.length, 0)} ${L("questions")} · ${s.level}</span>
         <b>${esc(s.title)}</b><span class="h-card-d">${L(descs[c.id])}</span>
         <span class="h-card-bar"><i style="width:${d / n * 100}%"></i></span>
@@ -164,7 +168,7 @@ VIEWS.home = root => {
   /* level chips: matching stories jump to the top, the rest fade */
   const cardsBox = root.querySelector(".h-cards");
   const sortCards = scroll => { const cs = [...cardsBox.children]; cs.sort((x, y) => (fitsLevel(y.dataset.lv, FILTER) - fitsLevel(x.dataset.lv, FILTER)) || (WORLD_ORDER.indexOf(x.className.match(/hc-(\w+)/)[1]) - WORLD_ORDER.indexOf(y.className.match(/hc-(\w+)/)[1])));
-    cs.forEach(c => { cardsBox.appendChild(c); c.classList.toggle("dim", !fitsLevel(c.dataset.lv, FILTER)); });
+    cs.forEach(c => { cardsBox.appendChild(c); c.classList.toggle("dim", !fitsLevel(c.dataset.lv, FILTER)); const nx = c.querySelector(".h-card-nx"); if (nx) nx.textContent = nxLabel(c.dataset.lv); });
     if (scroll) { const t = cardsBox.getBoundingClientRect().top + scrollY - 90; scrollTo({ top: t, behavior: REDUCED ? "auto" : "smooth" }); } };
   sortCards(false);
   root.addEventListener("click", e => { const b = e.target.closest("[data-lvl]"); if (!b) return; FILTER = b.dataset.lvl || null;

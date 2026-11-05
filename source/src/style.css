@@ -2488,3 +2488,8 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .fb-o.good{border-color:var(--ok);background:rgba(255,214,107,.15);color:var(--ok)}.fb-o.bad{border-color:var(--no);background:rgba(255,126,142,.12);color:var(--no);animation:shake .45s}
 @media (prefers-reduced-motion:reduce){.fb-ball,.fb-keeper,.kid-cel{transition:none;animation:none}}
 .an-kid-boy .dr-ch,.an-kid-girl .dr-ch{height:190px}.dr-animal.kidp{max-width:130px;max-height:190px}
+
+/* stories filtered by level: other levels stay readable, with a label instead of a heavy fade */
+.h-card.dim{opacity:.8!important;filter:none!important}
+.h-card-nx{display:none;position:absolute;top:12px;left:12px;z-index:3;padding:6px 12px;border-radius:999px;background:rgba(23,22,27,.82);color:#f2c79b;border:1px solid rgba(242,199,155,.5);font:700 11.5px "Bricolage Grotesque";letter-spacing:.04em;backdrop-filter:blur(4px)}
+.h-card.dim .h-card-nx{display:block}.h-card.dim .h-card-fy{display:none}
