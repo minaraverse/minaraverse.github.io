@@ -2487,3 +2487,4 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .fb-o span{font-size:22px}.fb-o:active{transform:scale(.98)}
 .fb-o.good{border-color:var(--ok);background:rgba(255,214,107,.15);color:var(--ok)}.fb-o.bad{border-color:var(--no);background:rgba(255,126,142,.12);color:var(--no);animation:shake .45s}
 @media (prefers-reduced-motion:reduce){.fb-ball,.fb-keeper,.kid-cel{transition:none;animation:none}}
+.an-kid-boy .dr-ch,.an-kid-girl .dr-ch{height:190px}.dr-animal.kidp{max-width:130px;max-height:190px}

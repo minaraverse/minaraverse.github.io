@@ -222,7 +222,7 @@ VIEWS.drill = root => {
   const ui = mJ ? +mJ[1] : mL ? +mL[1] : 0, li = mL ? +mL[2] : 0;
   if (!mode || (mode === "lesson" && (!UNITS[ui] || !unitOpen(ui) || li > uDone(ui) || li >= LPU)) || (mode === "jump" && (!UNITS[ui] || unitOpen(ui)))) { Router.go("app-learn"); return {}; }
   if (mode === "lesson" && hearts() <= 0) { noHearts(root); return {}; }
-  const U = UNITS[ui]; LESSON_CHAR = "p" + (mode === "lesson" ? ui : (Math.random() * PEOPLE.length) | 0); LESSON_ANIMAL = animalOf(mode === "lesson" ? ui : (Math.random() * ANIMALS.length) | 0); apTheme(mode === "lesson" || mode === "jump" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
+  const U = UNITS[ui]; LESSON_CHAR = "p" + (mode === "lesson" ? ui : (Math.random() * PEOPLE.length) | 0); LESSON_ANIMAL = animalOf(mode === "lesson" ? ui : (Math.random() * ANIMALS.length) | 0); if (LESSON_ANIMAL && /^kid-/.test(LESSON_ANIMAL.k)) LESSON_ANIMAL = null; apTheme(mode === "lesson" || mode === "jump" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
   const pool = mode === "practice" ? (done.length ? done : [UNITS[curUnit()]]) : mode === "jump" ? UNITS.slice(Math.max(0, ui - 3), ui) : [U];
   pool.forEach(u => u.ctx = {});
   const pi = mode === "lesson" ? (li < uDone(ui) ? (Math.random() * partsOf(li)) | 0 : partDone(ui, li)) : 0;
@@ -710,10 +710,13 @@ const ANIMALS = [["bunny-balloon", "Sky Bunny", "Uçan Dovşan", "Летучий
   ["squirrel", "Squirrel", "Dələ", "Бельчонок"], ["hedgehog", "Hedgehog", "Kirpi", "Ёжик"], ["bunny-swing", "Swing Bunny", "Yellənən Dovşan", "Зайка на качелях"],
   ["raccoon", "Raccoon", "Yenot", "Енотик"], ["giraffe", "Giraffe", "Zürafə", "Жирафик"], ["squirrel-moon", "Moon Squirrel", "Ay Dələsi", "Лунная белочка"],
   ["fawn", "Fawn", "Maral balası", "Оленёнок"], ["bear-bunny", "Bear & Bunny", "Ayı və Dovşan", "Мишка и зайка"]];
-const animalOf = n => { const a = ANIMALS[n]; return a ? { k: a[0], n: LANG === "az" ? a[2] : LANG === "ru" ? a[3] : a[1] } : null; };
+/* the two animated kids stand by the units that suit them: the football boy at "can / can't", the girl in her pink T-shirt at "Clothes & weather" */
+const KIDS_AT = { 15: ["kid-boy", "Football Boy", "Futbolçu oğlan", "Футболист"], 17: ["kid-girl", "Bunny Girl", "Dovşanlı qız", "Девочка с зайкой"] };
+const animalOf = n => { const a = ANIMALS[n] || KIDS_AT[n]; return a ? { k: a[0], n: LANG === "az" ? a[2] : LANG === "ru" ? a[3] : a[1] } : null; };
 const ANIMALS_LIVE = ["owl", "bunny-balloon", "wolf", "squirrel", "hedgehog", "bunny-swing", "raccoon", "giraffe", "squirrel-moon", "fawn", "bear-bunny"]; /* animated with Higgsfield (transparent animated WebP) */
 /* the fawn sleeps until you scroll to it, then wakes up and smiles (plays once) */
-const animalImg = A => A.k === "fawn" ? `<img class="dr-animal live wake" src="img/av-fawn-sleep.webp" data-live="img/av-fawn-live.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`
+const animalImg = A => /^kid-/.test(A.k) ? `<img class="dr-animal live kidp ${A.k === "kid-girl" ? "wake" : ""}" src="img/${A.k}${A.k === "kid-girl" ? "-still" : ""}.webp" ${A.k === "kid-girl" ? `data-live="img/kid-girl.webp"` : ""} alt="${esc(A.n)}" loading="lazy" decoding="async">`
+  : A.k === "fawn" ? `<img class="dr-animal live wake" src="img/av-fawn-sleep.webp" data-live="img/av-fawn-live.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`
   : `<img class="dr-animal ${ANIMALS_LIVE.includes(A.k) ? "live" : ""}" src="img/av-${A.k}${ANIMALS_LIVE.includes(A.k) ? "-live" : ""}.webp" alt="${esc(A.n)}" loading="lazy" decoding="async">`;
 function wakeAnimals(root) { const ws = root.querySelectorAll("img.wake[data-live]"); if (!ws.length || !("IntersectionObserver" in window)) return;
   const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; const i = e.target; io.unobserve(i); setTimeout(() => { i.src = i.dataset.live + "?t=" + Date.now(); }, 600); }), { threshold: .6 });
