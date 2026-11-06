@@ -5,15 +5,15 @@
    ✍️ gapt — write the missing word (from B1; A2 gets 4 choices instead of 3)
    🎙 say  — say the sentence; the words appear live as the child speaks, then the app checks them
    🎙 ans  — answer a question with your own sentence by voice (live text) — checked by rules per level ===== */
-Object.assign(UI.en, { e2Almost: "Almost! Try once more next time", e2Dlg: "Listen to the conversation and answer", e2Spot: "Find the mistake", e2SpotFix: "Now choose the right word", e2Anag: "Put the letters in order", e2Gapt: "Write the missing word",
+Object.assign(UI.en, { e2Dict2: "Tap the field, then 🎙 on the keyboard and speak — your words appear here", e2DictOn: "No 🎙 button? Settings → General → Keyboard → Enable Dictation", e2DictPh: "Tap here and speak…", e2Almost: "Almost! Try once more next time", e2Dlg: "Listen to the conversation and answer", e2Spot: "Find the mistake", e2SpotFix: "Now choose the right word", e2Anag: "Put the letters in order", e2Gapt: "Write the missing word",
   e2Say: "Say this sentence", e2Dict: "Listen and write the sentence", e2Ans: "Answer the question by voice", e2AnsT: "Write your answer to the question", e2Mic: "Tap and speak", e2MicOn: "Listening… tap to stop",
   e2MicAgain: "Say it again", e2None: "I didn't hear you — tap and try again", e2Type: "⌨️ Can't speak now? Write it", e2Speak: "🎙 Speak instead", e2Sample: "Example:", e2Heard: "You said:", e2Words: "Practise these words:",
   e2Longer: "Say a little more — at least {n} words", e2Script: "Conversation:", e2Play: "Listen", e2Write: "Write here…", e2MicNo: "No microphone access — write your answer instead." });
-Object.assign(UI.az, { e2Almost: "Az qaldı! Növbəti dəfə alınacaq", e2Dlg: "Söhbəti dinlə və cavab ver", e2Spot: "Səhvi tap", e2SpotFix: "İndi düzgün sözü seç", e2Anag: "Hərfləri düz sırala", e2Gapt: "Buraxılmış sözü yaz",
+Object.assign(UI.az, { e2Dict2: "Sahəyə toxun, sonra klaviaturada 🎙 bas və danış — sözlər özü yazılacaq", e2DictOn: "🎙 düyməsi yoxdur? Ayarlar → Ümumi → Klaviatura → «Diktə»ni aç", e2DictPh: "Bura toxun və danış…", e2Almost: "Az qaldı! Növbəti dəfə alınacaq", e2Dlg: "Söhbəti dinlə və cavab ver", e2Spot: "Səhvi tap", e2SpotFix: "İndi düzgün sözü seç", e2Anag: "Hərfləri düz sırala", e2Gapt: "Buraxılmış sözü yaz",
   e2Say: "Bu cümləni de", e2Dict: "Dinlə və cümləni yaz", e2Ans: "Suala səslə cavab ver", e2AnsT: "Suala cavabını yaz", e2Mic: "Bas və danış", e2MicOn: "Dinləyirəm… bitirəndə bas",
   e2MicAgain: "Yenidən de", e2None: "Səsini eşitmədim — bas və bir də de", e2Type: "⌨️ İndi danışa bilmirsən? Yaz", e2Speak: "🎙 Səslə de", e2Sample: "Nümunə:", e2Heard: "Sən dedin:", e2Words: "Bu sözləri məşq et:",
   e2Longer: "Bir az ətraflı de — ən azı {n} söz", e2Script: "Söhbət:", e2Play: "Dinlə", e2Write: "Bura yaz…", e2MicNo: "Mikrofona icazə yoxdur — cavabını yaz." });
-Object.assign(UI.ru, { e2Almost: "Почти! В следующий раз получится", e2Dlg: "Послушай разговор и ответь", e2Spot: "Найди ошибку", e2SpotFix: "Теперь выбери правильное слово", e2Anag: "Расставь буквы по порядку", e2Gapt: "Впиши пропущенное слово",
+Object.assign(UI.ru, { e2Dict2: "Нажми на поле, затем 🎙 на клавиатуре и говори — слова появятся здесь", e2DictOn: "Нет кнопки 🎙? Настройки → Основные → Клавиатура → «Диктовка»", e2DictPh: "Нажми сюда и говори…", e2Almost: "Почти! В следующий раз получится", e2Dlg: "Послушай разговор и ответь", e2Spot: "Найди ошибку", e2SpotFix: "Теперь выбери правильное слово", e2Anag: "Расставь буквы по порядку", e2Gapt: "Впиши пропущенное слово",
   e2Say: "Скажи это предложение", e2Dict: "Послушай и напиши предложение", e2Ans: "Ответь на вопрос голосом", e2AnsT: "Напиши ответ на вопрос", e2Mic: "Нажми и говори", e2MicOn: "Слушаю… нажми, когда закончишь",
   e2MicAgain: "Сказать ещё раз", e2None: "Я тебя не услышал — нажми и скажи ещё раз", e2Type: "⌨️ Не можешь говорить? Напиши", e2Speak: "🎙 Сказать голосом", e2Sample: "Пример:", e2Heard: "Ты сказал(а):", e2Words: "Потренируй эти слова:",
   e2Longer: "Скажи чуть подробнее — хотя бы {n} слов", e2Script: "Разговор:", e2Play: "Слушать", e2Write: "Пиши здесь…", e2MicNo: "Нет доступа к микрофону — напиши ответ." });
@@ -226,32 +226,49 @@ function ansCheck(x, text) { const t = dNorm(text), n = t.split(" ").filter(Bool
   return { ok: true }; }
 const e2Tr = row => LANG === "ru" ? row[2] : LANG === "az" ? row[1] : "";
 
-/* live speech block: the words appear while the child is talking */
-const micHTML = typing => `<div class="dx-live" aria-live="polite"></div><input class="dx-in dx-ain" ${typing ? "" : "hidden"} autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="${L("e2Write")}">
-  ${SR2 ? `<button class="dx-mic" data-mic><span class="dx-dot"></span><b>${L("e2Mic")}</b></button><button class="dx-alt" data-alt>${typing ? L("e2Speak") : L("e2Type")}</button>` : ""}`;
+/* live speech block: the words appear while the child is talking.
+   iPhone / iPad: the browser's speech recognition hangs in home-screen apps, so there the keyboard's own 🎙 dictation is used —
+   it types the words into the field live and works everywhere. Elsewhere: browser recognition with a watchdog so it can never get stuck. */
+const SR_OK = !!SR2 && !IOS_DEV;
+const VOICE_OK = SR_OK || IOS_DEV;
+const micHTML = typing => IOS_DEV
+  ? `<div class="dx-dictw"><input class="dx-in dx-ain" autocomplete="off" autocapitalize="sentences" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="${L("e2DictPh")}">
+     <p class="dx-dict">🎙 ${L("e2Dict2")}<small>${L("e2DictOn")}</small></p></div>`
+  : `<div class="dx-live" aria-live="polite"></div><input class="dx-in dx-ain" ${typing ? "" : "hidden"} autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="${L("e2Write")}">
+  ${SR_OK ? `<button class="dx-mic" data-mic><span class="dx-dot"></span><b>${L("e2Mic")}</b></button><button class="dx-alt" data-alt>${typing ? L("e2Speak") : L("e2Type")}</button>` : ""}`;
 function micWire(x, box, ready, score) {
   const live = box.querySelector(".dx-live"), mic = box.querySelector("[data-mic]"), alt = box.querySelector("[data-alt]"), inp = box.querySelector(".dx-ain");
-  x.given = ""; x.alts = []; let tries = 0;
-  const typing = on => { x.typing = on; box.classList.toggle("typing", on); inp.hidden = !on; if (alt) alt.textContent = on ? L("e2Speak") : L("e2Type"); if (on) { try { EX2_REC && EX2_REC.abort(); } catch (e) {} setTimeout(() => inp.focus(), 120); x.given = inp.value; ready(inp.value.trim().length > 1); } else { x.given = ""; ready(false); live.innerHTML = ""; } };
-  if (!SR2) typing(true);
+  x.given = ""; x.alts = []; x.dict = IOS_DEV; let tries = 0;
   inp.oninput = () => { x.given = inp.value; x.alts = [inp.value]; ready(inp.value.trim().length > 1); };
+  if (IOS_DEV) { x.typing = true; box.classList.add("typing", "dict"); return; }
+  const typing = on => { x.typing = on; box.classList.toggle("typing", on); inp.hidden = !on; if (alt) alt.textContent = on ? L("e2Speak") : L("e2Type");
+    if (on) { try { EX2_REC && EX2_REC.abort(); } catch (e) {} setTimeout(() => inp.focus(), 120); x.given = inp.value; ready(inp.value.trim().length > 1); } else { x.given = ""; ready(false); if (live) live.innerHTML = ""; } };
+  if (!SR_OK) typing(true);
   if (alt) alt.onclick = () => typing(!x.typing);
   if (!mic) return;
   mic.onclick = () => {
-    if (EX2_REC) { try { EX2_REC.stop(); } catch (e) {} return; }
+    if (EX2_REC) { const r = EX2_REC; try { r.stop(); } catch (e) {} if (r.__finish) setTimeout(r.__finish, 1500); return; }
     let rec; try { rec = new SR2(); } catch (e) { return typing(true); }
     EX2_REC = rec; rec.lang = "en-US"; rec.interimResults = true; rec.continuous = x.k === "ans" && x.lvl >= 2; rec.maxAlternatives = 3;
     try { AUD && AUD.pause(); } catch (e) {} if (TTS) speechSynthesis.cancel();
-    let fin = "", alts = []; mic.classList.add("on"); mic.querySelector("b").textContent = L("e2MicOn"); live.innerHTML = `<i>…</i>`; live.classList.add("on"); ready(false);
-    rec.onresult = e => { let f = "", im = ""; alts = [];
-      for (let i = 0; i < e.results.length; i++) { const r = e.results[i]; if (r.isFinal) { f += (f ? " " : "") + r[0].transcript.trim(); if (e.results.length === 1) for (let a = 0; a < r.length; a++) alts.push(r[a].transcript.trim()); } else im += r[0].transcript; }
-      fin = f; live.innerHTML = `<b>${esc(f)}</b> <i>${esc(im)}</i>`; };
-    rec.onerror = e => { if (e.error === "not-allowed" || e.error === "service-not-allowed") { live.innerHTML = `<small>${L("e2MicNo")}</small>`; typing(true); } };
-    rec.onend = () => { EX2_REC = null; mic.classList.remove("on"); live.classList.remove("on");
-      if (fin) { const list = alts.length ? alts : [fin]; const best = score ? list.slice().sort((a, b) => score(b) - score(a))[0] : list[0];
+    let fin = "", im = "", alts = [], done = false, heardAny = false;
+    mic.classList.add("on"); mic.querySelector("b").textContent = L("e2MicOn"); live.innerHTML = `<i>…</i>`; live.classList.add("on"); ready(false);
+    /* finish exactly once — on the normal end, or forced by a timer if the browser never ends the session */
+    const finish = () => { if (done) return; done = true; clearTimeout(hardT); clearTimeout(quietT); if (EX2_REC === rec) EX2_REC = null; try { rec.abort(); } catch (e) {}
+      mic.classList.remove("on"); live.classList.remove("on"); const text = (fin + " " + (fin ? "" : im)).trim();
+      if (text) { const list = alts.length && fin ? alts : [text]; const best = score ? list.slice().sort((a, b) => score(b) - score(a))[0] : list[0];
         x.given = best; x.alts = list; live.innerHTML = `<b>${esc(best)}</b>`; mic.querySelector("b").textContent = L("e2MicAgain"); ready(true); }
       else { tries++; mic.querySelector("b").textContent = L("e2Mic"); live.innerHTML = `<small>${L("e2None")}</small>`; if (tries >= 2 && alt) alt.classList.add("hi"); } };
-    try { rec.start(); } catch (e) { EX2_REC = null; typing(true); } };
+    rec.__finish = finish;
+    const hardT = setTimeout(() => { try { rec.stop(); } catch (e) {} setTimeout(finish, 1500); }, rec.continuous ? 30000 : 15000);
+    let quietT = setTimeout(() => { if (!heardAny) { try { rec.stop(); } catch (e) {} setTimeout(finish, 1200); } }, 9000);
+    rec.onresult = e => { heardAny = true; let f = "", m = ""; alts = [];
+      for (let i = 0; i < e.results.length; i++) { const r = e.results[i]; if (r.isFinal) { f += (f ? " " : "") + r[0].transcript.trim(); if (e.results.length === 1) for (let a = 0; a < r.length; a++) alts.push(r[a].transcript.trim()); } else m += r[0].transcript; }
+      fin = f; im = m.trim(); live.innerHTML = `<b>${esc(f)}</b> <i>${esc(m)}</i>`;
+      if (!rec.continuous) { clearTimeout(quietT); quietT = setTimeout(() => { try { rec.stop(); } catch (er) {} setTimeout(finish, 1200); }, 3500); } };
+    rec.onerror = e => { if (e.error === "not-allowed" || e.error === "service-not-allowed" || e.error === "audio-capture") { finish(); live.innerHTML = `<small>${L("e2MicNo")}</small>`; typing(true); } };
+    rec.onend = finish;
+    try { rec.start(); } catch (e) { finish(); typing(true); } };
 }
 
 const EX2 = {
@@ -307,21 +324,21 @@ const EX2 = {
       if (!s) { ctx.sq2 = ctx.sq2 && ctx.sq2.length ? ctx.sq2 : shuffle(S.slice()); s = ctx.sq2.pop(); }
       if (lvl === 0 && tokN(s.en).length > 7) s = S.slice().sort((a, b) => a.en.length - b.en.length)[(Math.random() * Math.min(4, S.length)) | 0];
       return { k: "say", s, lvl, need: [.6, .7, .8, .85, .9][lvl] }; },
-    html(x, T) { if (!SR2) return T("e2Dict") + bigSay(x.s.en, true) + micHTML(true);
+    html(x, T) { if (!VOICE_OK) return T("e2Dict") + bigSay(x.s.en, true) + micHTML(true);
       return T("e2Say") + `<div class="dx-say">${pixMini(x.s.en)}<div class="dx-bub"><b class="dx-sayt">${esc(x.s.en)}</b>${sayBtn(x.s.en)}${x.lvl <= 1 ? `<small>${esc(nat(x.s))}</small>` : ""}</div></div>` + micHTML(false); },
-    wire(x, box, ready) { micWire(x, box, ready, h => sayScore(x.s.en, h)); if (!SR2) setTimeout(() => window.__dx === x && sayRate(x.s.en, .9), 350); },
+    wire(x, box, ready) { micWire(x, box, ready, h => sayScore(x.s.en, h)); if (!VOICE_OK) setTimeout(() => window.__dx === x && sayRate(x.s.en, .9), 350); },
     judge(x) { const h = x.given || "", sc = sayScore(x.s.en, h), ok = sc >= x.need, got = new Set(tokN(h));
       const marked = x.s.en.split(/\s+/).map(w => { const n = tokN(w); return `<span class="${n.every(t => got.has(t)) ? "w-ok" : "w-no"}">${esc(w)}</span>`; }).join(" ");
-      return { ok, note: `<span class="dx-heard">${x.typing ? "" : `🎙 ${L("e2Heard")} «${esc(h)}»<br>`}${marked}</span>` }; },
+      return { ok, note: `<span class="dx-heard">${x.typing && !x.dict ? "" : `🎙 ${L("e2Heard")} «${esc(h)}»<br>`}${marked}</span>` }; },
     given: x => x.given || "",
     ans: x => x.s.en
   },
   ans: {
     make(U, ref, ctx) { const lvl = exLv(U), pool = E2Q[lvl], used = ctx.ansUsed || (ctx.ansUsed = []); const left = pool.filter(q => !used.includes(q));
       const q = (left.length ? left : pool)[(Math.random() * (left.length || pool.length)) | 0]; used.push(q); return { k: "ans", q, lvl }; },
-    html(x, T) { return T(SR2 ? "e2Ans" : "e2AnsT") + `<div class="dx-say">${pixMini(x.q[0])}<div class="dx-bub"><b>${esc(x.q[0])}</b>${sayBtn(x.q[0])}${e2Tr(x.q) ? `<small>${esc(e2Tr(x.q))}</small>` : ""}</div></div>` + micHTML(!SR2); },
+    html(x, T) { return T(VOICE_OK ? "e2Ans" : "e2AnsT") + `<div class="dx-say">${pixMini(x.q[0])}<div class="dx-bub"><b>${esc(x.q[0])}</b>${sayBtn(x.q[0])}${e2Tr(x.q) ? `<small>${esc(e2Tr(x.q))}</small>` : ""}</div></div>` + micHTML(!SR_OK); },
     wire(x, box, ready) { micWire(x, box, ready, h => ansCheck(x, h).ok ? 1 + h.length / 1e3 : h.length / 1e3); setTimeout(() => window.__dx === x && say(x.q[0]), 350); },
-    judge(x) { const r = ansCheck(x, x.given || ""); const heard = x.typing ? "" : `🎙 ${L("e2Heard")} «${esc(x.given || "")}»<br>`;
+    judge(x) { const r = ansCheck(x, x.given || ""); const heard = x.typing && !x.dict ? "" : `🎙 ${L("e2Heard")} «${esc(x.given || "")}»<br>`;
       return { ok: r.ok, note: `<span class="dx-heard">${heard}${r.ok ? "" : `💡 ${esc(r.hint)}<br>`}<b>${L("e2Sample")}</b> ${esc(x.q[3])}</span>`, noAns: true, title: r.ok ? "" : L("e2Almost") }; },
     given: x => x.given || "",
     ans: x => x.q[3]

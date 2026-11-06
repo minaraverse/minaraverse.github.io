@@ -232,7 +232,9 @@ const TALKS = {
     { q: "Here it is. It is ten manats.", tr: ["Buyur. On manatdır.", "Вот, пожалуйста. Десять манатов."], a: [["OK, here you are.", "Yaxşı, buyurun.", "Хорошо, вот, пожалуйста."], ["Great, thank you!", "Əla, təşəkkür edirəm!", "Отлично, спасибо!"]] },
     { q: "Thank you! Bye!", tr: ["Təşəkkürlər! Hələlik!", "Спасибо! Пока!"], a: [["Bye-bye!", "Hələlik!", "Пока-пока!"], ["Thank you, goodbye!", "Təşəkkürlər, sağ olun!", "Спасибо, до свидания!"]] }] }
 };
-const SRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+/* iPhone / iPad (incl. iPadOS that reports itself as a Mac): browser speech recognition is unreliable there, the keyboard's 🎙 dictation is used instead */
+const IOS_DEV = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const SRec = IOS_DEV ? null : window.SpeechRecognition || window.webkitSpeechRecognition;
 const tkNat = o => LANG === "ru" ? o[2] : o[1];
 /* how close the child's words are to an answer: patterns for "say your own", otherwise share of the answer's words heard */
 function tkScore(heard, opt) { const h = dNorm(heard); if (!h) return 0;
@@ -251,9 +253,14 @@ VIEWS.talk = root => {
   const step = () => { if (!alive) return; const ln = D.lines[i]; tries = 0;
     bubble(`<span class="tk-av">${D.av}</span><div><small>${D.who}</small><b>${esc(ln.q)}</b>${sayBtn(ln.q)}<em>${esc(LANG === "ru" ? ln.tr[1] : ln.tr[0])}</em></div>`);
     setTimeout(() => alive && say(ln.q), 350); dockDraw(); };
-  const dockDraw = (msg) => { const ln = D.lines[i], free = !SRec || tries >= 2;
-    dock.innerHTML = `<p class="tk-hint">${SRec ? "🎙 " + L("tkSay") : "🗣 " + L("tkNoMic")}</p><div class="tk-opts ${free ? "tap" : ""}">${ln.a.map((o, j) => `<button class="tk-o" data-o="${j}"><b>${esc(o[0])}</b><small>${esc(tkNat(o))}${o[3] ? ` · ${L("tkOwn")}` : ""}</small>${o[3] ? "" : sayBtn(o[0])}</button>`).join("")}</div>
-      ${SRec ? `<button class="ap-cta tk-mic" data-mic>🎙 ${L("tkMic")}</button>` : ""}<p class="tk-st">${msg || (SRec && tries >= 2 ? L("tkTap") : "")}</p>`; };
+  const dockDraw = (msg) => { const ln = D.lines[i], free = (!SRec && !IOS_DEV) || tries >= 2;
+    dock.innerHTML = `<p class="tk-hint">${SRec || IOS_DEV ? "🎙 " + L("tkSay") : "🗣 " + L("tkNoMic")}</p><div class="tk-opts ${free ? "tap" : ""}">${ln.a.map((o, j) => `<button class="tk-o" data-o="${j}"><b>${esc(o[0])}</b><small>${esc(tkNat(o))}${o[3] ? ` · ${L("tkOwn")}` : ""}</small>${o[3] ? "" : sayBtn(o[0])}</button>`).join("")}</div>
+      ${SRec ? `<button class="ap-cta tk-mic" data-mic>🎙 ${L("tkMic")}</button>` : ""}${IOS_DEV ? `<form class="tk-dict"><input class="dx-in" autocomplete="off" autocapitalize="sentences" autocorrect="off" spellcheck="false" enterkeyhint="send" placeholder="${L("e2DictPh")}"><button class="ap-cta" type="submit">✓</button></form><p class="dx-dict">🎙 ${L("e2Dict2")}<small>${L("e2DictOn")}</small></p>` : ""}<p class="tk-st">${msg || ((SRec || IOS_DEV) && tries >= 2 ? L("tkTap") : "")}</p>`;
+    const f = dock.querySelector(".tk-dict"); if (f) f.onsubmit = ev => { ev.preventDefault(); const t = f.querySelector("input").value.trim(); if (t) judgeHeard([t]); }; };
+  /* match what the child said against the possible answers */
+  const judgeHeard = alts => { const ln = D.lines[i]; let best = { s: 0 };
+    alts.forEach(h => ln.a.forEach(o => { const s = tkScore(h, o); if (s > best.s) best = { s, h, o }; }));
+    if (best.s >= .6) answer(best.o[3] ? best.h.replace(/^./, c => c.toUpperCase()) : best.o[0], true); else { tries++; sfx("miss"); dockDraw(`${L("tkAgain")}${alts[0] ? ` <q>${esc(alts[0])}</q>` : ""}`); } };
   const answer = (text, byVoice) => { if (byVoice) voice++; sfx("ok"); buzz(15); dock.innerHTML = "";
     bubble(`<div><small>${L("tkYou")}</small><b>${esc(text)}</b>${byVoice ? `<i class="tk-ok">🎙 ✓</i>` : ""}</div><span class="tk-av me">${typeof myAvatar === "function" && myAvatar() && typeof avatarSVG === "function" ? avatarSVG() : "🙂"}</span>`, true);
     i++; setTimeout(() => { if (!alive) return; i < D.lines.length ? step() : end(); }, 1100); };
@@ -261,18 +268,25 @@ VIEWS.talk = root => {
     if (typeof qAdd === "function") qAdd(q => { q.les++; });
     dock.innerHTML = `<div class="tk-end"><h2>🎉 ${L("tkDone")}</h2><p>${"⭐".repeat(stars)} · 🎙 ${voice}/${D.lines.length} ${L("tkVoice")} · +10 XP</p><button class="ap-cta" data-again>${L("tkAgainB")}</button><a class="dr-link" href="#talk">${L("tkMore")}</a></div>`; };
   const listen = btn => { if (rec) return; try { rec = new SRec(); } catch (e) { tries = 2; return dockDraw(); }
-    rec.lang = "en-US"; rec.interimResults = false; rec.maxAlternatives = 5; let got = false;
+    rec.lang = "en-US"; rec.interimResults = true; rec.maxAlternatives = 5; let got = false, im = "", ended = false; const me = rec;
     btn.classList.add("on"); btn.innerHTML = `<span class="tk-dot"></span> ${L("tkListening")}`; if (TTS) speechSynthesis.cancel(); try { AUD && AUD.pause(); } catch (e) {}
-    rec.onresult = e => { got = true; const R0 = e.results[0], alts = Array.from({ length: R0.length }, (_, q) => R0[q].transcript), ln = D.lines[i]; let best = { s: 0 };
-      alts.forEach(h => ln.a.forEach(o => { const s = tkScore(h, o); if (s > best.s) best = { s, h, o }; }));
-      if (best.s >= .6) answer(best.o[3] ? best.h.replace(/^./, c => c.toUpperCase()) : best.o[0], true); else { tries++; sfx("miss"); dockDraw(`${L("tkAgain")}${alts[0] ? ` <q>${esc(alts[0])}</q>` : ""}`); } };
-    rec.onerror = e => { if (e.error === "not-allowed" || e.error === "service-not-allowed") tries = 2; };
-    rec.onend = () => { rec = null; if (!got && alive && i < D.lines.length && dock.querySelector("[data-mic]")) { tries++; dockDraw(tries >= 2 ? L("tkTap") : L("tkAgain")); } };
+    const st = dock.querySelector(".tk-st");
+    /* the session always ends: on its own, or forced after a pause / at most 12 s */
+    const end2 = () => { if (ended) return; ended = true; clearTimeout(wd); clearTimeout(qt); try { me.abort(); } catch (e) {} if (rec === me) rec = null;
+      if (!alive || i >= D.lines.length || !dock.querySelector("[data-mic]")) return;
+      if (got) return; if (im) { got = true; return judgeHeard([im]); } tries++; dockDraw(tries >= 2 ? L("tkTap") : L("tkAgain")); };
+    const wd = setTimeout(() => { try { me.stop(); } catch (e) {} setTimeout(end2, 1200); }, 12000); let qt = 0;
+    rec.onresult = e => { const r = e.results[e.results.length - 1];
+      if (r.isFinal) { got = true; clearTimeout(qt); const alts = Array.from({ length: r.length }, (_, q) => r[q].transcript); end2(); return judgeHeard(alts); }
+      im = Array.from(e.results).map(x => x[0].transcript).join(" ").trim(); if (st) st.innerHTML = `<q>${esc(im)}</q>`;
+      clearTimeout(qt); qt = setTimeout(() => { try { me.stop(); } catch (er) {} setTimeout(end2, 1200); }, 3000); };
+    rec.onerror = e => { if (e.error === "not-allowed" || e.error === "service-not-allowed" || e.error === "audio-capture") tries = 2; };
+    rec.onend = end2;
     try { rec.start(); } catch (e) { rec = null; tries = 2; dockDraw(); } };
   root.onclick = e => { if (e.target.closest("[data-again]")) { i = 0; voice = 0; chat.innerHTML = ""; return step(); }
     const m = e.target.closest("[data-mic]"); if (m) return listen(m);
     const o = e.target.closest(".tk-o"); if (!o || e.target.closest("[data-say]")) return; const opt = D.lines[i].a[+o.dataset.o];
-    if (!SRec || tries >= 2) answer(opt[0], false); else if (!opt[3]) say(opt[0]); };
+    if ((!SRec && !IOS_DEV) || tries >= 2) answer(opt[0], false); else if (!opt[3]) say(opt[0]); };
   step();
   return { unmount() { alive = false; try { rec && rec.abort(); } catch (e) {} } };
 };
