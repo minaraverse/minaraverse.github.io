@@ -188,7 +188,7 @@ document.addEventListener("click", e => { const b = e.target.closest("[data-unit
 const OFF_V = 1;
 const offReady = () => (lsGet("mv-offpack", {}).v || 0) >= OFF_V;
 function extraSetItems() {
-  return `<button class="ap-item ap-sw" data-adult aria-pressed="${adultOn()}"><span>🧑</span><b>${L("adT")}<em>${L("adP")}</em></b><i class="sw ${adultOn() ? "on" : ""}"></i></button>
+  return `${instIsApp() ? "" : `<button class="ap-item ap-inst" data-inst><span>📲</span><b>${L("inT")}<em>${L("inP")}</em></b><i>›</i></button>`}<button class="ap-item ap-sw" data-adult aria-pressed="${adultOn()}"><span>🧑</span><b>${L("adT")}<em>${L("adP")}</em></b><i class="sw ${adultOn() ? "on" : ""}"></i></button>
     ${typeof caches === "object" ? `<button class="ap-item" data-offdl><span>📥</span><b>${L("ofT")}<em>${offReady() ? L("ofDone") : L("ofP")}</em></b><i>${offReady() ? "✓" : "↓"}</i></button>` : ""}`;
 }
 function offUrls() { const u = [...CLIPS].map(h => "img/tts/" + h + ".mp3");
@@ -207,6 +207,7 @@ async function offDownload(btn) {
   } catch (e) { toast(L("ofNo")); } finally { delete btn.dataset.busy; }
 }
 document.addEventListener("click", e => {
+  const ib = e.target.closest("[data-inst]"); if (ib) { e.preventDefault(); e.stopPropagation(); instGo(); return; }
   const a = e.target.closest("[data-adult]"); if (a) { e.preventDefault(); e.stopPropagation(); lsSet("mv-adult", !adultOn()); adultApply(); sfx("tap"); toast(adultOn() ? L("adOnT") : L("adOffT")); Router.remount(); return; }
   const o = e.target.closest("[data-offdl]"); if (o) { e.preventDefault(); e.stopPropagation(); offDownload(o); }
 }, true);
@@ -360,3 +361,35 @@ async function adExtra(root, kind, key, shell, back) {
 /* overlays from this module never outlive their screen */
 new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if (n.classList && n.classList.contains("dr-ov")) n.dataset.h = location.hash; }))).observe(document.body, { childList: true });
 addEventListener("hashchange", () => document.querySelectorAll(".up-ov,.rp-ov,.rc-ov").forEach(o => { if (o.dataset.h !== location.hash) o.remove(); }));
+
+/* ---------- 📲 install the app on the phone: Android = the system install dialog, iPhone = picture steps for Safari ---------- */
+Object.assign(UI.en, { inT: "Install the app on your phone", inP: "Opens like a normal app, full screen, works offline", inDone: "Safiverse is on your home screen 🎉",
+  inIosT: "Add Safiverse to your iPhone", inIos1: "Open this page in <b>Safari</b>", inIos2: "Tap the <b>Share</b> button at the bottom", inIos3: "Scroll down and tap <b>Add to Home Screen</b>", inIos4: "Tap <b>Add</b> — the Safiverse icon appears on your screen",
+  inAndT: "Install Safiverse on Android", inAnd1: "Open this page in <b>Chrome</b>", inAnd2: "Tap <b>⋮</b> in the top right corner", inAnd3: "Tap <b>Install app</b> (or <b>Add to Home screen</b>)", inAnd4: "Tap <b>Install</b> — the Safiverse icon appears on your screen",
+  inPcT: "Install Safiverse on the computer", inPc1: "Open this page in <b>Chrome</b> or <b>Edge</b>", inPc2: "Click the install icon <b>⊕</b> at the right end of the address bar", inPc3: "Click <b>Install</b>", inOk: "Got it" });
+Object.assign(UI.az, { inT: "Tətbiqi telefona quraşdır", inP: "Adi tətbiq kimi, tam ekranda açılır, internetsiz də işləyir", inDone: "Safiverse ana ekrandadır 🎉",
+  inIosT: "Safiverse-i iPhone-a əlavə et", inIos1: "Bu səhifəni <b>Safari</b>-də aç", inIos2: "Aşağıdakı <b>Paylaş</b> düyməsinə toxun", inIos3: "Aşağı sürüşdür və <b>Ana ekrana əlavə et</b> seç", inIos4: "<b>Əlavə et</b> bas — Safiverse ikonu ekranında görünəcək",
+  inAndT: "Safiverse-i Android-ə quraşdır", inAnd1: "Bu səhifəni <b>Chrome</b>-da aç", inAnd2: "Sağ yuxarıdakı <b>⋮</b> düyməsinə toxun", inAnd3: "<b>Tətbiqi quraşdır</b> (və ya <b>Ana ekrana əlavə et</b>) seç", inAnd4: "<b>Quraşdır</b> bas — Safiverse ikonu ekranında görünəcək",
+  inPcT: "Safiverse-i kompüterə quraşdır", inPc1: "Bu səhifəni <b>Chrome</b> və ya <b>Edge</b>-də aç", inPc2: "Ünvan sətrinin sağındakı <b>⊕</b> quraşdırma ikonuna bas", inPc3: "<b>Quraşdır</b> bas", inOk: "Aydındır" });
+Object.assign(UI.ru, { inT: "Установить приложение на телефон", inP: "Открывается как обычное приложение, на весь экран, работает без интернета", inDone: "Safiverse на главном экране 🎉",
+  inIosT: "Добавь Safiverse на iPhone", inIos1: "Открой эту страницу в <b>Safari</b>", inIos2: "Нажми кнопку <b>Поделиться</b> внизу", inIos3: "Прокрути вниз и выбери <b>На экран «Домой»</b>", inIos4: "Нажми <b>Добавить</b> — значок Safiverse появится на экране",
+  inAndT: "Установи Safiverse на Android", inAnd1: "Открой эту страницу в <b>Chrome</b>", inAnd2: "Нажми <b>⋮</b> в правом верхнем углу", inAnd3: "Выбери <b>Установить приложение</b> (или <b>Добавить на главный экран</b>)", inAnd4: "Нажми <b>Установить</b> — значок Safiverse появится на экране",
+  inPcT: "Установи Safiverse на компьютер", inPc1: "Открой эту страницу в <b>Chrome</b> или <b>Edge</b>", inPc2: "Нажми значок установки <b>⊕</b> справа в адресной строке", inPc3: "Нажми <b>Установить</b>", inOk: "Понятно" });
+let INST_EVT = null;
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); INST_EVT = e; });
+addEventListener("appinstalled", () => { INST_EVT = null; lsSet("mv-installed", 1); toast(L("inDone"), "gold"); if (/^#app-profile/.test(location.hash)) Router.remount(); });
+const instIsApp = () => { try { return navigator.standalone === true || matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches; } catch (e) { return false; } };
+const SHARE_SVG = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10H6.5A1.5 1.5 0 0 0 5 11.5v8A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 17.5 10H16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+async function instGo() {
+  sfx("tap");
+  if (INST_EVT) { const ev = INST_EVT; INST_EVT = null; try { ev.prompt(); const r = await ev.userChoice; if (r && r.outcome === "accepted") return; } catch (e) {} }
+  const android = /Android/i.test(navigator.userAgent), kind = IOS_DEV ? "ios" : android ? "and" : "pc";
+  const steps = kind === "ios" ? [["🧭", "inIos1"], [SHARE_SVG, "inIos2"], ["➕", "inIos3"], ["✅", "inIos4"]] : kind === "and" ? [["🌐", "inAnd1"], ["⋮", "inAnd2"], ["📲", "inAnd3"], ["✅", "inAnd4"]] : [["🌐", "inPc1"], ["⊕", "inPc2"], ["✅", "inPc3"]];
+  document.querySelectorAll(".in-ov").forEach(o => o.remove());
+  const ov = document.createElement("div"); ov.className = "dr-ov in-ov";
+  ov.innerHTML = `<div class="dr-card in-card" role="dialog" aria-label="${L("inT")}"><button class="rp-x" aria-label="Close">✕</button><img class="in-ic" src="icon-192.png" alt="" width="72" height="72" onerror="this.remove()">
+    <h2>${L(kind === "ios" ? "inIosT" : kind === "and" ? "inAndT" : "inPcT")}</h2><ol class="in-steps">${steps.map(([ic, k], i) => `<li><span class="in-n">${i + 1}</span><span class="in-i">${ic}</span><p>${L(k)}</p></li>`).join("")}</ol>
+    <button class="ap-cta" data-ok>${L("inOk")}</button>${kind === "ios" ? `<i class="in-arrow" aria-hidden="true">⬇</i>` : ""}</div>`;
+  document.body.appendChild(ov);
+  ov.onclick = e => { if (e.target === ov || e.target.closest(".rp-x,[data-ok]")) ov.remove(); };
+}
