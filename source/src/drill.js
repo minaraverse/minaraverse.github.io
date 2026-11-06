@@ -164,32 +164,34 @@ function makeEx(kind, U, ref, ctx) {
     case "buildr": { const s = sent(ref); return { k: kind, s, ...tiles(s, NATK()) }; }
     case "fill": { const f = fill(ref); return { k: kind, f, opts: shuffle([f.a, ...f.w]) }; }
     case "afill": { const f = fill(ref); return { k: kind, f, opts: shuffle([f.a, f.w[0]]) }; }
+    default: return typeof EX2 === "object" && EX2[kind] && EX2[kind].make ? EX2[kind].make(U, ref, ctx) : null;
   }
 }
 /* each star = a node made of short parts (6 questions each); trophy = one long unit review */
 const NODE_PARTS = [
   /* 1 · introduce: pictures only here */
-  ["img:a0 img:a1 mean:a0 img:a2 mean:a1 rmean:a2", "img:a3 img:a4 mean:a3 hearw:a0 pairs:A rmean:a4", "mean:a5 rmean:a1 hearw:a2 pairs:A mean:a4 writew:a0", "hearw:a4 mean:a2 rmean:a5 writew:a3 pairs:A typew:a1"],
+  ["img:a0 img:a1 mean:a0 img:a2 mean:a1 rmean:a2", "img:a3 img:a4 mean:a3 hearw:a0 pairs:A rmean:a4", "mean:a5 rmean:a1 hearw:a2 pairs:A mean:a4 anag:a0", "hearw:a4 mean:a2 rmean:a5 writew:a3 pairs:A typew:a1"],
   /* 2 · recognise: 4 similar options, first recall */
-  ["mean:b0 rmean:b1 hearw:b0 mean:b2 smean:s0 rmean:b2", "mean:b3 hearw:b1 rmean:b0 pairs:B smean:s1 writew:b1", "rmean:b4 hearw:b2 smean:s0 build:s0 writew:b3 pairs:B", "writew:b0 smean:s1 build:s1 typew:b4 rmean:r pairs:M"],
+  ["mean:b0 rmean:b1 hearw:b0 mean:b2 smean:s0 anag:b2", "mean:b3 hearw:b1 rmean:b0 pairs:B smean:s1 writew:b1", "rmean:b4 hearw:b2 smean:s0 build:s0 writew:b3 pairs:B", "writew:b0 smean:s1 build:s1 typew:b4 say:s1 pairs:M"],
   /* 3 · listen & build (extra words in the tile bank) */
-  ["smean:s0 build:s0 listen:s0 fill:f0 hearw:r afill:f1", "smean:s2 build:s2 listen:s1 buildr:s1 writew:r fill:f1", "listen:s2 build:s3 afill:f0 buildr:s2 typew:r build:s1"],
+  ["smean:s0 build:s0 listen:s0 fill:f0 dlg:D afill:f1", "smean:s2 build:s2 listen:s1 buildr:s1 spot:s2 fill:f1", "listen:s2 build:s3 afill:f0 buildr:s2 say:s3 build:s1"],
   /* 4 · recall from memory: writing, grammar */
-  ["fill:f1 build:s4 writew:r listen:s4 buildr:s3 typew:r", "fill:f3 build:s5 writew:r listen:s5 buildr:s4 fill:f2", "build:s6 writew:r listen:s6 buildr:s5 typew:r fill:f0"],
+  ["fill:f1 build:s4 writew:r listen:s4 buildr:s3 ans:Q", "fill:f3 build:s5 anag:r listen:s5 spot:s4 fill:f2", "build:s6 writew:r listen:s6 buildr:s5 dlg:D fill:f0"],
   /* trophy · unit review */
-  ["build:R listen:R fill:f0 writew:r buildr:R afill:f3 build:R fill:f1 typew:r listen:R writew:r smean:R fill:f2 build:R"]];
+  ["build:R listen:R fill:f0 writew:r dlg:D afill:f3 build:R fill:f1 say:R listen:R ans:Q spot:R fill:f2 build:R"]];
 const partsOf = j => NODE_PARTS[j].length;
 const partDone = (u, j) => uDone(u) > j ? partsOf(j) : uDone(u) === j ? Math.min(partsOf(j) - 1, DP()["p" + u] || 0) : 0;
-const MIXED = "build:R fill:F listen:R mean:r img:r buildr:R pairs:M hearw:r smean:R build:R";
+const MIXED = "build:R fill:F listen:R mean:r anag:r spot:R pairs:M dlg:D smean:R say:R";
 const JUMPR = "build:R fill:F listen:R smean:R build:R fill:F buildr:R listen:R build:R fill:F";
 function buildQueue(recipe, unitsPick) { const ctx = {};
-  return recipe.split(" ").map(p => { const [k, r] = p.split(":"); const U = unitsPick(); const c = U.ctx || (U.ctx = {}); const x = makeEx(k, U, r, c); if (x) x.U = U; return x; }).filter(Boolean).map(x => noListen() ? unListen(x) : x).map(x => hardMode() && x.k !== "pairs" ? Object.assign(morph(x, HARDER[x.k]), { hard: !!HARDER[x.k] }) : x).map(lvlBoost); }
+  return recipe.split(" ").map(p => { const [k, r] = p.split(":"); const U = unitsPick(); const c = U.ctx || (U.ctx = {}); const x = makeEx(k, U, r, c); if (x) x.U = U; return x; }).filter(Boolean).map(x => noListen() ? unListen(x) : x).map(x => hardMode() && x.k !== "pairs" ? Object.assign(morph(x, HARDER[x.k]), { hard: !!HARDER[x.k] }) : x).map(lvlBoost).map(x => typeof ex2Boost === "function" ? ex2Boost(x) : x); }
 /* the level a learner chose sets the base difficulty: A2 → no picture hints, B1+ → recall and listening versions */
 function lvlBoost(x) { if (hardMode() || x.k === "pairs" || x.prev) return x; const i = ["A1", "A2", "B1", "B2", "C1", "C2"].indexOf(myLevel() || "A1");
   if (i >= 2 && HARDER[x.k]) return morph(x, HARDER[x.k]); if (i === 1 && x.k === "img") return morph(x, "mean"); return x; }
-const LISTEN_K = ["hearw", "typew", "listen", "afill"];
+const LISTEN_K = ["hearw", "typew", "listen", "afill", "dlg"];
 const noListen = () => +(sessionStorage.getItem("mv-nolisten") || 0) > Date.now();
 function unListen(x) { if (!LISTEN_K.includes(x.k)) return x;
+  if (x.k === "dlg") { const y = EX2.dlg.noListen(x); if (y) y.U = x.U; return y || x; }
   if (x.k === "hearw" || x.k === "typew") return { ...x, k: "mean", opts: shuffle([x.w, ...pickN(x.U.W, 2, [x.w])]) };
   if (x.k === "listen") return { ...x, k: "build" };
   return { ...x, k: "fill", opts: shuffle([x.f.a, ...x.f.w]) }; }
@@ -226,10 +228,11 @@ function exHTML(x) {
     case "buildr": return T("dBuildR") + `<div class="dx-say">${pixMini(x.s.en)}<div class="dx-bub"><b>${esc(x.s.en)}</b>${sayBtn(x.s.en)}</div></div>` + tileRow(x.bank, false);
     case "listen": return T("dListen") + bigSay(x.s.en, true) + tileRow(x.bank, false);
     case "afill": return T("dAfill") + `<div class="dx-say">${pixMini(x.f.q.replace("___", x.f.a))}<div class="dx-bub"><b>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</b></div></div><div class="dx-opts col">${x.opts.map((o, i) => `<button class="dx-opt dx-aud" data-i="${i}" data-en="${esc(o)}" style="--k:${i}"><kbd>${i + 1}</kbd><span>🔊</span><span class="dx-wave">${Array.from({ length: 22 }, (_, j) => `<i style="--h:${(25 + Math.abs(Math.sin(j * 1.7 + i * 2 + o.length)) * 75).toFixed(0)}%;--j:${j}"></i>`).join("")}</span></button>`).join("")}</div>`;
+    default: return typeof EX2 === "object" && EX2[x.k] ? EX2[x.k].html(x, T, opts) : "";
     case "fill": return T("dFill") + `<div class="dx-fill">${x.f.e ? `<span class="dx-hint">${x.f.e}</span>` : ""}<p>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</p></div>` + opts(x.opts, o => esc(o), "row");
   }
 }
-const answerOf = x => ({ img: () => x.w.en, mean: () => nat(x.w), rmean: () => x.w.en, hearw: () => x.w.en, typew: () => x.w.en, writew: () => x.w.en, smean: () => nat(x.s),
+const answerOf = x => typeof EX2 === "object" && EX2[x.k] ? EX2[x.k].ans(x) : ({ img: () => x.w.en, mean: () => nat(x.w), rmean: () => x.w.en, hearw: () => x.w.en, typew: () => x.w.en, writew: () => x.w.en, smean: () => nat(x.s),
   build: () => x.s.en, listen: () => x.s.en, buildr: () => nat(x.s), fill: () => x.f.q.replace("___", x.f.a), afill: () => x.f.q.replace("___", x.f.a), pairs: () => "" })[x.k]();
 const lev = (a, b) => { const m = a.length, n = b.length, d = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]); for (let j = 1; j <= n; j++) d[0][j] = j;
   for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[m][n]; };
@@ -259,10 +262,11 @@ VIEWS.drill = root => {
   const ready = on => { go.disabled = !on; go.classList.toggle("on", !!on); };
   const setBar = () => { bar.style.width = Math.max(3, st.solved / st.total * 100) + "%"; };
   const hbox = () => root.querySelector(".dr-h");
-  const givenOf = x => x.bank ? [...box.querySelectorAll(".dx-line .dx-tile")].map(t => t.textContent).join(" ") : (x.k === "typew" || x.k === "writew") ? (box.querySelector(".dx-in") || {}).value || "" : x.opts && sel != null ? x.opts[sel] : null;
+  const givenOf = x => typeof EX2 === "object" && EX2[x.k] && EX2[x.k].given ? EX2[x.k].given(x, box) : x.bank ? [...box.querySelectorAll(".dx-line .dx-tile")].map(t => t.textContent).join(" ") : (x.k === "typew" || x.k === "writew") ? (box.querySelector(".dx-in") || {}).value || "" : x.opts && sel != null ? x.opts[sel] : null;
   root.querySelector(".dr-rep").onclick = () => { if (st.phase === "fb" && st.cur && typeof reportSheet === "function") reportSheet(st.cur, st.given); };
 
   function render() {
+    if (typeof ex2Stop === "function") ex2Stop();
     st.cur = queue.shift(); const x = st.cur; sel = null; st.phase = "answer"; window.__dx = x;
     foot.className = "dr-foot" + (x.opts && x.k !== "afill" ? " auto" : ""); go.textContent = L("dCheck"); ready(false); root.querySelector(".dr-skip").hidden = !LISTEN_K.includes(x.k);
     box.classList.remove("in"); box.innerHTML = exHTML(x); void box.offsetWidth; box.classList.add("in");
@@ -276,12 +280,14 @@ VIEWS.drill = root => {
     if (x.k === "typew" || x.k === "writew") { const inp = box.querySelector(".dx-in"); inp.oninput = () => ready(inp.value.trim().length > 0); setTimeout(() => inp.focus(), 400); }
     if (x.bank) wireTiles(x);
     if (x.k === "pairs") wirePairs(x);
+    if (typeof EX2 === "object" && EX2[x.k] && EX2[x.k].wire) EX2[x.k].wire(x, box, ready, () => st.phase === "answer");
     judge = () => { switch (x.k) {
       case "img": case "mean": case "rmean": case "hearw": return { ok: x.opts[sel] === x.w };
       case "smean": return { ok: x.opts[sel] === x.s };
       case "fill": case "afill": return { ok: x.opts[sel] === x.f.a };
       case "typew": case "writew": return dTyped(box.querySelector(".dx-in").value, x.w.en);
       case "build": case "listen": case "buildr": return { ok: dSame([...box.querySelectorAll(".dx-line .dx-tile")].map(t => t.textContent).join(" "), x.ans.join(" ")) };
+      default: return typeof EX2 === "object" && EX2[x.k] ? EX2[x.k].judge(x, box, sel) : { ok: false };
     } };
   }
   function flip(a, b) { if (REDUCED) return; const r1 = a.getBoundingClientRect(), r2 = b.getBoundingClientRect();
@@ -317,14 +323,14 @@ VIEWS.drill = root => {
       st.ok++; st.solved++; st.combo++; st.maxCombo = Math.max(st.maxCombo, st.combo);
       const big = st.combo >= 5 && st.combo % 5 === 0; sfx(big ? "combo" : "ok"); buzz(15);
       ico.innerHTML = safiSVG("happy"); tb.textContent = L("dRight")[(Math.random() * 6) | 0];
-      tp.innerHTML = r.typo ? `${L("dTypo")} <u>${esc(x.w.en)}</u>` : "";
+      tp.innerHTML = r.typo ? `${L("dTypo")} <u>${esc(x.w.en)}</u>` : r.note || "";
       foot.className = "dr-foot show ok"; joy(true);
       if (mode === "review" && st.won < 3 && hearts() < HMAX && ++st.revOk % 2 === 0) { st.won++; setHearts(hearts() + 1); const hb = hbox(); if (hb) { hb.innerHTML = `❤️ <b>${hearts()}</b>`; hb.classList.remove("gain"); void hb.offsetWidth; hb.classList.add("gain"); } setTimeout(() => sfx("unlock"), 250); }
       if (big) { const cb = root.querySelector(".dr-cb"); cb.textContent = `🔥 ${st.combo} ${L("dCombo")}`; cb.classList.remove("pop"); void cb.offsetWidth; cb.classList.add("pop"); bar.parentNode.classList.add("hot"); }
-      if (x.k === "fill" || x.k === "build" || x.k === "listen") say(x.k === "fill" ? answerOf(x) : x.s.en);
+      if (["fill", "gapt", "build", "listen", "spot"].includes(x.k)) say(x.k === "fill" || x.k === "gapt" ? answerOf(x) : x.s.en);
     } else {
       st.miss++; st.combo = 0; bar.parentNode.classList.remove("hot"); sfx("no"); buzz([30, 40, 30]);
-      ico.innerHTML = safiSVG("sad"); tb.textContent = L("dWrongT"); const why = whyOf(x, given); tp.innerHTML = `<span class="dr-ans">${esc(answerOf(x))}</span>${x.k === "build" || x.k === "listen" || x.k === "fill" ? sayBtn(answerOf(x)) : ""}${why ? `<span class="dr-why"><b>💡 ${L("whyT")}</b> ${why}</span>` : ""}`;
+      ico.innerHTML = safiSVG("sad"); tb.textContent = r.title || L("dWrongT"); const E = typeof EX2 === "object" && EX2[x.k], why = E && E.why ? E.why(x) : whyOf(x, given); tp.innerHTML = `${r.noAns ? "" : `<span class="dr-ans">${esc(answerOf(x))}</span>`}${["build", "listen", "fill", "gapt", "spot", "say"].includes(x.k) ? sayBtn(answerOf(x)) : ""}${r.note || ""}${why ? `<span class="dr-why"><b>💡 ${L("whyT")}</b> ${why}</span>` : ""}`;
       dMissAdd(x);
       foot.className = "dr-foot show no"; joy(false);
       if (mode !== "jump") queue.push({ ...x, prev: true, bank: x.bank && shuffle(x.bank), opts: x.opts && shuffle(x.opts) });
@@ -380,7 +386,7 @@ VIEWS.drill = root => {
   }
   render(); setBar();
   if (mode === "lesson" && typeof ruleCard === "function") ruleCard(root, U);
-  return { unmount() { LESSON_CHAR = null; LESSON_ANIMAL = null; removeEventListener("keydown", onKey); document.querySelectorAll(".dr-ov").forEach(o => o.remove()); window.__dx = null; } };
+  return { unmount() { if (typeof ex2Stop === "function") ex2Stop(); LESSON_CHAR = null; LESSON_ANIMAL = null; removeEventListener("keydown", onKey); document.querySelectorAll(".dr-ov").forEach(o => o.remove()); window.__dx = null; } };
 };
 
 function countUp(el, to, ms = 900) { if (REDUCED) { el.textContent = to; return; } const t0 = performance.now(); const f = t => { const p = Math.min(1, (t - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }

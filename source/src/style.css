@@ -2558,3 +2558,30 @@ html.adult #view *:not(.sv-spin):not(.rc-bar i):not(.dr-rvbar){animation-duratio
 html.adult .dx-say{grid-template-columns:1fr}html.adult .dx-bub::before{display:none}
 html.adult .dr-node{box-shadow:0 5px 0 var(--line)}html.adult .dr-node.done{box-shadow:0 5px 0 var(--goldd)}
 html.adult .dr-end h1{font-size:28px}html.adult .ap-h{letter-spacing:0}
+
+/* ===== level-2 exercises: conversation · find the mistake · letters · write the gap · speaking with live text ===== */
+.dx-dlg{display:grid;justify-items:center;gap:14px;margin:10px 0 6px}
+.dl-cast{display:flex;gap:22px;justify-content:center}.dl-who{display:grid;justify-items:center;gap:4px;transition:transform .2s}
+.dl-who i{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:36px;font-style:normal;background:var(--card2);border:3px solid var(--line);transition:border-color .2s,box-shadow .2s}
+.dl-who b{font:800 14px var(--bf);color:var(--mut)}.dl-who.on{transform:translateY(-4px)}.dl-who.on i{border-color:var(--gold);box-shadow:0 0 0 6px rgba(255,201,77,.18)}.dl-who.on b{color:var(--gold)}
+.dl-ctl{display:flex;gap:10px}.dl-play{width:74px;height:74px;font-size:30px}
+.dx-q2{display:grid;gap:4px;margin:6px 0 12px;text-align:center}.dx-q2 b{font:800 19px/1.35 var(--bf)}.dx-q2 small{color:var(--mut);font:600 14px var(--bf)}
+.dx-script{margin-top:8px;font:600 13.5px/1.45 var(--bf);text-align:left}.dx-script summary{cursor:pointer;font-weight:800}.dx-script p{margin:4px 0}
+.dx-spot{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0}
+.dx-sw{padding:10px 13px;border-radius:14px;border:2px solid var(--line);border-bottom-width:4px;background:var(--card);color:var(--ink);font:800 18px var(--bf);cursor:pointer;animation:optin .3s calc(var(--k)*.03s) both}
+.dx-sw.sel{border-color:var(--gold);background:rgba(255,201,77,.14)}.dx-sw.good{border-color:#58cc02;background:rgba(88,204,2,.16)}.dx-sw.bad{border-color:#ff6b81;background:rgba(255,107,129,.14)}.dx-sw.fixd{text-decoration:underline}
+.dx-fixw{display:grid;justify-items:center;gap:8px}.dx-fixw small{color:var(--mut);font:800 13px var(--bf)}.dx-fixes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.dx-fix{padding:10px 16px;border-radius:999px;border:2px solid var(--line);background:var(--card2);color:var(--ink);font:800 16px var(--bf);cursor:pointer}.dx-fix.sel{border-color:var(--gold);color:var(--gold)}
+.dx-anagw{display:flex;align-items:center;justify-content:center;gap:6px;min-height:62px;margin:12px 0;padding:8px;border-bottom:2px solid var(--line)}
+.dx-anagw .dx-line{min-height:52px;border:0;margin:0;padding:0;gap:6px;flex-wrap:nowrap}
+.dx-letters{justify-content:center;gap:8px}.dx-letters .dx-tile,.dx-anagw .dx-tile{min-width:44px;height:52px;padding:0 6px;font:800 24px var(--bf);text-transform:uppercase;display:grid;place-items:center}
+.dx-fixed{opacity:.75;border-style:dashed!important;pointer-events:none}
+.dx-gaph{font-style:normal;letter-spacing:.04em;color:var(--gold)}.dx-gaph i{font-style:normal;opacity:.6}
+.dx-live{min-height:56px;margin:12px 0 8px;padding:12px 14px;border-radius:16px;border:2px dashed var(--line);font:700 18px/1.4 var(--bf);color:var(--ink);text-align:center;display:grid;place-items:center}
+.dx-live:empty{display:none}.dx-live.on{border-color:#ff8fa3;border-style:solid}.dx-live i{color:var(--mut);font-style:normal}.dx-live small{color:var(--mut);font:700 14px var(--bf)}
+.dx-mic{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:8px;padding:16px;border-radius:18px;border:0;border-bottom:4px solid #c9962a;background:var(--gold);color:#2a1804;font:800 17px var(--bf);cursor:pointer}
+.dx-mic .dx-dot{width:14px;height:14px;border-radius:50%;background:#2a1804}.dx-mic.on{background:#ff8fa3;border-bottom-color:#c25a6c}.dx-mic.on .dx-dot{background:#fff;animation:tkdot 1s infinite}
+.dx-alt{display:block;margin:10px auto 0;border:0;background:none;color:var(--mut);font:700 14px var(--bf);text-decoration:underline;cursor:pointer}.dx-alt.hi{color:var(--gold)}
+.dx-ain{margin-top:10px}.typing .dx-mic,.typing .dx-live{display:none}.typing .dx-sayt{filter:blur(7px);user-select:none}
+.dx-heard{display:block;margin-top:6px;font:600 14px/1.5 var(--bf)}.dx-heard .w-ok{color:#58cc02;font-weight:800}.dx-heard .w-no{color:#ff6b81;font-weight:800;text-decoration:underline}
+.dx-bub small{display:block;margin-top:4px;color:var(--mut);font:600 13.5px var(--bf)}

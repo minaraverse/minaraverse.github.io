@@ -119,7 +119,7 @@ function whyPair(g, a, ctx) {
 }
 function whyOf(x, given) {
   if (given == null || typeof given !== "string" || !x) return "";
-  const ans = x.f && (x.k === "fill" || x.k === "afill") ? x.f.a : x.bank && x.ans && x.k !== "buildr" ? x.ans.join(" ") : null; if (!ans) return "";
+  const ans = x.f && ["fill", "afill", "gapt"].includes(x.k) ? x.f.a : x.bank && x.ans && (x.k === "build" || x.k === "listen") ? x.ans.join(" ") : null; if (!ans) return "";
   const g = dNorm(given), a = dNorm(ans), ctx = x.f ? x.f.q : x.s ? x.s.en : ""; if (!g || g === a) return "";
   if (x.f) { const k = whyPair(g, a, ctx); if (k) return whyTxt(k); const U = x.U; return U && U.g ? esc(((LANG === "ru" ? U.g[1] : U.g[0]).match(/^[\s\S]*?[.!?](?=\s|$)/) || [LANG === "ru" ? U.g[1] : U.g[0]])[0]) : ""; }
   const gt = g.split(" "), at = a.split(" ");
@@ -145,6 +145,8 @@ function ruleCard(root, U) {
 /* ---------- 🚩 "Something wrong?" + "checked by the teacher" note ---------- */
 const tchkHTML = where => `<p class="tchk ${where || ""}"><span>✅</span> ${L("tcChk")}${where === "wel" ? "" : ` <small>· ${L("tcFlag")}</small>`}</p>`;
 function dItemText(x) {
+  if (x.q) return `${x.q[0]} → ${x.q[3]}${x.lines ? " | " + x.lines.map(l => l[1] + ": " + l[2]).join(" / ") : ""}`;
+  if (x.k === "spot") return `${x.toks.join(" ")} → ${x.s.en}`;
   if (x.f) return `${x.f.q} → ${x.f.a}`; if (x.s) return `${x.s.en} = ${nat(x.s)}`; if (x.w) return `${x.w.en} = ${nat(x.w)}`; if (x.ws) return x.ws.map(w => w.en + "=" + nat(w)).join(", "); return x.k; }
 function reportSheet(x, given) {
   document.querySelectorAll(".rp-ov").forEach(o => o.remove());
