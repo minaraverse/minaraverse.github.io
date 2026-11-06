@@ -156,7 +156,7 @@ const E2Q = [
    ["Which is better: living in a city or in a village? Why?", "", "", "I think a city is better because there are more things to do.", ["compare", "because"]],
    ["What is the most interesting film you have seen?", "", "", "The most interesting film I have seen is Inside Out because it is clever and funny.", ["because"]]],
   [["What would you do if you won a million manats?", "", "", "If I won a million manats, I would buy a house for my parents and travel around the world.", ["cond"]],
-   ["Do you think social media is good for teenagers? Why?", "", "", "I think social media can be useful, but teenagers spend too much time on it, so it can be harmful.", ["opinion", "because"]],
+   ["Do you think social media is good for teenagers? Why?", "", "", "I think social media can be useful, but it can also be harmful because teenagers spend too much time on it.", ["opinion", "because"]],
    ["Describe a challenge you have overcome.", "", "", "I have overcome my fear of speaking in public by practising every week in front of my class.", ["perf"]],
    ["If you could change one thing about your city, what would it be?", "", "", "If I could change one thing, I would build more parks because the city needs more green spaces.", ["cond"]],
    ["What are the advantages and disadvantages of working from home?", "", "", "Working from home saves time, but on the other hand it can be lonely and hard to focus.", ["contrast"]],
@@ -335,4 +335,151 @@ function ex2Boost(x) {
   if (lvl === 2) return Math.random() < .5 ? { ...x, k: "gapt", lvl, opts: undefined } : more();
   if (lvl >= 3) return Math.random() < .7 ? { ...x, k: "gapt", lvl, opts: undefined } : more();
   return x;
+}
+
+/* =================== advanced types (B1 → C2): collocations · word formation · same meaning · idioms · reading =================== */
+Object.assign(UI.en, { e2Coll: "Choose the word that goes with it", e2Wform: "Write the right form of the word", e2Para: "Which sentence means the same?", e2Idiom: "What does it mean?", e2Read: "Read and answer" });
+Object.assign(UI.az, { e2Coll: "Bu ifadə ilə işlənən sözü seç", e2Wform: "Sözün düzgün formasını yaz", e2Para: "Hansı cümlə eyni mənanı verir?", e2Idiom: "Bu ifadə nə deməkdir?", e2Read: "Oxu və cavab ver" });
+Object.assign(UI.ru, { e2Coll: "Выбери слово, которое подходит", e2Wform: "Напиши правильную форму слова", e2Para: "Какое предложение значит то же самое?", e2Idiom: "Что значит это выражение?", e2Read: "Прочитай и ответь" });
+/* [phrase with ___, answer, wrong…, level 2 B1 · 3 B2 · 4 C] */
+const COLL = [
+  ["___ a mistake", "make", ["do", "take"], 2], ["___ your homework", "do", ["make", "take"], 2], ["___ a photo", "take", ["make", "do"], 2], ["___ a shower", "have", ["make", "do"], 2],
+  ["___ a decision", "make", ["do", "get"], 2], ["___ attention", "pay", ["do", "make"], 2], ["___ the washing-up", "do", ["make", "take"], 2], ["___ friends with someone", "make", ["do", "get"], 2],
+  ["___ a break", "take", ["do", "make"], 2], ["___ a phone call", "make", ["do", "say"], 2], ["___ the truth", "tell", ["say", "talk"], 2], ["___ a noise", "make", ["do", "take"], 2],
+  ["___ a deadline", "meet", ["do", "arrive"], 3], ["___ responsibility for something", "take", ["make", "do"], 3], ["___ an effort", "make", ["do", "take"], 3], ["___ a complaint", "make", ["do", "say"], 3],
+  ["___ research", "do", ["make", "take"], 3], ["___ a risk", "take", ["make", "do"], 3], ["___ a profit", "make", ["do", "win"], 3], ["___ someone a favour", "do", ["make", "give"], 3],
+  ["___ progress", "make", ["do", "get"], 3], ["___ a presentation", "give", ["say", "tell"], 3], ["___ an agreement", "reach", ["arrive", "win"], 3], ["She always ___ her promises.", "keeps", ["holds", "saves"], 3],
+  ["___ a compromise", "reach", ["arrive", "get"], 4], ["___ the blame", "take", ["make", "do"], 4], ["___ an impression", "make", ["do", "take"], 4], ["___ a conclusion", "draw", ["pull", "paint"], 4],
+  ["___ consideration to an idea", "give", ["make", "do"], 4], ["___ a new policy", "implement", ["install", "perform"], 4], ["___ an objection", "raise", ["rise", "lift"], 4], ["___ a concern", "voice", ["speak", "tell"], 4],
+  ["___ the importance of something", "stress", ["press", "push"], 4], ["___ a precedent", "set", ["put", "make"], 4], ["___ a deal", "strike", ["hit", "beat"], 4], ["___ a living", "earn", ["win", "gain"], 4]];
+/* [sentence with ___, BASE, answer, level] */
+const WFORM = [
+  ["The film was really ___.", "BORE", "boring", 3], ["She is very ___ — she always helps others.", "HELP", "helpful", 3], ["Please be ___ when you cross the road.", "CARE", "careful", 3],
+  ["There is a big ___ between the two cities.", "DIFFER", "difference", 3], ["His ___ surprised everyone.", "DECIDE", "decision", 3], ["My phone keeps crashing — it's so ___!", "ANNOY", "annoying", 3],
+  ["The ___ of the project was a big success.", "COMPLETE", "completion", 3], ["Smoking is ___ to your health.", "HARM", "harmful", 3], ["We need to make an ___ before Friday.", "ANNOUNCE", "announcement", 3],
+  ["She answered every question ___.", "CORRECT", "correctly", 3], ["It's ___ to drive without a licence.", "LEGAL", "illegal", 3], ["He felt ___ because nobody called him on his birthday.", "HAPPY", "unhappy", 3],
+  ["The ___ of the company lives in London.", "OWN", "owner", 3], ["Thank you for your ___.", "PATIENT", "patience", 3],
+  ["The government's ___ to act surprised many experts.", "FAIL", "failure", 4], ["Her ___ to detail makes her an excellent editor.", "ATTEND", "attention", 4],
+  ["The results were ___ different from what we expected.", "SIGNIFY", "significantly", 4], ["The plan was rejected as completely ___.", "REAL", "unrealistic", 4], ["There has been a ___ increase in prices.", "DRAMA", "dramatic", 4],
+  ["We need to ___ our position in the market.", "STRONG", "strengthen", 4], ["His ___ to help was obvious from the way he spoke.", "RELUCTANT", "reluctance", 4], ["The ___ of the new law caused protests.", "INTRODUCE", "introduction", 4],
+  ["Older computers can't run it: the software is ___ with them.", "COMPATIBLE", "incompatible", 4], ["The meeting was postponed ___ — nobody knows the new date.", "DEFINITE", "indefinitely", 4],
+  ["She spoke with great ___ about the project.", "ENTHUSIASTIC", "enthusiasm", 4], ["We value ___ and honesty in our team.", "RELY", "reliability", 4], ["Talks failed because of a serious ___ about money.", "AGREE", "disagreement", 4]];
+/* [sentence, same meaning, wrong…, level] */
+const PARA = [
+  ["I'm not able to come tomorrow.", "I can't come tomorrow.", ["I don't want to come tomorrow.", "I must come tomorrow.", "I came yesterday."], 3],
+  ["She started working here three years ago.", "She has worked here for three years.", ["She worked here for three years and then left.", "She will work here for three years.", "She stopped working here three years ago."], 3],
+  ["It isn't necessary to bring food.", "You don't have to bring food.", ["You mustn't bring food.", "You have to bring food.", "There is no food here."], 3],
+  ["The meeting was cancelled because of the storm.", "The storm caused the meeting to be cancelled.", ["The meeting caused the storm.", "The meeting took place during the storm.", "The storm was cancelled."], 3],
+  ["I'd rather stay at home tonight.", "I prefer to stay at home tonight.", ["I have to stay at home tonight.", "I stayed at home last night.", "I don't like my home."], 3],
+  ["He's too young to drive.", "He isn't old enough to drive.", ["He is old enough to drive.", "He drives too fast.", "He doesn't want to drive."], 3],
+  ["Although it was raining, we went out.", "We went out in spite of the rain.", ["We stayed in because of the rain.", "It rained after we went out.", "We went out to watch the rain."], 3],
+  ["If you don't hurry, you'll miss the train.", "Unless you hurry, you'll miss the train.", ["If you hurry, you'll miss the train.", "You missed the train because you hurried.", "The train will wait for you."], 3],
+  ["This is the best pizza I've ever eaten.", "I've never eaten a better pizza.", ["I've never eaten pizza.", "This pizza is worse than the others.", "I eat pizza every day."], 3],
+  ["She fell asleep because she was very tired.", "She was so tired that she fell asleep.", ["She was tired because she fell asleep.", "She was too tired to sleep.", "She wasn't tired at all."], 3],
+  ["Hardly had we arrived when it started to rain.", "It started to rain as soon as we arrived.", ["We arrived because it was raining.", "It had stopped raining when we arrived.", "We hardly arrived at all."], 4],
+  ["The project is unlikely to be finished by Friday.", "The project probably won't be finished by Friday.", ["The project will definitely be finished by Friday.", "Nobody likes the project.", "The project was finished last Friday."], 4],
+  ["Had I known about the problem, I would have helped.", "I didn't know about the problem, so I didn't help.", ["I knew about the problem and helped.", "I will help if I hear about the problem.", "I helped, but I didn't know why."], 4],
+  ["It's high time we changed our strategy.", "We should change our strategy now.", ["We changed our strategy at the right time.", "Our strategy is still perfect.", "We have no time to change our strategy."], 4],
+  ["She's bound to get the job.", "She's almost certain to get the job.", ["She has to accept the job.", "She's tied to her old job.", "She probably won't get the job."], 4],
+  ["The proposal was turned down.", "The proposal was rejected.", ["The proposal was accepted.", "The proposal was made shorter.", "The proposal was printed."], 4],
+  ["There's no point in calling him now.", "It's useless to call him now.", ["You must call him now.", "He has no phone.", "Calling him now is a great idea."], 4],
+  ["Not only is the plan expensive, but it's also risky.", "The plan is both expensive and risky.", ["The plan is cheap but risky.", "The plan is expensive but safe.", "Only the risky part is expensive."], 4],
+  ["I'm used to working long hours.", "Working long hours is normal for me.", ["I worked long hours in the past, but not now.", "I want to work long hours.", "I hate working long hours."], 4],
+  ["Sales fell short of our expectations.", "Sales were lower than we expected.", ["Sales were higher than we expected.", "We expected sales to fall.", "Sales were exactly as expected."], 4]];
+/* [idiom, meaning, wrong…, level] */
+const IDIOM = [
+  ["It's raining cats and dogs.", "It's raining very heavily.", ["Animals are falling from the sky.", "It's raining a little.", "The weather is getting better."], 3],
+  ["The exam was a piece of cake.", "The exam was very easy.", ["The exam was about food.", "The exam was very hard.", "The exam was short."], 3],
+  ["I'm feeling under the weather.", "I'm feeling a little ill.", ["I'm feeling very happy.", "I'm standing in the rain.", "I'm worried about the weather."], 3],
+  ["Let's call it a day.", "Let's stop working for today.", ["Let's phone someone.", "Let's start a new day.", "Let's give this day a name."], 3],
+  ["He's on cloud nine.", "He's extremely happy.", ["He's flying a plane.", "He's very tired.", "He's confused."], 3],
+  ["Break a leg!", "Good luck!", ["Be careful!", "Hurry up!", "Get well soon!"], 3],
+  ["We need to think outside the box.", "We need to think creatively.", ["We need to think about the box.", "We need to stop thinking.", "We need to work outside."], 4],
+  ["Let's not beat around the bush.", "Let's speak directly.", ["Let's work in the garden.", "Let's take our time.", "Let's avoid the problem."], 4],
+  ["The new manager hit the ground running.", "He started working successfully right away.", ["He fell on his first day.", "He arrived late.", "He left the job quickly."], 4],
+  ["That's the last straw.", "That's the final problem I can accept.", ["That's the best idea.", "That's the last drink.", "That's a small problem."], 4],
+  ["We're back to square one.", "We have to start again from the beginning.", ["We have finished the project.", "We are in first place.", "We moved to a new office."], 4],
+  ["She's got a lot on her plate right now.", "She is very busy at the moment.", ["She is eating a big meal.", "She is very rich.", "She has nothing to do."], 4],
+  ["Can we touch base next week?", "Can we talk briefly next week?", ["Can we play baseball next week?", "Can we meet at the base?", "Can we finish next week?"], 4],
+  ["The deal is in the bag.", "The deal is almost certainly ours.", ["The deal is lost.", "The deal is secret.", "The deal is inside a bag."], 4],
+  ["He's sitting on the fence.", "He won't choose a side.", ["He is relaxing in the garden.", "He has made a decision.", "He is fixing the fence."], 4],
+  ["Let's get the ball rolling.", "Let's start.", ["Let's play football.", "Let's stop.", "Let's go home."], 4],
+  ["It costs an arm and a leg.", "It's very expensive.", ["It's very cheap.", "It's dangerous.", "It hurts."], 4],
+  ["I'll keep you in the loop.", "I'll keep you informed.", ["I'll keep you waiting.", "I'll keep you busy.", "I'll keep you out."], 4]];
+/* [title, text, question, answer, wrong…, level] */
+const READ = [
+  ["💬 A message from Anna", "Hi Tom! I'm sorry, but I can't meet you at the café on Saturday. My grandmother is visiting us, and my mum wants me to stay at home. Can we meet on Sunday afternoon instead? Let me know! Anna", "Why can't Anna meet on Saturday?", "Her grandmother is visiting.", ["She is ill.", "The café is closed.", "She has to work."], 2],
+  ["📌 Summer job", "Summer job at Sunny Café! We are looking for friendly students to work as waiters in July and August. You must be 17 or older and speak English. Work is from 10 am to 4 pm, five days a week. Send your CV to our email.", "Who can apply?", "students who are 17 or older", ["anyone under 17", "only professional chefs", "people who want to work at night"], 2],
+  ["🐶 Lost dog", "LOST DOG. Our small brown dog, Max, ran away from Nizami Park on Tuesday evening. He is very friendly and wears a red collar. If you see him, please call us. Reward!", "What is Max wearing?", "a red collar", ["a blue coat", "a brown hat", "nothing"], 2],
+  ["🚌 School trip", "On Friday, Class 7B is going to the History Museum. The bus leaves school at 9 o'clock, so please arrive by 8:45. Bring a packed lunch and a notebook. We will be back at 3 o'clock.", "What time should students arrive?", "by 8:45", ["at 9 o'clock", "at 3 o'clock", "at 10 o'clock"], 2],
+  ["📧 Email from the office", "Dear team, the printer on the second floor is broken. A technician will fix it tomorrow morning. Until then, please use the printer in the meeting room. Thank you, Laura", "Where should people print today?", "in the meeting room", ["on the second floor", "at home", "in the technician's office"], 2],
+  ["⭐ Hotel review", "I stayed at the Green Hotel for three nights. The room was clean and the staff were helpful, but the Wi-Fi was very slow and breakfast was expensive. I would stay there again, but I'd eat breakfast somewhere else.", "What did the writer NOT like?", "the slow Wi-Fi and the expensive breakfast", ["the dirty room", "the unhelpful staff", "the location"], 2],
+  ["📧 New office rules", "From next month, employees may work from home two days a week. Teams must agree which days they will be in the office so that meetings can still take place in person. Managers will review the arrangement after three months.", "What must teams do?", "agree on their office days", ["work from home every day", "stop having meetings", "choose a new manager"], 3],
+  ["📰 Multitasking", "Many people believe that multitasking makes them more productive. However, research suggests that switching between tasks actually reduces efficiency, because the brain needs time to refocus each time. Experts recommend finishing one task before starting another.", "What is the main idea?", "Doing one task at a time is more efficient.", ["Multitasking makes people more productive.", "The brain never needs to refocus.", "Experts recommend switching tasks often."], 3],
+  ["📧 Reply to a complaint", "Dear Mr Aliyev, thank you for your email. We are sorry that your order arrived late and that one item was damaged. We have sent a replacement, which should reach you within three working days, and we have refunded your delivery fee.", "What has the company done?", "sent a new item and refunded the delivery fee", ["refunded the full price", "cancelled the order", "asked him to return everything"], 3],
+  ["🚲 Bikes in the city", "The city's new bike-sharing scheme has been more popular than expected. In its first month, over 20,000 trips were made. The city now plans to add more stations, especially near metro stations, to encourage people to combine cycling with public transport.", "Why will new stations be near the metro?", "to help people combine cycling and public transport", ["because there is no space elsewhere", "to replace the metro", "because bikes are cheaper"], 3],
+  ["📝 Feedback on a report", "Your report was well organised and the data was clear. However, the conclusion was rather short. Next time, try to explain what the results mean for the company and suggest some next steps.", "What should the writer improve?", "the conclusion", ["the organisation", "the data", "the title"], 3],
+  ["📰 The merger", "Although the merger was expected to cut costs, the first year brought the opposite result. Joining two different IT systems proved far more complicated than anticipated, and several key employees left during the transition. Analysts now suggest that the benefits may only become visible in the long term.", "What do analysts think?", "The benefits may appear later.", ["The merger was a complete failure.", "Costs were cut immediately.", "The IT systems were easy to join."], 4],
+  ["📰 A four-day week", "Critics of the four-day working week argue that it simply squeezes the same workload into fewer days, leading to longer and more stressful shifts. Supporters, however, point to trials in which productivity remained stable while employee wellbeing improved significantly.", "What did the trials show?", "Productivity stayed the same and wellbeing improved.", ["Productivity fell sharply.", "Employees felt more stressed.", "The workload was cut in half."], 4],
+  ["📧 A partnership", "Dear Ms Huseynova, following our conversation last week, I am pleased to confirm that we would like to proceed with the partnership. However, before signing the contract, our legal department has requested a few minor changes to the payment terms, which I have attached for your review.", "What has to happen before signing?", "The payment terms need small changes.", ["The partnership is cancelled.", "A new meeting must be held.", "The legal department will sign it alone."], 4],
+  ["📰 Digital detox", "The phrase 'digital detox' has become fashionable, yet few people manage to disconnect for long. Researchers note that our dependence on smartphones is less about the devices themselves and more about the fear of missing out on information and social contact.", "According to researchers, what is the real reason for our dependence?", "the fear of missing out", ["the design of the phones", "the price of devices", "boredom at work"], 4],
+  ["📰 Salary freeze", "Despite record profits, the company announced it would freeze salaries for another year, citing economic uncertainty. Unsurprisingly, the decision was met with frustration by staff, many of whom felt their efforts had not been recognised.", "How did employees feel?", "frustrated and unappreciated", ["relieved", "surprised and grateful", "indifferent"], 4],
+  ["📰 Learning as an adult", "Learning a language as an adult is often said to be harder than learning one as a child. However, adults have advantages too: they can use strategies consciously, understand grammar explanations and connect new words to what they already know.", "What does the text suggest?", "Adults also have advantages when learning languages.", ["Only children can learn languages.", "Grammar is useless for adults.", "Adults learn faster in every way."], 4]];
+/* pick an item of the right level that this lesson hasn't used yet */
+function e2Pick(bank, lvlIx, U, ctx, key) { const L = Math.min(4, exLv(U)), used = ctx[key] || (ctx[key] = []);
+  let pool = bank.map((r, i) => i).filter(i => bank[i][lvlIx] === L); if (!pool.length) pool = bank.map((r, i) => i).filter(i => bank[i][lvlIx] <= L);
+  const left = pool.filter(i => !used.includes(i)), i = (left.length ? left : pool)[(Math.random() * (left.length || pool.length)) | 0]; used.push(i); return bank[i]; }
+Object.assign(EX2, {
+  coll: { make(U, ref, ctx) { const r = e2Pick(COLL, 3, U, ctx, "collU"); return { k: "coll", r, a: r[1], opts: shuffle([r[1], ...r[2]]), item: r[0] + " → " + r[1] }; },
+    html: (x, T, opts) => T("e2Coll") + `<div class="dx-fill"><p>${esc(x.r[0]).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</p></div>` + opts(x.opts, o => esc(o), "row"),
+    judge: (x, box, sel) => ({ ok: x.opts[sel] === x.a }), ans: x => x.r[0].replace("___", x.a) },
+  wform: { make(U, ref, ctx) { const r = e2Pick(WFORM, 3, U, ctx, "wformU"); return { k: "wform", r, item: r[0] + " (" + r[1] + ") → " + r[2] }; },
+    html: (x, T) => T("e2Wform") + `<div class="dx-fill"><p>${esc(x.r[0]).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</p><span class="dx-base">${esc(x.r[1])}</span></div><input class="dx-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${L("dTypeHere")}">`,
+    wire(x, box, ready) { const inp = box.querySelector(".dx-in"); inp.oninput = () => ready(inp.value.trim().length > 0); setTimeout(() => inp.focus(), 400); },
+    judge(x, box) { const r = dTyped(box.querySelector(".dx-in").value, x.r[2]); return { ok: r.ok, note: r.ok && r.typo ? `${L("dTypo")} <u>${esc(x.r[2])}</u>` : "" }; },
+    given: (x, box) => (box.querySelector(".dx-in") || {}).value || "", ans: x => x.r[0].replace("___", x.r[2]) },
+  para: { make(U, ref, ctx) { const r = e2Pick(PARA, 3, U, ctx, "paraU"); return { k: "para", r, a: r[1], opts: shuffle([r[1], ...r[2]]), item: r[0] + " = " + r[1] }; },
+    html: (x, T, opts) => T("e2Para") + `<div class="dx-say"><div class="dx-bub"><b>${esc(x.r[0])}</b>${sayBtn(x.r[0])}</div></div>` + opts(x.opts, o => esc(o), "col"),
+    judge: (x, box, sel) => ({ ok: x.opts[sel] === x.a }), ans: x => x.a },
+  idiom: { make(U, ref, ctx) { const r = e2Pick(IDIOM, 3, U, ctx, "idiomU"); return { k: "idiom", r, a: r[1], opts: shuffle([r[1], ...r[2]]), item: r[0] + " = " + r[1] }; },
+    html: (x, T, opts) => T("e2Idiom") + `<div class="dx-say"><div class="dx-bub dx-idiom"><b>“${esc(x.r[0])}”</b>${sayBtn(x.r[0])}</div></div>` + opts(x.opts, o => esc(o), "col"),
+    judge: (x, box, sel) => ({ ok: x.opts[sel] === x.a }), ans: x => x.a },
+  read: { make(U, ref, ctx) { const r = e2Pick(READ, 5, U, ctx, "readU"); return { k: "read", r, a: r[3], opts: shuffle([r[3], ...r[4]]), item: r[0] + ": " + r[2] + " → " + r[3] }; },
+    html: (x, T, opts) => T("e2Read") + `<article class="dx-read"><h3>${esc(x.r[0])}</h3><p>${esc(x.r[1])}</p></article><div class="dx-q2"><b>${esc(x.r[2])}</b></div>` + opts(x.opts, o => esc(o), "col"),
+    judge: (x, box, sel) => ({ ok: x.opts[sel] === x.a }), ans: x => x.a }
+});
+
+/* =================== lesson builder: the number of questions and the mix of exercise types grow with the level =================== */
+/* questions per lesson part: A1 5 · A2 8 · B1 11 · B2 15 · C1/C2 20 (the unit's big review is a little longer, max 20) */
+const PART_N = [5, 8, 11, 15, 20, 20], REVIEW_N = [7, 10, 14, 18, 20, 20];
+const lv6 = U => Math.max(0, ["A1", "A2", "B1", "B2", "C1", "C2"].indexOf((SECTIONS[U.sec] || {}).lv));
+/* exercise families and the levels where each type lives [type, from, to] — simple types fade out, new ones appear */
+const E2TY = {
+  W: [["img", 0, 0], ["mean", 0, 2], ["rmean", 0, 3], ["hearw", 0, 2], ["pairs", 0, 5], ["anag", 0, 4], ["writew", 1, 5], ["typew", 2, 5]],
+  S: [["smean", 0, 1], ["build", 0, 4], ["buildr", 1, 3], ["listen", 1, 5]],
+  G: [["afill", 0, 1], ["fill", 0, 5], ["spot", 1, 5], ["coll", 2, 5], ["wform", 3, 5]],
+  L: [["dlg", 0, 5], ["listen", 0, 5], ["hearw", 0, 1], ["typew", 2, 5]],
+  P: [["say", 0, 5], ["ans", 0, 5]],
+  X: [["read", 2, 5], ["para", 3, 5], ["idiom", 3, 5]]
+};
+/* what each star practises: 1 new words · 2 recognise & recall · 3 listen & build · 4 grammar, writing, speaking · trophy = everything */
+const NODE_W = [{ W: 70, S: 10, L: 10, P: 10 }, { W: 40, S: 20, L: 15, G: 15, P: 10 }, { S: 30, L: 30, G: 15, P: 15, W: 10 }, { G: 35, P: 20, S: 15, L: 10, X: 20 }, { W: 12, S: 18, G: 20, L: 20, P: 15, X: 15 }];
+function nodeRecipe(U, j, p) {
+  const L = lv6(U), n = j === 4 ? REVIEW_N[L] : PART_N[L], want = { ...NODE_W[j] };
+  if (L >= 3) { want.W = Math.round((want.W || 0) / 2); want.X = (want.X || 0) + 15; }   /* B2+: fewer single-word drills, more real English */
+  if (L >= 4) { want.X += 10; want.L = (want.L || 0) + 5; }
+  const avail = c => E2TY[c].filter(t => L >= t[1] && L <= t[2]).map(t => t[0]);
+  const fams = Object.keys(want).filter(c => want[c] > 0 && avail(c).length), tot = fams.reduce((a, c) => a + want[c], 0);
+  const cap = { pairs: 1, read: 1, dlg: Math.max(1, Math.ceil(n / 7)), ans: Math.max(1, Math.ceil(n / 8)), say: Math.max(1, Math.ceil(n / 7)) }, cnt = {};
+  const out = []; let wi = 0, si = p * 3, fi = p, last = "";
+  for (let i = 0; i < n; i++) {
+    let fam = j === 0 && i < 2 ? "W" : null;
+    if (!fam || !avail(fam).length) { let r = Math.random() * tot; fam = fams.find(c => (r -= want[c]) < 0) || fams[0]; }
+    let types = avail(fam).filter(t => t !== last && (cnt[t] || 0) < (cap[t] || 99));
+    if (!types.length) types = Object.values(E2TY).flat().filter(t => L >= t[1] && L <= t[2] && t[0] !== last && (cnt[t[0]] || 0) < (cap[t[0]] || 99)).map(t => t[0]);
+    const t = types[(Math.random() * types.length) | 0]; cnt[t] = (cnt[t] || 0) + 1; last = t;
+    const isW = ["img", "mean", "rmean", "hearw", "anag", "writew", "typew"].includes(t), isS = ["smean", "build", "buildr", "listen", "say", "spot"].includes(t);
+    const ref = isW ? (j === 0 ? "a" + (wi++) : j === 1 ? "b" + (wi++) : "r") : isS ? (j >= 2 && j < 4 ? "s" + (si++) : "R") : t === "fill" || t === "afill" ? (j < 4 ? "f" + (fi++) : "F") : t === "pairs" ? (j === 0 ? "A" : j === 1 ? "B" : "M") : "X";
+    out.push(t + ":" + ref); }
+  return out.join(" ");
 }

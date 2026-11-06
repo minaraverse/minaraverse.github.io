@@ -146,10 +146,10 @@ function morph(x, to) {
 const hardMode = () => { const a = typeof ACCT === "function" && ACCT(); return !!(a && a.hard); };
 function makeEx(kind, U, ref, ctx) {
   const W = U.W, S = U.S, F = U.F, rnd = a => a[(Math.random() * a.length) | 0];
-  const word = r => r === "r" ? rnd(W) : r[0] === "a" ? W[+r.slice(1) % Math.min(6, W.length)] : r[0] === "b" ? W[5 + (+r.slice(1) % Math.max(1, W.length - 5))] || rnd(W) : rnd(W);
+  const half = Math.max(1, Math.ceil(W.length / 2)), word = r => r === "r" ? rnd(W) : r[0] === "a" ? W[+r.slice(1) % half] : r[0] === "b" ? W[half + (+r.slice(1) % Math.max(1, W.length - half))] || rnd(W) : rnd(W);
   const sent = r => { if (r === "R") { ctx.sq = ctx.sq && ctx.sq.length ? ctx.sq : shuffle(S); return ctx.sq.pop(); } return S[+r.slice(1) % S.length]; };
   const fill = r => r === "F" ? rnd(F) : F[+r.slice(1) % F.length];
-  const words = r => r === "A" ? W.slice(0, 5) : r === "B" ? (W.length >= 10 ? W.slice(5, 10) : W.slice(-5)) : pickN(W, 5);
+  const words = r => r === "A" ? pickN(W.slice(0, Math.max(5, Math.ceil(W.length / 2))), 5) : r === "B" ? pickN(W.length >= 10 ? W.slice(Math.ceil(W.length / 2)) : W.slice(-5), 5) : pickN(W, 5);
   const distract = (s, key, n) => { const have = new Set(toks(s[key]).map(x => x.toLowerCase()));
     const pool = [...new Set(S.filter(x => x !== s).flatMap(x => toks(x[key])).map(x => x === "I" ? x : x.toLowerCase()))].filter(x => !have.has(x.toLowerCase()));
     return pickN(pool, n); };
@@ -251,7 +251,7 @@ VIEWS.drill = root => {
   pool.forEach(u => u.ctx = {});
   const pi = mode === "lesson" ? (li < uDone(ui) ? (Math.random() * partsOf(li)) | 0 : partDone(ui, li)) : 0;
   /* review: the mistakes from this unit first (fresh order), then a few mixed questions — every 2 right answers win a heart back */
-  const queue = mode === "review" ? dMissQueue(ui, buildQueue(REVIEWR, () => U)) : buildQueue(mode === "lesson" ? NODE_PARTS[li][pi] : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
+  const queue = mode === "review" ? dMissQueue(ui, buildQueue(REVIEWR, () => U)) : buildQueue(mode === "lesson" ? (typeof nodeRecipe === "function" ? nodeRecipe(U, li, pi) : NODE_PARTS[li][pi]) : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
   const st = { won: 0, revOk: 0, total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, lives: 3, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer" };
   const heartsBox = () => mode === "jump" ? `<span class="dr-h">${"❤️".repeat(st.lives)}${"🤍".repeat(3 - st.lives)}</span>` : mode === "lesson" ? `<span class="dr-h">❤️ <b>${hearts()}</b></span>` : mode === "review" ? `<span class="dr-h rev">❤️ <b>${hearts()}</b></span>` : `<span class="dr-h inf">❤️ ∞</span>`;
   root.innerHTML = `<div class="ap ap-les dr" style="--uc:${U.c}"><header class="ap-lh"><a href="#app-learn" class="ap-x dr-x" aria-label="Close">✕</a>${lhBrand()}<div class="dr-bar"><i></i><em class="dr-cb"></em></div>${heartsBox()}</header>
@@ -333,8 +333,8 @@ VIEWS.drill = root => {
       ico.innerHTML = safiSVG("sad"); tb.textContent = r.title || L("dWrongT"); const E = typeof EX2 === "object" && EX2[x.k], why = E && E.why ? E.why(x) : whyOf(x, given); tp.innerHTML = `${r.noAns ? "" : `<span class="dr-ans">${esc(answerOf(x))}</span>`}${["build", "listen", "fill", "gapt", "spot", "say"].includes(x.k) ? sayBtn(answerOf(x)) : ""}${r.note || ""}${why ? `<span class="dr-why"><b>💡 ${L("whyT")}</b> ${why}</span>` : ""}`;
       dMissAdd(x);
       foot.className = "dr-foot show no"; joy(false);
-      if (mode !== "jump") queue.push({ ...x, prev: true, bank: x.bank && shuffle(x.bank), opts: x.opts && shuffle(x.opts) });
-      if (mode === "lesson") { setHearts(hearts() - 1); const hb = hbox(); if (hb) { hb.innerHTML = `❤️ <b>${hearts()}</b>`; hb.classList.remove("hurt"); void hb.offsetWidth; hb.classList.add("hurt"); setTimeout(() => sfx("heart"), 280); } }
+      if (mode !== "jump" && !(x.prev && (x.k === "say" || x.k === "ans"))) queue.push({ ...x, prev: true, bank: x.bank && shuffle(x.bank), opts: x.opts && shuffle(x.opts) });
+      if (mode === "lesson" && x.k !== "say" && x.k !== "ans") { setHearts(hearts() - 1); const hb = hbox(); if (hb) { hb.innerHTML = `❤️ <b>${hearts()}</b>`; hb.classList.remove("hurt"); void hb.offsetWidth; hb.classList.add("hurt"); setTimeout(() => sfx("heart"), 280); } }
       if (mode === "jump") { st.lives--; const hb = hbox(); hb.innerHTML = "❤️".repeat(Math.max(0, st.lives)) + "🤍".repeat(3 - Math.max(0, st.lives)); hb.classList.remove("hurt"); void hb.offsetWidth; hb.classList.add("hurt"); setTimeout(() => sfx("heart"), 280); }
     }
     setBar(); go.textContent = L("dCont"); ready(true); go.focus({ preventScroll: true });

@@ -145,6 +145,7 @@ function ruleCard(root, U) {
 /* ---------- 🚩 "Something wrong?" + "checked by the teacher" note ---------- */
 const tchkHTML = where => `<p class="tchk ${where || ""}"><span>✅</span> ${L("tcChk")}${where === "wel" ? "" : ` <small>· ${L("tcFlag")}</small>`}</p>`;
 function dItemText(x) {
+  if (x.item) return x.item;
   if (x.q) return `${x.q[0]} → ${x.q[3]}${x.lines ? " | " + x.lines.map(l => l[1] + ": " + l[2]).join(" / ") : ""}`;
   if (x.k === "spot") return `${x.toks.join(" ")} → ${x.s.en}`;
   if (x.f) return `${x.f.q} → ${x.f.a}`; if (x.s) return `${x.s.en} = ${nat(x.s)}`; if (x.w) return `${x.w.en} = ${nat(x.w)}`; if (x.ws) return x.ws.map(w => w.en + "=" + nat(w)).join(", "); return x.k; }

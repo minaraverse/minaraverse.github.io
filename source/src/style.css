@@ -2585,3 +2585,7 @@ html.adult .dr-end h1{font-size:28px}html.adult .ap-h{letter-spacing:0}
 .dx-ain{margin-top:10px}.typing .dx-mic,.typing .dx-live{display:none}.typing .dx-sayt{filter:blur(7px);user-select:none}
 .dx-heard{display:block;margin-top:6px;font:600 14px/1.5 var(--bf)}.dx-heard .w-ok{color:#58cc02;font-weight:800}.dx-heard .w-no{color:#ff6b81;font-weight:800;text-decoration:underline}
 .dx-bub small{display:block;margin-top:4px;color:var(--mut);font:600 13.5px var(--bf)}
+.dx-read{margin:8px 0 10px;padding:16px 18px;border-radius:18px;background:var(--card);border:2px solid var(--line);text-align:left;max-height:42vh;overflow:auto}
+.dx-read h3{margin:0 0 8px;font:800 15px var(--bf);color:var(--gold)}.dx-read p{margin:0;font:600 16.5px/1.6 var(--bf);color:var(--ink)}
+.dx-base{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;background:rgba(255,201,77,.14);border:1.5px solid rgba(255,201,77,.45);color:var(--gold);font:800 14px var(--bf);letter-spacing:.06em}
+.dx-idiom b{font-style:italic}
