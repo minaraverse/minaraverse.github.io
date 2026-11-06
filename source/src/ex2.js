@@ -20,7 +20,7 @@ Object.assign(UI.ru, { e2Almost: "Почти! В следующий раз по�
 
 const SR2 = window.SpeechRecognition || window.webkitSpeechRecognition;
 /* level of the unit's section: 0 A1 · 1 A2 · 2 B1 · 3 B2 and above */
-const exLv = U => Math.min(3, Math.max(0, ["A1", "A2", "B1", "B2", "C1", "C2"].indexOf((SECTIONS[U.sec] || {}).lv)));
+const exLv = U => Math.min(4, Math.max(0, ["A1", "A2", "B1", "B2", "C1", "C2"].indexOf((SECTIONS[U.sec] || {}).lv)));
 
 /* ---------- 🎧 conversations: [voice, name, line] · questions: [en, az, ru, answer, [wrong…]] ---------- */
 const DLG = [
@@ -92,8 +92,21 @@ const DLG = [
     [["What does Jennifer mean by «I won't hold my breath»?", "", "", "She doesn't expect it to happen.", ["She is very excited.", "She is going swimming.", "She will buy tickets now."]]]],
   [[["m", "Tyson", "Your presentation was brilliant — the client loved it."], ["f", "Angelina", "Thanks, though I was so nervous I nearly forgot the last slide."], ["m", "Tyson", "Nobody noticed. You came across as really confident."]],
     [["How did Angelina feel during the presentation?", "", "", "nervous", ["bored", "relaxed", "angry"]], ["What did the audience think?", "", "", "She seemed confident.", ["She seemed nervous.", "Some slides were missing.", "It was too long."]]]]
+  /* C1–C2 — professional English: negotiation, feedback, deadlines, interviews */
+  ,[[["f", "Emma", "We'd like to place a larger order, but your price is a little higher than we expected."], ["m", "John", "I understand. If you order more than five hundred units, we can offer a ten percent discount."], ["f", "Emma", "That's helpful. Could you also include free delivery?"], ["m", "John", "I'm afraid that's not possible, but we can guarantee delivery within a week."]],
+    [["What does John agree to?", "", "", "a discount for large orders", ["free delivery", "a lower price for any order", "delivery in one day"]], ["What does John refuse?", "", "", "free delivery", ["a discount", "delivery within a week", "a larger order"]]]],
+  [[["f", "Laura", "Overall, your first quarter has been really impressive."], ["m", "Max", "Thank you. I wasn't sure the client presentation went well."], ["f", "Laura", "It did, although next time I'd like you to keep the slides more concise."], ["m", "Max", "That makes sense. I tend to include too much detail."]],
+    [["What does Laura want Max to improve?", "", "", "making his slides more concise", ["arriving on time", "talking to clients more", "adding more detail"]]]],
+  [[["f", "Anna", "The client has brought the deadline forward to Monday."], ["m", "Charles", "Monday? We'd have to work over the weekend to manage that."], ["f", "Anna", "I know it's tight. I'll ask whether we can deliver the main part on Monday and the rest on Wednesday."], ["m", "Charles", "That would make it far more realistic."]],
+    [["What does Anna suggest?", "", "", "delivering the work in two parts", ["refusing the project", "working all weekend", "asking for more money"]], ["How does Charles feel about Anna's idea?", "", "", "It sounds more realistic.", ["It is impossible.", "It is too expensive.", "He prefers working at the weekend."]]]],
+  [[["f", "Jessica", "Why are you interested in this position?"], ["m", "Lewis", "I've spent five years in sales, and I'm keen to move into a role that focuses more on strategy."], ["f", "Jessica", "And what would you say is your main weakness?"], ["m", "Lewis", "I sometimes find it hard to delegate, but I've been learning to trust my team more."]],
+    [["Why does Lewis want the job?", "", "", "He wants to focus more on strategy.", ["He wants a higher salary.", "He doesn't like sales at all.", "He wants to work alone."]], ["Which weakness does he mention?", "", "", "difficulty delegating", ["being late", "poor sales results", "lack of experience"]]]],
+  [[["f", "Nicole", "I'm calling about the software update — since we installed it, our system keeps crashing."], ["m", "Oscar", "I'm sorry to hear that. Have you tried restarting the server?"], ["f", "Nicole", "Several times. It's affecting our whole team."], ["m", "Oscar", "In that case, I'll escalate it to our technical department and get back to you within two hours."]],
+    [["What will Oscar do?", "", "", "pass the problem to the technical department", ["visit the office", "cancel the update", "refund the software"]]]],
+  [[["f", "Bella", "Our competitors have cut their prices again."], ["m", "George", "Should we do the same?"], ["f", "Bella", "I'd rather not. If we compete on price alone, we'll damage our brand. Let's focus on quality and service instead."], ["m", "George", "Agreed — our customers value reliability more than discounts."]],
+    [["What is Bella's strategy?", "", "", "focusing on quality and service", ["lowering prices", "copying the competitors", "stopping production"]], ["What does George believe about their customers?", "", "", "They value reliability more than discounts.", ["They only care about price.", "They are leaving the brand.", "They want more discounts."]]]]
 ];
-const DLG_LV = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3];
+const DLG_LV = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4];
 
 /* ---------- 🎙 open questions by level: [en, az, ru, example answer, [checks]] ---------- */
 const E2C = {
@@ -120,7 +133,7 @@ const E2C = {
   advice: [/\b(should|must|need to|have to|try to|would|recommend|it is important|do not)\b/, ["Give advice: You should…, It is important to…", "Məsləhət ver: You should…, It is important to…", "Дай совет: You should…, It is important to…"]],
   change: [/\b(has|have) (changed|become|grown|got|opened|built)\b|\b(changed|became|built|opened|new|more|now)\b/, ["Describe a change: has changed, there is a new…, became", "Dəyişikliyi təsvir et: has changed, there is a new…, became", "Опиши изменение: has changed, there is a new…, became"]]
 };
-const E2MIN = [3, 5, 7, 10];
+const E2MIN = [3, 5, 7, 10, 12];
 const E2Q = [
   [["What is your name?", "Adın nədir?", "Как тебя зовут?", "My name is Safi.", ["name"]], ["How old are you?", "Neçə yaşın var?", "Сколько тебе лет?", "I am eight years old.", ["age"]],
    ["What is your favourite colour?", "Sevimli rəngin hansıdır?", "Твой любимый цвет?", "My favourite colour is blue.", ["colour"]], ["Do you have a pet?", "Ev heyvanın var?", "У тебя есть питомец?", "Yes, I have a cat.", ["have"]],
@@ -149,7 +162,15 @@ const E2Q = [
    ["What are the advantages and disadvantages of working from home?", "", "", "Working from home saves time, but on the other hand it can be lonely and hard to focus.", ["contrast"]],
    ["How do you think technology will change education?", "", "", "I think technology will make lessons more personal, and students will learn at their own speed.", ["opinion", "future"]],
    ["What advice would you give to someone learning English?", "", "", "I would tell them to speak every day and not to be afraid of making mistakes.", ["advice"]],
-   ["Tell me about a person who has influenced you.", "", "", "My grandmother has influenced me a lot because she taught me to be patient and kind.", ["perf", "because"]]]
+   ["Tell me about a person who has influenced you.", "", "", "My grandmother has influenced me a lot because she taught me to be patient and kind.", ["perf", "because"]]],
+  [["How would you persuade a team to accept a big change?", "", "", "I would explain why the change is necessary, listen to their concerns and show how it will help them in the long term.", ["cond"]],
+   ["Describe a difficult situation you had to deal with at work or at school.", "", "", "Last year I had to solve a conflict between two colleagues, so I listened to both sides and we found a compromise.", ["past"]],
+   ["What are the pros and cons of remote work for companies?", "", "", "Remote work reduces office costs, but on the other hand it can make teamwork and communication harder.", ["contrast"]],
+   ["Should governments invest more in technology or in education? Why?", "", "", "I believe education should come first because without well-educated people, technology cannot be used properly.", ["opinion", "because"]],
+   ["How do you usually prepare for an important presentation?", "", "", "I usually research the topic carefully, prepare clear slides and practise several times in front of a friend.", ["usual"]],
+   ["Where do you see yourself in five years?", "", "", "In five years I hope to be leading a small team and working on international projects.", ["future"]],
+   ["What makes a good leader, in your opinion?", "", "", "In my opinion, a good leader listens to people, makes clear decisions and takes responsibility when things go wrong.", ["opinion"]],
+   ["If you could start your own business, what would it be and why?", "", "", "I would open a language school because I love teaching and there is a real need for good teachers.", ["cond", "because"]]]
 ];
 
 /* ---------- 🔎 mistakes to plant: a correct word → a wrong one, with the rule that explains it ---------- */
@@ -176,7 +197,7 @@ function spotMake(U, ref, lvl) {
 
 /* ---------- 🔤 letters ---------- */
 function anagMake(U, ref, lvl) {
-  const ok = w => /^[a-z]+$/i.test(w.en) && w.en.length >= [3, 4, 5, 6][lvl] && w.en.length <= [6, 8, 10, 14][lvl];
+  const ok = w => /^[a-z]+$/i.test(w.en) && w.en.length >= [3, 4, 5, 6, 7][lvl] && w.en.length <= [6, 8, 10, 14, 16][lvl];
   let w = /^a\d+$/.test(ref) ? U.W[+ref.slice(1) % Math.min(6, U.W.length)] : /^b\d+$/.test(ref) ? U.W[5 + (+ref.slice(1) % Math.max(1, U.W.length - 5))] : null;
   if (!w || !ok(w)) { const pool = U.W.filter(ok); w = pool.length ? pool[(Math.random() * pool.length) | 0] : U.W.find(x => /^[a-z]{3,}$/i.test(x.en)); }
   if (!w) return null;
@@ -285,7 +306,7 @@ const EX2 = {
     make(U, ref, ctx) { const S = U.S, lvl = exLv(U); let s = /^s\d+$/.test(ref) ? S[+ref.slice(1) % S.length] : null;
       if (!s) { ctx.sq2 = ctx.sq2 && ctx.sq2.length ? ctx.sq2 : shuffle(S.slice()); s = ctx.sq2.pop(); }
       if (lvl === 0 && tokN(s.en).length > 7) s = S.slice().sort((a, b) => a.en.length - b.en.length)[(Math.random() * Math.min(4, S.length)) | 0];
-      return { k: "say", s, lvl, need: [.6, .7, .8, .85][lvl] }; },
+      return { k: "say", s, lvl, need: [.6, .7, .8, .85, .9][lvl] }; },
     html(x, T) { if (!SR2) return T("e2Dict") + bigSay(x.s.en, true) + micHTML(true);
       return T("e2Say") + `<div class="dx-say">${pixMini(x.s.en)}<div class="dx-bub"><b class="dx-sayt">${esc(x.s.en)}</b>${sayBtn(x.s.en)}${x.lvl <= 1 ? `<small>${esc(nat(x.s))}</small>` : ""}</div></div>` + micHTML(false); },
     wire(x, box, ready) { micWire(x, box, ready, h => sayScore(x.s.en, h)); if (!SR2) setTimeout(() => window.__dx === x && sayRate(x.s.en, .9), 350); },
