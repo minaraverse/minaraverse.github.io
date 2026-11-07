@@ -138,10 +138,12 @@ function stats_() { const all = allRows_(), iso = r => Object.assign({}, r, { t:
   return { ok: true, today: summary_(rows(1), all), week: summary_(rows(7), all), month: summary_(rows(30), all), last: rows(7).reverse().slice(0, 60) }; }
 function todayMain_() { try { const d0 = new Date(); d0.setHours(0, 0, 0, 0); return readRows_().filter(r => new Date(r._time) >= d0); } catch (e) { return []; } }
 const UI_NAMES = { audio: "Включали озвучку", translate: "Открывали перевод", share: "Делились сайтом", safiverse: "Переходили в Safiverse", "level-cta": "Нажимали «Узнать уровень»", answer: "Отвечали на вопросы (чел.)" };
+const RU_M = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+function ruDate_(d) { const z = new Date(d.getTime() + 4 * 36e5); return z.getUTCDate() + " " + RU_M[z.getUTCMonth()]; }
 function dailyDigest() {
   const all = allRows_(), d0 = new Date(); d0.setHours(0, 0, 0, 0);
   const rows = all.filter(r => r.t >= d0).map(r => Object.assign({}, r, { t: r.t.toISOString() })), s = summary_(rows, all), main = todayMain_();
-  const date = Utilities.formatDate(new Date(), "Asia/Baku", "d MMMM", "ru");
+  const date = ruDate_(new Date());
   if (!s.visitors) { tg_("🌙 <b>" + date + "</b>\nСегодня на сайт никто не заходил."); return; }
   const j = (arr, f) => arr.map(x => f ? f(x) : x[0] + " " + x[1]).join(" · ");
   const leads = main.filter(r => /lesson/i.test(String(r.type))).map(r => (r.name + " " + (r.surname || "")).trim()), tests = main.filter(r => /level/i.test(String(r.type)));
@@ -172,7 +174,7 @@ function onNewAnswer(e) {
 }
 /* ---------- everything the site has collected so far (run once, or from setupTelegram) ---------- */
 function historyReport() {
-  const rows = readRows_(), fmt = d => Utilities.formatDate(new Date(d), "Asia/Baku", "d MMM", "ru");
+  const rows = readRows_(), fmt = d => ruDate_(new Date(d));
   const who = r => (String(r.name || "").trim() + " " + String(r.surname || "").trim()).trim() || "Без имени";
   const leads = rows.filter(r => /lesson/i.test(String(r.type))), tests = rows.filter(r => /level/i.test(String(r.type))), chaps = rows.filter(r => /chapter/i.test(String(r.type)));
   const people = {}; rows.forEach(r => { const k = who(r).toLowerCase(); const p = people[k] = people[k] || { name: who(r), tests: 0, chaps: 0, lead: false, last: r._time, level: "" };
