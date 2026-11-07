@@ -131,7 +131,7 @@ VIEWS.level = root => {
       <a class="qz-btn lv-dm" href="${DM}" target="_blank" rel="noopener">💬 ${L("lvlDM")} ↗</a></div>
       <pre class="qz-copy">${esc(`Minaraverse level test\nName: ${NAME || "—"}\nLevel: ${lvl} (${total}/${LEVELQ.length})\n${LVLS.map(l => l + " " + by[l] + "/5").join(" · ")}`)}</pre>
       <button type="button" class="qz-btn ghost" data-again>${L("lvlAgain")}</button></div>`;
-    lsSet("mv-level", { lvl, total, day: dayStr(new Date()) }); markDay();
+    lsSet("mv-level", { lvl, total, day: dayStr(new Date()) }); markDay(); if (typeof track === "function") track("level", { score: lvl + " · " + total + "/" + LEVELQ.length });
     const rec = () => ({ type: "Level test", ...profileFields(), level: lvl, name: (PROFILE().first || NAME || "—"), story: "Level test", chapter: lvl, score: `${total}/${LEVELQ.length}`, riddle: "—", answers: `${LVLS.map(l => l + " " + by[l] + "/5").join(" · ")}`, lang: LANG });
     const ni = body.querySelector("#lv-name"), pre = body.querySelector(".qz-copy");
     ni.oninput = () => { NAME = ni.value.trim(); try { localStorage.setItem("mv-name", NAME); } catch (e) {} pre.textContent = `Minaraverse level test\nName: ${NAME || "—"}\nLevel: ${lvl} (${total}/${LEVELQ.length})\n${rec().answers}`; };

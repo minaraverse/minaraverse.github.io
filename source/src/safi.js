@@ -34,14 +34,12 @@ const gatherProgress = () => { const o = {}; SYNC_KEYS.forEach(k => { const v = 
 function applyProgress(p) { if (!p) return; SYNC_KEYS.forEach(k => { if (k in p) lsSet(k, p[k]); }); try { DAYS = lsGet("mv-days", []); } catch (e) {} }
 let SYNC_T = 0;
 function pushSync(now) {
-  const a = ACCT(); if (!svOn() || !a) return; clearTimeout(SYNC_T); lsSet("mv-dirty", Date.now());
-  if (navigator.onLine === false) return; /* offline: progress stays on the phone and is sent when the internet returns */
+  const a = ACCT(); if (!svOn() || !a) return; clearTimeout(SYNC_T);
   SYNC_T = setTimeout(async () => { try {
     const u = UNITS[curUnit()], d = await sPost("sync", { email: a.email, token: a.token, progress: gatherProgress(), xp: XP().total, streak: streak(), lessons: drillLessons(), unit: u ? T3(u.t) : "", name: a.name, av: avStr() });
     if (d && d.err === "auth") { lsSet("mv-acct", null); return; }
     if (d && "hard" in d && ACCT() && !!ACCT().hard !== !!d.hard) { const x = ACCT(); x.hard = !!d.hard; lsSet("mv-acct", x); }
     if (d && d.status && ACCT() && ACCT().status !== d.status) { const x = ACCT(); x.status = d.status; lsSet("mv-acct", x); if (d.status === "pending") Router.remount(); }
-    if (d && d.ok) lsSet("mv-dirty", null);
     if (d && d.progress) { applyProgress(d.progress); Router.remount(); } } catch (e) {} }, now ? 0 : 1500);
 }
 
@@ -106,7 +104,7 @@ function welcomeScreen(root) {
   document.documentElement.classList.add("ap-mode");
   root.innerHTML = `<div class="ap sv-wel"><div class="ap-hud slim">${apBack()}${brandHTML()}</div><main class="ap-main sv-main">
     <div class="sv-safi">${safiSVG("wave")}</div>
-    <h1 class="ap-h">${L("svWelcome")}</h1><p class="ap-p">${L("svWelcomeP")}</p>${typeof tchkHTML === "function" ? tchkHTML("wel") : ""}
+    <h1 class="ap-h">${L("svWelcome")}</h1><p class="ap-p">${L("svWelcomeP")}</p>
     <div class="sv-btns"><button class="ap-cta sv-main-b" data-login>🔑 ${L("svHave")}</button><button class="sv-ghost sv-guest-b" data-guest><b>👀 ${L("svGuest")}</b><small>${L("svGuestP")}</small></button>
     <button class="sv-new-b" data-reg>✨ ${L("svReg")}</button></div><div class="sv-lang">${langPill()}</div></main></div>`;
   root.onclick = e => { if (e.target.closest("[data-reg]")) regScreen(root, "new"); else if (e.target.closest("[data-login]")) regScreen(root, "login");
@@ -238,7 +236,7 @@ VIEWS.sadmin = root => {
       : tab === "ok" ? `<button class="fr-b ${r.hard ? "go" : ""}" data-hard="${r.hard ? 0 : 1}" data-e="${esc(r.email)}" aria-pressed="${!!r.hard}">💪 ${T(AB.hard)}: ${r.hard ? T(AB.on) : T(AB.off)}</button><button class="fr-b" data-st="blocked" data-e="${esc(r.email)}">🚫 ${T(AB.blocked)}</button>` : `<button class="fr-b go" data-st="ok" data-e="${esc(r.email)}">↩️ ${T(AB.unblock)}</button>`;
     const tch = d.teacher || { user: "minara", target: 150 };
     const tbox = `<form class="sv-adv ad-tch" data-tch><b>👩‍🏫 ${T({ en: "Teacher card in the league", az: "Liqada müəllim kartı", ru: "Карточка учителя в лиге" })}</b><label>@<input name="u" value="${esc(tch.user)}" autocapitalize="none" spellcheck="false"></label><label>🎯 <input name="t" inputmode="numeric" value="${tch.target}"> XP</label><button class="sv-ghost"><b>✓</b></button></form>`;
-    root.innerHTML = shell(`${vbox}${tbox}${typeof adExtraBox === "function" ? adExtraBox(d) : ""}<h1 class="ap-h">👥 ${all.length}</h1>
+    root.innerHTML = shell(`${vbox}${tbox}<h1 class="ap-h">👥 ${all.length}</h1>
       <div class="ad-tabs" role="tablist">${Object.keys(AT).map(k => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? "on" : ""}" data-tab="${k}"><span>${AT[k][0]} <em>${cnt(k)}</em></span><small>${T(AT[k][1])}</small></button>`).join("")}</div>
       <input class="lg-in sv-q" placeholder="🔍"><div class="sv-tbl">${rows.length ? rows.map(r => `<div class="sv-row ${tab === "pending" ? "pend" : ""}" data-q="${esc((r.name + " " + r.email + " " + (r.user || "") + " " + (r.group || "")).toLowerCase())}">
       <span class="lg-av">${avOf(r.avatar, r.name)}</span><div><b>${esc(r.name)}</b> <small>👤 ${r.user ? esc(r.user) : "—"}</small><small>${r.age === "kid" ? "👧" : "🧑"} ${esc(r.email)}</small>${r.group ? `<small>👥 ${esc(r.group)}</small>` : ""}
@@ -246,8 +244,7 @@ VIEWS.sadmin = root => {
     const tf = root.querySelector("[data-tch]"); if (tf) tf.onsubmit = async e => { e.preventDefault(); const r = await sPost("ad_teacher", { key: key(), user: tf.u.value, target: tf.t.value }).catch(() => ({})); toast(r.ok ? "✓ @" + r.user + " · 🎯 " + r.target + " XP" : "✗ " + (r.err || "")); };
     const gf = root.querySelector("[data-goal]"); if (gf) gf.onsubmit = async e => { e.preventDefault(); const d = await sPost("ad_goal", { key: key(), goal: gf.g.value }).catch(() => ({})); toast(d.ok ? "✓ " + d.goal : "✗"); };
     root.querySelector(".sv-q").oninput = e => { const q = e.target.value.toLowerCase(); root.querySelectorAll(".sv-row").forEach(x => x.hidden = q && !x.dataset.q.includes(q)); };
-    root.onclick = async e => { const xb = e.target.closest("[data-adx]"); if (xb && typeof adExtra === "function") return adExtra(root, xb.dataset.adx, key, shell, load);
-      const tb = e.target.closest("[data-tab]"); if (tb) { tab = tb.dataset.tab; sfx("tap"); return load(); }
+    root.onclick = async e => { const tb = e.target.closest("[data-tab]"); if (tb) { tab = tb.dataset.tab; sfx("tap"); return load(); }
       const hb = e.target.closest("[data-hard]"); if (hb && !hb.disabled) { hb.disabled = true; hb.textContent = "…"; const r = await sPost("ad_hard", { key: key(), email: hb.dataset.e, on: hb.dataset.hard === "1" }).catch(() => ({})); toast(r.ok ? "✓ 💪 " + (r.hard ? T(AB.on) : T(AB.off)) : "✗"); return load(); }
       const b = e.target.closest("[data-st]"); if (!b || b.disabled) return;
       if (b.dataset.st !== "ok" && !b.dataset.sure) { b.dataset.sure = 1; b.dataset.t = b.textContent; b.textContent = T(AB.sure); b.classList.add("warn"); setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = b.dataset.t; b.classList.remove("warn"); } }, 3000); return; }

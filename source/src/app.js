@@ -116,7 +116,7 @@ VIEWS.app = root => {
   if (sub === "learn" && curCourse() === "milingo") { root.innerHTML = shell("learn", drillPathHTML()); wireDrillPath(root); return {}; }
   if (sub === "learn") {
     const k = curCourse(), S = STORIES[k], nx = nextIndex(k);
-    const nodes = S.units.map((u, i) => { const open = true, /* story courses in the app are never locked */ done = isDone(k, i), cur = i === nx && !solved(k, i), off = [0, 60, 90, 60, 0, -60, -90, -60][i % 8];
+    const nodes = S.units.map((u, i) => { const open = isOpen(k, i), done = isDone(k, i), cur = i === nx && !solved(k, i), off = [0, 60, 90, 60, 0, -60, -90, -60][i % 8];
       return `<div class="ap-node-w" style="--x:${off}px;--i:${i}">${cur ? `<span class="ap-start">${L("apStart")}</span>` : ""}<a class="ap-node ${done ? "done" : ""} ${cur ? "now" : ""} ${open ? "" : "lock"}" href="${open ? `#lesson-${k}-${i}` : "#app-learn"}" aria-label="${esc(u.name)}">
         <span>${done ? (best(k, i) === u.qs.length ? "👑" : "✓") : open ? (u.emoji || courseEmoji(k)) : "🔒"}</span></a><small class="ap-nl">${esc(u.name)}</small></div>`; }).join("");
     root.innerHTML = shell("learn", `<button class="ap-unit" data-go="course"><span><small>${L("apCourse")} · ${S.level}</small><b>${courseEmoji(k)} ${esc(S.title)}</b></span><i>${L("apChange")} ▾</i></button>
@@ -128,9 +128,9 @@ VIEWS.app = root => {
   if (sub === "quests") { root.innerHTML = shell("quests", questsHTML()); wireQuests(root); return {}; }
   if (sub === "practice") {
     const due = dueKeys().length;
-    const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ...(typeof TALKS === "object" ? [["#talk", "🗣", L("tkT"), L("tkP")]] : []), ...(typeof speakView === "function" ? [["#app-speak", "🎙", L("spT"), L("spP")]] : []), ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
+    const items = [["#drill-p", "💪", L("dPracticeAll"), L("dPracticeAllP")], ...(typeof speakView === "function" ? [["#app-speak", "🎙", L("spT"), L("spP")]] : []), ["#app-course", "📚", L("dStories"), L("apAllUnits")], ["#review", "🔁", L("apReview"), due ? `${due} · ${L("apReviewP")}` : L("reviewNone")], ["#daily", "🔤", L("apDaily"), dailyState().done ? L("dailyDone") : L("dailySub")],
       ["#errors", "🎯", L("apErrors"), "A1–C2"], ["#club", "☕", L("clubK"), L("clubNew")], ["#contract", "💼", "Business English", "B1–C1"], ["#level", "📊", L("apLevelT"), myLevel() ? myLevel() + " · " + lvName(myLevel()) : "A1–C2"]];
-    const worlds = typeof SK === "object" ? `<div class="wd-grid"><a class="wd-card wd-goal" href="#goal" style="--k:0"><span class="wd-e">⚽</span><b>${L("fbT")}</b><small>${L("fbP")}</small><img class="wd-kid" src="img/kid-boy-still.webp" alt=""></a>${typeof FL_N === "number" ? `<a class="wd-card wd-fleet" href="#fleet" style="--k:0"><span class="wd-e">⚓</span><b>${L("flT")}</b><small>${L("flP")}</small></a>` : ""}${["math", "music", "chess"].map((k, i) => { const done = skLessons(k), all = SK[k].U.length * SKL;
+    const worlds = typeof SK === "object" ? `<div class="wd-grid"><a class="wd-card wd-goal" href="#goal" style="--k:0"><span class="wd-e">⚽</span><b>${L("fbT")}</b><small>${L("fbP")}</small><img class="wd-kid" src="img/kid-boy-still.webp" alt=""></a>${["math", "music", "chess"].map((k, i) => { const done = skLessons(k), all = SK[k].U.length * SKL;
       return `<button class="wd-card wd-${k}" data-world="${k}" style="--k:${i}"><span class="wd-e">${SK[k].e}</span><b>${L(SK[k].n)}</b><small>${L(SK[k].p)}</small><div class="wd-bar"><i style="width:${Math.round(done / all * 100)}%"></i></div><em>${done}/${all}</em></button>`; }).join("")}</div><h2 class="ap-h2">🇬🇧 ${L("apEnPrac")}</h2>` : "";
     root.innerHTML = shell("practice", `<h1 class="ap-h">${letters(L("apPractice"))}</h1>${worlds}<div class="ap-list">${items.map(([h, e, t, s]) => `<a class="ap-item" href="${h}"><span>${e}</span><b>${t}</b><small>${esc(s)}</small><i>›</i></a>`).join("")}</div>`);
     root.onclick = e => { const w = e.target.closest("[data-world]"); if (!w) return; sfx("tap"); Router.go("app-world-" + w.dataset.world); };
@@ -148,7 +148,7 @@ VIEWS.app = root => {
     <div class="ap-stats"><div><b>🔥 ${streak()}</b><small>${L("apDays")}</small></div><div><b>⚡ ${x.total}</b><small>${L("apTotal")}</small></div><div><b>🎯 ${goal()}</b><small>${L("apGoal")}</small></div><div><b>📚 ${drillLessons() + WORLD_ORDER.reduce((a, k) => a + doneCount(k), 0)}</b><small>${L("chapters")}</small></div></div>
     <h2 class="ap-h2">${L("apBadges")}</h2><div class="ap-badges">${BADGES.map(([k, e, t]) => `<div class="${b[k] ? "on" : ""}"><span>${e}</span><small>${esc(t)}</small></div>`).join("")}</div>
     <div class="ap-set">${typeof levelItem === "function" ? levelItem() : ""}<div class="ap-item"><span>❤️</span><b>${L("dHearts")}</b><small>${hearts()} / 5${hearts() >= 5 ? " · " + L("dFull") : ""}</small></div>${typeof friendsView === "function" && typeof ACCT === "function" && ACCT() ? `<a href="#app-friends" class="ap-item"><span>👥</span><b>${L("frT")}</b><small>${frCount() ? `<em class="fr-n">${frCount()}</em>` : ""}</small><i>›</i></a>${typeof certItems === "function" ? certItems() : ""}${typeof mailItem === "function" ? mailItem() : ""}${ACCT().user ? `<button class="ap-item" data-inv><span>📨</span><b>${L("invT")}</b><small>📤</small><i>›</i></button>` : ""}` : ""}<a href="#app-goal" class="ap-item"><span>🎯</span><b>${L("apGoal")}</b><small>${goal()} XP</small><i>›</i></a>
-      <button class="ap-item" data-snd><span>🔊</span><b>${L("apSound")}</b><small>${soundOn() ? L("apOn") : L("apOff")}</small><i>›</i></button>${typeof extraSetItems === "function" ? extraSetItems() : ""}
+      <button class="ap-item" data-snd><span>🔊</span><b>${L("apSound")}</b><small>${soundOn() ? L("apOn") : L("apOff")}</small><i>›</i></button>
       <div class="ap-item"><span>🌐</span><b>EN · AZ · RU</b>${langPill()}</div>
       <a href="#" class="ap-item"><span>🌍</span><b>${L("apSite")}</b><small>minaraverse.github.io</small><i>›</i></a>
       ${typeof ACCT === "function" && ACCT() ? `<button class="ap-item" data-out><span>👤</span><b>${esc(ACCT().user || ACCT().email)}</b><small>${L("svOut")}</small><i>›</i></button>` : ""}<a href="${typeof svOn === "function" && svOn() ? "#sadmin" : "#admin"}" class="ap-item"><span>🔐</span><b>Admin</b><small>${typeof svOn === "function" && svOn() ? "Safiverse" : "Minaraverse"}</small><i>›</i></a></div>`);
@@ -164,7 +164,7 @@ VIEWS.app = root => {
 VIEWS.lesson = root => {
   document.documentElement.classList.add("ap-mode");
   const m = location.hash.match(/lesson-(\w+)-(\d+)/); if (!m || !STORIES[m[1]]) { Router.go("app-learn"); return {}; }
-  const k = m[1], i = +m[2], S = STORIES[k], u = S.units[i]; if (!u) { Router.go("app-learn"); return {}; }
+  const k = m[1], i = +m[2], S = STORIES[k], u = S.units[i]; if (!u || !isOpen(k, i)) { Router.go("app-learn"); return {}; }
   const note = noteOf(u);
   LESSON = { k, i, n: 0, ok: 0, miss: 0, streak: 0, total: u.qs.length + Math.min(3, dueKeys(k + "|").filter(x => !x.startsWith(`${k}|${i}|`)).length), start: Date.now() };
   root.innerHTML = `<div class="ap ap-les"><header class="ap-lh"><a href="#app-learn" class="ap-x" aria-label="Close">✕</a>${lhBrand()}<div class="ap-lbar"><i></i></div><span class="ap-st on">🔥 ${streak()}</span></header>
@@ -196,8 +196,8 @@ function mascot(say, k) {
 
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 /* ---------- Milingo opens only from its button: the home-screen app always starts on Minaraverse ---------- */
-if (!SAFI && STANDALONE && /^#(app|lesson|drill|goal|talk|tell|fleet)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
-addEventListener("hashchange", () => { if (!/^#(app|lesson|drill|goal|talk|tell|fleet)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
+if (!SAFI && STANDALONE && /^#(app|lesson|drill|goal)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+addEventListener("hashchange", () => { if (!/^#(app|lesson|drill|goal)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
 
 /* Safiverse: the app itself is the home page */
 if (SAFI) { VIEWS.home = root => { Router.go("app-" + (lsGet("mv-goal", null) ? "learn" : "goal")); return {}; };

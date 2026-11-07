@@ -7,6 +7,9 @@
  * Only a SHA-256 hash of the admin code is stored (Script Properties).
  */
 const ADMIN_EMAIL = "nurlan_kerimov@hotmail.com";
+/* Telegram notifications: paste the bot token from @BotFather between the quotes, save,
+   send /start to the bot in Telegram, then run setupTelegram() once (▶) — it finds your chat, sends a test and sets the 21:00 digest. */
+const TG_TOKEN = "";
 const KIDS_MAX_AGE = 14;
 const P = PropertiesService.getScriptProperties();
 
@@ -86,6 +89,51 @@ function league_(p) {
   return { ok: true, tier: t, week: cur, days: 8 - day_(), players: players, zones: zones_(t, players.length), prev: prev };
 }
 
+
+/* ---------- visits & activity log ("Ziyarətlər" sheet) + Telegram ---------- */
+const EVH = ["time", "uid", "name", "event", "story", "chapter", "score", "lang", "device", "ref"];
+function evSheet_() { const ss = SpreadsheetApp.getActiveSpreadsheet(); let sh = ss.getSheetByName("Ziyarətlər");
+  if (!sh) { sh = ss.insertSheet("Ziyarətlər"); sh.appendRow(EVH); sh.setFrozenRows(1); } return sh; }
+const cl_ = (s, n) => String(s || "").replace(/[<>"=]/g, "").trim().slice(0, n);
+function tg_(text) { const chat = P.getProperty("TG_CHAT"); if (!TG_TOKEN || !chat) return false;
+  try { UrlFetchApp.fetch("https://api.telegram.org/bot" + TG_TOKEN + "/sendMessage", { method: "post", contentType: "application/json", muteHttpExceptions: true,
+    payload: JSON.stringify({ chat_id: chat, text: text, parse_mode: "HTML", disable_web_page_preview: true }) }); return true; } catch (e) { return false; } }
+const STORY_NAMES = { kids: "Little Explorers", cafe: "Baku Café", tapes: "English Tape Club", wild: "Wild English", travel: "Travel", voyage: "Voyage", mystery: "Mystery", movie: "Movie Club", business: "Baku Startup", contract: "Missing Contract", interview: "Job Interview", client: "Angry Client", call: "Video Call", debate: "Debate", ielts: "IELTS", heist: "Heist", club: "Weekly Club", errors: "Mistake Hunters" };
+const sname_ = k => STORY_NAMES[k] || k;
+function event_(p) {
+  const ev = cl_(p.ev, 12); if (["visit", "view", "done", "level"].indexOf(ev) < 0) return { ok: false };
+  const sh = evSheet_(), name = cl_(p.name, 40), story = cl_(p.story, 24), ch = cl_(p.ch, 6), score = cl_(p.score, 12);
+  sh.appendRow([new Date(), cl_(p.uid, 32), name, ev, story, ch, score, cl_(p.lang, 4), cl_(p.dev, 8), cl_(p.ref, 60)]);
+  if (ev === "done") tg_("🎉 <b>" + (name || "Adsız tələbə") + "</b>\n📖 " + sname_(story) + " · Fəsil " + (Number(ch) + 1 || ch) + "\n⭐ " + score + (p.dev === "mobile" ? "  📱" : "  💻"));
+  if (ev === "level") tg_("🎓 <b>" + (name || "Adsız tələbə") + "</b> səviyyə testini bitirdi: <b>" + score + "</b>");
+  if (ev === "visit" && name) tg_("👋 <b>" + name + "</b> sayta girdi" + (p.dev === "mobile" ? " 📱" : " 💻"));
+  return { ok: true };
+}
+function evRows_(days) { const v = evSheet_().getDataRange().getValues(); v.shift(); const since = Date.now() - days * 864e5;
+  return v.filter(r => r[0] instanceof Date && r[0].getTime() >= since).map(r => ({ t: r[0].toISOString(), uid: r[1], name: r[2], ev: r[3], story: r[4], ch: r[5], score: r[6], lang: r[7], dev: r[8] })); }
+function summary_(rows) { const u = new Set(), named = new Set(), st = {}; let views = 0, done = 0;
+  rows.forEach(r => { if (r.uid) u.add(r.uid); if (r.name) named.add(r.name); if (r.ev === "view") { views++; st[r.story] = (st[r.story] || 0) + 1; } if (r.ev === "done") done++; });
+  const top = Object.entries(st).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => sname_(x[0]) + " (" + x[1] + ")");
+  return { visitors: u.size, named: [...named], views: views, done: done, top: top }; }
+function stats_() { const d = summary_(evRows_(1)), w = summary_(evRows_(7)), m = summary_(evRows_(30));
+  return { ok: true, today: d, week: w, month: m, last: evRows_(7).reverse().slice(0, 60) }; }
+function dailyDigest() { const s = summary_(evRows_(1)); if (!s.visitors && !s.done) { tg_("🌙 Bu gün sayta heç kim girməyib."); return; }
+  tg_("🌙 <b>Bugünkü xülasə</b>\n👥 Ziyarətçi: " + s.visitors + "\n📖 Hekayə açılıb: " + s.views + "\n✅ Fəsil bitirilib: " + s.done + (s.top.length ? "\n🔥 " + s.top.join(", ") : "") + (s.named.length ? "\n🙋 " + s.named.slice(0, 15).join(", ") : "")); }
+/* run once from the editor after pasting TG_TOKEN and sending /start to the bot */
+function setupTelegram() {
+  if (!TG_TOKEN) throw new Error("TG_TOKEN boşdur — @BotFather-dən aldığınız tokeni yuxarıya yapışdırın.");
+  const r = JSON.parse(UrlFetchApp.fetch("https://api.telegram.org/bot" + TG_TOKEN + "/getUpdates", { muteHttpExceptions: true }).getContentText());
+  const m = (r.result || []).map(x => x.message || x.my_chat_member && { chat: x.my_chat_member.chat }).filter(Boolean).pop();
+  if (!m) throw new Error("Telegram-da botunuzu açıb Start basın (və ya bir mesaj yazın), sonra yenidən işə salın.");
+  P.setProperty("TG_CHAT", String(m.chat.id));
+  ScriptApp.getProjectTriggers().forEach(t => { if (t.getHandlerFunction() === "dailyDigest") ScriptApp.deleteTrigger(t); });
+  ScriptApp.newTrigger("dailyDigest").timeBased().everyDays(1).atHour(21).inTimezone("Asia/Baku").create();
+  tg_("✅ Minaraverse bildirişləri qoşuldu!\nHər fəsil bitəndə dərhal, hər axşam 21:00-da isə xülasə gələcək.");
+  Logger.log("OK — chat " + m.chat.id);
+}
+function doPost(e) { let p = {}; try { p = JSON.parse(e.postData.contents || "{}"); } catch (er) {}
+  if (p.a === "ev") return json_(event_(p)); return json_({ ok: false }); }
+
 function doGet(e) {
   const p = (e && e.parameter) || {}, a = p.a || (p.board ? "board" : "rows");
   const lock = LockService.getScriptLock(); lock.waitLock(10000);
@@ -94,6 +142,7 @@ function doGet(e) {
     if (a === "board") return json_({ ok: true, board: board_(readRows_()) });
     if (a === "status") { const sh = sheet_(); return json_({ ok: true, hasCode: !!P.getProperty("KEY"), email: ADMIN_EMAIL.replace(/^(.).*(@.*)$/, "$1***$2"),
       file: SpreadsheetApp.getActiveSpreadsheet().getName(), sheet: sh.getName(), rows: Math.max(0, sh.getLastRow() - 1) }); }
+    if (a === "stats") { const k = P.getProperty("KEY"); if (!k || !p.key || hash_(p.key) !== k) return json_({ ok: false }); return json_(stats_()); }
     if (a === "rows") {
       const k = P.getProperty("KEY");
       if (!k || !p.key || hash_(p.key) !== k) return json_({ ok: false });

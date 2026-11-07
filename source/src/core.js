@@ -82,7 +82,7 @@ const isDone = (s, i) => rec(s, i) != null;
 const solved = (s, i) => !!(rec(s, i) && rec(s, i).r);
 const isOpen = (s, i) => i === 0 || solved(s, i - 1);
 const doneCount = s => STORIES[s].units.filter((_, i) => solved(s, i)).length;
-const record = (s, i, score, r) => { PROG[s] = PROG[s] || {}; const o = PROG[s][i] || { b: 0, r: false }; PROG[s][i] = { b: Math.max(o.b, score), r: o.r || r }; saveProg(); };
+const record = (s, i, score, r) => { PROG[s] = PROG[s] || {}; const o = PROG[s][i] || { b: 0, r: false }; PROG[s][i] = { b: Math.max(o.b, score), r: o.r || r }; saveProg();  if (typeof track === "function") track("done", { story: s, ch: String(i), score: score + "/" + ((STORIES[s] && STORIES[s].units[i] && STORIES[s].units[i].qs || []).length || "?") }); };
 const nextIndex = s => { const n = STORIES[s].units.length; for (let i = 0; i < n; i++) if (!solved(s, i)) return i; return n - 1; };
 let NAME = ""; try { NAME = localStorage.getItem("mv-name") || ""; } catch (e) {}
 

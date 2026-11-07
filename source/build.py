@@ -2,7 +2,7 @@ import base64, pathlib
 R = pathlib.Path("/home/claude/mv")
 band = ""
 css = (R / "src/style.css").read_text()
-MODS = ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "audmap", "core", "art", "home", "share", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "admin", "app", "course", "course2", "drill", "people", "skills", "safi", "friends", "social", "learn2", "uisound", "lesson", "level", "teacher", "mascot", "kids", "extras", "ex2", "fleet"]
+MODS = ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "audmap", "core", "art", "home", "share", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "admin", "app", "course", "course2", "drill", "people", "skills", "safi", "friends", "social", "learn2", "uisound", "lesson", "level", "teacher", "mascot", "kids", "track"]
 SV_DROP = {"home", "tapes", "voyage", "wild", "travel", "mystery", "art"}  # Minaraverse-site-only pages: not part of the Safiverse app
 js = "\n".join((R / f"src/{n}.js").read_text() for n in MODS if (R / f"src/{n}.js").exists())
 js_sv = "\n".join((R / f"src/{n}.js").read_text() for n in MODS if n not in SV_DROP and (R / f"src/{n}.js").exists())

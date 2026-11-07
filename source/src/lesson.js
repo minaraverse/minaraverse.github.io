@@ -7,7 +7,7 @@ let LH_LAST = "";
 function lhDust(h) {
   const br = h.querySelector(".lh-brand"); if (!br) return;
   const key = location.hash.split("?")[0]; if (key === LH_LAST) return; /* once per lesson, not on every question */
-  if (REDUCED || (typeof adultOn === "function" && adultOn())) { LH_LAST = key; return; }
+  if (REDUCED) { LH_LAST = key; return; }
   const r = br.getBoundingClientRect(); if (!r.width) { if ((h.__try = (h.__try || 0) + 1) < 20) setTimeout(() => lhDust(h), 50); return; } /* wait until the header is laid out */
   LH_LAST = key;
   /* 1) the old "← minaraverse" pill, letter by letter */
