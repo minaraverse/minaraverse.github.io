@@ -110,7 +110,7 @@ VIEWS.level = root => {
   const body = root.querySelector(".lv-body"), f1 = root.querySelector("#lvf"), f2 = root.querySelector("#lvf2"), W = innerWidth < 600 ? 14 : 18;
   const intro = () => { flapText(f1, "GATE A1 → C2", W); flapText(f2, "30 QUESTIONS · 7 MIN", W + 6);
     body.innerHTML = `<div class="lv-card"><p class="lv-k">${L("levelK")}</p><h1 class="lv-h">${L("levelH")}</h1><p class="lv-p">${L("levelP")}</p>
-      <div class="lv-prof"><p class="lv-k">${L("profK")}</p><div class="lv-pf"><input id="lp-first" placeholder="${L("fFirst")}" autocomplete="given-name" value="${esc(PROFILE().first || NAME.split(" ")[0] || "")}"><input id="lp-last" placeholder="${L("fLast")}" autocomplete="family-name" value="${esc(PROFILE().last || "")}"><input id="lp-age" placeholder="${L("fAge")}" inputmode="numeric" maxlength="3" value="${esc(PROFILE().age || "")}"></div><small>${L("profP")}</small></div>
+      <div class="lv-prof"><p class="lv-k">${L("profK")}</p><div class="lv-pf"><input id="lp-first" placeholder="${L("fFirst")}" autocomplete="given-name" value="${esc(PROFILE().first || NAME.split(" ")[0] || "")}"><input id="lp-last" placeholder="${L("fLast")}" autocomplete="family-name" value="${esc(PROFILE().last || "")}"><input id="lp-age" placeholder="${L("fAge")}" inputmode="numeric" maxlength="3" value="${esc(PROFILE().age || "")}"><input id="lp-ig" placeholder="Instagram (@…)" autocomplete="off" value="${esc(PROFILE().ig || "")}"></div><small>${L("profP")}</small></div>
       <button type="button" class="qz-btn" data-go>${L("levelBtn")} →</button></div>`; };
   const q = () => { const [lv, text, opts] = LEVELQ[i], order = shuffled([text, opts], "lv" + i);
     flapText(f1, `${L("lvlQ")} ${String(i + 1).padStart(2, "0")}/${LEVELQ.length}`.normalize("NFD").replace(/[̀-ͯ]/g, ""), W); flapText(f2, `GATE ${lv}`, W + 6);
@@ -139,8 +139,8 @@ VIEWS.level = root => {
       if (resultsOn()) { e.preventDefault(); fl.textContent = "…"; sendResult(rec()).then(ok => { fl.textContent = ok ? "✓ " + L("sent") : L("sendFail"); }); return; } fl.href = formLink(rec()); };
   };
   body.onclick = e => {
-    if (e.target.closest("[data-go]")) { const g = id => (body.querySelector(id) || {}).value || ""; const pf = { ...PROFILE(), first: g("#lp-first").trim(), last: g("#lp-last").trim(), age: g("#lp-age").trim() };
-      if (pf.first) { lsSet("mv-profile", pf); NAME = [pf.first, pf.last].filter(Boolean).join(" "); try { localStorage.setItem("mv-name", NAME); } catch (er) {} }
+    if (e.target.closest("[data-go]")) { const g = id => (body.querySelector(id) || {}).value || ""; const pf = { ...PROFILE(), first: g("#lp-first").trim(), last: g("#lp-last").trim(), age: g("#lp-age").trim(), ig: g("#lp-ig").trim().replace(/^@/, "") };
+      if (pf.first) { lsSet("mv-profile", pf); NAME = [pf.first, pf.last].filter(Boolean).join(" "); try { localStorage.setItem("mv-name", NAME); } catch (er) {}  if (typeof track === "function") track("reg", { score: "level-test" }); }
       i = 0; picks = []; q(); return; }
     if (e.target.closest("[data-again]")) { intro(); return; }
     if (e.target.closest("[data-back]")) { i = Math.max(0, i - 1); q(); return; }

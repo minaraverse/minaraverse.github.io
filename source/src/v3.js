@@ -12,7 +12,7 @@ Object.assign(UI.en, {
   leadK: "Lessons with Minara", leadH: "Want to speak English like a native speaker?", leadP: "Fluent, proficient English, Business English, IELTS or English for your child. Leave your details and Minara will contact you.",
   leadB1: "Speak confidently and naturally: General English, Business English, IELTS and more", leadB3: "Stories, mysteries and debates in every lesson (speaking, reading, writing, listening, vocabulary and more)", leadB4: "For adults and kids, online",
   leadInd: "Individual lessons", leadIndP: "One-to-one, your goals, your pace.", leadGrp: "Group lessons", leadGrpP: "Small online groups, lots of speaking.",
-  fFirst: "First name", fLast: "Last name", fAge: "Age", fEmail: "Email", fWa: "WhatsApp number", fLevel: "Your level", fMsg: "Your goal (optional)", fUnknown: "Not sure yet",
+  fOpt: "optional", fFirst: "First name", fLast: "Last name", fAge: "Age", fEmail: "Email", fWa: "WhatsApp number", fLevel: "Your level", fMsg: "Your goal (optional)", fUnknown: "Not sure yet",
   fSend: "Send my request", fNote: "Your details go only to Minara and are used only to contact you about lessons.", fNeed: "Please fill in name, last name and WhatsApp or email.",
   fOpened: "Almost done! A Google Form has opened with your details. Press “Submit” there to send your request.", fOpenBtn: "Open the form again", fSent: "Thank you! Your request has been sent. Minara will contact you soon.", fCopied: "Your request is copied. Paste it into the Instagram chat that just opened.",
   profK: "Before you start (optional)", profP: "So Minara knows who took the test."
@@ -30,7 +30,7 @@ Object.assign(UI.az, {
   leadK: "Minara ilə dərslər", leadH: "İngilis dilində daşıyıcı kimi danışmaq istəyirsən?", leadP: "Sərbəst, mükəmməl ingilis dili, Business English, IELTS və ya uşağın üçün ingilis dili. Məlumatlarını yaz, Minara səninlə əlaqə saxlayacaq.",
   leadB1: "Özünəinamlı və təbii danış: General English, Business English, IELTS və s.", leadB3: "Hər dərsdə hekayələr, sirlər və debatlar (danışıq, oxu, yazı, dinləmə, söz ehtiyatı və s.)", leadB4: "Böyüklər və uşaqlar üçün, onlayn",
   leadInd: "Fərdi dərslər", leadIndP: "Təkbətək, sənin məqsədin, sənin tempin.", leadGrp: "Qrup dərsləri", leadGrpP: "Kiçik onlayn qruplar, çox danışıq.",
-  fFirst: "Ad", fLast: "Soyad", fAge: "Yaş", fEmail: "Email", fWa: "WhatsApp nömrəsi", fLevel: "Səviyyən", fMsg: "Məqsədin (istəyə görə)", fUnknown: "Hələ bilmirəm",
+  fOpt: "istəyə görə", fFirst: "Ad", fLast: "Soyad", fAge: "Yaş", fEmail: "Email", fWa: "WhatsApp nömrəsi", fLevel: "Səviyyən", fMsg: "Məqsədin (istəyə görə)", fUnknown: "Hələ bilmirəm",
   fSend: "Müraciətimi göndər", fNote: "Məlumatların yalnız Minaraya gedir və yalnız dərslərlə bağlı əlaqə üçün istifadə olunur.", fNeed: "Ad, soyad və WhatsApp və ya email yaz.",
   fOpened: "Az qaldı! Məlumatlarınla Google Forma açıldı. Müraciəti göndərmək üçün orada «Göndər / Submit» düyməsini bas.", fOpenBtn: "Formanı yenidən aç", fSent: "Təşəkkürlər! Müraciətin göndərildi. Minara tezliklə səninlə əlaqə saxlayacaq.", fCopied: "Müraciətin kopyalandı. Açılan Instagram çatına yapışdır.",
   profK: "Başlamazdan əvvəl (istəyə görə)", profP: "Minara testi kimin keçdiyini bilsin."
@@ -48,7 +48,7 @@ Object.assign(UI.ru, {
   leadK: "Уроки с Минарой", leadH: "Хочешь говорить по-английски как носитель?", leadP: "Свободный, уверенный английский, Business English, IELTS или английский для ребёнка. Оставь свои данные, и Минара свяжется с тобой.",
   leadB1: "Говори уверенно и естественно: General English, Business English, IELTS и другое", leadB3: "Истории, детективы и дебаты на каждом уроке (speaking, reading, writing, listening, vocabulary и другое)", leadB4: "Для взрослых и детей, онлайн",
   leadInd: "Индивидуальные уроки", leadIndP: "Один на один, твои цели, твой темп.", leadGrp: "Групповые уроки", leadGrpP: "Небольшие онлайн-группы, много разговорной практики.",
-  fFirst: "Имя", fLast: "Фамилия", fAge: "Возраст", fEmail: "Email", fWa: "Номер WhatsApp", fLevel: "Твой уровень", fMsg: "Твоя цель (по желанию)", fUnknown: "Пока не знаю",
+  fOpt: "по желанию", fFirst: "Имя", fLast: "Фамилия", fAge: "Возраст", fEmail: "Email", fWa: "Номер WhatsApp", fLevel: "Твой уровень", fMsg: "Твоя цель (по желанию)", fUnknown: "Пока не знаю",
   fSend: "Отправить заявку", fNote: "Твои данные получит только Минара и использует их только для связи по урокам.", fNeed: "Заполни имя, фамилию и WhatsApp или email.",
   fOpened: "Почти готово! Открылась Google Форма с твоими данными. Нажми там «Отправить / Submit», чтобы отправить заявку.", fOpenBtn: "Открыть форму ещё раз", fSent: "Спасибо! Заявка отправлена. Минара скоро свяжется с тобой.", fCopied: "Заявка скопирована. Вставь её в открывшийся чат Instagram.",
   profK: "Перед началом (по желанию)", profP: "Чтобы Минара знала, кто прошёл тест."
@@ -140,6 +140,7 @@ function leadHTML() {
       <div class="hl2-row"><label><span>${L("fFirst")} *</span><input name="first" autocomplete="given-name" value="${esc(p.first || NAME.split(" ")[0] || "")}"></label><label><span>${L("fLast")} *</span><input name="last" autocomplete="family-name" value="${esc(p.last || "")}"></label></div>
       <div class="hl2-row"><label><span>${L("fAge")}</span><input name="age" inputmode="numeric" maxlength="3" value="${esc(p.age || "")}"></label><label><span>${L("fLevel")}</span><select name="level"><option value="">${L("fUnknown")}</option>${LVLS.map(l => `<option ${l === lv ? "selected" : ""} value="${l}">${l} · ${lvName(l)}</option>`).join("")}</select></label></div>
       <div class="hl2-row"><label><span>${L("fWa")} *</span><input name="wa" type="tel" autocomplete="tel" placeholder="+994" value="${esc(p.wa || "")}"></label><label><span>${L("fEmail")}</span><input name="email" type="email" autocomplete="email" value="${esc(p.email || "")}"></label></div>
+      <label><span>Instagram <small>(${L("fOpt")})</small></span><input name="ig" placeholder="@username" autocomplete="off" value="${esc(p.ig || "")}"></label>
       <label><span>${L("fMsg")}</span><textarea name="msg" rows="2"></textarea></label>
       <button type="submit" class="hl2-send">${L("fSend")} →</button><p class="hl2-note">🔒 ${L("fNote")}</p><p class="hl2-status" role="status" aria-live="polite"></p></form></section>`;
 }
@@ -148,9 +149,9 @@ function wireLead(root) {
   f.addEventListener("submit", e => {
     e.preventDefault(); const d = Object.fromEntries(new FormData(f)), st = f.querySelector(".hl2-status");
     if (!d.first.trim() || !d.last.trim() || !(d.wa.trim() || d.email.trim())) { st.textContent = L("fNeed"); st.className = "hl2-status bad"; return; }
-    lsSet("mv-profile", { first: d.first.trim(), last: d.last.trim(), age: d.age.trim(), wa: d.wa.trim(), email: d.email.trim() }); NAME = `${d.first.trim()} ${d.last.trim()}`; try { localStorage.setItem("mv-name", NAME); } catch (er) {}
+    lsSet("mv-profile", { first: d.first.trim(), last: d.last.trim(), age: d.age.trim(), wa: d.wa.trim(), email: d.email.trim(), ig: (d.ig || "").trim().replace(/^@/, "") }); if (typeof track === "function") track("reg", { score: "lesson-request" }); NAME = `${d.first.trim()} ${d.last.trim()}`; try { localStorage.setItem("mv-name", NAME); } catch (er) {}
     const fmt = d.format === "grp" ? "Group" : "Individual", lvl = lsGet("mv-level", null);
-    const rec = { type: "Lesson request", name: d.first.trim(), surname: d.last.trim(), age: d.age.trim(), email: d.email.trim(), whatsapp: d.wa.trim(), format: fmt, level: d.level || "", message: d.msg.trim(), score: lvl ? `${lvl.lvl} (${lvl.total})` : "", lang: LANG };
+    const rec = { type: "Lesson request", name: d.first.trim(), surname: d.last.trim(), age: d.age.trim(), email: d.email.trim(), whatsapp: d.wa.trim(), format: fmt, level: d.level || "", message: ((d.ig || "").trim() ? "Instagram: @" + (d.ig || "").trim().replace(/^@/, "") + (d.msg.trim() ? " · " : "") : "") + d.msg.trim(), score: lvl ? `${lvl.lvl} (${lvl.total})` : "", lang: LANG };
     const txt = `Minaraverse — ${fmt} lessons\n${rec.name} ${rec.surname}${rec.age ? ", " + rec.age : ""}\nWhatsApp: ${rec.whatsapp || "—"}\nEmail: ${rec.email || "—"}\nLevel: ${rec.level || "—"}${rec.message ? "\nGoal: " + rec.message : ""}`;
     if (resultsOn()) { st.textContent = "…"; sendResult(rec).then(ok => { st.textContent = ok ? "✓ " + L("fSent") : L("sendFail"); st.className = "hl2-status " + (ok ? "ok" : "bad"); if (ok) f.querySelector("[name=msg]").value = ""; }); return; }
     if (RESULTS.form) { const u = formLink(rec); window.open(u, "_blank", "noopener"); st.innerHTML = "✓ " + esc(L("fOpened")) + ` <a class="hl2-open" href="${esc(u)}" target="_blank" rel="noopener">${esc(L("fOpenBtn"))} ↗</a>`; }
