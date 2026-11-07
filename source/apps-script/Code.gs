@@ -102,25 +102,25 @@ function tg_(text) { const chat = P.getProperty("TG_CHAT"); if (!TG_TOKEN || !ch
 const STORY_NAMES = { kids: "Little Explorers", cafe: "Baku Café", tapes: "English Tape Club", wild: "Wild English", travel: "Travel", voyage: "Voyage", mystery: "Mystery", movie: "Movie Club", business: "Baku Startup", contract: "Missing Contract", interview: "Job Interview", client: "Angry Client", call: "Video Call", debate: "Debate", ielts: "IELTS", heist: "Heist", club: "Weekly Club", errors: "Mistake Hunters" };
 const sname_ = k => STORY_NAMES[k] || k;
 const EVS = ["visit", "view", "chapter", "done", "level", "page", "ui", "reg"];
-const PAGE_NAMES = { level: "Səviyyə testi", practice: "Məşq", app: "Safiverse", club: "Həftənin klubu", word: "Günün sözü", errors: "Səhv ovçuları", review: "Səhvləri təkrarla", board: "Şərəf lövhəsi", lesson: "Dərs müraciəti", pick: "Kurs seçimi" };
+const PAGE_NAMES = { level: "Тест уровня", practice: "Тренировка", app: "Safiverse", club: "Клуб недели", word: "Слово дня", errors: "Охотники за ошибками", review: "Повтор ошибок", board: "Доска почёта", lesson: "Заявка на урок", pick: "Выбор курса" };
 const pname_ = k => PAGE_NAMES[k] || sname_(k);
-const who_ = (name, ig) => (name || "Adsız") + (ig ? " (@" + ig + ")" : "");
+const who_ = (name, ig) => (name || "Без имени") + (ig ? " (@" + ig + ")" : "");
 function event_(p) {
   const ev = cl_(p.ev, 12); if (EVS.indexOf(ev) < 0) return { ok: false };
   const sh = evSheet_(), name = cl_(p.name, 40), ig = cl_(p.ig, 40).replace(/^@/, ""), story = cl_(p.story, 24), ch = cl_(p.ch, 6), score = cl_(p.score, 20);
   sh.appendRow([new Date(), cl_(p.uid, 32), name, ev, story, ch, score, cl_(p.lang, 4), cl_(p.dev, 8), cl_(p.ref, 60), ig]);
   const dev = p.dev === "mobile" ? " 📱" : " 💻";
-  if (ev === "done") tg_("🎉 <b>" + who_(name, ig) + "</b>\n📖 " + sname_(story) + " · Fəsil " + (Number(ch) + 1 || ch) + "\n⭐ " + score + dev);
-  if (ev === "level") tg_("🎓 <b>" + who_(name, ig) + "</b> səviyyə testini bitirdi: <b>" + score + "</b>" + dev);
-  if (ev === "reg") tg_("📝 <b>Yeni qeydiyyat:</b> " + who_(name, ig) + (score === "lesson-request" ? " — dərs müraciəti" : " — səviyyə testində") + dev);
-  if (ev === "visit" && name) tg_("👋 <b>" + who_(name, ig) + "</b> sayta girdi" + dev);
+  if (ev === "done") tg_("🎉 <b>" + who_(name, ig) + "</b>\n📖 " + sname_(story) + " · Глава " + (Number(ch) + 1 || ch) + "\n⭐ " + score + dev);
+  if (ev === "level") tg_("🎓 <b>" + who_(name, ig) + "</b> прошёл(а) тест уровня: <b>" + score + "</b>" + dev);
+  if (ev === "reg") tg_("📝 <b>Новая регистрация:</b> " + who_(name, ig) + (score === "lesson-request" ? " — заявка на урок" : " — в тесте уровня") + dev);
+  if (ev === "visit" && name) tg_("👋 <b>" + who_(name, ig) + "</b> зашёл(а) на сайт" + dev);
   return { ok: true };
 }
 function allRows_() { const v = evSheet_().getDataRange().getValues(); v.shift();
   return v.filter(r => r[0] instanceof Date).map(r => ({ t: r[0], uid: String(r[1] || ""), name: String(r[2] || ""), ev: String(r[3] || ""), story: String(r[4] || ""), ch: String(r[5]), score: String(r[6] || ""), lang: String(r[7] || ""), dev: String(r[8] || ""), ref: String(r[9] || ""), ig: String(r[10] || "") })); }
 function evRows_(days) { const since = Date.now() - days * 864e5; return allRows_().filter(r => r.t.getTime() >= since).map(r => Object.assign({}, r, { t: r.t.toISOString() })); }
 const cnt_ = (list, f) => { const m = {}; list.forEach(x => { const k = f(x); if (k) m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]); };
-const src_ = ref => /instagram/i.test(ref) ? "Instagram" : /t\.co|twitter|x\.com/i.test(ref) ? "X" : /facebook|fb\./i.test(ref) ? "Facebook" : /t\.me|telegram/i.test(ref) ? "Telegram" : /google/i.test(ref) ? "Google" : /youtube|youtu\.be/i.test(ref) ? "YouTube" : /tiktok/i.test(ref) ? "TikTok" : /minaraverse|safiverse/i.test(ref) ? "" : ref ? "Digər sayt" : "Birbaşa / WhatsApp";
+const src_ = ref => /instagram/i.test(ref) ? "Instagram" : /t\.co|twitter|x\.com/i.test(ref) ? "X" : /facebook|fb\./i.test(ref) ? "Facebook" : /t\.me|telegram/i.test(ref) ? "Telegram" : /google/i.test(ref) ? "Google" : /youtube|youtu\.be/i.test(ref) ? "YouTube" : /tiktok/i.test(ref) ? "TikTok" : /minaraverse|safiverse/i.test(ref) ? "" : ref ? "Другой сайт" : "Напрямую / WhatsApp";
 function summary_(rows, all) {
   const u = new Set(), named = {}, st = {}; let views = 0, done = 0;
   rows.forEach(r => { if (r.uid) u.add(r.uid); if (r.name) named[r.name] = named[r.name] || { ig: r.ig, done: 0 }; if (r.name && r.ig) named[r.name].ig = r.ig; if (r.ev === "view") { views++; st[r.story] = (st[r.story] || 0) + 1; } if (r.ev === "done") { done++; if (r.name) named[r.name].done++; } });
@@ -130,45 +130,45 @@ function summary_(rows, all) {
   const newU = [...u].filter(id => first[id] && first[id].getTime() >= since).length;
   const visits = rows.filter(r => r.ev === "visit");
   const openers = new Set(rows.filter(r => r.ev === "view").map(r => r.uid)).size, starters = new Set(rows.filter(r => r.ev === "chapter").map(r => r.uid)).size, finishers = new Set(rows.filter(r => r.ev === "done").map(r => r.uid)).size;
-  return { visitors: u.size, newU: newU, returning: u.size - newU, named: Object.entries(named).map(([n, x]) => who_(n, x.ig) + (x.done ? " · " + x.done + " fəsil" : "")), views: views, done: done, top: top,
+  return { visitors: u.size, newU: newU, returning: u.size - newU, named: Object.entries(named).map(([n, x]) => who_(n, x.ig) + (x.done ? " · глав: " + x.done : "")), views: views, done: done, top: top,
     dev: cnt_(visits, r => r.dev === "mobile" ? "📱" : "💻"), lang: cnt_(visits, r => r.lang.toUpperCase()), src: cnt_(visits, r => src_(r.ref)),
     funnel: { openers, starters, finishers, chapters: rows.filter(r => r.ev === "chapter").length }, pages: cnt_(rows.filter(r => r.ev === "page"), r => pname_(r.story)).slice(0, 6),
     ui: cnt_(rows.filter(r => r.ev === "ui"), r => r.score), levels: rows.filter(r => r.ev === "level").map(r => r.score), regs: rows.filter(r => r.ev === "reg").map(r => who_(r.name, r.ig)) }; }
 function stats_() { const all = allRows_(), iso = r => Object.assign({}, r, { t: r.t.toISOString() }), rows = d => all.filter(r => r.t.getTime() >= Date.now() - d * 864e5).map(iso);
   return { ok: true, today: summary_(rows(1), all), week: summary_(rows(7), all), month: summary_(rows(30), all), last: rows(7).reverse().slice(0, 60) }; }
 function todayMain_() { try { const d0 = new Date(); d0.setHours(0, 0, 0, 0); return readRows_().filter(r => new Date(r._time) >= d0); } catch (e) { return []; } }
-const UI_NAMES = { audio: "🔊 səs", translate: "🌍 tərcümə", share: "📤 paylaşma", safiverse: "📱 Safiverse", "level-cta": "🎓 testə keçid", answer: "✍️ cavab" };
+const UI_NAMES = { audio: "🔊 озвучка", translate: "🌍 перевод", share: "📤 поделились", safiverse: "📱 Safiverse", "level-cta": "🎓 переход к тесту", answer: "✍️ ответы" };
 function dailyDigest() {
   const all = allRows_(), d0 = new Date(); d0.setHours(0, 0, 0, 0);
   const rows = all.filter(r => r.t >= d0).map(r => Object.assign({}, r, { t: r.t.toISOString() })), s = summary_(rows, all), main = todayMain_();
-  const date = Utilities.formatDate(new Date(), "Asia/Baku", "d MMMM");
-  if (!s.visitors) { tg_("🌙 <b>" + date + "</b>\nBu gün sayta heç kim girməyib."); return; }
+  const date = Utilities.formatDate(new Date(), "Asia/Baku", "d MMMM", "ru");
+  if (!s.visitors) { tg_("🌙 <b>" + date + "</b>\nСегодня на сайт никто не заходил."); return; }
   const j = (arr, f) => arr.map(x => f ? f(x) : x[0] + " " + x[1]).join(" · ");
   const leads = main.filter(r => /lesson/i.test(String(r.type))).map(r => (r.name + " " + (r.surname || "")).trim()), tests = main.filter(r => /level/i.test(String(r.type)));
-  let m = "🌙 <b>Bugünkü xülasə — " + date + "</b>\n\n";
-  m += "👥 Ziyarətçi: <b>" + s.visitors + "</b> (yeni " + s.newU + ", qayıdan " + s.returning + ")\n";
+  let m = "🌙 <b>Сводка за день — " + date + "</b>\n\n";
+  m += "👥 Посетителей: <b>" + s.visitors + "</b> (новых " + s.newU + ", вернулись " + s.returning + ")\n";
   if (s.dev.length) m += j(s.dev) + "   🌐 " + j(s.lang) + "\n";
-  if (s.src.length) m += "📍 Haradan: " + j(s.src) + "\n";
-  m += "\n📖 Hekayə açan: <b>" + s.funnel.openers + "</b> nəfər → fəslə başlayan: <b>" + s.funnel.starters + "</b> → bitirən: <b>" + s.funnel.finishers + "</b>\n";
-  m += "   Açılış: " + s.views + " · Başlanan fəsil: " + s.funnel.chapters + " · Bitirilən: " + s.done + "\n";
+  if (s.src.length) m += "📍 Откуда: " + j(s.src) + "\n";
+  m += "\n📖 Открыли историю: <b>" + s.funnel.openers + "</b> чел. → начали главу: <b>" + s.funnel.starters + "</b> → закончили: <b>" + s.funnel.finishers + "</b>\n";
+  m += "   Открытий: " + s.views + " · Начатых глав: " + s.funnel.chapters + " · Пройденных: " + s.done + "\n";
   if (s.top.length) m += "🔥 " + s.top.join(", ") + "\n";
-  if (s.pages.length) m += "🧭 Bölmələr: " + j(s.pages) + "\n";
-  if (s.ui.length) m += "🖱 Hərəkətlər: " + j(s.ui, x => (UI_NAMES[x[0]] || x[0]) + " " + x[1]) + "\n";
-  if (s.levels.length || tests.length) m += "\n🎓 Səviyyə testi: " + Math.max(s.levels.length, tests.length) + (s.levels.length ? " (" + s.levels.join(", ") + ")" : "") + "\n";
-  if (s.regs.length || leads.length) m += "📝 Qeydiyyat / müraciət: " + [...new Set(s.regs.concat(leads))].join(", ") + "\n";
-  if (s.named.length) m += "\n🙋 Adı məlum olanlar: " + s.named.slice(0, 20).join(", ") + "\n";
+  if (s.pages.length) m += "🧭 Разделы: " + j(s.pages) + "\n";
+  if (s.ui.length) m += "🖱 Действия: " + j(s.ui, x => (UI_NAMES[x[0]] || x[0]) + " " + x[1]) + "\n";
+  if (s.levels.length || tests.length) m += "\n🎓 Тест уровня: " + Math.max(s.levels.length, tests.length) + (s.levels.length ? " (" + s.levels.join(", ") + ")" : "") + "\n";
+  if (s.regs.length || leads.length) m += "📝 Регистрации / заявки: " + [...new Set(s.regs.concat(leads))].join(", ") + "\n";
+  if (s.named.length) m += "\n🙋 Известные ученики: " + s.named.slice(0, 20).join(", ") + "\n";
   tg_(m.trim());
 }
 /* run once from the editor after pasting TG_TOKEN and sending /start to the bot */
 function setupTelegram() {
-  if (!TG_TOKEN) throw new Error("TG_TOKEN boşdur — @BotFather-dən aldığınız tokeni yuxarıya yapışdırın.");
+  if (!TG_TOKEN) throw new Error("TG_TOKEN пуст — вставьте токен от @BotFather в строку 12.");
   const r = JSON.parse(UrlFetchApp.fetch("https://api.telegram.org/bot" + TG_TOKEN + "/getUpdates", { muteHttpExceptions: true }).getContentText());
   const m = (r.result || []).map(x => x.message || x.my_chat_member && { chat: x.my_chat_member.chat }).filter(Boolean).pop();
-  if (!m) throw new Error("Telegram-da botunuzu açıb Start basın (və ya bir mesaj yazın), sonra yenidən işə salın.");
+  if (!m) throw new Error("Откройте бота в Telegram и отправьте ему любое сообщение, затем запустите снова.");
   P.setProperty("TG_CHAT", String(m.chat.id));
   ScriptApp.getProjectTriggers().forEach(t => { if (t.getHandlerFunction() === "dailyDigest") ScriptApp.deleteTrigger(t); });
   ScriptApp.newTrigger("dailyDigest").timeBased().everyDays(1).atHour(21).inTimezone("Asia/Baku").create();
-  tg_("✅ Minaraverse bildirişləri qoşuldu!\nHər fəsil bitəndə dərhal, hər axşam 21:00-da isə xülasə gələcək.");
+  tg_("✅ Уведомления Minaraverse подключены!\nКаждая пройденная глава — сразу, сводка — каждый вечер в 21:00.");
   Logger.log("OK — chat " + m.chat.id);
 }
 function doPost(e) { let p = {}; try { p = JSON.parse(e.postData.contents || "{}"); } catch (er) {}
