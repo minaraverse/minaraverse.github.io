@@ -112,7 +112,7 @@ function event_(p) {
   const dev = p.dev === "mobile" ? " 📱" : " 💻";
   if (ev === "done") tg_("🎉 <b>" + who_(name, ig) + "</b>\n📖 " + sname_(story) + " · Глава " + (Number(ch) + 1 || ch) + "\n⭐ " + score + dev);
   if (ev === "level") tg_("🎓 <b>" + who_(name, ig) + "</b> прошёл(а) тест уровня: <b>" + score + "</b>" + dev);
-  if (ev === "reg") tg_("📝 <b>Новая регистрация:</b> " + who_(name, ig) + (score === "lesson-request" ? " — заявка на урок" : " — в тесте уровня") + dev);
+  if (ev === "reg" && score !== "lesson-request") tg_("📝 <b>Новая регистрация:</b> " + who_(name, ig) + (score === "lesson-request" ? " — заявка на урок" : " — в тесте уровня") + dev);
   if (ev === "visit" && name) tg_("👋 <b>" + who_(name, ig) + "</b> зашёл(а) на сайт" + dev);
   return { ok: true };
 }
@@ -130,14 +130,14 @@ function summary_(rows, all) {
   const newU = [...u].filter(id => first[id] && first[id].getTime() >= since).length;
   const visits = rows.filter(r => r.ev === "visit");
   const openers = new Set(rows.filter(r => r.ev === "view").map(r => r.uid)).size, starters = new Set(rows.filter(r => r.ev === "chapter").map(r => r.uid)).size, finishers = new Set(rows.filter(r => r.ev === "done").map(r => r.uid)).size;
-  return { visitors: u.size, newU: newU, returning: u.size - newU, named: Object.entries(named).map(([n, x]) => who_(n, x.ig) + (x.done ? " · глав: " + x.done : "")), views: views, done: done, top: top,
-    dev: cnt_(visits, r => r.dev === "mobile" ? "📱" : "💻"), lang: cnt_(visits, r => r.lang.toUpperCase()), src: cnt_(visits, r => src_(r.ref)),
+  return { visitors: u.size, newU: newU, returning: u.size - newU, named: Object.entries(named).map(([n, x]) => who_(n, x.ig) + (x.done ? " — глав пройдено: " + x.done : "")), views: views, done: done, top: top,
+    dev: cnt_(visits, r => r.dev === "mobile" ? "с телефона" : "с компьютера"), lang: cnt_(visits, r => r.lang.toUpperCase()), src: cnt_(visits, r => src_(r.ref)),
     funnel: { openers, starters, finishers, chapters: rows.filter(r => r.ev === "chapter").length }, pages: cnt_(rows.filter(r => r.ev === "page"), r => pname_(r.story)).slice(0, 6),
     ui: cnt_(rows.filter(r => r.ev === "ui"), r => r.score), levels: rows.filter(r => r.ev === "level").map(r => r.score), regs: rows.filter(r => r.ev === "reg").map(r => who_(r.name, r.ig)) }; }
 function stats_() { const all = allRows_(), iso = r => Object.assign({}, r, { t: r.t.toISOString() }), rows = d => all.filter(r => r.t.getTime() >= Date.now() - d * 864e5).map(iso);
   return { ok: true, today: summary_(rows(1), all), week: summary_(rows(7), all), month: summary_(rows(30), all), last: rows(7).reverse().slice(0, 60) }; }
 function todayMain_() { try { const d0 = new Date(); d0.setHours(0, 0, 0, 0); return readRows_().filter(r => new Date(r._time) >= d0); } catch (e) { return []; } }
-const UI_NAMES = { audio: "🔊 озвучка", translate: "🌍 перевод", share: "📤 поделились", safiverse: "📱 Safiverse", "level-cta": "🎓 переход к тесту", answer: "✍️ ответы" };
+const UI_NAMES = { audio: "Включали озвучку", translate: "Открывали перевод", share: "Делились сайтом", safiverse: "Переходили в Safiverse", "level-cta": "Нажимали «Узнать уровень»", answer: "Отвечали на вопросы (чел.)" };
 function dailyDigest() {
   const all = allRows_(), d0 = new Date(); d0.setHours(0, 0, 0, 0);
   const rows = all.filter(r => r.t >= d0).map(r => Object.assign({}, r, { t: r.t.toISOString() })), s = summary_(rows, all), main = todayMain_();
@@ -147,17 +147,46 @@ function dailyDigest() {
   const leads = main.filter(r => /lesson/i.test(String(r.type))).map(r => (r.name + " " + (r.surname || "")).trim()), tests = main.filter(r => /level/i.test(String(r.type)));
   let m = "🌙 <b>Сводка за день — " + date + "</b>\n\n";
   m += "👥 Посетителей: <b>" + s.visitors + "</b> (новых " + s.newU + ", вернулись " + s.returning + ")\n";
-  if (s.dev.length) m += j(s.dev) + "   🌐 " + j(s.lang) + "\n";
-  if (s.src.length) m += "📍 Откуда: " + j(s.src) + "\n";
-  m += "\n📖 Открыли историю: <b>" + s.funnel.openers + "</b> чел. → начали главу: <b>" + s.funnel.starters + "</b> → закончили: <b>" + s.funnel.finishers + "</b>\n";
-  m += "   Открытий: " + s.views + " · Начатых глав: " + s.funnel.chapters + " · Пройденных: " + s.done + "\n";
-  if (s.top.length) m += "🔥 " + s.top.join(", ") + "\n";
-  if (s.pages.length) m += "🧭 Разделы: " + j(s.pages) + "\n";
-  if (s.ui.length) m += "🖱 Действия: " + j(s.ui, x => (UI_NAMES[x[0]] || x[0]) + " " + x[1]) + "\n";
-  if (s.levels.length || tests.length) m += "\n🎓 Тест уровня: " + Math.max(s.levels.length, tests.length) + (s.levels.length ? " (" + s.levels.join(", ") + ")" : "") + "\n";
-  if (s.regs.length || leads.length) m += "📝 Регистрации / заявки: " + [...new Set(s.regs.concat(leads))].join(", ") + "\n";
-  if (s.named.length) m += "\n🙋 Известные ученики: " + s.named.slice(0, 20).join(", ") + "\n";
+  if (s.dev.length) m += "Устройства: " + j(s.dev, x => x[0] + " " + x[1]) + "\n";
+  if (s.lang.length) m += "Язык сайта: " + j(s.lang, x => ({ AZ: "азербайджанский", RU: "русский", EN: "английский" })[x[0]] + " " + x[1]) + "\n";
+  if (s.src.length) m += "Откуда пришли: " + j(s.src, x => x[0] + " " + x[1]) + "\n";
+  m += "\n📖 <b>Истории</b>\nОткрыли историю: " + s.funnel.openers + " чел.\nНачали главу: " + s.funnel.starters + " чел.\nЗакончили главу: " + s.funnel.finishers + " чел.\n";
+  m += "Всего: открытий " + s.views + ", начатых глав " + s.funnel.chapters + ", пройденных глав " + s.done + "\n";
+  if (s.top.length) m += "Самые популярные: " + s.top.join(", ") + "\n";
+  if (s.pages.length) m += "\n🧭 <b>Разделы сайта</b>\n" + s.pages.map(x => x[0] + ": " + x[1]).join("\n") + "\n";
+  if (s.ui.length) m += "\n🖱 <b>Действия</b>\n" + s.ui.map(x => (UI_NAMES[x[0]] || x[0]) + ": " + x[1]).join("\n") + "\n";
+  if (s.levels.length || tests.length) m += "\n🎓 Прошли тест уровня: " + Math.max(s.levels.length, tests.length) + (s.levels.length ? " (" + s.levels.join(", ") + ")" : "") + "\n";
+  if (s.regs.length || leads.length) m += "📝 Зарегистрировались / оставили заявку: " + [...new Set(s.regs.concat(leads))].join(", ") + "\n";
+  if (s.named.length) m += "\n🙋 <b>Ученики, чьи имена известны</b>\n" + s.named.slice(0, 25).join("\n") + "\n";
   tg_(m.trim());
+}
+
+/* ---------- every Google Form answer (level test, chapter result, lesson request) → Telegram with full details ---------- */
+function fv_(nv, k) { const key = Object.keys(nv || {}).find(x => x.trim().toLowerCase() === k); return key ? String((nv[key] || [""])[0] || "").trim() : ""; }
+function onNewAnswer(e) {
+  const nv = (e && e.namedValues) || {}; const type = fv_(nv, "type"), name = (fv_(nv, "name") + " " + fv_(nv, "surname")).trim();
+  if (/lesson/i.test(type)) { tg_("📝 <b>Заявка на урок</b>\n👤 " + (name || "Без имени") + (fv_(nv, "age") ? ", " + fv_(nv, "age") + " лет" : "") + "\n📱 WhatsApp: " + (fv_(nv, "whatsapp") || "—") + "\n✉️ Email: " + (fv_(nv, "email") || "—")
+      + "\n📚 Формат: " + (fv_(nv, "format") || "—") + " · Уровень: " + (fv_(nv, "level") || "—") + (fv_(nv, "score") ? " · Тест: " + fv_(nv, "score") : "") + (fv_(nv, "message") ? "\n💬 " + fv_(nv, "message") : "")); return; }
+  if (/level/i.test(type)) { tg_("🎓 <b>Результат теста уровня отправлен</b>\n👤 " + (name || "Без имени") + (fv_(nv, "age") ? ", " + fv_(nv, "age") + " лет" : "") + "\n📊 " + (fv_(nv, "level") || fv_(nv, "chapter")) + " · " + fv_(nv, "score")); return; }
+  if (/chapter/i.test(type)) tg_("✅ <b>Результат главы отправлен</b>\n👤 " + (name || "Без имени") + "\n📖 " + fv_(nv, "story") + " · " + fv_(nv, "chapter") + " · ⭐ " + fv_(nv, "score"));
+}
+/* ---------- everything the site has collected so far (run once, or from setupTelegram) ---------- */
+function historyReport() {
+  const rows = readRows_(), fmt = d => Utilities.formatDate(new Date(d), "Asia/Baku", "d MMM", "ru");
+  const who = r => (String(r.name || "").trim() + " " + String(r.surname || "").trim()).trim() || "Без имени";
+  const leads = rows.filter(r => /lesson/i.test(String(r.type))), tests = rows.filter(r => /level/i.test(String(r.type))), chaps = rows.filter(r => /chapter/i.test(String(r.type)));
+  const people = {}; rows.forEach(r => { const k = who(r).toLowerCase(); const p = people[k] = people[k] || { name: who(r), tests: 0, chaps: 0, lead: false, last: r._time, level: "" };
+    if (/lesson/i.test(String(r.type))) p.lead = true; if (/level/i.test(String(r.type))) { p.tests++; p.level = String(r.level || r.chapter || p.level); } if (/chapter/i.test(String(r.type))) p.chaps++; if (r._time > p.last) p.last = r._time; });
+  const P = Object.values(people).sort((a, b) => (b.last > a.last ? 1 : -1));
+  const first = rows.length ? rows.map(r => r._time).sort()[0] : null;
+  let m = "📚 <b>Всё, что собрал сайт до сегодняшнего дня</b>" + (first ? " (с " + fmt(first) + ")" : "") + "\n\n";
+  m += "Всего отправленных результатов: " + rows.length + "\n• тестов уровня: " + tests.length + "\n• результатов глав: " + chaps.length + "\n• заявок на урок: " + leads.length + "\n• людей с именами: " + P.length + "\n";
+  if (leads.length) m += "\n📝 <b>Заявки на урок</b>\n" + leads.map(r => "• " + who(r) + (r.age ? ", " + r.age : "") + " — WhatsApp: " + (r.whatsapp || "—") + (r.email ? ", " + r.email : "") + " — " + (r.format || "") + " " + (r.level || "") + " (" + fmt(r._time) + ")").join("\n") + "\n";
+  if (P.length) m += "\n🙋 <b>Все ученики</b>\n" + P.slice(0, 60).map(p => "• " + p.name + (p.level ? " — " + p.level : "") + (p.tests ? ", тестов: " + p.tests : "") + (p.chaps ? ", глав: " + p.chaps : "") + (p.lead ? ", заявка ✓" : "") + " (" + fmt(p.last) + ")").join("\n") + "\n";
+  const byStory = {}; chaps.forEach(r => { const k = String(r.story || "?"); byStory[k] = (byStory[k] || 0) + 1; });
+  const bs = Object.entries(byStory).sort((a, b) => b[1] - a[1]); if (bs.length) m += "\n📖 <b>Главы по историям</b>\n" + bs.map(x => "• " + x[0] + ": " + x[1]).join("\n") + "\n";
+  const ev = allRows_(); if (ev.length) m += "\n📈 Учёт посещений включён " + fmt(ev[0].t) + " — с этого дня в сводке будут и посетители, и действия на сайте. Раньше визиты не считались.";
+  for (let i = 0; i < m.length; i += 3800) tg_(m.slice(i, i + 3800));
 }
 /* run once from the editor after pasting TG_TOKEN and sending /start to the bot */
 function setupTelegram() {
@@ -168,6 +197,8 @@ function setupTelegram() {
   P.setProperty("TG_CHAT", String(m.chat.id));
   ScriptApp.getProjectTriggers().forEach(t => { if (t.getHandlerFunction() === "dailyDigest") ScriptApp.deleteTrigger(t); });
   ScriptApp.newTrigger("dailyDigest").timeBased().everyDays(1).atHour(21).inTimezone("Asia/Baku").create();
+  ScriptApp.getProjectTriggers().forEach(t => { if (t.getHandlerFunction() === "onNewAnswer") ScriptApp.deleteTrigger(t); });
+  ScriptApp.newTrigger("onNewAnswer").forSpreadsheet(SpreadsheetApp.getActiveSpreadsheet()).onFormSubmit().create();
   tg_("✅ Уведомления Minaraverse подключены!\nКаждая пройденная глава — сразу, сводка — каждый вечер в 21:00.");
   Logger.log("OK — chat " + m.chat.id);
 }
