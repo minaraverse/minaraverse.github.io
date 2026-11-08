@@ -2722,6 +2722,16 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .es-memst{margin:4px 0 0;font:600 14px "Bricolage Grotesque",sans-serif;color:#ffd9a0}
 .lv-sugk{margin:6px 0 0;font:700 12px "Bricolage Grotesque",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#ffd34d}.lv-sugk.dim{color:#c9bca9}
 .lv-stories.dim .lv-chip{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);opacity:.85}
+/* escape card in the story grid */
+.h-card-esc{position:relative;overflow:hidden;background:#140d08!important;border-color:rgba(233,184,90,.5)!important;color:#F1E4C8}
+.h-card-esc-bg{position:absolute;inset:0;background-size:cover;background-position:center top;opacity:.95;transition:transform .6s}
+.h-card-esc-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,13,8,0) 0%,rgba(20,13,8,0) 50%,rgba(20,13,8,.85) 68%,rgba(20,13,8,.98) 80%)}
+.h-card-esc:hover .h-card-esc-bg{transform:scale(1.04)}
+.h-card-esc .h-card-t{position:relative;padding-top:340px}
+.h-card-esc .h-card-go{color:#ffd9a0}
+.h-card-esc .h-card-k{color:#E9B85A}.h-card-esc b{font-size:28px}.h-card-esc-s{display:block;margin:4px 0 6px;font:italic 400 17px Fraunces,Georgia,serif;color:#ffd9a0}
+.h-card-esc .es-lamp{top:14px;right:14px;z-index:2}
+.h-card-esc .h-card-bar i{background:#E9B85A}
 
 </style>
 <div id="view"></div>
@@ -7374,11 +7384,10 @@ VIEWS.home = root => {
         <span class="h-card-t"><span class="h-card-k">${n} ${L("chapters")} · ${s.units.reduce((a, u) => a + u.qs.length, 0)} ${L("questions")} · ${s.level}</span>
         <b>${esc(s.title)}</b>${typeof epBadge === "function" ? epBadge(c.id) : ""}<span class="h-card-d">${L(descs[c.id])}</span>
         <span class="h-card-bar"><i style="width:${d / n * 100}%"></i></span>
-        <span class="h-card-go">${d === n ? L("complete") + " ✓" : d ? L("cont") + " · " + d + "/" + n : L("start")} →</span>${d === n ? `<span class="h-card-cert" data-cert="${c.id}" role="button" tabindex="0">🏅 ${L("getCert")}</span>` : ""}</span></a>`; }).join("")}</div>
+        <span class="h-card-go">${d === n ? L("complete") + " ✓" : d ? L("cont") + " · " + d + "/" + n : L("start")} →</span>${d === n ? `<span class="h-card-cert" data-cert="${c.id}" role="button" tabindex="0">🏅 ${L("getCert")}</span>` : ""}</span></a>${c.id === "wild" && typeof escapeCardHTML === "function" ? escapeCardHTML() : ""}`; }).join("")}</div>
     <a class="h-morebiz" href="#" data-jump="h-exam">💼 ${(nb => ({ en: `+ ${nb} more stories in Business English`, az: `+ Business English bölməsində daha ${nb} hekayə`, ru: `+ ещё ${nb} истории в разделе Business English` })[LANG])(["interview", "client", "contract", "call"].filter(k => STORIES[k]).length)} ↓</a>
   </section>
   <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
-  ${typeof escapeHomeHTML === "function" ? escapeHomeHTML() : ""}
   <section class="h-exam" id="h-exam"><div class="h-sh h-sh-big"><div class="h-count biz"><b>${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).length}</b><span>${L("bizK")}</span></div><div><p class="h-k">💼 ${L("bizK")} · ${typeof SERIES !== "undefined" ? (SERIES.bluesail.name[LANG] || SERIES.bluesail.name.en) : ""}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
     <div class="hx-cases">${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
       return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${k === "contract" ? `<span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span>` : WART[k]()}</span>
@@ -7467,7 +7476,8 @@ VIEWS.home = root => {
   const tt = () => top.classList.toggle("on", scrollY > innerHeight * 1.2); addEventListener("scroll", tt, { passive: true });
   /* level chips: matching stories jump to the top, the rest fade */
   const cardsBox = root.querySelector(".h-cards");
-  const sortCards = scroll => { const cs = [...cardsBox.children]; cs.sort((x, y) => (fitsLevel(y.dataset.lv, FILTER) - fitsLevel(x.dataset.lv, FILTER)) || (WORLD_ORDER.indexOf(x.className.match(/hc-(\w+)/)[1]) - WORLD_ORDER.indexOf(y.className.match(/hc-(\w+)/)[1])));
+  const ordIdx = el => { const id = (el.className.match(/hc-(\w+)/) || [])[1]; return id === "escape" ? WORLD_ORDER.indexOf("wild") + .5 : WORLD_ORDER.indexOf(id); };
+  const sortCards = scroll => { const cs = [...cardsBox.children]; cs.sort((x, y) => (fitsLevel(y.dataset.lv, FILTER) - fitsLevel(x.dataset.lv, FILTER)) || (ordIdx(x) - ordIdx(y)));
     cs.forEach(c => { cardsBox.appendChild(c); c.classList.toggle("dim", !fitsLevel(c.dataset.lv, FILTER)); const nx = c.querySelector(".h-card-nx"); if (nx) nx.textContent = nxLabel(c.dataset.lv); });
     if (scroll) { const t = cardsBox.getBoundingClientRect().top + scrollY - 90; scrollTo({ top: t, behavior: REDUCED ? "auto" : "smooth" }); } };
   sortCards(false);
@@ -9976,11 +9986,12 @@ function setupScratch(cv, onDone) {
   cv.addEventListener("pointerdown", e => { down = true; cv.setPointerCapture(e.pointerId); dot(e); }); cv.addEventListener("pointermove", e => { if (down) dot(e); }); ["pointerup", "pointercancel"].forEach(ev => cv.addEventListener(ev, () => { down = false; check(); }));
   cv.style.touchAction = "none";
 }
-/* home card */
-function escapeHomeHTML() {
+/* home card: sits in the story grid next to Wild English */
+function escapeCardHTML() {
   const doneN = ESC_ROOMS.filter(escRoomDone).length;
-  return `<section class="h-escape" id="h-escape"><a class="h-esc" href="#escape"><span class="es-lamp"></span><div class="h-esc-t"><p class="h-k">🔐 ${L("esK")} · ${ESC_ROOMS.length} ${L("esRoom").toLowerCase()}s</p><h2 class="h-h2">${L("esH")}</h2><p class="h-esc-s">“${L("esSlogan")}”</p><p class="h-esc-p">${L("esP")}</p><span class="h-cta">${doneN ? L("esCont") + " · " + doneN + "/" + ESC_ROOMS.length : L("esStart")} →</span></div>
-    <div class="h-esc-art" aria-hidden="true"><i class="c1"></i><i class="c2"></i><i class="c3"></i><b>01:00</b><span>☥ ✦ ◬ ☉</span></div></a></section>`;
+  return `<a class="h-card hc-escape h-card-esc" href="#escape" data-lv="A1–C2" data-tint="#2a1a08"><span class="es-lamp"></span><span class="h-card-esc-bg" style="background-image:url(img/escape-card.jpg)"></span>
+    <span class="h-card-t"><span class="h-card-k">🔐 ${L("esK")} · ${ESC_ROOMS.length} ${L("esRoom").toLowerCase()}s · A1–C2</span><b>${L("esH")}</b><span class="h-card-esc-s">“${L("esSlogan")}”</span><span class="h-card-d">${L("esP")}</span>
+    <span class="h-card-bar"><i style="width:${doneN / ESC_ROOMS.length * 100}%"></i></span><span class="h-card-go">${doneN ? L("esCont") + " · " + doneN + "/" + ESC_ROOMS.length : L("esStart")} →</span></span></a>`;
 }
 
 /* ===== MILINGO COURSE CONTENT: 3 sections, 24 units, easy → hard =====

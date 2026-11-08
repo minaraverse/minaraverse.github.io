@@ -2716,3 +2716,13 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .es-memst{margin:4px 0 0;font:600 14px "Bricolage Grotesque",sans-serif;color:#ffd9a0}
 .lv-sugk{margin:6px 0 0;font:700 12px "Bricolage Grotesque",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#ffd34d}.lv-sugk.dim{color:#c9bca9}
 .lv-stories.dim .lv-chip{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);opacity:.85}
+/* escape card in the story grid */
+.h-card-esc{position:relative;overflow:hidden;background:#140d08!important;border-color:rgba(233,184,90,.5)!important;color:#F1E4C8}
+.h-card-esc-bg{position:absolute;inset:0;background-size:cover;background-position:center top;opacity:.95;transition:transform .6s}
+.h-card-esc-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,13,8,0) 0%,rgba(20,13,8,0) 50%,rgba(20,13,8,.85) 68%,rgba(20,13,8,.98) 80%)}
+.h-card-esc:hover .h-card-esc-bg{transform:scale(1.04)}
+.h-card-esc .h-card-t{position:relative;padding-top:340px}
+.h-card-esc .h-card-go{color:#ffd9a0}
+.h-card-esc .h-card-k{color:#E9B85A}.h-card-esc b{font-size:28px}.h-card-esc-s{display:block;margin:4px 0 6px;font:italic 400 17px Fraunces,Georgia,serif;color:#ffd9a0}
+.h-card-esc .es-lamp{top:14px;right:14px;z-index:2}
+.h-card-esc .h-card-bar i{background:#E9B85A}

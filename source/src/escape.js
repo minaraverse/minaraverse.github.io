@@ -191,9 +191,10 @@ function setupScratch(cv, onDone) {
   cv.addEventListener("pointerdown", e => { down = true; cv.setPointerCapture(e.pointerId); dot(e); }); cv.addEventListener("pointermove", e => { if (down) dot(e); }); ["pointerup", "pointercancel"].forEach(ev => cv.addEventListener(ev, () => { down = false; check(); }));
   cv.style.touchAction = "none";
 }
-/* home card */
-function escapeHomeHTML() {
+/* home card: sits in the story grid next to Wild English */
+function escapeCardHTML() {
   const doneN = ESC_ROOMS.filter(escRoomDone).length;
-  return `<section class="h-escape" id="h-escape"><a class="h-esc" href="#escape"><span class="es-lamp"></span><div class="h-esc-t"><p class="h-k">🔐 ${L("esK")} · ${ESC_ROOMS.length} ${L("esRoom").toLowerCase()}s</p><h2 class="h-h2">${L("esH")}</h2><p class="h-esc-s">“${L("esSlogan")}”</p><p class="h-esc-p">${L("esP")}</p><span class="h-cta">${doneN ? L("esCont") + " · " + doneN + "/" + ESC_ROOMS.length : L("esStart")} →</span></div>
-    <div class="h-esc-art" aria-hidden="true"><i class="c1"></i><i class="c2"></i><i class="c3"></i><b>01:00</b><span>☥ ✦ ◬ ☉</span></div></a></section>`;
+  return `<a class="h-card hc-escape h-card-esc" href="#escape" data-lv="A1–C2" data-tint="#2a1a08"><span class="es-lamp"></span><span class="h-card-esc-bg" style="background-image:url(img/escape-card.jpg)"></span>
+    <span class="h-card-t"><span class="h-card-k">🔐 ${L("esK")} · ${ESC_ROOMS.length} ${L("esRoom").toLowerCase()}s · A1–C2</span><b>${L("esH")}</b><span class="h-card-esc-s">“${L("esSlogan")}”</span><span class="h-card-d">${L("esP")}</span>
+    <span class="h-card-bar"><i style="width:${doneN / ESC_ROOMS.length * 100}%"></i></span><span class="h-card-go">${doneN ? L("esCont") + " · " + doneN + "/" + ESC_ROOMS.length : L("esStart")} →</span></span></a>`;
 }

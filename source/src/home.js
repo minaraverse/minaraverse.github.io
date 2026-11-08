@@ -76,11 +76,10 @@ VIEWS.home = root => {
         <span class="h-card-t"><span class="h-card-k">${n} ${L("chapters")} · ${s.units.reduce((a, u) => a + u.qs.length, 0)} ${L("questions")} · ${s.level}</span>
         <b>${esc(s.title)}</b>${typeof epBadge === "function" ? epBadge(c.id) : ""}<span class="h-card-d">${L(descs[c.id])}</span>
         <span class="h-card-bar"><i style="width:${d / n * 100}%"></i></span>
-        <span class="h-card-go">${d === n ? L("complete") + " ✓" : d ? L("cont") + " · " + d + "/" + n : L("start")} →</span>${d === n ? `<span class="h-card-cert" data-cert="${c.id}" role="button" tabindex="0">🏅 ${L("getCert")}</span>` : ""}</span></a>`; }).join("")}</div>
+        <span class="h-card-go">${d === n ? L("complete") + " ✓" : d ? L("cont") + " · " + d + "/" + n : L("start")} →</span>${d === n ? `<span class="h-card-cert" data-cert="${c.id}" role="button" tabindex="0">🏅 ${L("getCert")}</span>` : ""}</span></a>${c.id === "wild" && typeof escapeCardHTML === "function" ? escapeCardHTML() : ""}`; }).join("")}</div>
     <a class="h-morebiz" href="#" data-jump="h-exam">💼 ${(nb => ({ en: `+ ${nb} more stories in Business English`, az: `+ Business English bölməsində daha ${nb} hekayə`, ru: `+ ещё ${nb} истории в разделе Business English` })[LANG])(["interview", "client", "contract", "call"].filter(k => STORIES[k]).length)} ↓</a>
   </section>
   <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
-  ${typeof escapeHomeHTML === "function" ? escapeHomeHTML() : ""}
   <section class="h-exam" id="h-exam"><div class="h-sh h-sh-big"><div class="h-count biz"><b>${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).length}</b><span>${L("bizK")}</span></div><div><p class="h-k">💼 ${L("bizK")} · ${typeof SERIES !== "undefined" ? (SERIES.bluesail.name[LANG] || SERIES.bluesail.name.en) : ""}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
     <div class="hx-cases">${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
       return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${k === "contract" ? `<span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span>` : WART[k]()}</span>
@@ -169,7 +168,8 @@ VIEWS.home = root => {
   const tt = () => top.classList.toggle("on", scrollY > innerHeight * 1.2); addEventListener("scroll", tt, { passive: true });
   /* level chips: matching stories jump to the top, the rest fade */
   const cardsBox = root.querySelector(".h-cards");
-  const sortCards = scroll => { const cs = [...cardsBox.children]; cs.sort((x, y) => (fitsLevel(y.dataset.lv, FILTER) - fitsLevel(x.dataset.lv, FILTER)) || (WORLD_ORDER.indexOf(x.className.match(/hc-(\w+)/)[1]) - WORLD_ORDER.indexOf(y.className.match(/hc-(\w+)/)[1])));
+  const ordIdx = el => { const id = (el.className.match(/hc-(\w+)/) || [])[1]; return id === "escape" ? WORLD_ORDER.indexOf("wild") + .5 : WORLD_ORDER.indexOf(id); };
+  const sortCards = scroll => { const cs = [...cardsBox.children]; cs.sort((x, y) => (fitsLevel(y.dataset.lv, FILTER) - fitsLevel(x.dataset.lv, FILTER)) || (ordIdx(x) - ordIdx(y)));
     cs.forEach(c => { cardsBox.appendChild(c); c.classList.toggle("dim", !fitsLevel(c.dataset.lv, FILTER)); const nx = c.querySelector(".h-card-nx"); if (nx) nx.textContent = nxLabel(c.dataset.lv); });
     if (scroll) { const t = cardsBox.getBoundingClientRect().top + scrollY - 90; scrollTo({ top: t, behavior: REDUCED ? "auto" : "smooth" }); } };
   sortCards(false);
