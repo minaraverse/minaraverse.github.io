@@ -293,7 +293,7 @@ VIEWS.talk = root => {
 };
 
 /* ---------- 🎙 "Tell what you learned today": 3 sentences in the child's own voice → teacher ---------- */
-const tellOK = () => typeof MediaRecorder === "function" && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && typeof svOn === "function" && svOn() && !!ACCT() && ACCT().status !== "pending";
+const tellOK = () => typeof MediaRecorder === "function" && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && typeof svOn === "function" && svOn() && !!ACCT();
 VIEWS.tell = root => {
   document.documentElement.classList.add("ap-mode");
   const n = +((location.hash.match(/^#tell-(\d+)/) || [])[1] || curUnit()), U = UNITS[n];

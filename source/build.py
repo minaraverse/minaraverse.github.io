@@ -2,7 +2,7 @@ import base64, pathlib
 R = pathlib.Path("/home/claude/mv")
 band = ""
 css = (R / "src/style.css").read_text()
-MODS = ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data11", "tasks0", "data12", "data13", "tasks", "audmap", "core", "series", "art", "home", "share", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "ladder", "deep", "deepdata", "admin", "app", "worlds2", "escape", "course", "course2", "drill", "people", "skills", "safi", "friends", "social", "learn2", "uisound", "lesson", "level", "teacher", "mascot", "kids", "track", "peek"]
+MODS = ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data11", "tasks0", "data12", "data13", "tasks", "audmap", "core", "series", "art", "home", "share", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "ladder", "deep", "deepdata", "admin", "app", "worlds2", "escape", "course", "course2", "drill", "people", "skills", "safi", "friends", "social", "learn2", "uisound", "lesson", "level", "teacher", "mascot", "kids", "track", "peek", "extras", "ex2", "fleet"]
 # per-story extra tasks live in src/tasks/<story>.js and are joined into src/tasks.js
 _tk = sorted(f for f in (R / "src/tasks").glob("*.js") if f.stem not in ("check",))
 (R / "src/tasks.js").write_text("/* generated from src/tasks/*.js by build.py */\n" + "\n".join(f.read_text() for f in _tk) + "\nmergeTasks();\n")
@@ -75,7 +75,7 @@ sv_html = sv_html.replace('<meta name="description" content="Minaraverse: Englis
   '<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;background:#0b0a20}img{max-width:100%}[hidden]{display:none!important}' + (R / 'tools/splash.css').read_text() + '</style>' + STARTUP + '</head><body>' + (R / 'tools/splash.html').read_text() + sv_html + '</body></html>')
 (S / "manifest.json").write_text('{"name":"Safiverse — English step by step","short_name":"Safiverse","start_url":"./#app-learn","scope":"./","display":"standalone","background_color":"#0b0a20","theme_color":"#0b0a20","orientation":"portrait",'
   '"icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}')
-(S / "sw.js").write_text('/* Safiverse offline cache: network first (fresh version), but if the network is slow (>3.5 s) open the saved copy at once */\nconst C = "sv-v24";\n'
+(S / "sw.js").write_text('/* Safiverse offline cache: network first (fresh version), but if the network is slow (>3.5 s) open the saved copy at once */\nconst C = "sv-v25";\n'
   'self.addEventListener("install", e => { e.waitUntil(caches.open(C).then(c => c.addAll(["./", "./index.html"])).then(() => self.skipWaiting())); });\n'
   'self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith("sv-") && k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); });\n'
   'self.addEventListener("fetch", e => { const r = e.request; if (r.method !== "GET" || !r.url.startsWith(self.location.origin)) return;\n'
