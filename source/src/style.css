@@ -2619,3 +2619,11 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .bd-rest li{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.06);counter-increment:bd;font-size:14px}
 .bd-rest li::before{content:counter(bd);flex:0 0 22px;height:22px;border-radius:50%;background:rgba(255,255,255,.12);font:700 12px/22px "Bricolage Grotesque",sans-serif;text-align:center}
 .bd-rest li b{font-weight:600}.bd-rest li small{margin-left:auto;opacity:.7;white-space:nowrap}
+/* ===== hall of fame confetti: keeps falling ===== */
+.bd-week,.bd-month{position:relative;overflow:hidden}
+.bd-conf{position:absolute;inset:0;pointer-events:none;z-index:0}
+.bd-conf i{position:absolute;top:-16px;left:var(--x);width:10px;height:15px;border-radius:2px;background:var(--c);opacity:.85;transform:rotate(var(--r));animation:bdfall var(--t) linear infinite;animation-delay:var(--d)}
+.bd-conf i:nth-child(odd){width:6px;height:6px;border-radius:50%}
+@keyframes bdfall{0%{transform:translate3d(0,-20px,0) rotate(var(--r))}50%{transform:translate3d(14px,50%,0) rotate(calc(var(--r) + 180deg))}100%{transform:translate3d(-10px,110%,0) rotate(calc(var(--r) + 360deg))}}
+.bd-week>*:not(.bd-conf),.bd-month>*:not(.bd-conf){position:relative;z-index:1}
+@media (prefers-reduced-motion:reduce){.bd-conf{display:none}}

@@ -55,7 +55,8 @@ function board_(rows, evRows) {
     Object.keys(Object.assign({}, a, b)).forEach(k => { const x = a[k], y = b[k]; const best = !x ? y : !y ? x : (y.pts > x.pts ? Object.assign({}, y, { age: x.age || y.age, level: y.level || x.level }) : Object.assign({}, x, { level: x.level || y.level })); m[k] = best; });
     return Object.values(m).filter(x => x.pts > 0).sort((a2, b2) => b2.pts - a2.pts); };
   const ev = evRows || [], after = (list, t) => list.filter(r => new Date(r._time) >= t);
-  const week = sum(after(rows, monday), after(ev, monday)), month = sum(after(rows, first), after(ev, first));
+  /* week = Monday to now; the second board counts every student since the very first day, so nobody who worked is left out */
+  const week = sum(after(rows, monday), after(ev, monday)), month = sum(rows, ev);
   const fmt = x => x ? { name: x.name, score: x.pts + " pts" + (x.ch ? " · " + x.ch + (x.ch === 1 ? " chapter" : " chapters") : ""), level: x.level } : null;
   const top3 = list => list.slice(0, 10).map(fmt);   /* ranked list (up to 10) — every student who finished anything is on the board */
   const levels = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 }, last = {};

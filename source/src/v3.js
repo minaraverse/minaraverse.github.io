@@ -172,13 +172,14 @@ const BOARD = {
   month: { adults: [null, null, null], kids: [null, null, null] },
   levels: { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 }
 };
-Object.assign(UI.en, { bdK: "Hall of fame", bdH: "Who's on top this week?", bdP: "Take the level test and the stories, send your result to Minara. Every week we choose the student of the week, and at the end of the month the top 3 among adults and kids. A photo only if you want one, otherwise just your name.",
-  bdWeek: "Student of the week", bdMonth: "This month's top 3", bdAdults: "Adults", bdKids: "Kids", bdFree: "This place is free", bdYou: "It could be you", bdLevels: "Our students by level", bdStart: "Take the test and compete", bdSend: "Send my result" });
-Object.assign(UI.az, { bdK: "Fəxri lövhə", bdH: "Bu həftə kim öndədir?", bdP: "Səviyyə testini və hekayələri keç, nəticəni Minaraya göndər. Hər həftə həftənin tələbəsini, ay sonunda isə böyüklər və uşaqlar arasında ilk 3-lüyü seçirik. Şəkil yalnız istəsən, yoxsa sadəcə adın.",
-  bdWeek: "Həftənin tələbəsi", bdMonth: "Ayın ilk 3-lüyü", bdAdults: "Böyüklər", bdKids: "Uşaqlar", bdFree: "Bu yer boşdur", bdYou: "Burada sən ola bilərsən", bdLevels: "Səviyyələrə görə tələbələrimiz", bdStart: "Testi keç və yarış", bdSend: "Nəticəmi göndər" });
-Object.assign(UI.ru, { bdK: "Доска почёта", bdH: "Кто лидирует на этой неделе?", bdP: "Проходи тест уровня и истории, отправляй результат Минаре. Каждую неделю выбираем ученика недели, а в конце месяца — топ-3 среди взрослых и детей. Фото — только если захочешь, иначе просто имя.",
-  bdWeek: "Ученик недели", bdMonth: "Топ-3 месяца", bdAdults: "Взрослые", bdKids: "Дети", bdFree: "Место свободно", bdYou: "Здесь можешь быть ты", bdLevels: "Наши ученики по уровням", bdStart: "Пройти тест и участвовать", bdSend: "Отправить результат" });
+Object.assign(UI.en, { bdK: "Hall of fame", bdH: "Who's on top this week?", bdP: "Take the level test and the stories, send your result to Minara. Every week we choose the student of the week, and the overall top among adults and kids. A photo only if you want one, otherwise just your name.",
+  bdWeek: "Student of the week", bdMonth: "Top students · all time", bdAdults: "Adults", bdKids: "Kids", bdFree: "This place is free", bdYou: "It could be you", bdLevels: "Our students by level", bdStart: "Take the test and compete", bdSend: "Send my result" });
+Object.assign(UI.az, { bdK: "Fəxri lövhə", bdH: "Bu həftə kim öndədir?", bdP: "Səviyyə testini və hekayələri keç, nəticəni Minaraya göndər. Hər həftə həftənin tələbəsini, böyüklər və uşaqlar arasında ümumi liderləri göstəririk. Şəkil yalnız istəsən, yoxsa sadəcə adın.",
+  bdWeek: "Həftənin tələbəsi", bdMonth: "Ən yaxşı tələbələr · bütün vaxt", bdAdults: "Böyüklər", bdKids: "Uşaqlar", bdFree: "Bu yer boşdur", bdYou: "Burada sən ola bilərsən", bdLevels: "Səviyyələrə görə tələbələrimiz", bdStart: "Testi keç və yarış", bdSend: "Nəticəmi göndər" });
+Object.assign(UI.ru, { bdK: "Доска почёта", bdH: "Кто лидирует на этой неделе?", bdP: "Проходи тест уровня и истории, отправляй результат Минаре. Каждую неделю выбираем ученика недели, а а здесь же — общий топ среди взрослых и детей за всё время. Фото — только если захочешь, иначе просто имя.",
+  bdWeek: "Ученик недели", bdMonth: "Лучшие ученики · за всё время", bdAdults: "Взрослые", bdKids: "Дети", bdFree: "Место свободно", bdYou: "Здесь можешь быть ты", bdLevels: "Наши ученики по уровням", bdStart: "Пройти тест и участвовать", bdSend: "Отправить результат" });
 const bdFace = (p, big) => p && p.photo ? `<img src="${esc(p.photo)}" alt="">` : p ? `<b>${esc((p.name || "?")[0])}</b>` : `<svg viewBox="0 0 24 24" width="${big ? 34 : 24}" height="${big ? 34 : 24}" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>`;
+const confettiHTML = () => `<span class="bd-conf" aria-hidden="true">${Array.from({ length: 26 }, (_, k) => `<i style="--x:${(k * 53) % 100}%;--d:${(k % 6) * -1.3}s;--t:${5 + (k % 4)}s;--c:${["#ffd34d", "#ff7b8a", "#8fd3ff", "#b4f0a0", "#f4a5ff"][k % 5]};--r:${(k * 37) % 360}deg"></i>`).join("")}</span>`;
 function podium(list, title) {
   const order = [1, 0, 2], rest = (list || []).slice(3).filter(Boolean);
   return `<div class="bd-pod"><p class="bd-pk">${title}</p><div class="bd-steps">${order.map(i => { const p = list[i];
@@ -188,9 +189,9 @@ function podium(list, title) {
 function boardHTML() {
   const w = BOARD.week, max = Math.max(1, ...Object.values(BOARD.levels));
   return `<section class="h-board" id="h-board"><div class="h-sh"><div><p class="h-k">🏆 ${L("bdK")}</p><h2 class="h-h2">${L("bdH")}</h2></div></div><p class="bd-p">${L("bdP")}</p>
-    <div class="bd-grid"><div class="bd-week"><p class="bd-pk">⭐ ${L("bdWeek")}</p><span class="bd-frame ${w ? "" : "empty"}">${bdFace(w, true)}</span><b>${w ? esc(w.name) : L("bdYou")}</b><small>${w ? esc([w.level, w.score].filter(Boolean).join(" · ")) : L("bdFree")}</small>
+    <div class="bd-grid"><div class="bd-week">${confettiHTML()}<p class="bd-pk">⭐ ${L("bdWeek")}</p><span class="bd-frame ${w ? "" : "empty"}">${bdFace(w, true)}</span><b>${w ? esc(w.name) : L("bdYou")}</b><small>${w ? esc([w.level, w.score].filter(Boolean).join(" · ")) : L("bdFree")}</small>
         ${(BOARD.weekList || []).length > 1 ? `<ol class="bd-rest bd-wk" start="2">${BOARD.weekList.slice(1).map(p => `<li><b>${esc(p.name)}</b><small>${esc([p.level, p.score].filter(Boolean).join(" · "))}</small></li>`).join("")}</ol>` : ""}</div>
-      <div class="bd-month"><p class="bd-mk">📅 ${L("bdMonth")}</p>${podium(BOARD.month.adults, L("bdAdults"))}${podium(BOARD.month.kids, L("bdKids"))}</div></div>
+      <div class="bd-month">${confettiHTML()}<p class="bd-mk">📅 ${L("bdMonth")}</p>${podium(BOARD.month.adults, L("bdAdults"))}${podium(BOARD.month.kids, L("bdKids"))}</div></div>
     <div class="bd-levels"><p class="bd-pk">${L("bdLevels")}</p><div class="bd-bars">${LVLS.map(l => `<div><i style="height:${BOARD.levels[l] / max * 100}%"></i><b>${BOARD.levels[l] || "—"}</b><span>${l}</span></div>`).join("")}</div></div>
     <div class="bd-cta"><a class="h-cta" href="#level">${L("bdStart")} →</a><a class="h-cta2" href="#" data-jump="h-lead">${L("bdSend")} ↓</a></div></section>`;
 }
