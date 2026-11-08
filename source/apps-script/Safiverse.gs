@@ -59,6 +59,7 @@ function verify_(p) {
   if (withCred && other) return { ok: false, err: "taken" };
   const group = clean(p.group, 40);
   sh.appendRow([email, name, clean(p.age, 10), clean(p.av, 30), new Date(), new Date(), 0, 0, 0, "", hash_(token), "", p.parent ? "yes" : "", withCred ? user : "", withCred ? pinHash(user, p.pin) : "", "", "", "ok", group]);
+  try { svNotify_("🆕 <b>Новая регистрация в Safiverse</b>\n👤 " + name + (withCred ? " (@" + user + ")" : "") + (p.age ? " · " + clean(p.age, 10) + " лет" : "") + "\n📧 " + email); } catch (er) {}
   try { MailApp.sendEmail({ to: ADMIN_EMAIL, name: "Safiverse", subject: "🆕 Safiverse: yeni tələbə — " + name,
     htmlBody: mailHtml_("🆕 Yeni tələbə qeydiyyatdan keçdi", `<p style="font-size:15px"><b>${name}</b> · @${withCred ? user : "—"}<br>${clean(p.age, 10) === "kid" ? "👧 uşaq" : "🧑 böyük"} · ${email}${group ? "<br>👥 " + group : ""}</p>`, "Admin panel →", ""),
     body: "Yeni tələbə qeydiyyatdan keçdi: " + name + " (@" + user + "), " + email + (group ? ", qrup: " + group : "") + ". " + APP_URL + "#sadmin" }); } catch (e) {}
@@ -99,6 +100,7 @@ function setcred_(p) {
 /* ---------- progress sync (the copy with more XP wins) ---------- */
 function sync_(p) {
   const a = auth_(p); if (!a) return { ok: false, err: "auth" };
+  try { svFirstToday_(a.f.v, p); } catch (er) {}
   const r = a.f.row, cur = a.f.v[11] ? JSON.parse(a.f.v[11]) : null, inc = p.progress || null, xp = Number(p.xp) || 0;
   const curXp = Number(a.f.v[6]) || 0;
   if (inc && xp >= curXp) { try { feedFromSync_(a.email, cur, inc, Number(a.f.v[7]) || 0, Number(p.streak) || 0, Number(a.f.v[8]) || 0, Number(p.lessons) || 0); } catch (e) {} }
@@ -510,3 +512,39 @@ function handle_(p) {
 }
 function doPost(e) { let p = {}; try { p = JSON.parse(e.postData.contents || "{}"); } catch (er) {} return json_(handle_(p)); }
 function doGet(e) { const q = (e && e.parameter) || {}; if (q.a === "unsub") return unsubPage_(q); return json_(handle_(q)); }
+
+
+/* =================== Telegram reports through the Minaraverse bot =================== */
+/* Safiverse has no bot token of its own: it hands the text to the Minaraverse server, which sends it to Minara's Telegram.
+   Live: a new sign-up, and the first time each student starts working on a given day. Every evening at 21:00 — the day's report.
+   Run setupSvTelegram() once (▶) — it sets the 21:00 trigger and sends today's report right away. */
+const MV_RELAY = "https://script.google.com/macros/s/AKfycbyvcWi9KVAJ0elYh2XVjc_K0tOInPXsyVq9N1q9noAMDzzo0FTYPtSdF7ANxorwy3n0/exec";
+function svNotify_(text) { UrlFetchApp.fetch(MV_RELAY, { method: "post", contentType: "application/json", payload: JSON.stringify({ a: "svtg", text: "🪐 " + text }), muteHttpExceptions: true, followRedirects: true }); }
+const svDay_ = d => Utilities.formatDate(new Date(d), TZ, "yyyy-MM-dd");
+const svTime_ = d => Utilities.formatDate(new Date(d), TZ, "HH:mm");
+const svWho_ = r => String(r[1] || "—") + (r[13] ? " (@" + r[13] + ")" : "");
+function svFirstToday_(row, p) {
+  const last = row[5] ? svDay_(row[5]) : "", t = today_(); if (last === t) return;
+  const k = "svn_" + t + "_" + hash_(String(row[0])).slice(0, 10); if (P.getProperty(k)) return; P.setProperty(k, "1");
+  svNotify_("📚 <b>" + svWho_(row) + "</b> зашёл(ла) заниматься в Safiverse\n⭐ " + (Number(p.xp) || Number(row[6]) || 0) + " XP · 🔥 " + (Number(p.streak) || Number(row[7]) || 0) + " дн. подряд · 📘 уроков: " + (Number(p.lessons) || Number(row[8]) || 0) + (p.unit || row[9] ? "\n📍 " + clean(p.unit || row[9], 60) : ""));
+}
+function svReport_(day) {
+  const v = students_().getDataRange().getValues(); v.shift(); const rows = v.filter(r => r[0]), t = day || today_();
+  const xpDay = r => Number(((prog_(r)["mv-xp"] || {}).days || {})[t]) || 0;
+  const newToday = rows.filter(r => r[4] && svDay_(r[4]) === t), cameToday = rows.filter(r => (r[5] && svDay_(r[5]) === t) || xpDay(r) > 0);
+  const worked = cameToday.filter(r => xpDay(r) > 0).sort((a, b) => xpDay(b) - xpDay(a)), justLooked = cameToday.filter(r => !xpDay(r));
+  const d = t.split("-"), M = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+  let m = "🪐 <b>Safiverse · отчёт за " + Number(d[2]) + " " + M[Number(d[1]) - 1] + "</b>\n\n";
+  m += "👥 Всего учеников: " + rows.length + "\n🚪 Заходили сегодня: " + cameToday.length + "\n✍️ Занимались (получили XP): " + worked.length + "\n🆕 Новых регистраций: " + newToday.length + "\n";
+  if (worked.length) m += "\n🏆 <b>Кто занимался</b>\n" + worked.map((r, i) => (i + 1) + ". " + svWho_(r) + " — " + xpDay(r) + " XP сегодня · всего " + (Number(r[6]) || 0) + " XP · 🔥 " + (Number(r[7]) || 0) + " · уроков " + (Number(r[8]) || 0) + (r[5] ? " · последний раз в " + svTime_(r[5]) : "") + (r[9] ? "\n     📍 " + r[9] : "")).join("\n") + "\n";
+  if (justLooked.length) m += "\n👀 <b>Зашли, но не занимались</b>\n" + justLooked.map(r => "• " + svWho_(r) + (r[5] ? " в " + svTime_(r[5]) : "")).join("\n") + "\n";
+  if (newToday.length) m += "\n🆕 <b>Новые ученики</b>\n" + newToday.map(r => "• " + svWho_(r) + (r[2] ? ", " + r[2] + " лет" : "") + " — в " + svTime_(r[4])).join("\n") + "\n";
+  if (!cameToday.length) m += "\nСегодня в Safiverse никто не заходил.";
+  return m.trim();
+}
+function svDigest() { svNotify_(svReport_().replace(/^🪐 /, "")); }
+function setupSvTelegram() {
+  ScriptApp.getProjectTriggers().filter(tr => tr.getHandlerFunction() === "svDigest").forEach(tr => ScriptApp.deleteTrigger(tr));
+  ScriptApp.newTrigger("svDigest").timeBased().atHour(21).nearMinute(0).everyDays(1).inTimezone(TZ).create();
+  svDigest(); Logger.log("ok: 21:00 trigger set, report sent");
+}

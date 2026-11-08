@@ -221,6 +221,7 @@ function setupTelegram() {
   Logger.log("OK — chat " + m.chat.id);
 }
 function doPost(e) { let p = {}; try { p = JSON.parse(e.postData.contents || "{}"); } catch (er) {}
+  if (p.a === "svtg") return json_(svRelay_(p));
   if (p.a === "ev") return json_(event_(p)); return json_({ ok: false }); }
 
 function doGet(e) {
@@ -256,4 +257,14 @@ function doGet(e) {
     }
     return json_({ ok: false });
   } finally { lock.releaseLock(); }
+}
+
+
+/* relay for the Safiverse server: it has no bot token, so it passes its report here and this script sends it to Minara's Telegram.
+   Only Safiverse messages (they start with 🪐), at most 150 a day, so the relay cannot be used to flood the chat. */
+function svRelay_(p) {
+  const text = String(p.text || ""); if (text.indexOf("🪐") !== 0 || text.length > 4000) return { ok: false };
+  const k = "svrelay_" + Utilities.formatDate(new Date(), "Asia/Baku", "yyyy-MM-dd"), n = Number(P.getProperty(k) || 0);
+  if (n >= 150) return { ok: false, err: "limit" }; P.setProperty(k, String(n + 1));
+  tg_(text); return { ok: true };
 }
