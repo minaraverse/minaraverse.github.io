@@ -2942,3 +2942,8 @@ html.adult .dr-end h1{font-size:28px}html.adult .ap-h{letter-spacing:0}
 .fq-res{margin:10px 0 0;text-align:center;font-size:28px;font-weight:700}.fq-res.ok{color:#3b9a1d}.fq-res.no{color:#d63a3a}
 html.adult .fl-paper,html.adult .fl-card{font-family:var(--bf)}html.adult .fl-paper button{font-family:var(--bf)}
 .wd-fleet::after{background:rgba(31,79,163,.08)}.wd-fleet b{color:#1f4fa3}.wd-fleet .wd-e{font-size:38px}
+/* delete account + consent link */
+.ap-del b{color:#ff8fa3}.dm-card{position:relative;gap:10px}.dm-ic{font-size:44px}.dm-card h2{margin:0;font:800 22px var(--bf)}.dm-card p{margin:0;color:var(--mut)}
+.dm-l{display:grid;gap:6px;text-align:left;font:600 14px var(--bf);color:var(--ink)}.dm-go{background:#ff6b81!important;border-bottom-color:#c24a5e!important;color:#fff!important}.dm-go:disabled{opacity:.45}
+.sv-chk a{color:var(--gold);text-decoration:underline}
+.dm-card .ap-cta.dm-go{background:#ff6b81!important;background-image:none!important;border-bottom-color:#c24a5e!important;color:#fff!important;box-shadow:none!important}

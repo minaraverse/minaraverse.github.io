@@ -1,14 +1,15 @@
 /**
  * Safiverse server (Google Apps Script, bound to the "Safiverse — tələbələr" spreadsheet).
- * Nothing to edit except ADMIN_EMAIL. Paste, save, Deploy → New deployment → Web app →
+ * The admin email is NOT written here (this file is public): set it once in Project Settings → Script properties → ADMIN_EMAIL.
+ * If it is missing, the script owner's own Google email is used. Paste, save, Deploy → New deployment → Web app →
  * Execute as: Me, Who has access: Anyone → Deploy, and send the /exec link.
  * Sheets are created automatically: "Tələbələr" (students) and "Liqa" (weekly leagues).
  * Sign-up: a 6-digit code goes to the email once; the student also picks a username and a personal code (4–6 digits).
  * Later sign-in: username + personal code on any phone (email code stays as "forgot my code"). Only hashes are stored.
  */
-const ADMIN_EMAIL = "nurlan_kerimov@hotmail.com";
-const KIDS_MAX_AGE = 14;
 const P = PropertiesService.getScriptProperties();
+const ADMIN_EMAIL = (() => { const e = String(P.getProperty("ADMIN_EMAIL") || "").trim(); if (e) return e; try { return Session.getEffectiveUser().getEmail(); } catch (er) { return ""; } })();
+const KIDS_MAX_AGE = 14;
 
 function hash_(s) { return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, "sv|" + s).map(b => ("0" + ((b + 256) % 256).toString(16)).slice(-2)).join(""); }
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
@@ -469,6 +470,20 @@ function recUp_(p) {
   return { ok: true };
 }
 
+/* 🗑 delete my account — everything stored about the student: the account, recordings (files go to Drive trash), reports, league row, friends / duels / gifts / feed rows */
+function delMe_(p) {
+  const a = auth_(p); if (!a) return { ok: false, err: "auth" };
+  const email = a.email, user = String(a.f.v[13] || "").toLowerCase(), lgId = hash_(email).slice(0, 24);
+  const purge = (sh, test) => { if (!sh) return; const v = sh.getDataRange().getValues(); for (let i = v.length - 1; i >= 1; i--) if (test(v[i])) sh.deleteRow(i + 1); };
+  const mine = r => r.slice(0, 4).some(c => { const x = String(c).toLowerCase(); return x && (x === email || (user && x === user)); });
+  purge(recSh_(), r => { if (String(r[2]).toLowerCase() !== email) return false; try { JSON.parse(r[7] || "[]").forEach(id => { try { DriveApp.getFileById(id).setTrashed(true); } catch (e) {} }); } catch (e) {} return true; });
+  purge(repSh_(), r => (user && String(r[2]).toLowerCase() === user) || String(r[2]).toLowerCase() === email);
+  purge(lgSheet_(), r => r[0] === lgId);
+  ["Dostlar", "Duellər", "Hədiyyələr", "Lent"].forEach(n => purge(ss_().getSheetByName(n), mine));
+  const sh = students_(), f = find_(sh, email); if (f) sh.deleteRow(f.row);
+  return { ok: true };
+}
+
 function handle_(p) {
   const lock = LockService.getScriptLock(); lock.waitLock(15000);
   try {
@@ -484,6 +499,7 @@ function handle_(p) {
     if (p.a === "vote") return vote_(p);
     if (p.a === "report") return report_(p);
     if (p.a === "rec_up") return recUp_(p);
+    if (p.a === "del_me") return delMe_(p);
     if (String(p.a || "").indexOf("fr_") === 0) return friends_(p);
     if (String(p.a || "").indexOf("so_") === 0) return social_(p);
     if (String(p.a || "").indexOf("du_") === 0) return duel_(p);

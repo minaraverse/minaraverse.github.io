@@ -129,7 +129,7 @@ function regScreen(root, mode) {
     return field("name", L("svName"), `maxlength="30" autocomplete="given-name" value="${esc(st.name)}"`)
       + `<div class="sv-age"><button type="button" data-age="kid" class="${kid ? "on" : ""}">👧 ${L("svKid")}</button><button type="button" data-age="adult" class="${st.age === "adult" ? "on" : ""}">🧑 ${L("svAdult")}</button></div>`
       + field("email", kid ? L("svEmailKid") : L("svEmail"), `type="email" inputmode="email" autocomplete="email" value="${esc(st.email)}"`)
-      + userF() + pinF() + field("group", L("svGroup"), `maxlength="40" placeholder="${esc(L("svGroupPh"))}" value="${esc(st.group || "")}"`) + (kid ? `<label class="sv-chk"><input type="checkbox" name="consent"> ${L("svConsent")}</label>` : ""); };
+      + userF() + pinF() + field("group", L("svGroup"), `maxlength="40" placeholder="${esc(L("svGroupPh"))}" value="${esc(st.group || "")}"`) + `<label class="sv-chk"><input type="checkbox" name="consent"> <span>${(kid ? L("svConsent2") : L("svAgree")).replace("{p}", `<a href="${PRIV_URL}" target="_blank" rel="noopener">${L("svPrivLink")}</a>`)}</span></label>`; };
   const links = () => st.mode === "login" ? `<button type="button" class="dr-link" data-to="email">${L("svForgot")}</button><button type="button" class="dr-link" data-to="new">${L("svReg")}</button>`
     : st.mode === "email" ? `<button type="button" class="dr-link" data-to="login">← ${L("svLogin")}</button>`
     : st.mode === "set" ? `<button type="button" class="dr-link" data-later>${L("svLater")}</button>`
@@ -170,7 +170,7 @@ function regScreen(root, mode) {
         if (reg() && st.name.length < 2) return err(L("svNameBad")); if (reg() && !st.age) return err(L("svAgeBad"));
         if ((reg() || st.mode === "email") && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(st.email)) return err(L("svEmailBad"));
         if (needCred && !/^[a-z0-9._]{3,20}$/.test(st.user)) return err(L("svUserBad")); if (needCred && !/^\d{4,6}$/.test(st.pin)) return err(L("svPinBad"));
-        if (reg() && st.age === "kid" && !f.consent.checked) return err(L("svConsBad"));
+        if (reg() && f.consent && !f.consent.checked) return err(st.age === "kid" ? L("svConsBad") : L("svAgreeBad"));
         const b = f.querySelector(".ap-cta"); b.disabled = true; b.textContent = "…"; const back = () => { b.disabled = false; b.textContent = btn(); };
         try {
           if (st.mode === "login") { const d = await sPost("login", { user: st.user, pin: st.pin }); if (d.ok) return finish(d); back(); return err(errOf(d)); }
@@ -262,3 +262,9 @@ Object.assign(UI.en, { svLoading: "Loading…", netOff: "No connection — check
 Object.assign(UI.az, { svLoading: "Yüklənir…", netOff: "Bağlantı yoxdur — interneti yoxla və yenidən cəhd et.", svOuting: "Çıxılır…" });
 Object.assign(UI.ru, { svLoading: "Загрузка…", netOff: "Нет связи — проверь интернет и попробуй снова.", svOuting: "Выходим…" });
 const loadBox = () => `<div class="sv-load" role="status"><span class="sv-spin"></span><p>${L("svLoading")}</p></div>`;
+
+/* privacy policy page (public) + consent wording */
+const PRIV_URL = "https://safiverse.github.io/privacy.html";
+Object.assign(UI.en, { svAgree: "I have read the {p} and agree", svConsent2: "I am the parent: I have read the {p} and agree", svPrivLink: "privacy policy", svAgreeBad: "Please agree to the privacy policy" });
+Object.assign(UI.az, { svAgree: "{p} ilə tanış oldum və razıyam", svConsent2: "Mən valideynəm: {p} ilə tanış oldum və razıyam", svPrivLink: "Məxfilik siyasəti", svAgreeBad: "Məxfilik siyasəti ilə razılaşmağı qeyd et" });
+Object.assign(UI.ru, { svAgree: "Я прочитал(а) {p} и согласен(на)", svConsent2: "Я родитель: прочитал(а) {p} и согласен(на)", svPrivLink: "политику конфиденциальности", svAgreeBad: "Отметь согласие с политикой конфиденциальности" });

@@ -75,6 +75,7 @@ sv_html = sv_html.replace('<meta name="description" content="Minaraverse: Englis
   '<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;background:#0b0a20}img{max-width:100%}[hidden]{display:none!important}' + (R / 'tools/splash.css').read_text() + '</style>' + STARTUP + '</head><body>' + (R / 'tools/splash.html').read_text() + sv_html + '</body></html>')
 (S / "manifest.json").write_text('{"name":"Safiverse — English step by step","short_name":"Safiverse","start_url":"./#app-learn","scope":"./","display":"standalone","background_color":"#0b0a20","theme_color":"#0b0a20","orientation":"portrait",'
   '"icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}')
+shutil.copy(R / "tools/privacy.html", S / "privacy.html")  # public privacy policy page next to the app
 (S / "sw.js").write_text('/* Safiverse offline cache: network first (fresh version), but if the network is slow (>3.5 s) open the saved copy at once */\nconst C = "sv-v25";\n'
   'self.addEventListener("install", e => { e.waitUntil(caches.open(C).then(c => c.addAll(["./", "./index.html"])).then(() => self.skipWaiting())); });\n'
   'self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith("sv-") && k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); });\n'
@@ -89,7 +90,7 @@ sv_html = sv_html.replace('<meta name="description" content="Minaraverse: Englis
 S2 = R / "dist-sv"; (S2 / "img").mkdir(parents=True, exist_ok=True)
 sv_root = (S / "index.html").read_text().replace('../img/', 'img/')
 (S2 / "index.html").write_text(sv_root)
-for f in ["manifest.json", "sw.js", "favicon.png", "icon-180.png", "icon-192.png", "icon-512.png"] + [p.name for p in S.glob("splash-*.png")]:
+for f in ["manifest.json", "sw.js", "privacy.html", "favicon.png", "icon-180.png", "icon-192.png", "icon-512.png"] + [p.name for p in S.glob("splash-*.png")]:
     if (S / f).exists(): shutil.copy(S / f, S2 / f)
 shutil.copytree(D / "img", S2 / "img", dirs_exist_ok=True)
 (S2 / ".nojekyll").write_text("")

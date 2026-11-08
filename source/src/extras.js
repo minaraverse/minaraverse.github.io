@@ -188,7 +188,7 @@ document.addEventListener("click", e => { const b = e.target.closest("[data-unit
 const OFF_V = 1;
 const offReady = () => (lsGet("mv-offpack", {}).v || 0) >= OFF_V;
 function extraSetItems() {
-  return `${instIsApp() ? "" : `<button class="ap-item ap-inst" data-inst><span>📲</span><b>${L("inT")}<em>${L("inP")}</em></b><i>›</i></button>`}<button class="ap-item ap-sw" data-adult aria-pressed="${adultOn()}"><span>🧑</span><b>${L("adT")}<em>${L("adP")}</em></b><i class="sw ${adultOn() ? "on" : ""}"></i></button>
+  return `<a class="ap-item" href="${typeof PRIV_URL === "string" ? PRIV_URL : "privacy.html"}" target="_blank" rel="noopener"><span>🔒</span><b>${L("pvT")}</b><i>›</i></a>${typeof svOn === "function" && svOn() && typeof ACCT === "function" && ACCT() ? `<button class="ap-item ap-del" data-delme><span>🗑</span><b>${L("dmT")}<em>${L("dmP")}</em></b><i>›</i></button>` : ""}${instIsApp() ? "" : `<button class="ap-item ap-inst" data-inst><span>📲</span><b>${L("inT")}<em>${L("inP")}</em></b><i>›</i></button>`}<button class="ap-item ap-sw" data-adult aria-pressed="${adultOn()}"><span>🧑</span><b>${L("adT")}<em>${L("adP")}</em></b><i class="sw ${adultOn() ? "on" : ""}"></i></button>
     ${typeof caches === "object" ? `<button class="ap-item" data-offdl><span>📥</span><b>${L("ofT")}<em>${offReady() ? L("ofDone") : L("ofP")}</em></b><i>${offReady() ? "✓" : "↓"}</i></button>` : ""}`;
 }
 function offUrls() { const u = [...CLIPS].map(h => "img/tts/" + h + ".mp3");
@@ -207,6 +207,7 @@ async function offDownload(btn) {
   } catch (e) { toast(L("ofNo")); } finally { delete btn.dataset.busy; }
 }
 document.addEventListener("click", e => {
+  const dm = e.target.closest("[data-delme]"); if (dm) { e.preventDefault(); e.stopPropagation(); delMeSheet(); return; }
   const ib = e.target.closest("[data-inst]"); if (ib) { e.preventDefault(); e.stopPropagation(); instGo(); return; }
   const a = e.target.closest("[data-adult]"); if (a) { e.preventDefault(); e.stopPropagation(); lsSet("mv-adult", !adultOn()); adultApply(); sfx("tap"); toast(adultOn() ? L("adOnT") : L("adOffT")); Router.remount(); return; }
   const o = e.target.closest("[data-offdl]"); if (o) { e.preventDefault(); e.stopPropagation(); offDownload(o); }
@@ -392,4 +393,26 @@ async function instGo() {
     <button class="ap-cta" data-ok>${L("inOk")}</button>${kind === "ios" ? `<i class="in-arrow" aria-hidden="true">⬇</i>` : ""}</div>`;
   document.body.appendChild(ov);
   ov.onclick = e => { if (e.target === ov || e.target.closest(".rp-x,[data-ok]")) ov.remove(); };
+}
+
+/* ---------- 🗑 delete my account (required by the App Store; promised in the privacy policy) ---------- */
+Object.assign(UI.en, { pvT: "Privacy policy", dmT: "Delete my account", dmP: "Removes the account, progress and voice recordings", dmQ: "Delete your account?", dmW: "This cannot be undone. Your account, progress, league place, friends and voice recordings will be deleted for good.", dmType: "To confirm, write your username: {u}", dmGo: "Delete for good", dmNo: "Cancel", dmDone: "Your account has been deleted", dmBad: "That is not your username" });
+Object.assign(UI.az, { pvT: "Məxfilik siyasəti", dmT: "Hesabı sil", dmP: "Hesab, irəliləyiş və səs yazıları silinir", dmQ: "Hesabın silinsin?", dmW: "Bu geri qaytarılmır. Hesabın, irəliləyişin, liqadakı yerin, dostların və səs yazıların həmişəlik silinəcək.", dmType: "Təsdiq üçün istifadəçi adını yaz: {u}", dmGo: "Həmişəlik sil", dmNo: "Ləğv et", dmDone: "Hesabın silindi", dmBad: "Bu sənin istifadəçi adın deyil" });
+Object.assign(UI.ru, { pvT: "Политика конфиденциальности", dmT: "Удалить аккаунт", dmP: "Удаляются аккаунт, прогресс и голосовые записи", dmQ: "Удалить аккаунт?", dmW: "Это нельзя отменить. Аккаунт, прогресс, место в лиге, друзья и голосовые записи будут удалены навсегда.", dmType: "Для подтверждения напиши имя пользователя: {u}", dmGo: "Удалить навсегда", dmNo: "Отмена", dmDone: "Аккаунт удалён", dmBad: "Это не твоё имя пользователя" });
+function delMeSheet() {
+  const a = ACCT(); if (!a) return; const u = a.user || a.email;
+  document.querySelectorAll(".dm-ov").forEach(o => o.remove());
+  const ov = document.createElement("div"); ov.className = "dr-ov dm-ov";
+  ov.innerHTML = `<div class="dr-card dm-card" role="dialog" aria-label="${L("dmQ")}"><button class="rp-x" aria-label="Close">✕</button><div class="dm-ic">🗑</div><h2>${L("dmQ")}</h2><p>${L("dmW")}</p>
+    <label class="dm-l">${L("dmType").replace("{u}", `<b>${esc(u)}</b>`)}<input class="dx-in" autocomplete="off" autocapitalize="none" spellcheck="false"></label><p class="sv-err" role="alert"></p>
+    <button class="ap-cta dm-go" data-go disabled>${L("dmGo")}</button><button class="dr-link" data-no>${L("dmNo")}</button></div>`;
+  document.body.appendChild(ov);
+  const inp = ov.querySelector("input"), go = ov.querySelector("[data-go]"), er = ov.querySelector(".sv-err");
+  inp.oninput = () => { go.disabled = inp.value.trim().toLowerCase() !== String(u).toLowerCase(); };
+  ov.onclick = async e => { if (e.target === ov || e.target.closest(".rp-x,[data-no]")) return ov.remove();
+    if (!e.target.closest("[data-go]") || go.disabled) return; go.disabled = true; go.innerHTML = `<span class="sv-spin sm"></span>`;
+    let d = {}; try { d = await sPost("del_me", { email: a.email, token: a.token }, 30000); } catch (x) {}
+    if (!d.ok) { go.disabled = false; go.textContent = L("dmGo"); er.textContent = navigator.onLine === false ? L("ofOff") : L("svErr"); return; }
+    try { Object.keys(localStorage).filter(k => /^mv-/.test(k) && k !== "mv-lang").forEach(k => localStorage.removeItem(k)); } catch (x) {}
+    ov.remove(); toast(L("dmDone")); setTimeout(() => { location.hash = "#app-learn"; location.reload(); }, 900); };
 }
