@@ -136,8 +136,8 @@ VIEWS.level = root => {
       <div class="lv-choose"><p class="lv-k">${L("lvChooseK")}</p>
         <a class="lv-ch" href="#exam-${xv.id}"><span>📝</span><div><b>${L("lvChTest").replace("{lv}", xv.lv.join("–"))}</b><small>${L("lvChTestS")}</small></div><i>→</i></a>
         <p class="lv-pick">${L("lvPickP")}</p>
-        <div class="lv-two"><div class="lv-col"><p class="lv-sugk">⭐ ${L("lvSugg").replace("{lv}", lvl)}</p><div class="lv-tiles">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).map(k => storyTile(k)).join("")}</div></div>
-          <div class="lv-col other"><p class="lv-sugk dim">👀 ${L("lvAlso")}</p><div class="lv-tiles">${[...(typeof ESC_ROOMS !== "undefined" ? ["escape"] : []), ...WORLD_ORDER.filter(k => !fitsLevel(STORIES[k].level, lvl))].map(k => storyTile(k)).join("")}</div></div></div>
+        <div class="lv-two"><div class="lv-col"><p class="lv-sugk">⭐ ${L("lvSugg").replace("{lv}", lvl)} <span class="lv-n">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).length}</span><span class="lv-swipe">→</span></p><div class="lv-tiles">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).map(k => storyTile(k)).join("")}</div></div>
+          <div class="lv-col other"><p class="lv-sugk dim">👀 ${L("lvAlso")} <span class="lv-n">${WORLD_ORDER.filter(k => !fitsLevel(STORIES[k].level, lvl)).length + 1}</span><span class="lv-swipe">→</span></p><div class="lv-tiles">${[...(typeof ESC_ROOMS !== "undefined" ? ["escape"] : []), ...WORLD_ORDER.filter(k => !fitsLevel(STORIES[k].level, lvl))].map(k => storyTile(k)).join("")}</div></div></div>
         <a class="lv-ch" href="#errors"><span>🎯</span><div><b>${esc(STORIES.errors.title)}</b><small>${L("lvChErr")}</small></div><i>→</i></a></div>
       <div class="lv-split">${Object.keys(by).map(l => `<div class="${l === lvl ? "on" : ""}"><b>${l}</b><span>${by[l]}/5</span><i style="height:${by[l] / 5 * 100}%"></i></div>`).join("")}</div>
       <details class="lv-plan"><summary class="lv-k">${L("yourPlan")}</summary>${planHTML(lvl)}</details>

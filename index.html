@@ -2748,6 +2748,20 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .st-t{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;background:linear-gradient(transparent,rgba(0,0,0,.85));display:grid;gap:1px}
 .st-t small{font:700 10px "Bricolage Grotesque",sans-serif;letter-spacing:.06em;color:#ffd34d}.st-t b{font:600 14px/1.15 "Bricolage Grotesque",sans-serif}
 .stk-escape .st-img{background-position:center 40%}
+/* phones: both lists side by side in time — two swipeable rows that fit on one screen */
+.lv-n{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:rgba(255,211,77,.2);font-size:11px;color:#ffe9a8}
+.lv-swipe{display:none}
+@media (max-width:759px){
+  .lv-two{gap:10px}
+  .lv-tiles{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 10px;margin:8px -2px 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .lv-tiles::-webkit-scrollbar{display:none}
+  .lv-tiles .st-tile{flex:0 0 38%;scroll-snap-align:start;aspect-ratio:4/5}
+  .lv-col.other .lv-tiles .st-tile{flex-basis:34%}
+  .lv-swipe{display:inline-block;margin-left:6px;animation:lvsw 1.4s ease-in-out infinite}
+  .lv-sugk{display:flex;align-items:center}
+  .lv-col.other{padding:10px;border-radius:14px;background:rgba(255,255,255,.04)}
+}
+@keyframes lvsw{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
 
 </style>
 <div id="view"></div>
@@ -8286,8 +8300,8 @@ VIEWS.level = root => {
       <div class="lv-choose"><p class="lv-k">${L("lvChooseK")}</p>
         <a class="lv-ch" href="#exam-${xv.id}"><span>📝</span><div><b>${L("lvChTest").replace("{lv}", xv.lv.join("–"))}</b><small>${L("lvChTestS")}</small></div><i>→</i></a>
         <p class="lv-pick">${L("lvPickP")}</p>
-        <div class="lv-two"><div class="lv-col"><p class="lv-sugk">⭐ ${L("lvSugg").replace("{lv}", lvl)}</p><div class="lv-tiles">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).map(k => storyTile(k)).join("")}</div></div>
-          <div class="lv-col other"><p class="lv-sugk dim">👀 ${L("lvAlso")}</p><div class="lv-tiles">${[...(typeof ESC_ROOMS !== "undefined" ? ["escape"] : []), ...WORLD_ORDER.filter(k => !fitsLevel(STORIES[k].level, lvl))].map(k => storyTile(k)).join("")}</div></div></div>
+        <div class="lv-two"><div class="lv-col"><p class="lv-sugk">⭐ ${L("lvSugg").replace("{lv}", lvl)} <span class="lv-n">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).length}</span><span class="lv-swipe">→</span></p><div class="lv-tiles">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).map(k => storyTile(k)).join("")}</div></div>
+          <div class="lv-col other"><p class="lv-sugk dim">👀 ${L("lvAlso")} <span class="lv-n">${WORLD_ORDER.filter(k => !fitsLevel(STORIES[k].level, lvl)).length + 1}</span><span class="lv-swipe">→</span></p><div class="lv-tiles">${[...(typeof ESC_ROOMS !== "undefined" ? ["escape"] : []), ...WORLD_ORDER.filter(k => !fitsLevel(STORIES[k].level, lvl))].map(k => storyTile(k)).join("")}</div></div></div>
         <a class="lv-ch" href="#errors"><span>🎯</span><div><b>${esc(STORIES.errors.title)}</b><small>${L("lvChErr")}</small></div><i>→</i></a></div>
       <div class="lv-split">${Object.keys(by).map(l => `<div class="${l === lvl ? "on" : ""}"><b>${l}</b><span>${by[l]}/5</span><i style="height:${by[l] / 5 * 100}%"></i></div>`).join("")}</div>
       <details class="lv-plan"><summary class="lv-k">${L("yourPlan")}</summary>${planHTML(lvl)}</details>
