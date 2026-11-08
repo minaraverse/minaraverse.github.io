@@ -2,7 +2,7 @@ import base64, pathlib
 R = pathlib.Path("/home/claude/mv")
 band = ""
 css = (R / "src/style.css").read_text()
-MODS = ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data11", "tasks0", "data12", "data13", "tasks", "audmap", "core", "series", "art", "home", "share", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "ladder", "deep", "deepdata", "admin", "app", "worlds2", "course", "course2", "drill", "people", "skills", "safi", "friends", "social", "learn2", "uisound", "lesson", "level", "teacher", "mascot", "kids", "track", "peek"]
+MODS = ["words", "data", "data2", "tr", "tr2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data11", "tasks0", "data12", "data13", "tasks", "audmap", "core", "series", "art", "home", "share", "tapes", "voyage", "wild", "travel", "views2", "mystery", "v2", "v3", "ladder", "deep", "deepdata", "admin", "app", "worlds2", "escape", "course", "course2", "drill", "people", "skills", "safi", "friends", "social", "learn2", "uisound", "lesson", "level", "teacher", "mascot", "kids", "track", "peek"]
 # per-story extra tasks live in src/tasks/<story>.js and are joined into src/tasks.js
 _tk = sorted(f for f in (R / "src/tasks").glob("*.js") if f.stem not in ("check",))
 (R / "src/tasks.js").write_text("/* generated from src/tasks/*.js by build.py */\n" + "\n".join(f.read_text() for f in _tk) + "\nmergeTasks();\n")

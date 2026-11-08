@@ -80,6 +80,7 @@ VIEWS.home = root => {
     <a class="h-morebiz" href="#" data-jump="h-exam">💼 ${(nb => ({ en: `+ ${nb} more stories in Business English`, az: `+ Business English bölməsində daha ${nb} hekayə`, ru: `+ ещё ${nb} истории в разделе Business English` })[LANG])(["interview", "client", "contract", "call"].filter(k => STORIES[k]).length)} ↓</a>
   </section>
   <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
+  ${typeof escapeHomeHTML === "function" ? escapeHomeHTML() : ""}
   <section class="h-exam" id="h-exam"><div class="h-sh h-sh-big"><div class="h-count biz"><b>${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).length}</b><span>${L("bizK")}</span></div><div><p class="h-k">💼 ${L("bizK")} · ${typeof SERIES !== "undefined" ? (SERIES.bluesail.name[LANG] || SERIES.bluesail.name.en) : ""}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
     <div class="hx-cases">${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
       return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${k === "contract" ? `<span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span>` : WART[k]()}</span>
