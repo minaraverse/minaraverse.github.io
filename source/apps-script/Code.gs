@@ -39,16 +39,24 @@ function readRows_() {
 
 function points_(r) { const m = String(r.score || "").match(/(\d+)\s*\/\s*(\d+)/); return m ? Number(m[1]) : 0; }
 
-function board_(rows) {
+/* site activity (Ziyarətlər) as board rows: every finished chapter and level test of a student who typed their name counts automatically */
+function evAsRows_() { try { return allRows_().filter(r => r.name && (r.ev === "done" || r.ev === "level")).map(r => { const parts = r.name.trim().split(/\s+/);
+    return { _time: r.t.toISOString(), name: parts[0], surname: parts.slice(1).join(" "), type: r.ev === "done" ? "Chapter" : "Level", score: r.ev === "done" ? r.score : "", level: r.ev === "level" ? r.score : "", age: "", _ev: true }; }); } catch (e) { return []; } }
+function board_(rows, evRows) {
   const now = new Date(), monday = new Date(now), first = new Date(now.getFullYear(), now.getMonth(), 1);
   monday.setHours(0, 0, 0, 0); monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
   const who = r => (String(r.name || "").trim() + " " + String(r.surname || "").trim()).trim();
-  const show = r => { const s = String(r.surname || "").trim(); return String(r.name || "").trim() + (s ? " " + s[0].toUpperCase() + "." : ""); };
-  const sum = list => { const m = {}; list.forEach(r => { const k = who(r).toLowerCase(); if (!k || !/level|chapter/i.test(r.type)) return;
-      m[k] = m[k] || { name: show(r), pts: 0, age: Number(r.age) || 0, level: "" }; m[k].pts += points_(r); if (r.level) m[k].level = String(r.level); });
-    return Object.values(m).filter(x => x.pts > 0).sort((a, b) => b.pts - a.pts); };
-  const week = sum(rows.filter(r => new Date(r._time) >= monday)), month = sum(rows.filter(r => new Date(r._time) >= first));
-  const fmt = x => x ? { name: x.name, score: x.pts + " pts", level: x.level } : null;
+  const show = r => (String(r.name || "").trim() + " " + String(r.surname || "").trim()).trim();
+  const sum1 = list => { const m = {}; list.forEach(r => { const k = who(r).toLowerCase(); if (!k || !/level|chapter/i.test(r.type)) return;
+      m[k] = m[k] || { name: show(r), pts: 0, ch: 0, age: Number(r.age) || 0, level: "" }; m[k].pts += points_(r); if (/chapter/i.test(r.type) && points_(r)) m[k].ch++; if (r.level) m[k].level = String(r.level); if (Number(r.age)) m[k].age = Number(r.age); });
+    return m; };
+  /* form answers and site activity are two views of the same work: per student take the bigger one, so nothing is counted twice */
+  const sum = (list, evList) => { const a = sum1(list), b = sum1(evList || []), m = {};
+    Object.keys(Object.assign({}, a, b)).forEach(k => { const x = a[k], y = b[k]; const best = !x ? y : !y ? x : (y.pts > x.pts ? Object.assign({}, y, { age: x.age || y.age, level: y.level || x.level }) : Object.assign({}, x, { level: x.level || y.level })); m[k] = best; });
+    return Object.values(m).filter(x => x.pts > 0).sort((a2, b2) => b2.pts - a2.pts); };
+  const ev = evRows || [], after = (list, t) => list.filter(r => new Date(r._time) >= t);
+  const week = sum(after(rows, monday), after(ev, monday)), month = sum(after(rows, first), after(ev, first));
+  const fmt = x => x ? { name: x.name, score: x.pts + " pts" + (x.ch ? " · " + x.ch + (x.ch === 1 ? " chapter" : " chapters") : ""), level: x.level } : null;
   const top3 = list => [0, 1, 2].map(i => fmt(list[i]));
   const levels = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 }, last = {};
   rows.filter(r => /level/i.test(r.type)).forEach(r => { last[who(r).toLowerCase()] = String(r.level || r.chapter || ""); });
@@ -91,7 +99,7 @@ function league_(p) {
 
 
 /* ---------- visits & activity log ("Ziyarətlər" sheet) + Telegram ---------- */
-const EVH = ["time", "uid", "name", "event", "story", "chapter", "score", "lang", "device", "ref", "ig"];
+const EVH = ["time", "uid", "name", "event", "story", "chapter", "score", "lang", "device", "ref", "ig", "text"];
 function evSheet_() { const ss = SpreadsheetApp.getActiveSpreadsheet(); let sh = ss.getSheetByName("Ziyarətlər");
   if (!sh) { sh = ss.insertSheet("Ziyarətlər"); sh.appendRow(EVH); sh.setFrozenRows(1); }
   if (sh.getLastColumn() < EVH.length) sh.getRange(1, 1, 1, EVH.length).setValues([EVH]); return sh; }
@@ -99,17 +107,19 @@ const cl_ = (s, n) => String(s || "").replace(/[<>"=]/g, "").trim().slice(0, n);
 function tg_(text) { const chat = P.getProperty("TG_CHAT"); if (!TG_TOKEN || !chat) return false;
   try { UrlFetchApp.fetch("https://api.telegram.org/bot" + TG_TOKEN + "/sendMessage", { method: "post", contentType: "application/json", muteHttpExceptions: true,
     payload: JSON.stringify({ chat_id: chat, text: text, parse_mode: "HTML", disable_web_page_preview: true }) }); return true; } catch (e) { return false; } }
-const STORY_NAMES = { kids: "Little Explorers", cafe: "Baku Café", tapes: "English Tape Club", wild: "Wild English", travel: "Travel", voyage: "Voyage", mystery: "Mystery", movie: "Movie Club", business: "Baku Startup", contract: "Missing Contract", interview: "Job Interview", client: "Angry Client", call: "Video Call", debate: "Debate", ielts: "IELTS", heist: "Heist", club: "Weekly Club", errors: "Mistake Hunters" };
+const STORY_NAMES = { kids: "Little Explorers", cafe: "Baku Café", tapes: "English Tape Club", wild: "Wild English", travel: "Travel", voyage: "Voyage", mystery: "Mystery", movie: "Movie Club", business: "Baku Startup", contract: "Missing Contract", interview: "Job Interview", client: "Angry Client", call: "Video Call", debate: "Debate", ielts: "IELTS", heist: "Heist", exam: "Тест уровня (30 вопросов)", club: "Weekly Club", errors: "Mistake Hunters", camp: "Summer Camp", firstweek: "First Week in Baku", roommates: "Roommates", trial: "The Trial", podcast: "The Podcast", editor: "The Editor" };
 const sname_ = k => STORY_NAMES[k] || k;
-const EVS = ["visit", "view", "chapter", "done", "level", "page", "ui", "reg"];
+const EVS = ["visit", "view", "chapter", "done", "level", "page", "ui", "reg", "write", "poll"];
 const PAGE_NAMES = { level: "Тест уровня", practice: "Тренировка", app: "Safiverse", club: "Клуб недели", word: "Слово дня", errors: "Охотники за ошибками", review: "Повтор ошибок", board: "Доска почёта", lesson: "Заявка на урок", pick: "Выбор курса" };
 const pname_ = k => PAGE_NAMES[k] || sname_(k);
 const who_ = (name, ig) => (name || "Без имени") + (ig ? " (@" + ig + ")" : "");
 function event_(p) {
   const ev = cl_(p.ev, 12); if (EVS.indexOf(ev) < 0) return { ok: false };
-  const sh = evSheet_(), name = cl_(p.name, 40), ig = cl_(p.ig, 40).replace(/^@/, ""), story = cl_(p.story, 24), ch = cl_(p.ch, 6), score = cl_(p.score, 20);
-  sh.appendRow([new Date(), cl_(p.uid, 32), name, ev, story, ch, score, cl_(p.lang, 4), cl_(p.dev, 8), cl_(p.ref, 60), ig]);
+  const sh = evSheet_(), name = cl_(p.name, 40), ig = cl_(p.ig, 40).replace(/^@/, ""), story = cl_(p.story, 24), ch = cl_(p.ch, 6), score = cl_(p.score, 90);
+  const text = cl_(p.text, 700);
+  sh.appendRow([new Date(), cl_(p.uid, 32), name, ev, story, ch, score, cl_(p.lang, 4), cl_(p.dev, 8), cl_(p.ref, 60), ig, text]);
   const dev = p.dev === "mobile" ? " 📱" : " 💻";
+  if (ev === "write") tg_("✍️ <b>" + who_(name, ig) + "</b> написал(а) своё мнение\n📖 " + sname_(story) + " · Глава " + (Number(ch) + 1 || ch) + "\n\n" + text + dev);
   if (ev === "done") tg_("🎉 <b>" + who_(name, ig) + "</b>\n📖 " + sname_(story) + " · Глава " + (Number(ch) + 1 || ch) + "\n⭐ " + score + dev);
   if (ev === "level") tg_("🎓 <b>" + who_(name, ig) + "</b> прошёл(а) тест уровня: <b>" + score + "</b>" + dev);
   if (ev === "reg" && score !== "lesson-request") tg_("📝 <b>Новая регистрация:</b> " + who_(name, ig) + (score === "lesson-request" ? " — заявка на урок" : " — в тесте уровня") + dev);
@@ -117,7 +127,7 @@ function event_(p) {
   return { ok: true };
 }
 function allRows_() { const v = evSheet_().getDataRange().getValues(); v.shift();
-  return v.filter(r => r[0] instanceof Date).map(r => ({ t: r[0], uid: String(r[1] || ""), name: String(r[2] || ""), ev: String(r[3] || ""), story: String(r[4] || ""), ch: String(r[5]), score: String(r[6] || ""), lang: String(r[7] || ""), dev: String(r[8] || ""), ref: String(r[9] || ""), ig: String(r[10] || "") })); }
+  return v.filter(r => r[0] instanceof Date).map(r => ({ t: r[0], uid: String(r[1] || ""), name: String(r[2] || ""), ev: String(r[3] || ""), story: String(r[4] || ""), ch: String(r[5]), score: String(r[6] || ""), lang: String(r[7] || ""), dev: String(r[8] || ""), ref: String(r[9] || ""), ig: String(r[10] || ""), text: String(r[11] || "") })); }
 function evRows_(days) { const since = Date.now() - days * 864e5; return allRows_().filter(r => r.t.getTime() >= since).map(r => Object.assign({}, r, { t: r.t.toISOString() })); }
 const cnt_ = (list, f) => { const m = {}; list.forEach(x => { const k = f(x); if (k) m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]); };
 const src_ = ref => /instagram/i.test(ref) ? "Instagram" : /t\.co|twitter|x\.com/i.test(ref) ? "X" : /facebook|fb\./i.test(ref) ? "Facebook" : /t\.me|telegram/i.test(ref) ? "Telegram" : /google/i.test(ref) ? "Google" : /youtube|youtu\.be/i.test(ref) ? "YouTube" : /tiktok/i.test(ref) ? "TikTok" : /minaraverse|safiverse/i.test(ref) ? "" : ref ? "Другой сайт" : "Напрямую / WhatsApp";
@@ -160,6 +170,11 @@ function dailyDigest() {
   if (s.levels.length || tests.length) m += "\n🎓 Прошли тест уровня: " + Math.max(s.levels.length, tests.length) + (s.levels.length ? " (" + s.levels.join(", ") + ")" : "") + "\n";
   if (s.regs.length || leads.length) m += "📝 Зарегистрировались / оставили заявку: " + [...new Set(s.regs.concat(leads))].join(", ") + "\n";
   if (s.named.length) m += "\n🙋 <b>Ученики, чьи имена известны</b>\n" + s.named.slice(0, 25).join("\n") + "\n";
+  const polls = {}; rows.filter(r => r.ev === "poll").forEach(r => { const k = sname_(r.story) + " · Глава " + (Number(r.ch) + 1 || r.ch) + "\n" + r.score; polls[k] = polls[k] || {}; polls[k][r.text] = (polls[k][r.text] || 0) + 1; });
+  const pk = Object.keys(polls); if (pk.length) m += "\n🔮 <b>Что будет дальше? — голоса учеников</b>\n" + pk.map(k => k + "\n" + Object.entries(polls[k]).sort((a, b) => b[1] - a[1]).map(x => "   • " + x[0] + " — " + x[1]).join("\n")).join("\n") + "\n";
+  try { const b = board_(readRows_(), evAsRows_()), nm = x => x ? x.name + " (" + x.score + (x.level ? ", " + x.level : "") + ")" : "—";
+    m += "\n🏆 <b>Доска почёта сейчас</b>\nУченик недели: " + nm(b.week) + "\nТоп-3 месяца (взрослые): " + b.month.adults.map(nm).join(", ") + "\nТоп-3 месяца (дети): " + b.month.kids.map(nm).join(", ") + "\n"; } catch (e) {}
+  const wr = rows.filter(r => r.ev === "write"); if (wr.length) m += "\n✍️ Написали своё мнение: " + wr.length + " (" + [...new Set(wr.map(r => who_(r.name, r.ig)))].join(", ") + ")\n";
   tg_(m.trim());
 }
 
@@ -212,7 +227,7 @@ function doGet(e) {
   const lock = LockService.getScriptLock(); lock.waitLock(10000);
   try {
     if (a === "lg") return json_(league_(p));
-    if (a === "board") return json_({ ok: true, board: board_(readRows_()) });
+    if (a === "board") return json_({ ok: true, board: board_(readRows_(), evAsRows_()) });
     if (a === "status") { const sh = sheet_(); return json_({ ok: true, hasCode: !!P.getProperty("KEY"), email: ADMIN_EMAIL.replace(/^(.).*(@.*)$/, "$1***$2"),
       file: SpreadsheetApp.getActiveSpreadsheet().getName(), sheet: sh.getName(), rows: Math.max(0, sh.getLastRow() - 1) }); }
     if (a === "stats") { const k = P.getProperty("KEY"); if (!k || !p.key || hash_(p.key) !== k) return json_({ ok: false }); return json_(stats_()); }

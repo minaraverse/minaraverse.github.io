@@ -127,13 +127,14 @@ function makeWorld(key, cls) {
         <section class="gw-hero"><div class="gw-art">${WART[key]()}</div><div class="gw-ht"><p class="gw-k">${S.level} · ${n} ${L("chapters")}</p><h1 class="gw-h">${letters(S.title)}</h1><p class="gw-p">${L(key + "D")}</p>
           <div class="gw-bar"><i style="width:${d / n * 100}%"></i></div><a class="gw-cta" href="#${key}-${nextIndex(key) + 1}">${d ? L("cont") : L("start")} →</a></div></section>
         <ol class="gw-list">${S.units.map((u, k) => { const open = isOpen(key, k), sv = solved(key, k);
-          return `<li><a class="gw-ch ${open ? "" : "locked"} ${sv ? "solved" : ""}" href="${open ? `#${key}-${k + 1}` : `#${key}`}" style="--i:${k}"><span class="gw-em">${u.emoji || "✦"}</span><span class="gw-n">${S.unit} ${k + 1}</span><b>${esc(u.name)}</b><small>${esc(loc(u) || "")}</small><i>${sv ? "✓ " + best(key, k) + "/6" : open ? "→" : "🔒"}</i></a></li>`; }).join("")}</ol></main></div>`;
+          return `<li><a class="gw-ch ${open ? "" : "locked"} ${sv ? "solved" : ""}" href="${open ? `#${key}-${k + 1}` : `#${key}`}" style="--i:${k}"><span class="gw-em">${u.emoji || "✦"}</span><span class="gw-n">${S.unit} ${k + 1}</span><b>${esc(u.name)}</b><small>${esc(loc(u) || "")}</small><i>${sv ? "✓ " + best(key, k) + "/" + u.qs.length : open ? "→" : "🔒"}</i></a></li>`; }).join("")}</ol></main></div>`;
       riseLetters(root, ".gw-h .ch", { stagger: 30 });
       root.querySelector(".gw-list").addEventListener("click", e => { const a = e.target.closest(".locked"); if (a) { e.preventDefault(); flash(a, "shake"); } });
       return {};
     }
     if (!isOpen(key, ci)) { Router.go(key); return {}; }
     const u = S.units[ci];
+    if (typeof deepLesson === "function" && deepLesson(key, ci)) { renderDeep(root, key, ci, cls); return {}; }
     root.innerHTML = `<div class="gw gw-${key} gw-chv">${topBar()}<main class="gw-main"><a class="gw-back" href="#${key}">← ${esc(S.title)}</a>
       <div class="gw-band">${WART[key]()}<div class="gw-bt"><span class="gw-em big">${u.emoji || "✦"}</span><div><p class="gw-k">${S.unit} ${ci + 1}/${n}</p><h1 class="gw-h2">${esc(u.name)}</h1><small>${esc(loc(u) || "")}</small></div></div></div>
       <div class="gw-grid"><article class="gw-note"><p>${esc(u.note)} ${sayBtn(u.note)}</p>${trBlock(key, ci)}</article><div class="gw-quiz"></div></div></main></div>`;

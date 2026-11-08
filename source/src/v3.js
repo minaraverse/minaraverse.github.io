@@ -1,4 +1,7 @@
 /* ===== v3: advanced worlds, exams and games for every level, lead form ===== */
+Object.assign(UI.en, { lvAutoP: "Next: a full test for your level ({lv}) — listening, grammar and reading. 30 questions, and you will see how many you got right. Starting automatically in…", lvAutoGo: "Start the test now", lvAutoStay: "Stay here" });
+Object.assign(UI.az, { lvAutoP: "Növbəti: səviyyən üçün tam test ({lv}) — dinləmə, qrammatika və oxu. 30 sual — neçəsinə düz cavab verdiyini görəcəksən. Avtomatik başlayır…", lvAutoGo: "Testə indi başla", lvAutoStay: "Burada qal" });
+Object.assign(UI.ru, { lvAutoP: "Дальше: полный тест для твоего уровня ({lv}) — аудирование, грамматика и чтение. 30 вопросов, в конце увидишь, сколько правильно. Начнётся автоматически через…", lvAutoGo: "Начать тест сейчас", lvAutoStay: "Остаться здесь" });
 Object.assign(UI.en, {
   exV_basic: "Basic", exV_std: "Standard", exV_adv: "Advanced",
   cafeD: "Leyla opens a little café near Fountain Square. Order, chat and make plans in simple English.",

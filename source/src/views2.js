@@ -122,7 +122,9 @@ VIEWS.level = root => {
     const total = picks.filter(p => p === 0).length, info = LEVEL_INFO[lvl], go = info.go;
     flapText(f1, `LEVEL ${lvl}`, W); flapText(f2, `${total}/${LEVELQ.length} CORRECT · BOARDING`, W + 6);
     const goLabel = go === "exam" ? L("examT") : STORIES[go].title;
+    const XV2 = examVersions(), xv = XV2.find(x => x.lv.includes(lvl)) || XV2[1];
     body.innerHTML = `<div class="lv-card res"><p class="lv-k">${L("lvlResult")}</p><div class="lv-big">${lvl}</div><p class="lv-p">${esc(info[LANG] || info.en)}</p>
+      <div class="lv-auto" role="status"><p>${L("lvAutoP").replace("{lv}", xv.lv.join("–"))}</p><div class="lv-auto-row"><a class="qz-btn" href="#exam-${xv.id}-go">▶ ${L("lvAutoGo")} <b class="lv-cnt">10</b></a><button type="button" class="qz-btn ghost" data-stay>${L("lvAutoStay")}</button></div></div>
       <div class="lv-split">${Object.keys(by).map(l => `<div class="${l === lvl ? "on" : ""}"><b>${l}</b><span>${by[l]}/5</span><i style="height:${by[l] / 5 * 100}%"></i></div>`).join("")}</div>
       <a class="lv-go" href="#${go}"><small>${L("lvlGo")}</small><b>${esc(goLabel)}</b><i>→</i></a>
       <div class="lv-plan"><p class="lv-k">${L("yourPlan")}</p>${planHTML(lvl)}</div>
@@ -132,6 +134,9 @@ VIEWS.level = root => {
       <pre class="qz-copy">${esc(`Minaraverse level test\nName: ${NAME || "—"}\nLevel: ${lvl} (${total}/${LEVELQ.length})\n${LVLS.map(l => l + " " + by[l] + "/5").join(" · ")}`)}</pre>
       <button type="button" class="qz-btn ghost" data-again>${L("lvlAgain")}</button></div>`;
     lsSet("mv-level", { lvl, total, day: dayStr(new Date()) }); markDay(); if (typeof track === "function") track("level", { score: lvl + " · " + total + "/" + LEVELQ.length });
+    (() => { let left = 10; const cnt = body.querySelector(".lv-cnt"), box = body.querySelector(".lv-auto");
+      const tm = setInterval(() => { if (!document.body.contains(box)) { clearInterval(tm); return; } left--; if (cnt) cnt.textContent = left; if (left <= 0) { clearInterval(tm); location.hash = `#exam-${xv.id}-go`; } }, 1000);
+      body.querySelector("[data-stay]").onclick = () => { clearInterval(tm); box.innerHTML = `<a class="qz-btn" href="#exam-${xv.id}-go">▶ ${L("lvAutoGo")}</a>`; }; })();
     const rec = () => ({ type: "Level test", ...profileFields(), level: lvl, name: (PROFILE().first || NAME || "—"), story: "Level test", chapter: lvl, score: `${total}/${LEVELQ.length}`, riddle: "—", answers: `${LVLS.map(l => l + " " + by[l] + "/5").join(" · ")}`, lang: LANG });
     const ni = body.querySelector("#lv-name"), pre = body.querySelector(".qz-copy");
     ni.oninput = () => { NAME = ni.value.trim(); try { localStorage.setItem("mv-name", NAME); } catch (e) {} pre.textContent = `Minaraverse level test\nName: ${NAME || "—"}\nLevel: ${lvl} (${total}/${LEVELQ.length})\n${rec().answers}`; };
@@ -153,7 +158,7 @@ VIEWS.level = root => {
 
 /* ---------- EXAM ROOM (DİM-style practice, unofficial) ---------- */
 VIEWS.exam = root => {
-  const XV = examVersions(), xk = (location.hash.match(/exam-(\w+)/) || [])[1] || (myLevel() ? XV.find(x => x.lv.includes(myLevel())) || XV[1] : XV[1]).id, X = (XV.find(x => x.id === xk) || XV[1]).ex;
+  const XV = examVersions(), xk = (location.hash.match(/exam-(basic|std|adv)/) || [])[1] || (myLevel() ? XV.find(x => x.lv.includes(myLevel())) || XV[1] : XV[1]).id, X = (XV.find(x => x.id === xk) || XV[1]).ex;
   let part = 0, plays = 2; const A = { l: [], g: [], r: [] };
   const parts = [{ k: "l", qs: X.lq, t: L("exP1") }, { k: "g", qs: X.gq, t: L("exP2") }, { k: "r", qs: X.rq, t: L("exP3") }];
   root.innerHTML = `<div class="ex">${topBar()}<main class="ex-main"><div class="ex-paper"></div></main></div>`;
@@ -171,16 +176,16 @@ VIEWS.exam = root => {
       <div class="ex-foot"><span class="ex-count">${done}/${n} ${L("exAns")}</span><button type="button" class="qz-btn" data-next>${part < 2 ? L("exNext") : L("exFinish")} →</button></div><p class="ex-need" hidden>${L("exNeed")}</p>`;
   };
   const results = () => {
-    let pts = 0, max = 0; const rows = [];
+    let pts = 0, max = 0, right = 0, nq = 0; const rows = [];
     parts.forEach(p => p.qs.forEach((q, k) => { const open = q[2] === "open", w = open ? 2 : 1, v = A[p.k][k];
-      const ok = open ? norm(v || "") === norm(q[1][0]) : v === 0; max += w; if (ok) pts += w;
+      const ok = open ? norm(v || "") === norm(q[1][0]) : v === 0; max += w; nq++; if (ok) { pts += w; right++; }
       rows.push(`<li class="${ok ? "ok" : "no"}"><span>${ok ? "✓" : "✗"}</span><div><b>${esc(q[0])}</b><small>${L("yourAns")}: ${esc(open ? (v || "—") : v != null ? q[1][v] : "—")}${ok ? "" : ` · ${L("correctAns")}: ${esc(q[1][0])}`}</small></div></li>`); }));
-    const score = Math.round(pts / max * 100); markDay(); lsSet("mv-exam", { score, day: dayStr(new Date()) });
-    P.innerHTML = `${head()}<div class="ex-res"><p class="ex-k">${L("exScore")}</p><div class="ex-score"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="bg"/><circle cx="60" cy="60" r="52" class="fg" style="stroke-dasharray:${score * 3.267} 400"/></svg><b>${score}</b><small>/100</small></div>
+    const score = Math.round(pts / max * 100); markDay(); lsSet("mv-exam", { score, right, nq, day: dayStr(new Date()) }); if (typeof track === "function") track("done", { story: "exam", ch: xk, score: right + "/" + nq });
+    P.innerHTML = `${head()}<div class="ex-res"><p class="ex-k">${L("exScore")}</p><div class="ex-score"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="bg"/><circle cx="60" cy="60" r="52" class="fg" style="stroke-dasharray:${Math.round(right / nq * 100) * 3.267} 400"/></svg><b>${right}</b><small>/${nq}</small></div>
       <p class="ex-unof">⚠ ${L("exUnof")}</p>
       <details class="qz-rev" open><summary>${L("review")}</summary><ol>${rows.join("")}</ol></details>
       <details class="trd"><summary>${L("exTrans")} · ${L("exP1")}</summary><p>${esc(X.listen)}</p></details>
-      <pre class="qz-copy">${esc(`Minaraverse — ${L("examT")} (unofficial)\nName: ${NAME || "—"}\nScore: ${score}/100 (${pts}/${max})`)}</pre>
+      <pre class="qz-copy">${esc(`Minaraverse — ${L("examT")} (unofficial)\nName: ${NAME || "—"}\nScore: ${right}/${nq}`)}</pre>
       <div class="qz-row"><a class="qz-btn" href="${DM}" target="_blank" rel="noopener">${L("sendMinara")} ↗</a><button type="button" class="qz-btn ghost" data-again>${L("again")}</button></div></div>`;
   };
   P.onclick = e => {
@@ -193,14 +198,16 @@ VIEWS.exam = root => {
   };
   const count = () => { const p = parts[part], c = P.querySelector(".ex-count"); if (c) c.textContent = `${p.qs.filter((q, k) => A[p.k][k] != null && A[p.k][k] !== "").length}/${p.qs.length} ${L("exAns")}`; };
   P.oninput = e => { const t = e.target.closest("[data-open]"); if (t) { A.r[+t.dataset.open] = t.value; count(); } };
-  intro();
+  if (/-go$/.test(location.hash)) { part = 0; drawPart(); } else intro();
   return { unmount() { if (TTS) speechSynthesis.cancel(); } };
 };
 
 /* ---------- MISTAKE HUNTERS ---------- */
 VIEWS.errors = root => {
   const S = STORIES.errors, m = location.hash.match(/errors-(\d+)/), gi = m ? +m[1] - 1 : -1;
+  if (gi >= 0 && S.units[gi] && typeof caseOpen === "function" && !caseOpen(gi)) { Router.go("errors"); return {}; }
   if (gi < 0 || !S.units[gi]) {
+    if (typeof ladderHTML === "function") { root.innerHTML = ladderHTML(); riseLetters(root, ".er-h .ch", { stagger: 30 }); return {}; }
     root.innerHTML = `<div class="er">${topBar()}<main class="er-main"><p class="er-k">🎯 ${L("examK")}</p><h1 class="er-h">${letters(S.title)}</h1><p class="er-p">${L("erP")}</p>
       <div class="h-chips er-chips">${LVLS.map(l => `<button type="button" data-el="${l}" aria-pressed="${myLevel() === l}">${l}${myLevel() === l ? " · " + L("forYou") : ""}</button>`).join("")}</div>
       <div class="er-grid">${S.units.map((u, k) => [u, k]).sort((a, b) => LVLS.indexOf(a[0].level) - LVLS.indexOf(b[0].level)).map(([u, k]) => { const b = best("errors", k);
@@ -214,7 +221,8 @@ VIEWS.errors = root => {
   root.innerHTML = `<div class="er er-game">${topBar()}<main class="er-main"><a class="er-back" href="#errors">← ${L("allGames")}</a>
     <div class="er-info"><span class="er-ic big">${esc(u.icon)}</span><div><p class="er-k">${L("erH")} · ${u.level || ""}</p><h1 class="er-h2">${esc(u.full || u.name)}</h1><p>${esc(u.info)}</p>${trBlock("errors", gi)}</div></div>
     <div class="er-quiz"></div></main></div>`;
-  Quiz(root.querySelector(".er-quiz"), { story: "errors", idx: gi, cls: "qz-err", nextLabel: S.units[gi + 1] ? S.units[gi + 1].full : "", onNext: () => Router.go(`errors-${gi + 2}`) });
+  const nx = typeof rankCases === "function" ? (() => { const cs = rankCases(u.level), i = cs.findIndex(x => x[1] === gi); if (cs[i + 1]) return cs[i + 1][1]; const r = RANKS.findIndex(x => x.lv === u.level), c2 = RANKS[r + 1] && rankCases(RANKS[r + 1].lv); return c2 && c2.length ? c2[0][1] : -1; })() : gi + 1;
+  Quiz(root.querySelector(".er-quiz"), { story: "errors", idx: gi, cls: "qz-err", nextLabel: S.units[nx] ? S.units[nx].full : "", onNext: () => Router.go(nx >= 0 ? `errors-${nx + 1}` : "errors") });
   return {};
 };
 

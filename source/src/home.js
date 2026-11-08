@@ -7,13 +7,13 @@ VIEWS.home = root => {
     { id: "mystery", art: () => `<div class="mini-myst"><img src="img/m-library.jpg" alt=""><i class="mm-light"></i><span class="mm-stamp">CASE № 7</span><b class="mm-t">THE SECRET OF ICHERISHEHER</b></div>` },
     { id: "movie", art: () => `<div class="mini-gw">${WART.movie()}<b class="mg-t mg-movie">NOW SHOWING</b></div>` },
     { id: "kids", art: () => `<div class="mini-gw">${WART.kids()}</div>` },
-    ...["cafe", "business", "debate", "ielts", "heist"].filter(k => STORIES[k]).map(k => ({ id: k, art: () => `<div class="mini-gw">${WART[k]()}</div>` })),
+    ...["cafe", "firstweek", "roommates", "camp", "business", "debate", "ielts", "heist", "trial", "podcast", "editor"].filter(k => STORIES[k]).map(k => ({ id: k, art: () => `<div class="mini-gw">${WART[k]()}</div>` })),
     { id: "travel", art: () => `<div class="mini-travel"><div class="mt-route">${ART.route()}</div><div class="mt-glass"><span class="mt-type"></span><i class="mt-btn">PLAN MY TRIP</i></div></div>` }
   ];
-  const descs = { tapes: "tapesD", voyage: "voyageD", wild: "wildD", travel: "travelD", mystery: "mysteryD", movie: "movieD", kids: "kidsD", cafe: "cafeD", business: "businessD", debate: "debateD", ielts: "ieltsD", heist: "heistD" };
+  const descs = { tapes: "tapesD", voyage: "voyageD", wild: "wildD", travel: "travelD", mystery: "mysteryD", movie: "movieD", kids: "kidsD", cafe: "cafeD", business: "businessD", debate: "debateD", ielts: "ieltsD", heist: "heistD", camp: "campD", firstweek: "firstweekD", roommates: "roommatesD", trial: "trialD", podcast: "podcastD", editor: "editorD" };
   const WORLDS = WORLD_ORDER, NCH = WORLDS.reduce((a, k) => a + STORIES[k].units.length, 0), NQ = WORLDS.reduce((a, k) => a + STORIES[k].units.reduce((b, u) => b + u.qs.length, 0), 0);
   const due = dueKeys().length, sk = streak(), dS = dailyState(), lvl = lsGet("mv-level", null);
-  const TINT = { tapes: "#3a1a22", voyage: "#132a44", wild: "#2e2414", travel: "#2c2346", mystery: "#2a1c10", movie: "#3a0c12", kids: "#123c44", cafe: "#2b1d16", business: "#0e2238", debate: "#151a2e", ielts: "#1e2a36", heist: "#141220" };
+  const TINT = { tapes: "#3a1a22", voyage: "#132a44", wild: "#2e2414", travel: "#2c2346", mystery: "#2a1c10", movie: "#3a0c12", kids: "#123c44", cafe: "#2b1d16", business: "#0e2238", debate: "#151a2e", ielts: "#1e2a36", heist: "#141220", camp: "#0f3a52", firstweek: "#2a1a44", roommates: "#3a2820", trial: "#2a2018", podcast: "#1c1230", editor: "#26323e" };
   const LV = myLevel(); let FILTER = LV;
   /* faded cards: tell whether they are the next step up or an easier level */
   const lvIdx = l => LVLS.indexOf(String(l || "").slice(0, 2));
@@ -69,20 +69,21 @@ VIEWS.home = root => {
 
   <p class="h-next" aria-hidden="false"><span>${L("nx3")}</span><i>↓</i></p>
   <section class="h-stories" id="h-stories">
-    <div class="h-sh"><div><p class="h-k">${L("storiesK")}</p><h2 class="h-h2">${L("storiesH")}</h2></div><p class="h-saved">${L("saved")}</p></div>
+    <div class="h-sh h-sh-big"><div class="h-count"><b>${WORLDS.length}</b><span>${L("storiesK")}</span></div><div><p class="h-k">${NCH} ${L("chapters")} · ${NQ} ${L("questions")} · A1–C2</p><h2 class="h-h2">${L("storiesH")}</h2></div><p class="h-saved">${L("saved")}</p></div>
     <div class="h-chips" role="group">${[["", L("allLevels")], ...LVLS.map(l => [l, l + " " + lvName(l) + (l === LV ? " ★" : "")])].map(([l, t]) => `<button type="button" data-lvl="${l}" aria-pressed="${(FILTER || "") === l}">${t}</button>`).join("")}</div>
     <div class="h-cards">${cards.sort((a, b) => WORLD_ORDER.indexOf(a.id) - WORLD_ORDER.indexOf(b.id)).map(c => { const s = STORIES[c.id], d = doneCount(c.id), n = s.units.length;
       return `<a class="h-card hc-${c.id} ${fitsLevel(s.level, FILTER) ? "" : "dim"}" href="#${c.id}" data-tint="${TINT[c.id]}" data-lv="${s.level}">${LV && fitsLevel(s.level, LV) ? `<span class="h-card-fy">★ ${L("forYou")}</span>` : ""}<span class="h-card-nx">${nxLabel(s.level)}</span><span class="h-card-art">${c.art()}</span>
         <span class="h-card-t"><span class="h-card-k">${n} ${L("chapters")} · ${s.units.reduce((a, u) => a + u.qs.length, 0)} ${L("questions")} · ${s.level}</span>
-        <b>${esc(s.title)}</b><span class="h-card-d">${L(descs[c.id])}</span>
+        <b>${esc(s.title)}</b>${typeof epBadge === "function" ? epBadge(c.id) : ""}<span class="h-card-d">${L(descs[c.id])}</span>
         <span class="h-card-bar"><i style="width:${d / n * 100}%"></i></span>
         <span class="h-card-go">${d === n ? L("complete") + " ✓" : d ? L("cont") + " · " + d + "/" + n : L("start")} →</span>${d === n ? `<span class="h-card-cert" data-cert="${c.id}" role="button" tabindex="0">🏅 ${L("getCert")}</span>` : ""}</span></a>`; }).join("")}</div>
+    <a class="h-morebiz" href="#" data-jump="h-exam">💼 ${(nb => ({ en: `+ ${nb} more stories in Business English`, az: `+ Business English bölməsində daha ${nb} hekayə`, ru: `+ ещё ${nb} истории в разделе Business English` })[LANG])(["interview", "client", "contract", "call"].filter(k => STORIES[k]).length)} ↓</a>
   </section>
   <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
-  <section class="h-exam" id="h-exam"><div class="h-sh"><div><p class="h-k">💼 ${L("bizK")}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
-    <div class="hx-cases">${["contract", "interview", "client", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
+  <section class="h-exam" id="h-exam"><div class="h-sh h-sh-big"><div class="h-count biz"><b>${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).length}</b><span>${L("bizK")}</span></div><div><p class="h-k">💼 ${L("bizK")} · ${typeof SERIES !== "undefined" ? (SERIES.bluesail.name[LANG] || SERIES.bluesail.name.en) : ""}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
+    <div class="hx-cases">${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
       return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${k === "contract" ? `<span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span>` : WART[k]()}</span>
-        <span class="hx-t"><small>${courseEmoji(k)} ${S.level} · ${n} ${{ en: "steps", az: "addım", ru: "шагов" }[LANG]}</small><b>${esc(S.title)}</b><span>${L(k + "D")}</span><span class="hx-bar"><i style="width:${d / n * 100}%"></i></span><em>${d === n ? "✓ " + L("complete") : d ? L("cont") + " · " + d + "/" + n : L("start")} →</em></span></a>`; }).join("")}</div>
+        <span class="hx-t"><small>${courseEmoji(k)} ${S.level} · ${n} ${{ en: "steps", az: "addım", ru: "шагов" }[LANG]}</small><b>${esc(S.title)}</b>${typeof epBadge === "function" ? epBadge(k) : ""}<span>${L(k + "D")}</span><span class="hx-bar"><i style="width:${d / n * 100}%"></i></span><em>${d === n ? "✓ " + L("complete") : d ? L("cont") + " · " + d + "/" + n : L("start")} →</em></span></a>`; }).join("")}</div>
     <div class="hx-cards hx-one"><a class="hx-card hx-err" href="#errors"><span class="hx-art" aria-hidden="true"><span class="hx-target"><i></i><i></i><i></i></span><span class="hx-words"><s>a elephant</s><b>an elephant</b></span></span>
       <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
   ${boardHTML()}

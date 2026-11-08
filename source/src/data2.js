@@ -149,12 +149,12 @@ const LEVELQ = [
 ["C2", "The new evidence ___ doubt on his version of events.", ["casts", "throws up", "puts"]]
 ];
 const LEVEL_INFO = {
-  A1: { en: "Beginner. You can use simple everyday phrases.", az: "Başlanğıc. Sadə gündəlik ifadələrdən istifadə edə bilirsən.", ru: "Начальный. Ты используешь простые повседневные фразы.", go: "tapes" },
+  A1: { en: "Beginner. You can use simple everyday phrases.", az: "Başlanğıc. Sadə gündəlik ifadələrdən istifadə edə bilirsən.", ru: "Начальный. Ты используешь простые повседневные фразы.", go: "cafe" },
   A2: { en: "Elementary. You can talk about your daily life and the past.", az: "Elementar. Gündəlik həyatın və keçmiş haqqında danışa bilirsən.", ru: "Элементарный. Ты можешь говорить о повседневной жизни и прошлом.", go: "tapes" },
   B1: { en: "Intermediate. You can tell stories and give your opinion.", az: "Orta. Hekayə danışa və fikrini bildirə bilirsən.", ru: "Средний. Ты можешь рассказывать истории и выражать мнение.", go: "mystery" },
   B2: { en: "Upper-intermediate. You can discuss many topics in detail.", az: "Ortadan yuxarı. Bir çox mövzunu ətraflı müzakirə edə bilirsən.", ru: "Выше среднего. Ты можешь подробно обсуждать многие темы.", go: "movie" },
-  C1: { en: "Advanced. You express yourself fluently and flexibly, even on complex topics.", az: "İrəli. Mürəkkəb mövzularda belə sərbəst və çevik danışırsan.", ru: "Продвинутый. Ты свободно и гибко выражаешь мысли даже на сложные темы.", go: "movie" },
-  C2: { en: "Proficiency. You understand almost everything and use English with precision and style.", az: "Mükəmməl. Demək olar ki, hər şeyi başa düşür, ingilis dilindən dəqiq və zərif istifadə edirsən.", ru: "Свободное владение. Ты понимаешь почти всё и используешь английский точно и стильно.", go: "movie" }
+  C1: { en: "Advanced. You express yourself fluently and flexibly, even on complex topics.", az: "İrəli. Mürəkkəb mövzularda belə sərbəst və çevik danışırsan.", ru: "Продвинутый. Ты свободно и гибко выражаешь мысли даже на сложные темы.", go: "business" },
+  C2: { en: "Proficiency. You understand almost everything and use English with precision and style.", az: "Mükəmməl. Demək olar ki, hər şeyi başa düşür, ingilis dilindən dəqiq və zərif istifadə edirsən.", ru: "Свободное владение. Ты понимаешь почти всё и используешь английский точно и стильно.", go: "heist" }
 };
 
 /* ---------- Exam room: DİM-style practice (unofficial) ---------- */

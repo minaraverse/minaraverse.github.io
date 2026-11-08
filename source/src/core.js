@@ -56,9 +56,9 @@ Object.assign(UI2.en, { getCert: "Get my certificate", certTitle: "Certificate o
 Object.assign(UI2.az, { getCert: "Sertifikatımı al", certTitle: "Uğur sertifikatı", certNamePh: "Sertifikat üçün ad və soyadını yaz", certSave: "Sertifikatı yadda saxla", certHint: "Telefonda şəklin üzərinə basıb saxlayaraq da yadda saxlaya bilərsən.", stories: "hekayə", h2a: "Əvvəl hekayə.", h2b: "Sonra sözlər.", showTr: "Tərcüməni göstər" });
 Object.assign(UI2.ru, { getCert: "Получить сертификат", certTitle: "Сертификат достижения", certNamePh: "Введи имя и фамилию для сертификата", certSave: "Сохранить сертификат", certHint: "На телефоне можно также нажать и удерживать картинку, чтобы сохранить её.", stories: "истории", h2a: "Сначала истории.", h2b: "Слова — потом.", showTr: "Показать перевод" });
 UI2.en.riddleYes = "Riddle solved! The next chapter is open.";
-Object.assign(UI2.en, { typeHere: "Type your answer", check: "Check", hintBtn: "Hint", retypePh: "Type the correct answer to continue", tapWords: "Tap the words in the right order", listenBtn: "Listen", warmL: "Warm-up review", reviewedL: "reviewed", daysL: "day streak", shareCard: "Share result card", cardHint: "Save the card and post it to your Instagram Story. Tag @minaraverse!", ctaLevel: "Find your English level", ctaLevelSub: "Free 20-question test · 5 minutes", cardSave: "Save card", reviewT: "Review", reviewDone: "Review done! These words will come back later so you never forget them." });
-Object.assign(UI2.az, { typeHere: "Cavabını yaz", check: "Yoxla", hintBtn: "İpucu", retypePh: "Davam etmək üçün düzgün cavabı yaz", tapWords: "Sözlərə düzgün sıra ilə toxun", listenBtn: "Dinlə", warmL: "İsinmə təkrarı", reviewedL: "təkrar edildi", daysL: "gün ardıcıl", shareCard: "Nəticə kartını paylaş", cardHint: "Kartı yadda saxla və Instagram Story-də paylaş. @minaraverse-i qeyd et!", ctaLevel: "İngilis dili səviyyəni öyrən", ctaLevelSub: "Pulsuz 20 suallıq test · 5 dəqiqə", cardSave: "Kartı yadda saxla", reviewT: "Təkrar", reviewDone: "Təkrar bitdi! Bu sözlər unutmayasan deyə sonra yenə qayıdacaq." });
-Object.assign(UI2.ru, { typeHere: "Напиши ответ", check: "Проверить", hintBtn: "Подсказка", retypePh: "Напиши правильный ответ, чтобы продолжить", tapWords: "Нажимай на слова в правильном порядке", listenBtn: "Слушать", warmL: "Разминка: повторение", reviewedL: "повторено", daysL: "дней подряд", shareCard: "Поделиться карточкой", cardHint: "Сохрани карточку и выложи в Instagram Story. Отметь @minaraverse!", ctaLevel: "Узнай свой уровень английского", ctaLevelSub: "Бесплатный тест из 20 вопросов · 5 минут", cardSave: "Сохранить карточку", reviewT: "Повторение", reviewDone: "Повторение готово! Эти слова вернутся позже, чтобы ты их не забыл." });
+Object.assign(UI2.en, { typeHere: "Type your answer", check: "Check", hintBtn: "Hint", retypePh: "Type the correct answer to continue", tapWords: "Tap the words in the right order", listenBtn: "Listen", warmL: "Warm-up review", reviewedL: "reviewed", daysL: "day streak", shareCard: "Share result card", cardHint: "Save the card and post it to your Instagram Story. Tag @minaraverse!", ctaLevel: "Find your English level", ctaLevelSub: "Free 20-question test · 5 minutes", cardSave: "Save card", reviewT: "Review", reviewDone: "Review done! These words will come back later so you never forget them.", gapHint: "Tap the word that fits the gap", dictHint: "Listen and type what you hear", fixHint: "There is one mistake. Fix it and press Check", matchHint: "Tap a word, then tap its match", seqHint: "Tap the events in the order they happened", writePh: "Write 2–3 sentences in English…", writeBtn: "Send", minWords: "At least {n} words", pollHint: "No wrong answers here — what do you think?", trueL: "True", falseL: "False", savedL: "Sent!" });
+Object.assign(UI2.az, { typeHere: "Cavabını yaz", check: "Yoxla", hintBtn: "İpucu", retypePh: "Davam etmək üçün düzgün cavabı yaz", tapWords: "Sözlərə düzgün sıra ilə toxun", listenBtn: "Dinlə", warmL: "İsinmə təkrarı", reviewedL: "təkrar edildi", daysL: "gün ardıcıl", shareCard: "Nəticə kartını paylaş", cardHint: "Kartı yadda saxla və Instagram Story-də paylaş. @minaraverse-i qeyd et!", ctaLevel: "İngilis dili səviyyəni öyrən", ctaLevelSub: "Pulsuz 20 suallıq test · 5 dəqiqə", cardSave: "Kartı yadda saxla", reviewT: "Təkrar", reviewDone: "Təkrar bitdi! Bu sözlər unutmayasan deyə sonra yenə qayıdacaq.", gapHint: "Boşluğa uyğun sözə toxun", dictHint: "Dinlə və eşitdiyini yaz", fixHint: "Bir səhv var. Düzəlt və Yoxla düyməsinə bas", matchHint: "Sözə toxun, sonra uyğun cütünə", seqHint: "Hadisələrə baş vermə sırası ilə toxun", writePh: "İngiliscə 2–3 cümlə yaz…", writeBtn: "Göndər", minWords: "Ən azı {n} söz", pollHint: "Burada səhv cavab yoxdur — sən necə düşünürsən?", trueL: "True", falseL: "False", savedL: "Göndərildi!" });
+Object.assign(UI2.ru, { typeHere: "Напиши ответ", check: "Проверить", hintBtn: "Подсказка", retypePh: "Напиши правильный ответ, чтобы продолжить", tapWords: "Нажимай на слова в правильном порядке", listenBtn: "Слушать", warmL: "Разминка: повторение", reviewedL: "повторено", daysL: "дней подряд", shareCard: "Поделиться карточкой", cardHint: "Сохрани карточку и выложи в Instagram Story. Отметь @minaraverse!", ctaLevel: "Узнай свой уровень английского", ctaLevelSub: "Бесплатный тест из 20 вопросов · 5 минут", cardSave: "Сохранить карточку", reviewT: "Повторение", reviewDone: "Повторение готово! Эти слова вернутся позже, чтобы ты их не забыл.", gapHint: "Нажми на слово, которое подходит в пропуск", dictHint: "Послушай и напиши, что услышал(а)", fixHint: "Здесь одна ошибка. Исправь и нажми Проверить", matchHint: "Нажми на слово, потом на его пару", seqHint: "Нажимай на события в том порядке, как они произошли", writePh: "Напиши 2–3 предложения по-английски…", writeBtn: "Отправить", minWords: "Минимум {n} слов", pollHint: "Здесь нет неправильных ответов — как думаешь ты?", trueL: "True", falseL: "False", savedL: "Отправлено!" });
 for (const k in UI2) Object.assign(UI[k], UI2[k]);
 const DM = "https://ig.me/m/minaraverse";
 /* results → Minara's Google Sheet (via a Google Form). Fill in after the form is created. */
@@ -82,7 +82,7 @@ const isDone = (s, i) => rec(s, i) != null;
 const solved = (s, i) => !!(rec(s, i) && rec(s, i).r);
 const isOpen = (s, i) => i === 0 || solved(s, i - 1);
 const doneCount = s => STORIES[s].units.filter((_, i) => solved(s, i)).length;
-const record = (s, i, score, r) => { PROG[s] = PROG[s] || {}; const o = PROG[s][i] || { b: 0, r: false }; PROG[s][i] = { b: Math.max(o.b, score), r: o.r || r }; saveProg();  if (typeof track === "function") track("done", { story: s, ch: String(i), score: score + "/" + ((STORIES[s] && STORIES[s].units[i] && STORIES[s].units[i].qs || []).length || "?") }); };
+const record = (s, i, score, r) => { PROG[s] = PROG[s] || {}; const o = PROG[s][i] || { b: 0, r: false }; PROG[s][i] = { b: Math.max(o.b, score), r: o.r || r }; saveProg();  if (typeof track === "function" && !(STORIES[s] && STORIES[s].virtual)) track("done", { story: s, ch: String(i), score: score + "/" + ((STORIES[s] && STORIES[s].units[i] && STORIES[s].units[i].qs || []).length || "?") }); };
 const nextIndex = s => { const n = STORIES[s].units.length; for (let i = 0; i < n; i++) if (!solved(s, i)) return i; return n - 1; };
 let NAME = ""; try { NAME = localStorage.getItem("mv-name") || ""; } catch (e) {}
 
@@ -153,17 +153,22 @@ const kindOf = (story, idx, qi) => { const S = STORIES[story], q = S.units[idx].
 const norm = s => String(s).toLowerCase().replace(/[’‘`]/g, "'").replace(/[^a-z0-9' ]/g, " ").replace(/\s+/g, " ").trim();
 const typedOk = (q, v) => [q[1][0], ...((q[3] && q[3].alt) || [])].some(a => norm(a) === norm(v) || norm(a).replace(/^(a|an|the) /, "") === norm(v));
 const seedRand = seed => { let h = 2166136261; for (const c of seed) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return () => { h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h >>> 0) % 10000) / 10000; }; };
-function tilesOf(sentence, seed) { const w = sentence.split(" "), r = seedRand(seed), idx = w.map((_, i) => i);
+const tilesOf = (sentence, seed) => tilesOfArr(sentence.split(" "), seed);
+const wordDist = (a, b) => { const m = a.length, n = b.length, d = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]); for (let j = 1; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[m][n]; };
+const dictOk = (q, v) => { const a = norm(q[1][0]).split(" "), b = norm(v).split(" ").filter(Boolean); return b.length > 0 && wordDist(a, b) <= Math.max(1, Math.floor(a.length * .2)); };
+function tilesOfArr(w, seed) { const r = seedRand(seed), idx = w.map((_, i) => i);
   for (let k = 0; k < 20 && idx.every((v, i) => v === i); k++) for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
   return idx.map(i => ({ i, w: w[i] })); }
 
-function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = null }) {
+const HINTK = { gap: "gapHint", dict: "dictHint", fix: "fixHint", match: "matchHint" };
+function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = null, slim = false }) {
   const S = review ? null : STORIES[story], unit = review ? null : S.units[idx], n = review ? 0 : unit.qs.length;
   const last = review ? true : idx + 1 >= S.units.length, noR = review ? true : !!S.noRiddle;
   let st = ACTIVE && !review && ACTIVE.story === story && ACTIVE.idx === idx ? ACTIVE : null;
   if (!st) {
     st = { story, idx, i: 0, picked: null, picks: [], ans: [], wrongR: [], r: false, deck: [] };
-    const warm = review ? review.slice(0, 10) : dueKeys(story + "|").filter(k => !k.startsWith(`${story}|${idx}|`)).slice(0, 3);
+    const warm = review ? review.slice(0, 10) : slim ? [] : dueKeys(story + "|").filter(k => !k.startsWith(`${story}|${idx}|`)).slice(0, 3);
     warm.forEach(k => { const o = qByKey(k); if (o) st.deck.push({ ...o, warm: true, key: k, kind: o.q[3] ? o.q[3].t : "mc" }); });
     if (!review) unit.qs.forEach((q, qi) => st.deck.push({ s: story, i: idx, qi, q, warm: false, key: `${story}|${idx}|${qi}`, kind: kindOf(story, idx, qi) }));
   }
@@ -180,9 +185,12 @@ function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = nu
       noR ? "" : `${UI.en.riddleL}: ${st.r ? UI.en.solved + " ✓" + (st.wrongR.length ? ` (${st.wrongR.length + 1} tries)` : "") : UI.en.notSolved + " ✗"}`, "", ...lines].filter(x => x !== "" || true).join("\n");
   };
   const fbBox = (it, good) => { const t = trOf(it.s, it.i, it.qi);
-    return `<div class="qz-fb ${good ? "ok" : "no"}" role="status"><b>${good ? L("right") : L("wrong")}</b>
+    const soft = it.kind === "write" || it.kind === "poll";
+    return `<div class="qz-fb ${good ? "ok" : "no"}" role="status"><b>${soft ? (it.kind === "write" ? "✍️ " : "🔮 ") + L("savedL") : good ? L("right") : L("wrong")}</b>
       <p><i>EN</i>${esc(it.q[2])} ${sayBtn(it.q[2], "sm")}</p>${t.az ? `<p><i>AZ</i>${esc(t.az)}</p>` : ""}${t.ru ? `<p><i>RU</i>${esc(t.ru)}</p>` : ""}</div>`; };
   const doneScreen = () => {
+    if (slim) { const s = st.picks.filter(p => p === 0).length; el.innerHTML = `<div class="qz ${cls} qz-done qz-slim"><div class="qz-score">${s}<span>/${n}</span></div><p class="qz-msg">${s === n ? L("msgPerfect") : s >= n - 1 ? L("msgGreat") : L("msgStart")}</p>
+      <div class="qz-row">${onNext ? `<button type="button" class="qz-btn" data-q="next">${esc(nextLabel || L("next"))} →</button>` : ""}<button type="button" class="qz-btn ghost" data-q="again">${L("again")}</button></div></div>`; return; }
     if (review) { el.innerHTML = `<div class="qz ${cls} qz-done"><div class="qz-k">🔁 ${L("reviewT")}</div><div class="qz-score">✓</div><p class="qz-msg">${L("reviewDone")}</p>
       <p class="qz-streak">🔥 ${streak()} ${L("daysL")}</p><div class="qz-row"><a class="qz-btn" href="#" data-gohome>${L("homeBtn")}</a></div></div>`; return; }
     const s = st.picks.filter(p => p === 0).length, rOk = noR || st.r;
@@ -197,6 +205,7 @@ function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = nu
         <button type="button" class="qz-btn ghost" data-q="card">📸 ${L("shareCard")}</button>
         <button type="button" class="qz-btn ghost" data-q="again">${L("again")}</button>
       </div>
+      ${last && typeof seriesNextHTML === "function" ? seriesNextHTML(story) : ""}
       ${S.units.every((_, k) => solved(story, k)) ? `<button type="button" class="qz-cert" data-q="cert">🏅 ${L("getCert")}</button>` : ""}
       <a class="qz-cta" href="#level"><span>🎯</span><b>${L("ctaLevel")}</b><small>${L("ctaLevelSub")}</small><i>→</i></a>
       <details class="qz-rev"><summary>${L("review")}</summary><ol>${unit.qs.map((q, k) =>
@@ -235,25 +244,55 @@ function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = nu
         <div class="qz-tiles">${tiles.map(t => `<button type="button" class="qz-tile" data-tile="${t.i}" ${used.includes(t.i) || done ? "disabled" : ""}>${esc(t.w)}</button>`).join("")}</div>
         ${!done && used.length === tiles.length ? `<div class="qz-row"><button type="button" class="qz-btn" data-q="ordercheck">${L("check")}</button></div>` : ""}
         ${done && p !== 0 ? `<p class="qz-correct">${L("correctAns")}: <b>${esc(q[1][0])}</b></p>` : ""}`;
+    } else if (it.kind === "gap") {
+      const order = shuffled(q, it.key), done = p != null, filled = done ? q[1][p === 0 ? 0 : p] : null;
+      body = `<p class="qz-gapline">${esc(q[0]).replace(/_{2,}/, `<span class="qz-slot ${done ? (p === 0 ? "ok" : "no") : ""}">${filled ? esc(filled) : ""}</span>`)}</p>
+        <div class="qz-chips">${order.map(oi => `<button type="button" class="qz-chip ${done && oi === 0 ? "right" : done && oi === p ? "wrong" : ""}" data-o="${oi}" ${done ? "disabled" : ""}>${esc(q[1][oi])}</button>`).join("")}</div>`;
+    } else if (it.kind === "match") {
+      const pairs = q[3].pairs, m = st.match || (st.match = { sel: null, done: [], miss: 0, bad: null }), ridx = tilesOfArr(pairs.map(x => x[1]), it.key + "m").map(t => t.i), fin = p != null;
+      body = `<div class="qz-match"><div class="qz-mcol">${pairs.map((pr, i) => `<button type="button" class="qz-mt ${m.done.includes(i) ? "done" : m.sel === i ? "sel" : ""}" data-ml="${i}" ${m.done.includes(i) || fin ? "disabled" : ""}>${esc(pr[0])}</button>`).join("")}</div>
+        <div class="qz-mcol">${ridx.map(i => `<button type="button" class="qz-mt ${m.done.includes(i) ? "done" : m.bad === i ? "bad" : ""}" data-mr="${i}" ${m.done.includes(i) || fin ? "disabled" : ""}>${esc(pairs[i][1])}</button>`).join("")}</div></div>
+        ${m.miss && !fin ? `<p class="qz-miss">✗ ${m.miss}</p>` : ""}`;
+    } else if (it.kind === "seq") {
+      const items = q[3].items, tiles = tilesOfArr(items, it.key), used = st.order || [], done = p != null;
+      body = `<ol class="qz-seq ${done ? (p === 0 ? "ok" : "no") : ""}">${used.map((ti, k) => `<li><button type="button" class="qz-tile in" data-out="${k}" ${done ? "disabled" : ""}>${esc(items[ti])}</button></li>`).join("") || `<li class="qz-ph">${L("seqHint")}</li>`}</ol>
+        <div class="qz-tiles qz-seqpool">${tiles.map(t => `<button type="button" class="qz-tile" data-tile="${t.i}" ${used.includes(t.i) || done ? "disabled" : ""}>${esc(t.w)}</button>`).join("")}</div>
+        ${!done && used.length === tiles.length ? `<div class="qz-row"><button type="button" class="qz-btn" data-q="seqcheck">${L("check")}</button></div>` : ""}
+        ${done && p !== 0 ? `<p class="qz-correct">${L("correctAns")}:</p><ol class="qz-seq ok">${items.map(x => `<li><span class="qz-tile in">${esc(x)}</span></li>`).join("")}</ol>` : ""}`;
+    } else if (it.kind === "dict" || it.kind === "fix") {
+      const done = p != null, good = done && p === 0, val = st.typed != null && st.typed !== "" ? st.typed : (it.kind === "fix" ? q[0] : "");
+      body = `${it.kind === "dict" ? `<button type="button" class="qz-listen" data-say="${esc(q[3].say || q[1][0])}">🔊 <span>${L("listenBtn")}</span></button>` : ""}
+        <form class="qz-type ${done ? (good ? "ok" : "no") : ""}" data-form="type" autocomplete="off">
+        <input id="qz-t" type="text" autocapitalize="sentences" spellcheck="false" placeholder="${L("typeHere")}" value="${esc(val)}" ${done ? "disabled" : ""} aria-label="${L("typeHere")}">
+        ${done ? "" : `<button type="submit" class="qz-btn">${L("check")}</button>`}</form>
+        ${done && !good ? `<p class="qz-correct">${L("correctAns")}: <b>${esc(q[1][0])}</b></p>` : ""}`;
+    } else if (it.kind === "write") {
+      const done = p != null, min = q[3].min || 8;
+      body = `<form class="qz-write" data-form="write"><textarea id="qz-w" rows="4" maxlength="600" placeholder="${L("writePh")}" ${done ? "disabled" : ""}>${esc(st.typed || "")}</textarea>
+        ${done ? "" : `<div class="qz-row qz-wrow"><span class="qz-wc" id="qz-wc">${L("minWords").replace("{n}", min)}</span><button type="submit" class="qz-btn">✍️ ${L("writeBtn")}</button></div>`}</form>`;
+    } else if (it.kind === "poll") {
+      const done = p != null;
+      body = `<p class="qz-pollhint">🔮 ${L("pollHint")}</p><div class="qz-opts qz-poll">${q[1].map((o, oi) => `<button type="button" class="qz-opt ${done && st.poll === oi ? "pick" : ""}" data-p="${oi}" ${done ? "disabled" : ""}><span class="qz-l">${"ABCD"[oi]}</span><span class="qz-ot">${esc(o)}</span></button>`).join("")}</div>`;
     } else {
-      const order = shuffled(q, it.key);
+      const order = shuffled(q, it.key), tf = it.kind === "tf";
       const opts = order.map((oi, k) => {
         const out = isMainRiddle && st.wrongR.includes(oi);
         let c = out ? "wrong" : ""; if (p != null) { if (oi === 0) c = "right"; else if (oi === p) c = "wrong"; }
-        return `<button type="button" class="qz-opt ${c}" data-o="${oi}" ${p != null || out ? "disabled" : ""}><span class="qz-l">${"ABCD"[k]}</span><span class="qz-ot">${esc(q[1][oi])}</span>${it.kind === "listen" ? "" : sayBtn(q[1][oi], "sm")}</button>`;
+        return `<button type="button" class="qz-opt ${c}" data-o="${oi}" ${p != null || out ? "disabled" : ""}><span class="qz-l">${tf ? (q[1][oi] === "True" ? "✓" : "✗") : "ABCD"[k]}</span><span class="qz-ot">${esc(q[1][oi])}</span>${it.kind === "listen" || tf ? "" : sayBtn(q[1][oi], "sm")}</button>`;
       }).join("");
-      body = `${it.kind === "listen" ? `<button type="button" class="qz-listen" data-say="${esc(q[3].say)}">🔊 <span>${L("listenBtn")}</span></button>` : ""}<div class="qz-opts">${opts}</div>
+      body = `${it.kind === "listen" ? `<button type="button" class="qz-listen" data-say="${esc(q[3].say)}">🔊 <span>${L("listenBtn")}</span></button>` : ""}<div class="qz-opts ${tf ? "tf" : ""}">${opts}</div>
         ${p == null && isMainRiddle && st.wrongR.length ? `<div class="qz-hintbox" role="status"><b>💡 ${L("hintL")}</b><span class="qz-pattern">${hintPattern(q[1][0])}</span></div>` : ""}`;
     }
     const canNext = p != null && !(it.kind === "type" && p !== 0 && !st.retyped);
     el.innerHTML = `<div class="qz ${cls} ${it.warm ? "qz-warm" : ""}">
       <div class="qz-top"><span class="qz-k">${head}</span><span class="qz-dots">${dots}</span></div>
-      <p class="qz-q">${it.kind === "listen" ? "" : sayBtn(q[0].replace(/_{2,}/g, "blank"), "big")}<span>${esc(q[0])}</span></p>
+      <p class="qz-q">${HINTK[it.kind] || it.kind === "listen" ? "" : sayBtn(q[0].replace(/_{2,}/g, "blank"), "big")}<span>${esc(HINTK[it.kind] ? L(HINTK[it.kind]) : q[0])}</span></p>
       ${body}
       ${p != null ? fbBox(it, p === 0) : ""}
       ${canNext ? `<div class="qz-row"><button type="button" class="qz-btn" data-q="adv">${st.i === D.length - 1 ? L("finish") : L("next")} →</button></div>` : ""}</div>`;
     if (canNext) { const b = el.querySelector('[data-q="adv"]'); b && b.focus({ preventScroll: true }); }
     else { const t = el.querySelector("#qz-rt") || (p == null && el.querySelector("#qz-t")); if (t && FINE) t.focus({ preventScroll: true }); }
+    const ta = el.querySelector("#qz-w"); if (ta && p == null) { const min = q[3].min || 8, wc = el.querySelector("#qz-wc"); ta.oninput = () => { const n2 = ta.value.trim().split(/\s+/).filter(Boolean).length; wc.textContent = n2 >= min ? `✓ ${n2}` : `${n2} / ${min}`; wc.classList.toggle("ok", n2 >= min); }; }
   };
   const answer = (good, text, optIdx) => {
     const it = D[st.i]; ACTIVE = review ? null : st;
@@ -266,12 +305,22 @@ function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = nu
   };
   el.onsubmit = e => {
     e.preventDefault(); const f = e.target.dataset.form, it = D[st.i];
-    if (f === "type") { const v = el.querySelector("#qz-t").value; if (!v.trim()) return; st.typed = v; answer(typedOk(it.q, v), v.trim()); }
+    if (f === "type") { const v = el.querySelector("#qz-t").value; if (!v.trim()) return; st.typed = v; answer(it.kind === "dict" ? dictOk(it.q, v) : typedOk(it.q, v), v.trim()); }
+    if (f === "write") { const ta = el.querySelector("#qz-w"), v = ta.value.trim(), min = it.q[3].min || 8, wc = v.split(/\s+/).filter(Boolean).length;
+      if (wc < min) { ta.classList.add("shake"); setTimeout(() => ta.classList.remove("shake"), 500); return; }
+      st.typed = v; if (typeof track === "function") track("write", { story, ch: String(idx), score: "opinion", text: "❓ " + it.q[0] + "\n💬 " + v }); answer(true, v); }
     if (f === "retype") { const i2 = el.querySelector("#qz-rt"); if (typedOk(it.q, i2.value)) { st.retyped = true; render(); } else { i2.classList.add("shake"); setTimeout(() => i2.classList.remove("shake"), 500); } }
   };
   el.onclick = e => {
     const o = e.target.closest("[data-o]"), a = e.target.closest("[data-q]"), tl = e.target.closest("[data-tile]"), ou = e.target.closest("[data-out]");
     const it = D[st.i];
+    const ml = e.target.closest("[data-ml]"), mr = e.target.closest("[data-mr]"), pl = e.target.closest("[data-p]");
+    if (ml && st.picked == null) { st.match.sel = +ml.dataset.ml; render(); return; }
+    if (mr && st.picked == null) { const m = st.match, i = +mr.dataset.mr; if (m.sel == null) return;
+      if (i === m.sel) { m.done.push(i); m.sel = null; if (m.done.length === it.q[3].pairs.length) { answer(m.miss <= 1, `${it.q[3].pairs.length - m.miss}/${it.q[3].pairs.length}`); return; } }
+      else { m.miss++; m.bad = i; m.sel = null; setTimeout(() => { if (m.bad === i) { m.bad = null; render(); } }, 650); }
+      render(); return; }
+    if (pl && st.picked == null) { const oi = +pl.dataset.p; st.poll = oi; if (typeof track === "function") track("poll", { story, ch: String(idx), score: it.q[0].slice(0, 90), text: it.q[1][oi] }); answer(true, it.q[1][oi]); return; }
     if (tl && st.picked == null) { st.order = [...(st.order || []), +tl.dataset.tile]; render(); return; }
     if (ou && st.picked == null) { st.order.splice(+ou.dataset.out, 1); render(); return; }
     if (o && st.picked == null && !e.target.closest("[data-say]")) {
@@ -284,11 +333,12 @@ function Quiz(el, { story, idx, onDone, onNext, nextLabel, cls = "", review = nu
     if (!a) return;
     const k = a.dataset.q;
     if (k === "hint") { st.hint = true; render(); }
+    if (k === "seqcheck") { const items = it.q[3].items; answer(st.order.every((v, i) => v === i), st.order.map(i => items[i]).join(" → ")); }
     if (k === "ordercheck") { const tiles = tilesOf(it.q[1][0], it.key), txt = st.order.map(i => tiles.find(t => t.i === i).w).join(" "); answer(norm(txt) === norm(it.q[1][0]), txt); }
-    if (k === "adv") { st.i++; st.picked = null; st.typed = ""; st.hint = false; st.retyped = false; st.order = [];
-      if (st.i >= D.length) { markDay(); if (!review) { const s = st.picks.filter(x => x === 0).length; if (noR) st.r = true; record(story, idx, s, st.r); if (typeof onLessonDone === "function") onLessonDone(story, idx, s, n); onDone && onDone(s); if (NAME) sendResult(st.rec()).then(x => { st.sent = x; }); } ACTIVE = null; }
+    if (k === "adv") { st.i++; st.picked = null; st.typed = ""; st.hint = false; st.retyped = false; st.order = []; st.match = null; st.poll = null;
+      if (st.i >= D.length) { markDay(); if (!review) { const s = st.picks.filter(x => x === 0).length; if (noR) st.r = true; record(story, idx, s, st.r); if (typeof onLessonDone === "function") onLessonDone(story, idx, s, n); onDone && onDone(s); if (NAME && !slim) sendResult(st.rec()).then(x => { st.sent = x; }); } ACTIVE = null; }
       render(); const top = el.getBoundingClientRect().top; if (top < 0 || top > innerHeight * .6) el.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" }); }
-    if (k === "again") { const keep = st.deck.filter(d => !d.warm); st.deck = keep; st.i = 0; st.picked = null; st.picks = []; st.ans = []; st.wrongR = []; st.r = false; Quiz(el, { story, idx, onDone, onNext, nextLabel, cls }); }
+    if (k === "again") { const keep = st.deck.filter(d => !d.warm); st.deck = keep; st.i = 0; st.picked = null; st.picks = []; st.ans = []; st.wrongR = []; st.r = false; Quiz(el, { story, idx, onDone, onNext, nextLabel, cls, slim }); }
     if (k === "next") { ACTIVE = null; onNext && onNext(); }
     if (k === "cert") Certificate(story);
     if (k === "card") ResultCard(story, idx, st.picks.slice(0, n), noR ? null : st.r);
