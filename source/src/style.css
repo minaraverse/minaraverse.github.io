@@ -2764,6 +2764,17 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .es-hintbox{margin:0 0 12px;animation:ldin .4s both}
 .es-kh{font:italic 400 16px/1.45 Fraunces,Georgia,serif;color:#ffe9b8}.es-kht{display:block;margin-top:4px;font-size:13px;color:#c9b996}
 .es-ask{margin-top:14px;padding:8px 14px;border-radius:999px;border:1px dashed rgba(233,184,90,.6);background:transparent;color:#E9B85A;font:600 13px "Bricolage Grotesque",sans-serif}
+.mini-wild .mw-photo{display:block;background-size:cover;background-position:50% 45%}
+/* Wild English: every animal visible right under the hero */
+.wd-strip{position:relative;z-index:2;padding:16px 16px 6px;background:#1a1612}
+.wd-strip-k{margin:0 0 10px;font:700 11px "Bricolage Grotesque",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#E8A766}
+.wd-strip-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}.wd-strip-row::-webkit-scrollbar{display:none}
+.wd-sa{flex:0 0 auto;display:grid;justify-items:center;gap:6px;border:0;background:none;color:#efe6d6;font:600 12px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.wd-sa-img{position:relative;width:64px;height:64px;border-radius:50%;background-size:cover;background-position:center;border:2px solid rgba(255,255,255,.2)}
+.wd-sa.now .wd-sa-img{border-color:#E8A766;box-shadow:0 0 0 3px rgba(232,167,102,.35)}
+.wd-sa.done .wd-sa-img i,.wd-sa:disabled .wd-sa-img i{position:absolute;right:-2px;bottom:-2px;width:22px;height:22px;border-radius:50%;background:#3fae6a;color:#fff;font:700 12px/22px sans-serif;text-align:center;font-style:normal}
+.wd-sa:disabled{opacity:.5;cursor:default}.wd-sa:disabled .wd-sa-img i{background:#444}
+@media (min-width:760px){.wd-strip{padding:20px 40px 8px}.wd-strip-row{justify-content:center;gap:22px}.wd-sa-img{width:76px;height:76px}}
 .dr-heart{margin:4px 0 0;font:800 16px var(--hf);color:#FF7E8E;animation:kidpop .6s cubic-bezier(.2,1.5,.4,1) .4s both}
 
 /* ===== extras: review hearts · why · rule card · reports · units picker · adult mode · offline · dialogues · recordings ===== */

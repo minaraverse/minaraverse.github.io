@@ -42,6 +42,8 @@ VIEWS.wild = root => {
     <a class="wd-map" href="#wd-facts" data-jump="wd-facts"><i>●</i>${L("seeFacts")} <span>→</span></a>
   </section>
 
+  <nav class="wd-strip" aria-label="${L("animals")}"><p class="wd-strip-k">${L("animals")} · ${U.filter((_, k) => isDone("wild", k)).length}/${N}</p><div class="wd-strip-row">${U.map((a, k) => { const op = isOpen("wild", k), dn = isDone("wild", k);
+    return `<button type="button" class="wd-sa ${k === i ? "now" : ""} ${dn ? "done" : ""}" ${op ? `data-an="${k}"` : "disabled"}><span class="wd-sa-img" style="background-image:url(img/${a.id}-por.jpg)">${dn ? "<i>✓</i>" : op ? "" : "<i>🔒</i>"}</span><b>${esc(a.name)}</b></button>`; }).join("")}</div></nav>
   <section class="wd-st" id="wd-st">
     <p class="wd-k">${esc(u.full.toUpperCase())} · ${String(i + 1).padStart(2, "0")}/${N}${sub ? " · " + esc(sub.toUpperCase()) : ""}</p>
     <h2 class="wd-big">${statement}</h2>
