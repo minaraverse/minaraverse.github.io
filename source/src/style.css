@@ -2761,3 +2761,6 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .es-pieces.no{border-color:var(--qno);background:var(--qnobg);animation:qzshake .4s}
 .es-wrongmsg{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:var(--qnobg);border:1px solid var(--qno);color:#ffb3a8;font:600 15px "Bricolage Grotesque",sans-serif}
 .es-orderline .qz-tile.in{cursor:pointer}
+.es-hintbox{margin:0 0 12px;animation:ldin .4s both}
+.es-kh{font:italic 400 16px/1.45 Fraunces,Georgia,serif;color:#ffe9b8}.es-kht{display:block;margin-top:4px;font-size:13px;color:#c9b996}
+.es-ask{margin-top:14px;padding:8px 14px;border-radius:999px;border:1px dashed rgba(233,184,90,.6);background:transparent;color:#E9B85A;font:600 13px "Bricolage Grotesque",sans-serif}
