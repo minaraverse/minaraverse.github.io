@@ -12777,7 +12777,8 @@ Object.assign(UI.ru, { svLoading: "Загрузка…", netOff: "Нет свя�
 const loadBox = () => `<div class="sv-load" role="status"><span class="sv-spin"></span><p>${L("svLoading")}</p></div>`;
 
 /* privacy policy page (public) + consent wording */
-const PRIV_URL = "https://safiverse.github.io/privacy.html";
+/* next to the app (same window, so the page's ← Back returns to the app); the Minaraverse site build links into its /safiverse/ folder */
+const PRIV_URL = SAFI || typeof VIEWS.home !== "function" ? "privacy.html" : "safiverse/privacy.html"; /* the Safiverse app builds have no Minaraverse home page */
 Object.assign(UI.en, { svAgree: "I have read the {p} and agree", svConsent2: "I am the parent: I have read the {p} and agree", svPrivLink: "privacy policy", svAgreeBad: "Please agree to the privacy policy" });
 Object.assign(UI.az, { svAgree: "{p} ilə tanış oldum və razıyam", svConsent2: "Mən valideynəm: {p} ilə tanış oldum və razıyam", svPrivLink: "Məxfilik siyasəti", svAgreeBad: "Məxfilik siyasəti ilə razılaşmağı qeyd et" });
 Object.assign(UI.ru, { svAgree: "Я прочитал(а) {p} и согласен(на)", svConsent2: "Я родитель: прочитал(а) {p} и согласен(на)", svPrivLink: "политику конфиденциальности", svAgreeBad: "Отметь согласие с политикой конфиденциальности" });
@@ -13534,7 +13535,7 @@ document.addEventListener("click", e => { const b = e.target.closest("[data-unit
 const OFF_V = 1;
 const offReady = () => (lsGet("mv-offpack", {}).v || 0) >= OFF_V;
 function extraSetItems() {
-  return `<a class="ap-item" href="${typeof PRIV_URL === "string" ? PRIV_URL : "privacy.html"}" target="_blank" rel="noopener"><span>🔒</span><b>${L("pvT")}</b><i>›</i></a>${typeof svOn === "function" && svOn() && typeof ACCT === "function" && ACCT() ? `<button class="ap-item ap-del" data-delme><span>🗑</span><b>${L("dmT")}<em>${L("dmP")}</em></b><i>›</i></button>` : ""}${instIsApp() ? "" : `<button class="ap-item ap-inst" data-inst><span>📲</span><b>${L("inT")}<em>${L("inP")}</em></b><i>›</i></button>`}<button class="ap-item ap-sw" data-adult aria-pressed="${adultOn()}"><span>🧑</span><b>${L("adT")}<em>${L("adP")}</em></b><i class="sw ${adultOn() ? "on" : ""}"></i></button>
+  return `<a class="ap-item" href="${typeof PRIV_URL === "string" ? PRIV_URL : "privacy.html"}"><span>🔒</span><b>${L("pvT")}</b><i>›</i></a>${typeof svOn === "function" && svOn() && typeof ACCT === "function" && ACCT() ? `<button class="ap-item ap-del" data-delme><span>🗑</span><b>${L("dmT")}<em>${L("dmP")}</em></b><i>›</i></button>` : ""}${instIsApp() ? "" : `<button class="ap-item ap-inst" data-inst><span>📲</span><b>${L("inT")}<em>${L("inP")}</em></b><i>›</i></button>`}<button class="ap-item ap-sw" data-adult aria-pressed="${adultOn()}"><span>🧑</span><b>${L("adT")}<em>${L("adP")}</em></b><i class="sw ${adultOn() ? "on" : ""}"></i></button>
     ${typeof caches === "object" ? `<button class="ap-item" data-offdl><span>📥</span><b>${L("ofT")}<em>${offReady() ? L("ofDone") : L("ofP")}</em></b><i>${offReady() ? "✓" : "↓"}</i></button>` : ""}`;
 }
 function offUrls() { const u = [...CLIPS].map(h => "img/tts/" + h + ".mp3");

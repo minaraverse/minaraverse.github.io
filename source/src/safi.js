@@ -264,7 +264,8 @@ Object.assign(UI.ru, { svLoading: "Загрузка…", netOff: "Нет свя�
 const loadBox = () => `<div class="sv-load" role="status"><span class="sv-spin"></span><p>${L("svLoading")}</p></div>`;
 
 /* privacy policy page (public) + consent wording */
-const PRIV_URL = "https://safiverse.github.io/privacy.html";
+/* next to the app (same window, so the page's ← Back returns to the app); the Minaraverse site build links into its /safiverse/ folder */
+const PRIV_URL = SAFI || typeof VIEWS.home !== "function" ? "privacy.html" : "safiverse/privacy.html"; /* the Safiverse app builds have no Minaraverse home page */
 Object.assign(UI.en, { svAgree: "I have read the {p} and agree", svConsent2: "I am the parent: I have read the {p} and agree", svPrivLink: "privacy policy", svAgreeBad: "Please agree to the privacy policy" });
 Object.assign(UI.az, { svAgree: "{p} ilə tanış oldum və razıyam", svConsent2: "Mən valideynəm: {p} ilə tanış oldum və razıyam", svPrivLink: "Məxfilik siyasəti", svAgreeBad: "Məxfilik siyasəti ilə razılaşmağı qeyd et" });
 Object.assign(UI.ru, { svAgree: "Я прочитал(а) {p} и согласен(на)", svConsent2: "Я родитель: прочитал(а) {p} и согласен(на)", svPrivLink: "политику конфиденциальности", svAgreeBad: "Отметь согласие с политикой конфиденциальности" });

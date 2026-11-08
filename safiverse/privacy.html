@@ -11,7 +11,9 @@
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#fbf8ef;--card:#fff;--ink:#1d1840;--mut:#5b5480;--gold:#b47b00;--violet:#6a4fd6;--line:#e6e0f5}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:760px;margin:0 auto;padding:28px 16px 60px}
+main{max-width:760px;margin:0 auto;padding:10px 16px 60px}
+.bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 -16px 14px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:var(--bg);border-bottom:1px solid var(--line)}
+.back{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;border:1.5px solid var(--gold);background:transparent;color:var(--gold);font:800 15px system-ui;cursor:pointer;text-decoration:none}
 .brand{font:800 22px/1 system-ui;color:var(--gold);letter-spacing:.01em}.brand span{color:var(--violet)}
 h1{font-size:28px;line-height:1.2;margin:14px 0 4px}
 .date{color:var(--mut);font-size:14px;margin:0 0 18px}
@@ -27,7 +29,7 @@ a{color:var(--violet)}
 </head>
 <body>
 <main>
-<div class="brand">✦ Safi<span>verse</span></div>
+<div class="bar"><a class="back" href="./" id="back">← <span id="backT">Geri</span></a><div class="brand">✦ Safi<span>verse</span></div></div>
 <div class="tabs" role="group" aria-label="Language">
   <button type="button" data-l="az" aria-pressed="true">Azərbaycanca</button>
   <button type="button" data-l="ru" aria-pressed="false">Русский</button>
@@ -141,9 +143,11 @@ a{color:var(--violet)}
 </main>
 <script>
 (function(){var b=document.querySelectorAll(".tabs button"),s=document.querySelectorAll("section");
-function show(l){s.forEach(function(x){x.classList.toggle("on",x.lang===l)});b.forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.l===l))});document.documentElement.lang=l}
+var BT={az:"Geri",ru:"Назад",en:"Back"};
+var bk=document.getElementById("back");bk.onclick=function(e){if(history.length>1&&document.referrer&&document.referrer.indexOf(location.host)>-1){e.preventDefault();history.back();}};
+function show(l){document.getElementById("backT").textContent=BT[l];s.forEach(function(x){x.classList.toggle("on",x.lang===l)});b.forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.l===l))});document.documentElement.lang=l}
 b.forEach(function(x){x.onclick=function(){show(x.dataset.l);try{history.replaceState(null,"","#"+x.dataset.l)}catch(e){}}});
-var h=(location.hash||"").slice(1),n="";try{n=JSON.parse(localStorage.getItem("mv-lang")||'""')}catch(e){}show(["az","ru","en"].indexOf(h)>-1?h:["az","ru","en"].indexOf(n)>-1?n:"az");})();
+var h=(location.hash||"").slice(1),n="";try{n=String(localStorage.getItem("mv-lang")||"").replace(/"/g,"")}catch(e){}show(["az","ru","en"].indexOf(h)>-1?h:["az","ru","en"].indexOf(n)>-1?n:"az");})();
 </script>
 </body>
 </html>
