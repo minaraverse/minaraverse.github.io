@@ -96,6 +96,14 @@ VIEWS.daily = root => {
   return { unmount() { removeEventListener("keydown", kd); } };
 };
 
+/* small picture tile for a story: its own art in the background, the title on top */
+function storyTile(k) {
+  const IMG = { wild: "img/tiger-hero.jpg", voyage: "img/p-ship.webp", mystery: "img/m-library.jpg", escape: "img/escape-card.jpg" };
+  const S = k === "escape" ? { title: L("esH"), level: "A1–C2" } : STORIES[k];
+  const art = IMG[k] ? `<span class="st-img" style="background-image:url(${IMG[k]})"></span>` : typeof WART !== "undefined" && WART[k] ? `<span class="st-svg">${WART[k]()}</span>`
+    : k === "tapes" ? `<span class="st-tapes">${STORIES.tapes.units.map(u => `<i style="--c:${u.spine}"></i>`).join("")}</span>` : `<span class="st-travel">✈</span>`;
+  return `<a class="st-tile stk-${k}" href="#${k}">${art}<span class="st-t"><small>${typeof courseEmoji === "function" ? (k === "escape" ? "🔐" : courseEmoji(k)) : ""} ${S.level}</small><b>${esc(S.title)}</b></span></a>`;
+}
 /* ---------- LEVEL TEST (airport split-flap board) ---------- */
 const FLAPS = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·/-";
 function flapText(el, text, len) {
@@ -127,10 +135,9 @@ VIEWS.level = root => {
     body.innerHTML = `<div class="lv-card res"><p class="lv-k">${L("lvlResult")}</p><div class="lv-big">${lvl}</div><p class="lv-p">${esc(info[LANG] || info.en)}</p>
       <div class="lv-choose"><p class="lv-k">${L("lvChooseK")}</p>
         <a class="lv-ch" href="#exam-${xv.id}"><span>📝</span><div><b>${L("lvChTest").replace("{lv}", xv.lv.join("–"))}</b><small>${L("lvChTestS")}</small></div><i>→</i></a>
-        <p class="lv-sugk">⭐ ${L("lvSugg").replace("{lv}", lvl)}</p>
-        <div class="lv-stories">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).map(k => `<a class="lv-chip" href="#${k}">${typeof courseEmoji === "function" ? courseEmoji(k) : "📖"} ${esc(STORIES[k].title)} <small>${STORIES[k].level}</small></a>`).join("")}</div>
-        <p class="lv-sugk dim">👀 ${L("lvAlso")}</p>
-        <div class="lv-stories dim">${WORLD_ORDER.filter(k => !fitsLevel(STORIES[k].level, lvl)).map(k => `<a class="lv-chip" href="#${k}">${typeof courseEmoji === "function" ? courseEmoji(k) : "📖"} ${esc(STORIES[k].title)} <small>${STORIES[k].level}</small></a>`).join("")}</div>
+        <p class="lv-pick">${L("lvPickP")}</p>
+        <div class="lv-two"><div class="lv-col"><p class="lv-sugk">⭐ ${L("lvSugg").replace("{lv}", lvl)}</p><div class="lv-tiles">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).map(k => storyTile(k)).join("")}</div></div>
+          <div class="lv-col other"><p class="lv-sugk dim">👀 ${L("lvAlso")}</p><div class="lv-tiles">${[...(typeof ESC_ROOMS !== "undefined" ? ["escape"] : []), ...WORLD_ORDER.filter(k => !fitsLevel(STORIES[k].level, lvl))].map(k => storyTile(k)).join("")}</div></div></div>
         <a class="lv-ch" href="#errors"><span>🎯</span><div><b>${esc(STORIES.errors.title)}</b><small>${L("lvChErr")}</small></div><i>→</i></a></div>
       <div class="lv-split">${Object.keys(by).map(l => `<div class="${l === lvl ? "on" : ""}"><b>${l}</b><span>${by[l]}/5</span><i style="height:${by[l] / 5 * 100}%"></i></div>`).join("")}</div>
       <details class="lv-plan"><summary class="lv-k">${L("yourPlan")}</summary>${planHTML(lvl)}</details>
