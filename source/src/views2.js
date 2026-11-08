@@ -127,7 +127,10 @@ VIEWS.level = root => {
     body.innerHTML = `<div class="lv-card res"><p class="lv-k">${L("lvlResult")}</p><div class="lv-big">${lvl}</div><p class="lv-p">${esc(info[LANG] || info.en)}</p>
       <div class="lv-choose"><p class="lv-k">${L("lvChooseK")}</p>
         <a class="lv-ch" href="#exam-${xv.id}"><span>📝</span><div><b>${L("lvChTest").replace("{lv}", xv.lv.join("–"))}</b><small>${L("lvChTestS")}</small></div><i>→</i></a>
+        <p class="lv-sugk">⭐ ${L("lvSugg").replace("{lv}", lvl)}</p>
         <div class="lv-stories">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).map(k => `<a class="lv-chip" href="#${k}">${typeof courseEmoji === "function" ? courseEmoji(k) : "📖"} ${esc(STORIES[k].title)} <small>${STORIES[k].level}</small></a>`).join("")}</div>
+        <p class="lv-sugk dim">👀 ${L("lvAlso")}</p>
+        <div class="lv-stories dim">${WORLD_ORDER.filter(k => !fitsLevel(STORIES[k].level, lvl)).map(k => `<a class="lv-chip" href="#${k}">${typeof courseEmoji === "function" ? courseEmoji(k) : "📖"} ${esc(STORIES[k].title)} <small>${STORIES[k].level}</small></a>`).join("")}</div>
         <a class="lv-ch" href="#errors"><span>🎯</span><div><b>${esc(STORIES.errors.title)}</b><small>${L("lvChErr")}</small></div><i>→</i></a></div>
       <div class="lv-split">${Object.keys(by).map(l => `<div class="${l === lvl ? "on" : ""}"><b>${l}</b><span>${by[l]}/5</span><i style="height:${by[l] / 5 * 100}%"></i></div>`).join("")}</div>
       <details class="lv-plan"><summary class="lv-k">${L("yourPlan")}</summary>${planHTML(lvl)}</details>
