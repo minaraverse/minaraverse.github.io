@@ -2606,3 +2606,16 @@ html.ap-mode .dr-path:has(.dr-pop) :is(.dr-pix,.dr-racer,.dr-kid,[data-racer],[d
 .lv-auto{margin:14px 0;padding:14px 16px;border-radius:16px;border:1.5px solid #ffd34d;background:rgba(255,211,77,.12)}
 .lv-auto p{margin:0 0 10px;font-size:15px;line-height:1.45}.lv-auto-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .lv-cnt{display:inline-block;min-width:26px;margin-left:6px;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.25);font-weight:700}
+/* ===== level result: the student chooses ===== */
+.lv-choose{margin:14px 0;display:grid;gap:8px}
+.lv-ch{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:inherit;text-decoration:none}
+.lv-ch span{font-size:24px}.lv-ch b{display:block;font:600 15px "Bricolage Grotesque",sans-serif}.lv-ch small{opacity:.75;font-size:12px}.lv-ch i{margin-left:auto;font-style:normal;opacity:.7}
+.lv-stories{display:flex;flex-wrap:wrap;gap:6px}
+.lv-chip{padding:8px 12px;border-radius:999px;background:rgba(255,211,77,.14);border:1px solid rgba(255,211,77,.4);color:inherit;text-decoration:none;font:600 13px "Bricolage Grotesque",sans-serif}.lv-chip small{opacity:.7;font-weight:500}
+.lv-plan summary{cursor:pointer;list-style:none}.lv-plan summary::after{content:" ▾";opacity:.6}
+/* ===== hall of fame: ranked lists under the podiums ===== */
+.bd-rest{margin:10px 0 0;padding-left:0;list-style:none;counter-reset:bd 3;display:grid;gap:4px}
+.bd-rest[start="2"]{counter-reset:bd 1}
+.bd-rest li{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.06);counter-increment:bd;font-size:14px}
+.bd-rest li::before{content:counter(bd);flex:0 0 22px;height:22px;border-radius:50%;background:rgba(255,255,255,.12);font:700 12px/22px "Bricolage Grotesque",sans-serif;text-align:center}
+.bd-rest li b{font-weight:600}.bd-rest li small{margin-left:auto;opacity:.7;white-space:nowrap}

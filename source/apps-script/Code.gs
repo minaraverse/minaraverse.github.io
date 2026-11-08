@@ -57,11 +57,11 @@ function board_(rows, evRows) {
   const ev = evRows || [], after = (list, t) => list.filter(r => new Date(r._time) >= t);
   const week = sum(after(rows, monday), after(ev, monday)), month = sum(after(rows, first), after(ev, first));
   const fmt = x => x ? { name: x.name, score: x.pts + " pts" + (x.ch ? " · " + x.ch + (x.ch === 1 ? " chapter" : " chapters") : ""), level: x.level } : null;
-  const top3 = list => [0, 1, 2].map(i => fmt(list[i]));
+  const top3 = list => list.slice(0, 10).map(fmt);   /* ranked list (up to 10) — every student who finished anything is on the board */
   const levels = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 }, last = {};
   rows.filter(r => /level/i.test(r.type)).forEach(r => { last[who(r).toLowerCase()] = String(r.level || r.chapter || ""); });
   Object.values(last).forEach(l => { if (levels[l] !== undefined) levels[l]++; });
-  return { week: fmt(week[0]), month: { adults: top3(month.filter(x => !x.age || x.age > KIDS_MAX_AGE)), kids: top3(month.filter(x => x.age && x.age <= KIDS_MAX_AGE)) }, levels: levels };
+  return { week: fmt(week[0]), weekList: top3(week), month: { adults: top3(month.filter(x => !x.age || x.age > KIDS_MAX_AGE)), kids: top3(month.filter(x => x.age && x.age <= KIDS_MAX_AGE)) }, levels: levels };
 }
 
 

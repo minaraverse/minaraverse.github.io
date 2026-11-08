@@ -115,28 +115,29 @@ VIEWS.level = root => {
   const q = () => { const [lv, text, opts] = LEVELQ[i], order = shuffled([text, opts], "lv" + i);
     flapText(f1, `${L("lvlQ")} ${String(i + 1).padStart(2, "0")}/${LEVELQ.length}`.normalize("NFD").replace(/[̀-ͯ]/g, ""), W); flapText(f2, `GATE ${lv}`, W + 6);
     body.innerHTML = `<div class="lv-card q">${i ? `<button type="button" class="lv-back" data-back>← ${L("backQ")}</button>` : ""}<div class="lv-bar"><i style="width:${i / LEVELQ.length * 100}%"></i></div><p class="lv-q">${esc(text)} ${sayBtn(text.replace(/_{2,}/g, "blank"), "sm")}</p>
-      <div class="lv-opts">${order.map((oi, k) => `<button type="button" class="lv-opt" data-o="${oi}"><span>${"ABC"[k]}</span>${esc(opts[oi])}</button>`).join("")}</div></div>`; };
+      <div class="lv-opts">${order.map((oi, k) => `<button type="button" class="lv-opt" data-o="${oi}"><span>${"ABCD"[k]}</span>${esc(opts[oi])}</button>`).join("")}</div></div>`; };
   const result = () => {
     const by = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0 }; LEVELQ.forEach((x, k) => { if (picks[k] === 0) by[x[0]]++; });
-    let lvl = "A1"; for (const l of LVLS) { if (by[l] >= 3) lvl = l; else break; }
+    /* a level is passed with 4 of 5; the result is the highest passed level in an unbroken chain from A1 (one slip at A1 is forgiven) */
+    let lvl = "A1"; for (const l of LVLS) { if (by[l] >= 4 || (l === "A1" && by[l] >= 3)) lvl = l; else break; }
     const total = picks.filter(p => p === 0).length, info = LEVEL_INFO[lvl], go = info.go;
     flapText(f1, `LEVEL ${lvl}`, W); flapText(f2, `${total}/${LEVELQ.length} CORRECT · BOARDING`, W + 6);
     const goLabel = go === "exam" ? L("examT") : STORIES[go].title;
     const XV2 = examVersions(), xv = XV2.find(x => x.lv.includes(lvl)) || XV2[1];
     body.innerHTML = `<div class="lv-card res"><p class="lv-k">${L("lvlResult")}</p><div class="lv-big">${lvl}</div><p class="lv-p">${esc(info[LANG] || info.en)}</p>
-      <div class="lv-auto" role="status"><p>${L("lvAutoP").replace("{lv}", xv.lv.join("–"))}</p><div class="lv-auto-row"><a class="qz-btn" href="#exam-${xv.id}-go">▶ ${L("lvAutoGo")} <b class="lv-cnt">10</b></a><button type="button" class="qz-btn ghost" data-stay>${L("lvAutoStay")}</button></div></div>
+      <div class="lv-choose"><p class="lv-k">${L("lvChooseK")}</p>
+        <a class="lv-ch" href="#exam-${xv.id}"><span>📝</span><div><b>${L("lvChTest").replace("{lv}", xv.lv.join("–"))}</b><small>${L("lvChTestS")}</small></div><i>→</i></a>
+        <div class="lv-stories">${WORLD_ORDER.filter(k => fitsLevel(STORIES[k].level, lvl)).map(k => `<a class="lv-chip" href="#${k}">${typeof courseEmoji === "function" ? courseEmoji(k) : "📖"} ${esc(STORIES[k].title)} <small>${STORIES[k].level}</small></a>`).join("")}</div>
+        <a class="lv-ch" href="#errors"><span>🎯</span><div><b>${esc(STORIES.errors.title)}</b><small>${L("lvChErr")}</small></div><i>→</i></a></div>
       <div class="lv-split">${Object.keys(by).map(l => `<div class="${l === lvl ? "on" : ""}"><b>${l}</b><span>${by[l]}/5</span><i style="height:${by[l] / 5 * 100}%"></i></div>`).join("")}</div>
-      <a class="lv-go" href="#${go}"><small>${L("lvlGo")}</small><b>${esc(goLabel)}</b><i>→</i></a>
-      <div class="lv-plan"><p class="lv-k">${L("yourPlan")}</p>${planHTML(lvl)}</div>
+      <details class="lv-plan"><summary class="lv-k">${L("yourPlan")}</summary>${planHTML(lvl)}</details>
       <div class="lv-send"><label class="qz-name"><span>${L("yourName")}</span><input id="lv-name" type="text" autocomplete="name" placeholder="${L("namePh")}" value="${esc(NAME)}"></label>
       ${RESULTS.form ? `<a class="qz-btn lv-form" data-form href="#" target="_blank" rel="noopener">📤 ${L("sendLevel")}</a><small class="lv-note">${L("sendNote")}</small>` : ""}
       <a class="qz-btn lv-dm" href="${DM}" target="_blank" rel="noopener">💬 ${L("lvlDM")} ↗</a></div>
       <pre class="qz-copy">${esc(`Minaraverse level test\nName: ${NAME || "—"}\nLevel: ${lvl} (${total}/${LEVELQ.length})\n${LVLS.map(l => l + " " + by[l] + "/5").join(" · ")}`)}</pre>
       <button type="button" class="qz-btn ghost" data-again>${L("lvlAgain")}</button></div>`;
     lsSet("mv-level", { lvl, total, day: dayStr(new Date()) }); markDay(); if (typeof track === "function") track("level", { score: lvl + " · " + total + "/" + LEVELQ.length });
-    (() => { let left = 10; const cnt = body.querySelector(".lv-cnt"), box = body.querySelector(".lv-auto");
-      const tm = setInterval(() => { if (!document.body.contains(box)) { clearInterval(tm); return; } left--; if (cnt) cnt.textContent = left; if (left <= 0) { clearInterval(tm); location.hash = `#exam-${xv.id}-go`; } }, 1000);
-      body.querySelector("[data-stay]").onclick = () => { clearInterval(tm); box.innerHTML = `<a class="qz-btn" href="#exam-${xv.id}-go">▶ ${L("lvAutoGo")}</a>`; }; })();
+
     const rec = () => ({ type: "Level test", ...profileFields(), level: lvl, name: (PROFILE().first || NAME || "—"), story: "Level test", chapter: lvl, score: `${total}/${LEVELQ.length}`, riddle: "—", answers: `${LVLS.map(l => l + " " + by[l] + "/5").join(" · ")}`, lang: LANG });
     const ni = body.querySelector("#lv-name"), pre = body.querySelector(".qz-copy");
     ni.oninput = () => { NAME = ni.value.trim(); try { localStorage.setItem("mv-name", NAME); } catch (e) {} pre.textContent = `Minaraverse level test\nName: ${NAME || "—"}\nLevel: ${lvl} (${total}/${LEVELQ.length})\n${rec().answers}`; };

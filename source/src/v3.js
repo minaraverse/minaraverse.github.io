@@ -1,4 +1,7 @@
 /* ===== v3: advanced worlds, exams and games for every level, lead form ===== */
+Object.assign(UI.en, { lvChooseK: "What next? You choose", lvChTest: "Test for your level ({lv})", lvChTestS: "30 questions: listening, grammar, reading", lvChErr: "Grammar games by rank" });
+Object.assign(UI.az, { lvChooseK: "Növbəti nə? Sən seç", lvChTest: "Səviyyən üçün test ({lv})", lvChTestS: "30 sual: dinləmə, qrammatika, oxu", lvChErr: "Rütbələr üzrə qrammatika oyunları" });
+Object.assign(UI.ru, { lvChooseK: "Что дальше? Выбирай сам(а)", lvChTest: "Тест для твоего уровня ({lv})", lvChTestS: "30 вопросов: аудирование, грамматика, чтение", lvChErr: "Игры по грамматике по рангам" });
 Object.assign(UI.en, { lvAutoP: "Next: a full test for your level ({lv}) — listening, grammar and reading. 30 questions, and you will see how many you got right. Starting automatically in…", lvAutoGo: "Start the test now", lvAutoStay: "Stay here" });
 Object.assign(UI.az, { lvAutoP: "Növbəti: səviyyən üçün tam test ({lv}) — dinləmə, qrammatika və oxu. 30 sual — neçəsinə düz cavab verdiyini görəcəksən. Avtomatik başlayır…", lvAutoGo: "Testə indi başla", lvAutoStay: "Burada qal" });
 Object.assign(UI.ru, { lvAutoP: "Дальше: полный тест для твоего уровня ({lv}) — аудирование, грамматика и чтение. 30 вопросов, в конце увидишь, сколько правильно. Начнётся автоматически через…", lvAutoGo: "Начать тест сейчас", lvAutoStay: "Остаться здесь" });
@@ -177,14 +180,16 @@ Object.assign(UI.ru, { bdK: "Доска почёта", bdH: "Кто лидиру
   bdWeek: "Ученик недели", bdMonth: "Топ-3 месяца", bdAdults: "Взрослые", bdKids: "Дети", bdFree: "Место свободно", bdYou: "Здесь можешь быть ты", bdLevels: "Наши ученики по уровням", bdStart: "Пройти тест и участвовать", bdSend: "Отправить результат" });
 const bdFace = (p, big) => p && p.photo ? `<img src="${esc(p.photo)}" alt="">` : p ? `<b>${esc((p.name || "?")[0])}</b>` : `<svg viewBox="0 0 24 24" width="${big ? 34 : 24}" height="${big ? 34 : 24}" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>`;
 function podium(list, title) {
-  const order = [1, 0, 2];
+  const order = [1, 0, 2], rest = (list || []).slice(3).filter(Boolean);
   return `<div class="bd-pod"><p class="bd-pk">${title}</p><div class="bd-steps">${order.map(i => { const p = list[i];
-    return `<div class="bd-st s${i + 1}"><span class="bd-face ${p ? "" : "empty"}">${bdFace(p)}</span><b>${p ? esc(p.name) : L("bdFree")}</b><small>${p ? esc([p.level, p.score].filter(Boolean).join(" · ")) : ""}</small><i>${i + 1}</i></div>`; }).join("")}</div></div>`;
+    return `<div class="bd-st s${i + 1}"><span class="bd-face ${p ? "" : "empty"}">${bdFace(p)}</span><b>${p ? esc(p.name) : L("bdFree")}</b><small>${p ? esc([p.level, p.score].filter(Boolean).join(" · ")) : ""}</small><i>${i + 1}</i></div>`; }).join("")}</div>
+    ${rest.length ? `<ol class="bd-rest" start="4">${rest.map(p => `<li><b>${esc(p.name)}</b><small>${esc([p.level, p.score].filter(Boolean).join(" · "))}</small></li>`).join("")}</ol>` : ""}</div>`;
 }
 function boardHTML() {
   const w = BOARD.week, max = Math.max(1, ...Object.values(BOARD.levels));
   return `<section class="h-board" id="h-board"><div class="h-sh"><div><p class="h-k">🏆 ${L("bdK")}</p><h2 class="h-h2">${L("bdH")}</h2></div></div><p class="bd-p">${L("bdP")}</p>
-    <div class="bd-grid"><div class="bd-week"><p class="bd-pk">⭐ ${L("bdWeek")}</p><span class="bd-frame ${w ? "" : "empty"}">${bdFace(w, true)}</span><b>${w ? esc(w.name) : L("bdYou")}</b><small>${w ? esc([w.level, w.score].filter(Boolean).join(" · ")) : L("bdFree")}</small></div>
+    <div class="bd-grid"><div class="bd-week"><p class="bd-pk">⭐ ${L("bdWeek")}</p><span class="bd-frame ${w ? "" : "empty"}">${bdFace(w, true)}</span><b>${w ? esc(w.name) : L("bdYou")}</b><small>${w ? esc([w.level, w.score].filter(Boolean).join(" · ")) : L("bdFree")}</small>
+        ${(BOARD.weekList || []).length > 1 ? `<ol class="bd-rest bd-wk" start="2">${BOARD.weekList.slice(1).map(p => `<li><b>${esc(p.name)}</b><small>${esc([p.level, p.score].filter(Boolean).join(" · "))}</small></li>`).join("")}</ol>` : ""}</div>
       <div class="bd-month"><p class="bd-mk">📅 ${L("bdMonth")}</p>${podium(BOARD.month.adults, L("bdAdults"))}${podium(BOARD.month.kids, L("bdKids"))}</div></div>
     <div class="bd-levels"><p class="bd-pk">${L("bdLevels")}</p><div class="bd-bars">${LVLS.map(l => `<div><i style="height:${BOARD.levels[l] / max * 100}%"></i><b>${BOARD.levels[l] || "—"}</b><span>${l}</span></div>`).join("")}</div></div>
     <div class="bd-cta"><a class="h-cta" href="#level">${L("bdStart")} →</a><a class="h-cta2" href="#" data-jump="h-lead">${L("bdSend")} ↓</a></div></section>`;
