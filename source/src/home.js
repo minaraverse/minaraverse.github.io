@@ -1,14 +1,14 @@
 /* ===== HOME ===== */
 VIEWS.home = root => {
   const cards = [
-    { id: "tapes", art: () => `<div class="mini-shelf">${STORIES.tapes.units.map((u, i) => `<span style="--c:${u.spine};--d:${i * .18}s" class="${i === 3 ? "on" : ""}"><b style="color:${u.ink}">${esc(u.name)}</b></span>`).join("")}</div>` },
+    { id: "tapes", art: () => `<div class="mini-gw">${WART.tapes()}</div>` },
     { id: "voyage", art: () => `<div class="mini-sea"><div class="mini-ship"><img src="img/p-ship.webp" alt=""></div><svg class="mini-waves" viewBox="0 0 800 120" preserveAspectRatio="none"><path d="M0 40 Q50 20 100 40 T200 40 T300 40 T400 40 T500 40 T600 40 T700 40 T800 40 V120 H0Z" fill="#dcd7c7" stroke="#16130e" stroke-width="3"/><path d="M0 70 Q50 52 100 70 T200 70 T300 70 T400 70 T500 70 T600 70 T700 70 T800 70 V120 H0Z" fill="#e6e0cf" stroke="#16130e" stroke-width="3"/></svg></div>` },
     { id: "wild", art: () => `<div class="mini-wild"><span class="mw-photo" style="background-image:url(img/elephant-hero.jpg)"></span><div class="mw-title">WILD</div></div>` },
     { id: "mystery", art: () => `<div class="mini-myst"><img src="img/m-library.jpg" alt=""><i class="mm-light"></i><span class="mm-stamp">CASE № 7</span><b class="mm-t">THE SECRET OF ICHERISHEHER</b></div>` },
     { id: "movie", art: () => `<div class="mini-gw">${WART.movie()}<b class="mg-t mg-movie">NOW SHOWING</b></div>` },
     { id: "kids", art: () => `<div class="mini-gw">${WART.kids()}</div>` },
     ...["cafe", "firstweek", "roommates", "camp", "business", "debate", "ielts", "heist", "trial", "podcast", "editor"].filter(k => STORIES[k]).map(k => ({ id: k, art: () => `<div class="mini-gw">${WART[k]()}</div>` })),
-    { id: "travel", art: () => `<div class="mini-travel"><div class="mt-route">${ART.route()}</div><div class="mt-glass"><span class="mt-type"></span><i class="mt-btn">PLAN MY TRIP</i></div></div>` }
+    { id: "travel", art: () => `<div class="mini-gw">${WART.travel()}</div>` }
   ];
   const descs = { tapes: "tapesD", voyage: "voyageD", wild: "wildD", travel: "travelD", mystery: "mysteryD", movie: "movieD", kids: "kidsD", cafe: "cafeD", business: "businessD", debate: "debateD", ielts: "ieltsD", heist: "heistD", camp: "campD", firstweek: "firstweekD", roommates: "roommatesD", trial: "trialD", podcast: "podcastD", editor: "editorD" };
   const WORLDS = WORLD_ORDER, NCH = WORLDS.reduce((a, k) => a + STORIES[k].units.length, 0), NQ = WORLDS.reduce((a, k) => a + STORIES[k].units.reduce((b, u) => b + u.qs.length, 0), 0);
@@ -82,7 +82,7 @@ VIEWS.home = root => {
   <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
   <section class="h-exam" id="h-exam"><div class="h-sh h-sh-big"><div class="h-count biz"><b>${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).length}</b><span>${L("bizK")}</span></div><div><p class="h-k">💼 ${L("bizK")} · ${typeof SERIES !== "undefined" ? (SERIES.bluesail.name[LANG] || SERIES.bluesail.name.en) : ""}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
     <div class="hx-cases">${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
-      return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${k === "contract" ? `<span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span>` : WART[k]()}</span>
+      return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${WART[k]()}</span>
         <span class="hx-t"><small>${courseEmoji(k)} ${S.level} · ${n} ${{ en: "steps", az: "addım", ru: "шагов" }[LANG]}</small><b>${esc(S.title)}</b>${typeof epBadge === "function" ? epBadge(k) : ""}<span>${L(k + "D")}</span><span class="hx-bar"><i style="width:${d / n * 100}%"></i></span><em>${d === n ? "✓ " + L("complete") : d ? L("cont") + " · " + d + "/" + n : L("start")} →</em></span></a>`; }).join("")}</div>
     <div class="hx-cards hx-one"><a class="hx-card hx-err" href="#errors"><span class="hx-art" aria-hidden="true"><span class="hx-target"><i></i><i></i><i></i></span><span class="hx-words"><s>a elephant</s><b>an elephant</b></span></span>
       <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
