@@ -221,7 +221,6 @@ function setupTelegram() {
   Logger.log("OK — chat " + m.chat.id);
 }
 function doPost(e) { let p = {}; try { p = JSON.parse(e.postData.contents || "{}"); } catch (er) {}
-  if (p.a === "svtg") return json_(svRelay_(p));
   if (p.a === "ev") return json_(event_(p)); return json_({ ok: false }); }
 
 function doGet(e) {
@@ -260,11 +259,56 @@ function doGet(e) {
 }
 
 
-/* relay for the Safiverse server: it has no bot token, so it passes its report here and this script sends it to Minara's Telegram.
-   Only Safiverse messages (they start with 🪐), at most 150 a day, so the relay cannot be used to flood the chat. */
-function svRelay_(p) {
-  const text = String(p.text || ""); if (text.indexOf("🪐") !== 0 || text.length > 4000) return { ok: false };
-  const k = "svrelay_" + Utilities.formatDate(new Date(), "Asia/Baku", "yyyy-MM-dd"), n = Number(P.getProperty(k) || 0);
-  if (n >= 150) return { ok: false, err: "limit" }; P.setProperty(k, String(n + 1));
-  tg_(text); return { ok: true };
+/* =================== SAFIVERSE in this bot (read-only) ===================
+   This script looks into the Safiverse admin list every 15 minutes with the admin code
+   (Project Settings → Script properties → SV_ADMIN_KEY) and writes to Telegram:
+   a new sign-up, and the first time each student starts working that day. At 21:00 — the Safiverse report.
+   Nothing is changed in Safiverse: it only reads the same list the admin page shows.
+   Run setupSafiverse() once (▶) after saving the admin code. */
+const SV_API = "https://script.google.com/macros/s/AKfycbw7xrJ_Y59DlK0dRZ_z2tZJYHLAKqQcXRKmzcCyKckEf_tOmVHvcpBw3MgH3XGftems/exec";
+const SVH = ["email", "name", "user", "age", "created", "last", "xp", "streak", "lessons", "unit", "xp_day_start", "day", "seen_today"];
+function svRows_() {
+  const key = P.getProperty("SV_ADMIN_KEY"); if (!key) throw new Error("SV_ADMIN_KEY is not set");
+  const r = UrlFetchApp.fetch(SV_API, { method: "post", contentType: "application/json", payload: JSON.stringify({ a: "ad_rows", key: key }), muteHttpExceptions: true, followRedirects: true });
+  const j = JSON.parse(r.getContentText()); if (!j.ok) throw new Error("Safiverse refused the admin code"); return j.rows || [];
+}
+function svSheet_() { const ss = SpreadsheetApp.getActiveSpreadsheet(); let sh = ss.getSheetByName("Safiverse"); if (!sh) { sh = ss.insertSheet("Safiverse"); sh.appendRow(SVH); sh.setFrozenRows(1); } return sh; }
+const svDay_ = d => d ? Utilities.formatDate(new Date(d), "Asia/Baku", "yyyy-MM-dd") : "";
+const svTm_ = d => d ? Utilities.formatDate(new Date(d), "Asia/Baku", "HH:mm") : "";
+const svWho_ = r => String(r.name || "—") + (r.user ? " (@" + r.user + ")" : "");
+/* compares the live list with the saved snapshot; quiet = only save (used on the very first run) */
+function svPoll(arg) {
+  const quiet = arg === true, rows = svRows_(), sh = svSheet_(), today = svDay_(new Date()), old = {}, v = sh.getDataRange().getValues(); v.shift();
+  v.forEach(r => { if (r[0]) old[String(r[0]).toLowerCase()] = { xp0: Number(r[10]) || 0, day: r[11] instanceof Date ? svDay_(r[11]) : String(r[11] || ""), seen: String(r[12] || "") }; });
+  const out = [], msgs = [];
+  rows.forEach(r => { const e = String(r.email).toLowerCase(), o = old[e], xp = Number(r.xp) || 0, newDay = !o || o.day !== today;
+    const xp0 = newDay ? xp : o.xp0;   /* XP at the start of the day, so the evening report can show "+N XP today" */
+    let seen = newDay ? "" : o.seen;
+    if (!o && !quiet) msgs.push("🆕 <b>Новая регистрация в Safiverse</b>\n👤 " + svWho_(r) + (r.age ? " · " + r.age + " лет" : "") + "\n🕐 " + svTm_(r.created));
+    if (svDay_(r.last) === today && seen !== "1") { seen = "1"; if (!quiet && o) msgs.push("📚 <b>" + svWho_(r) + "</b> зашёл(ла) заниматься в Safiverse — " + svTm_(r.last) + "\n⭐ " + xp + " XP · 🔥 " + (Number(r.streak) || 0) + " дн. подряд · 📘 уроков: " + (Number(r.lessons) || 0) + (r.unit ? "\n📍 " + r.unit : "")); }
+    out.push([e, r.name || "", r.user || "", r.age || "", r.created || "", r.last || "", xp, Number(r.streak) || 0, Number(r.lessons) || 0, r.unit || "", xp0, today, seen]); });
+  sh.getRange(2, 1, Math.max(sh.getLastRow() - 1, 1), SVH.length).clearContent(); if (out.length) sh.getRange(2, 1, out.length, SVH.length).setValues(out);
+  msgs.slice(0, 15).forEach(m => tg_("🪐 " + m)); if (msgs.length > 15) tg_("🪐 …и ещё " + (msgs.length - 15) + " — подробности в отчёте в 21:00");
+}
+function svReport_() {
+  svPoll(true); const v = svSheet_().getDataRange().getValues(); v.shift(); const rows = v.filter(r => r[0]), today = svDay_(new Date());
+  const came = rows.filter(r => svDay_(r[5]) === today), newT = rows.filter(r => svDay_(r[4]) === today);
+  const gain = r => Math.max(0, (Number(r[6]) || 0) - (Number(r[10]) || 0));
+  const worked = came.filter(r => gain(r) > 0).sort((a, b) => gain(b) - gain(a)), looked = came.filter(r => !gain(r));
+  const d = today.split("-"), M = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+  const who = r => String(r[1] || "—") + (r[2] ? " (@" + r[2] + ")" : "");
+  let m = "🪐 <b>Safiverse · отчёт за " + Number(d[2]) + " " + M[Number(d[1]) - 1] + "</b>\n\n👥 Всего учеников: " + rows.length + "\n🚪 Заходили сегодня: " + came.length + "\n✍️ Занимались (получили XP): " + worked.length + "\n🆕 Новых регистраций: " + newT.length + "\n";
+  if (worked.length) m += "\n🏆 <b>Кто занимался</b>\n" + worked.map((r, i) => (i + 1) + ". " + who(r) + " — +" + gain(r) + " XP · всего " + (Number(r[6]) || 0) + " · 🔥 " + (Number(r[7]) || 0) + " · уроков " + (Number(r[8]) || 0) + " · был(а) в " + svTm_(r[5]) + (r[9] ? "\n     📍 " + r[9] : "")).join("\n") + "\n";
+  if (looked.length) m += "\n👀 <b>Заходили" + (worked.length ? ", но XP не прибавилось" : "") + "</b>\n" + looked.map(r => "• " + who(r) + " — в " + svTm_(r[5]) + " · всего " + (Number(r[6]) || 0) + " XP · 🔥 " + (Number(r[7]) || 0) + " · уроков " + (Number(r[8]) || 0) + (r[9] ? " · " + r[9] : "")).join("\n") + "\n";
+  if (newT.length) m += "\n🆕 <b>Новые ученики</b>\n" + newT.map(r => "• " + who(r) + (r[3] ? ", " + r[3] + " лет" : "") + " — в " + svTm_(r[4])).join("\n") + "\n";
+  if (!came.length) m += "\nСегодня в Safiverse пока никто не заходил.";
+  return m.trim();
+}
+function svEvening() { const m = svReport_(); for (let i = 0; i < m.length; i += 3800) tg_(m.slice(i, i + 3800)); }
+function setupSafiverse() {
+  ScriptApp.getProjectTriggers().filter(t => ["svPoll", "svEvening"].indexOf(t.getHandlerFunction()) > -1).forEach(t => ScriptApp.deleteTrigger(t));
+  svPoll(true);
+  ScriptApp.newTrigger("svPoll").timeBased().everyMinutes(15).create();
+  ScriptApp.newTrigger("svEvening").timeBased().atHour(21).nearMinute(5).everyDays(1).inTimezone("Asia/Baku").create();
+  svEvening(); Logger.log("OK: Safiverse every 15 min + 21:00 report; today's report sent");
 }
