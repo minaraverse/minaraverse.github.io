@@ -2953,6 +2953,8 @@ html.adult .fl-paper,html.adult .fl-card{font-family:var(--bf)}html.adult .fl-pa
 @keyframes phDrift{from{transform:translate(-50%,-50%) scale(1.02)}to{transform:translate(-51.5%,-50.5%) scale(1.09)}}
 @media (prefers-reduced-motion:reduce){.gw-ph i{animation:none}}
 .gw-art{position:relative}
+/* Tape Club photo: calmer, less colourful */
+.gw-ph-tapes i{filter:saturate(.35) brightness(.78) contrast(.95) sepia(.18)}
 /* ===== Little Explorers: living scenes (kidsworld.js) ===== */
 .kw{position:absolute!important;inset:0;overflow:hidden;container-type:size;background:#17414b;-webkit-tap-highlight-color:transparent}
 .kw-st{position:absolute;left:50%;top:50%;width:max(100cqw,200cqh);aspect-ratio:2/1;transform:translate(-50%,-50%)}
