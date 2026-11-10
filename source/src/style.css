@@ -2953,3 +2953,78 @@ html.adult .fl-paper,html.adult .fl-card{font-family:var(--bf)}html.adult .fl-pa
 @keyframes phDrift{from{transform:translate(-50%,-50%) scale(1.02)}to{transform:translate(-51.5%,-50.5%) scale(1.09)}}
 @media (prefers-reduced-motion:reduce){.gw-ph i{animation:none}}
 .gw-art{position:relative}
+/* ===== Little Explorers: living scenes (kidsworld.js) ===== */
+.kw{position:absolute!important;inset:0;overflow:hidden;container-type:size;background:#17414b;-webkit-tap-highlight-color:transparent}
+.kw-st{position:absolute;left:50%;top:50%;width:max(100cqw,200cqh);aspect-ratio:2/1;transform:translate(-50%,-50%)}
+.kw-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.kw-kid{position:absolute;bottom:2.5%;height:52%;width:auto;max-width:none;filter:drop-shadow(0 12px 10px rgba(0,0,0,.35));cursor:pointer;user-select:none;-webkit-user-select:none}
+.kw-a{left:55%}.kw-m{left:70.5%}
+.kw-s6 .kw-a{left:58%}.kw-s6 .kw-m{left:73%}
+.kw .kw-t{cursor:pointer}
+.kw-svg g,.kw-svg circle,.kw-svg rect,.kw-svg path,.kw-svg text,.kw-svg ellipse{transform-box:fill-box;transform-origin:center}
+.kw-hint{position:absolute;top:10px;right:10px;z-index:4;background:rgba(255,253,245,.94);color:#1d2a30;font:800 12.5px/1.2 Nunito,system-ui,sans-serif;padding:7px 11px;border-radius:99px;box-shadow:0 6px 16px -6px rgba(0,0,0,.5);animation:kwHint 2.4s ease-in-out 3,kwHintOut .6s 7s forwards;pointer-events:none;max-width:70%}
+.kw-used .kw-hint,.mini-gw .kw-hint,.hx-art .kw-hint,.st-img .kw-hint{display:none}
+@keyframes kwHint{50%{transform:translateY(-3px)}}
+.gw-kids .gw-band::after,.gw-kids .gw-bt{pointer-events:none}
+.kw-bub{position:absolute;z-index:6;transform:translate(-50%,calc(-100% - 10px));background:#fffdf5;color:#17323a;border-radius:16px;padding:8px 13px;font:900 15px/1.25 Nunito,system-ui,sans-serif;text-align:center;box-shadow:0 10px 24px -8px rgba(0,0,0,.55);max-width:min(72%,320px);width:max-content;animation:kwBub .35s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+.kw-bub small{display:block;font-weight:700;font-size:13px;color:#4f6a72;margin-top:2px}
+.kw-bub::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#fffdf5}
+.kw-bub.down{transform:translate(-50%,10px)}.kw-bub.down::after{bottom:auto;top:-7px;border-top:0;border-bottom:8px solid #fffdf5}
+.kw-bub.talk{background:#ffd34d}.kw-bub.talk::after{border-top-color:#ffd34d}.kw-bub.talk.down::after{border-bottom-color:#ffd34d}.kw-bub.talk small{color:#5a4510}
+@keyframes kwBub{from{opacity:0;scale:.6}}
+.kw-pop{animation:kwPop .45s ease!important}
+img.kw-pop{transform-origin:50% 100%}
+@keyframes kwPop{40%{transform:scale(1.14)}}
+.kw-spin{animation:kwSpin 40s linear infinite}@keyframes kwSpin{to{transform:rotate(360deg)}}
+.kw-drift{animation:kwDrift 30s ease-in-out infinite alternate}@keyframes kwDrift{to{transform:translateX(80px)}}
+.kw-sway{transform-origin:50% 100%!important;animation:kwSway 3s ease-in-out infinite alternate}.kw-sway.slow{animation-duration:5s;animation-name:kwSway2}.kw-sway.awn{transform-origin:50% 0!important;animation:kwSway3 4s ease-in-out infinite alternate}
+@keyframes kwSway{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}@keyframes kwSway2{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}@keyframes kwSway3{from{transform:rotate(-.6deg)}to{transform:rotate(.6deg)}}
+.kw-tw{animation:kwTw 4s ease-in-out infinite}@keyframes kwTw{50%{opacity:.15;transform:scale(.5)}}
+.kw-bf{animation:kwBf1 14s ease-in-out infinite}.kw-bf.b2{animation-name:kwBf2;animation-duration:17s}
+@keyframes kwBf1{0%{transform:translate(120px,330px)}25%{transform:translate(300px,250px)}50%{transform:translate(420px,350px)}75%{transform:translate(240px,400px)}100%{transform:translate(120px,330px)}}
+@keyframes kwBf2{0%{transform:translate(420px,260px)}30%{transform:translate(200px,300px)}60%{transform:translate(80px,220px)}100%{transform:translate(420px,260px)}}
+.kw-wing{animation:kwWing .28s ease-in-out infinite alternate}@keyframes kwWing{to{transform:scaleX(.35)}}
+.kw-tail{transform-origin:0% 100%!important;animation:kwTail 1.6s ease-in-out infinite alternate}@keyframes kwTail{from{transform:rotate(-10deg)}to{transform:rotate(14deg)}}
+.kw-breath{transform-origin:50% 100%!important;animation:kwBreath 2.6s ease-in-out infinite}@keyframes kwBreath{50%{transform:scaleY(1.035)}}
+.kw-head{transform-origin:50% 100%!important;animation:kwHead 5s ease-in-out infinite}@keyframes kwHead{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+.kw-earL,.kw-earR{transform-origin:50% 100%!important;animation:kwEar 5s ease-in-out infinite}.kw-earR{animation-delay:-2.3s}@keyframes kwEar{88%,100%{transform:rotate(0)}92%{transform:rotate(-14deg)}96%{transform:rotate(6deg)}}
+.kw-eyes{animation:kwBlink 4.5s infinite}@keyframes kwBlink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+.kw-look{animation:kwLook 8s ease-in-out infinite}@keyframes kwLook{30%,45%{transform:translateX(4px)}65%,80%{transform:translateX(-4px)}}
+.kw-smoke{opacity:0;animation:kwSmoke 4s ease-out infinite}@keyframes kwSmoke{0%{opacity:.85;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(26px,-130px) scale(1.7)}}
+.kw-lamp{animation:kwLamp 3s ease-in-out infinite}@keyframes kwLamp{50%{opacity:.82}}
+.kw-bob{animation:kwBob 2.2s ease-in-out infinite}@keyframes kwBob{50%{transform:translateY(-7px)}}
+.kw-blinkled{animation:kwLed 1s steps(2) infinite}@keyframes kwLed{50%{opacity:.2}}
+.kw-wave{transform-origin:50% 0!important;animation:kwWave 1.2s ease-in-out infinite alternate}@keyframes kwWave{from{transform:rotate(10deg)}to{transform:rotate(-40deg)}}
+.kw-bounce{animation:kwBounce 1.1s infinite}@keyframes kwBounce{0%,100%{transform:translateY(0) scale(1.08,.9);animation-timing-function:ease-out}12%{transform:translateY(-6px) scale(1)}50%{transform:translateY(-95px);animation-timing-function:ease-in}}
+.kw-shad{animation:kwShad 1.1s infinite}@keyframes kwShad{50%{transform:scale(.5);opacity:.1}}
+.kw-roll{animation:kwRoll 4.5s ease-in-out infinite alternate}@keyframes kwRoll{to{transform:translateX(110px)}}
+.kw-zzz{opacity:0;animation:kwZzz 3s ease-out infinite}@keyframes kwZzz{20%{opacity:1}100%{opacity:0;transform:translate(40px,-90px)}}
+.kw-swingm{transform-origin:50% 0!important;animation:kwSwingm 2.6s ease-in-out infinite alternate}@keyframes kwSwingm{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+.kw-trunk{transform-origin:30% 0!important;animation:kwTrunk 2.4s ease-in-out infinite alternate}@keyframes kwTrunk{from{transform:rotate(-6deg)}to{transform:rotate(12deg)}}
+.kw-neck{transform-origin:0% 100%!important;animation:kwNeck 3.2s ease-in-out infinite}@keyframes kwNeck{50%{transform:rotate(-4deg)}}
+.kw-flap{animation:kwFlap .9s ease-in-out infinite alternate}@keyframes kwFlap{to{transform:rotate(5deg) translateY(-3px)}}
+.kw-chalk{opacity:0;animation:kwChalk 8s infinite}@keyframes kwChalk{0%{opacity:0;transform:scale(.6)}3%,80%{opacity:1;transform:scale(1)}88%,100%{opacity:0}}
+.kw-hand{transform-origin:50% 100%!important;animation:kwSpin 12s linear infinite}
+.kw-wob{animation:kwSway2 1.4s ease-in-out infinite alternate}
+.kw-rain{opacity:0;animation:kwRain 1.2s linear infinite}@keyframes kwRain{10%{opacity:1}100%{opacity:.2;transform:translate(-16px,240px)}}
+.kw-ripple{animation:kwRip 2s ease-out infinite}@keyframes kwRip{from{transform:scale(.3);opacity:1}to{transform:scale(2.4);opacity:0}}
+.kw-blow{animation:kwBlow 3s ease-in-out infinite alternate}@keyframes kwBlow{from{transform:rotate(-12deg) translate(-10px,6px)}to{transform:rotate(14deg) translate(14px,-12px)}}
+.kw-leaf{animation:kwLeaf 7s linear infinite}@keyframes kwLeaf{from{transform:translate(0,0) rotate(0)}to{transform:translate(1300px,var(--y,0)) rotate(720deg)}}
+.kw-float{animation:kwFloat 3.6s ease-in-out infinite}@keyframes kwFloat{50%{transform:translateY(-20px) rotate(3deg)}}
+.kw-flame{transform-origin:50% 100%!important;animation:kwFlame .32s ease-in-out infinite alternate}@keyframes kwFlame{to{transform:scale(.78,1.22)}}
+.kw-fall{animation:kwFall 5s linear infinite}@keyframes kwFall{to{transform:translateY(660px) rotate(540deg)}}
+.kw-glow{animation:kwLamp 2s ease-in-out infinite}
+/* Pixel buddy in chapters */
+.kw-buddy{position:fixed;left:10px;bottom:calc(14px + env(safe-area-inset-bottom));width:86px;height:86px;z-index:60;cursor:pointer;-webkit-tap-highlight-color:transparent;filter:drop-shadow(0 8px 12px rgba(0,0,0,.4))}
+.kw-buddy svg{width:100%;height:100%;display:block;overflow:visible}
+.kw-bwrap{transform-box:fill-box;transform-origin:50% 100%}
+.kw-buddy.yay .kw-bwrap{animation:kwJump .7s ease 2}.kw-buddy.sad .kw-bwrap{animation:kwShake .5s ease 2}
+@keyframes kwJump{40%{transform:translateY(-28px) scale(1.05,.95)}70%{transform:translateY(0) scale(1.08,.9)}}
+@keyframes kwShake{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.kw-bb{position:absolute;left:80px;bottom:40px;background:#ffd34d;color:#2a2205;border-radius:16px 16px 16px 4px;padding:8px 12px;font:900 15px/1.25 Nunito,system-ui,sans-serif;width:max-content;max-width:min(62vw,280px);box-shadow:0 10px 24px -8px rgba(0,0,0,.55);opacity:0;transform:scale(.6);transform-origin:0 100%;transition:.25s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+.kw-bb small{display:block;font-weight:700;font-size:13px;color:#5a4510;margin-top:2px}
+.kw-buddy.kw-on .kw-bb{opacity:1;transform:none}
+.gw-kids .gw-band{height:auto;background:#15323a}.gw-kids .gw-band::after{display:none}
+.gw-kids .gw-band .kw{position:relative!important;inset:auto;height:min(56vw,360px)}
+.gw-kids .gw-band .gw-bt{position:static;background:none;backdrop-filter:none;padding:12px 18px 16px}
+@keyframes kwHintOut{to{opacity:0;visibility:hidden}}
