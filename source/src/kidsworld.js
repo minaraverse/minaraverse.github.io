@@ -156,8 +156,7 @@ const OOPS = [["Oops! Try again!", "Ups! Yenə yoxla!", "Ой! Попробуй 
 const sceneIdx = () => { const m = location.hash.match(/^#kids-(\d+)/); const i = m ? +m[1] - 1 : -1; return SC[i] ? i : -1; };
 WART.kids = () => {
   const i = sceneIdx();
-  return `<div class="gw-svg kw kw-s${i + 1}" data-sc="${i}"><div class="kw-st"><svg class="kw-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${DEFS}${SC[i]()}</svg>
-    <img class="kw-kid kw-a kw-t" data-kid="a" src="img/kid-girl.webp" loading="lazy" alt="Aylin" draggable="false"><img class="kw-kid kw-m kw-t" data-kid="m" src="img/kid-boy.webp" loading="lazy" alt="Murad" draggable="false"></div>
+  return `<div class="gw-svg kw kw-s${i + 1}" data-sc="${i}"><div class="kw-st"><svg class="kw-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${DEFS}${SC[i]()}</svg></div>
     <span class="kw-hint">👆 ${L("kwTap")}</span></div>`;
 };
 
