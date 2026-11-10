@@ -1,7 +1,7 @@
 /* ===== HOME ===== */
 VIEWS.home = root => {
   const cards = [
-    { id: "tapes", art: () => `<div class="mini-gw">${WART.tapes()}</div>` },
+    { id: "tapes", art: () => `<div class="mini-shelf">${STORIES.tapes.units.map((u, i) => `<span style="--c:${u.spine};--d:${i * .18}s" class="${i === 3 ? "on" : ""}"><b style="color:${u.ink}">${esc(u.name)}</b></span>`).join("")}</div>` },
     { id: "voyage", art: () => `<div class="mini-sea"><div class="mini-ship"><img src="img/p-ship.webp" alt=""></div><svg class="mini-waves" viewBox="0 0 800 120" preserveAspectRatio="none"><path d="M0 40 Q50 20 100 40 T200 40 T300 40 T400 40 T500 40 T600 40 T700 40 T800 40 V120 H0Z" fill="#dcd7c7" stroke="#16130e" stroke-width="3"/><path d="M0 70 Q50 52 100 70 T200 70 T300 70 T400 70 T500 70 T600 70 T700 70 T800 70 V120 H0Z" fill="#e6e0cf" stroke="#16130e" stroke-width="3"/></svg></div>` },
     { id: "wild", art: () => `<div class="mini-wild"><span class="mw-photo" style="background-image:url(img/elephant-hero.jpg)"></span><div class="mw-title">WILD</div></div>` },
     { id: "mystery", art: () => `<div class="mini-myst"><img src="img/m-library.jpg" alt=""><i class="mm-light"></i><span class="mm-stamp">CASE № 7</span><b class="mm-t">THE SECRET OF ICHERISHEHER</b></div>` },

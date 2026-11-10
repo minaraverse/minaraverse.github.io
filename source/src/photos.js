@@ -5,4 +5,4 @@ function photoArt(k) {
   const i = PHOTO_KEYS.indexOf(k), x = (i % 4) / 3 * 100, y = Math.floor(i / 4) / 4 * 100;
   return `<div class="gw-svg gw-ph gw-ph-${k}" role="img" aria-label=""><i style="background-position:${x.toFixed(3)}% ${y.toFixed(3)}%"></i></div>`;
 }
-if (typeof WART !== "undefined") PHOTO_KEYS.forEach(k => { WART[k] = () => photoArt(k); });
+if (typeof WART !== "undefined") PHOTO_KEYS.filter(k => k !== "tapes").forEach(k => { WART[k] = () => photoArt(k); });  /* Tape Club keeps its original shelf art */
