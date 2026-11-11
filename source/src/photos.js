@@ -2,7 +2,8 @@
 const PHOTO_SPRITE = "https://d2ol7oe51mr4n9.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/ba91d37b-a85b-4759-8f90-7c3f10d72563.jpg";
 const PHOTO_KEYS = ["cafe", "kids", "firstweek", "tapes", "travel", "movie", "business", "debate", "ielts", "heist", "camp", "roommates", "trial", "podcast", "editor", "interview", "client", "call", "contract"];
 function photoArt(k) {
-  const i = PHOTO_KEYS.indexOf(k), x = (i % 4) / 3 * 100, y = Math.floor(i / 4) / 4 * 100;
-  return `<div class="gw-svg gw-ph gw-ph-${k}" role="img" aria-label=""><i style="background-position:${x.toFixed(3)}% ${y.toFixed(3)}%"></i></div>`;
+  const i = PHOTO_KEYS.indexOf(k), x = (i % 4) * 480, y = Math.floor(i / 4) * 360;
+  /* SVG "slice" = cover-fit that works in every browser (old iPhones too) */
+  return `<div class="gw-svg gw-ph gw-ph-${k}"><svg viewBox="${x} ${y} 480 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="${PHOTO_SPRITE}" xlink:href="${PHOTO_SPRITE}" x="0" y="0" width="1920" height="1800"/></svg></div>`;
 }
 if (typeof WART !== "undefined") PHOTO_KEYS.filter(k => k !== "tapes").forEach(k => { WART[k] = () => photoArt(k); });  /* Tape Club keeps its original shelf art */

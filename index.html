@@ -2954,13 +2954,13 @@ html.adult .fl-paper,html.adult .fl-card{font-family:var(--bf)}html.adult .fl-pa
 .sv-chk a{color:var(--gold);text-decoration:underline}
 .dm-card .ap-cta.dm-go{background:#ff6b81!important;background-image:none!important;border-bottom-color:#c24a5e!important;color:#fff!important;box-shadow:none!important}
 /* realistic story photos (sprite) */
-.gw-ph{position:absolute!important;inset:0;overflow:hidden;container-type:size;background:#1a1720}
-.gw-ph i{position:absolute;left:50%;top:50%;width:max(100cqw,133.34cqh);aspect-ratio:4/3;transform:translate(-50%,-50%);background-image:url(https://d2ol7oe51mr4n9.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/ba91d37b-a85b-4759-8f90-7c3f10d72563.jpg);background-size:400% 500%;background-repeat:no-repeat;animation:phDrift 18s ease-in-out infinite alternate}
-@keyframes phDrift{from{transform:translate(-50%,-50%) scale(1.02)}to{transform:translate(-51.5%,-50.5%) scale(1.09)}}
-@media (prefers-reduced-motion:reduce){.gw-ph i{animation:none}}
+.gw-ph{position:absolute!important;inset:0;overflow:hidden;background:#1a1720}
+.gw-ph svg{position:absolute;inset:0;width:100%;height:100%;display:block;animation:phDrift 18s ease-in-out infinite alternate;transform-origin:50% 50%}
+@keyframes phDrift{from{transform:scale(1.02)}to{transform:scale(1.09) translate(-1%,-.5%)}}
+@media (prefers-reduced-motion:reduce){.gw-ph svg{animation:none}}
 .gw-art{position:relative}
 /* Tape Club photo: calmer, less colourful */
-.gw-ph-tapes i{filter:saturate(.35) brightness(.78) contrast(.95) sepia(.18)}
+.gw-ph-tapes svg{filter:saturate(.35) brightness(.78) contrast(.95) sepia(.18)}
 /* ===== Little Explorers: living scenes (kidsworld.js) ===== */
 .kw{position:absolute!important;inset:0;overflow:hidden;container-type:size;background:#17414b;-webkit-tap-highlight-color:transparent}
 .kw-st{position:absolute;left:50%;top:50%;width:max(100cqw,200cqh);aspect-ratio:2/1;transform:translate(-50%,-50%)}
@@ -10110,8 +10110,9 @@ if (SAFI) { VIEWS.home = root => { Router.go("app-" + (lsGet("mv-goal", null) ? 
 const PHOTO_SPRITE = "https://d2ol7oe51mr4n9.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/ba91d37b-a85b-4759-8f90-7c3f10d72563.jpg";
 const PHOTO_KEYS = ["cafe", "kids", "firstweek", "tapes", "travel", "movie", "business", "debate", "ielts", "heist", "camp", "roommates", "trial", "podcast", "editor", "interview", "client", "call", "contract"];
 function photoArt(k) {
-  const i = PHOTO_KEYS.indexOf(k), x = (i % 4) / 3 * 100, y = Math.floor(i / 4) / 4 * 100;
-  return `<div class="gw-svg gw-ph gw-ph-${k}" role="img" aria-label=""><i style="background-position:${x.toFixed(3)}% ${y.toFixed(3)}%"></i></div>`;
+  const i = PHOTO_KEYS.indexOf(k), x = (i % 4) * 480, y = Math.floor(i / 4) * 360;
+  /* SVG "slice" = cover-fit that works in every browser (old iPhones too) */
+  return `<div class="gw-svg gw-ph gw-ph-${k}"><svg viewBox="${x} ${y} 480 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="${PHOTO_SPRITE}" xlink:href="${PHOTO_SPRITE}" x="0" y="0" width="1920" height="1800"/></svg></div>`;
 }
 if (typeof WART !== "undefined") PHOTO_KEYS.filter(k => k !== "tapes").forEach(k => { WART[k] = () => photoArt(k); });  /* Tape Club keeps its original shelf art */
 
