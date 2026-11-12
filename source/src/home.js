@@ -92,7 +92,7 @@ VIEWS.home = root => {
   <p class="h-next" aria-hidden="false"><span>${L("nx6")}</span><i>↓</i></p>
   ${leadHTML()}
   <section class="h-sharef"><div><p class="h-k">📤 ${L("shBtn")}</p><h2 class="h-h2">${L("shH")}</h2><p class="h-about-p">${L("shP")}</p></div>
-    <div class="h-shb"><button class="h-cta" data-siteshare>📤 ${L("shBtn")}</button><span class="h-shurl">minaraverse.github.io</span></div></section>
+    <div class="h-shb"><button class="h-cta" data-siteshare>📤 ${L("shBtn")}</button><span class="h-shurl">minaraverse.com</span></div></section>
   <footer class="h-foot"><p class="h-k">${L("follow")}</p><a class="h-big" href="${IG}" target="_blank" rel="noopener">${[..."@minaraverse"].map((ch, i) => `<span class="fl" style="--i:${i}">${ch}</span>`).join("")}<span class="h-arr" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></a>
     <div class="h-fbar"><span class="h-fmv" aria-hidden="true">M<i>V</i></span><p class="h-small">© ${new Date().getFullYear()} Minaraverse<br><span>English beyond the classroom</span></p><a class="h-adminbtn" href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Minaraverse giriş</a></div></footer>
   </div>`;

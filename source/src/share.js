@@ -2,7 +2,7 @@
 Object.assign(UI.en, { shBtn: "Share the site", shH: "Send Minaraverse to a friend", shP: "Learning English together is more fun. Send the link in one tap.", shTxt: "Minaraverse — learn English through stories and games 👇", shCopy: "Copy link", shCopied: "Link copied ✓", shMore: "More…", shWa: "WhatsApp", shTg: "Telegram" });
 Object.assign(UI.az, { shBtn: "Saytı paylaş", shH: "Minaraverse-i dostuna göndər", shP: "İngilis dilini birlikdə öyrənmək daha maraqlıdır. Linki bir toxunuşla göndər.", shTxt: "Minaraverse — ingilis dilini hekayələr və oyunlarla öyrən 👇", shCopy: "Linki kopyala", shCopied: "Link kopyalandı ✓", shMore: "Digər…", shWa: "WhatsApp", shTg: "Telegram" });
 Object.assign(UI.ru, { shBtn: "Поделиться сайтом", shH: "Отправь Minaraverse другу", shP: "Учить английский вместе интереснее. Отправь ссылку в одно касание.", shTxt: "Minaraverse — учи английский через истории и игры 👇", shCopy: "Скопировать ссылку", shCopied: "Ссылка скопирована ✓", shMore: "Ещё…", shWa: "WhatsApp", shTg: "Telegram" });
-const SITE_URL = "https://minaraverse.github.io";
+const SITE_URL = "https://minaraverse.com";
 function openShare() {
   document.querySelectorAll(".sh-ov").forEach(o => o.remove());
   const url = SITE_URL, txt = L("shTxt"), enc = encodeURIComponent;
