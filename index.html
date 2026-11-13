@@ -7620,7 +7620,7 @@ VIEWS.home = root => {
     { id: "movie", art: () => `<div class="mini-gw">${WART.movie()}<b class="mg-t mg-movie">NOW SHOWING</b></div>` },
     { id: "kids", art: () => `<div class="mini-gw">${WART.kids()}</div>` },
     ...["cafe", "firstweek", "roommates", "camp", "business", "debate", "ielts", "heist", "trial", "podcast", "editor"].filter(k => STORIES[k]).map(k => ({ id: k, art: () => `<div class="mini-gw">${WART[k]()}</div>` })),
-    { id: "travel", art: () => `<div class="mini-gw">${WART.travel()}</div>` }
+    { id: "travel", art: () => `<div class="mini-travel"><div class="mt-route">${ART.route()}</div><div class="mt-glass"><span class="mt-type"></span><i class="mt-btn">PLAN MY TRIP</i></div></div>` }
   ];
   const descs = { tapes: "tapesD", voyage: "voyageD", wild: "wildD", travel: "travelD", mystery: "mysteryD", movie: "movieD", kids: "kidsD", cafe: "cafeD", business: "businessD", debate: "debateD", ielts: "ieltsD", heist: "heistD", camp: "campD", firstweek: "firstweekD", roommates: "roommatesD", trial: "trialD", podcast: "podcastD", editor: "editorD" };
   const WORLDS = WORLD_ORDER, NCH = WORLDS.reduce((a, k) => a + STORIES[k].units.length, 0), NQ = WORLDS.reduce((a, k) => a + STORIES[k].units.reduce((b, u) => b + u.qs.length, 0), 0);
@@ -7694,7 +7694,7 @@ VIEWS.home = root => {
   <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
   <section class="h-exam" id="h-exam"><div class="h-sh h-sh-big"><div class="h-count biz"><b>${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).length}</b><span>${L("bizK")}</span></div><div><p class="h-k">💼 ${L("bizK")} · ${typeof SERIES !== "undefined" ? (SERIES.bluesail.name[LANG] || SERIES.bluesail.name.en) : ""}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
     <div class="hx-cases">${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
-      return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${WART[k]()}</span>
+      return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${k === "contract" ? `<span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span>` : WART[k]()}</span>
         <span class="hx-t"><small>${courseEmoji(k)} ${S.level} · ${n} ${{ en: "steps", az: "addım", ru: "шагов" }[LANG]}</small><b>${esc(S.title)}</b>${typeof epBadge === "function" ? epBadge(k) : ""}<span>${L(k + "D")}</span><span class="hx-bar"><i style="width:${d / n * 100}%"></i></span><em>${d === n ? "✓ " + L("complete") : d ? L("cont") + " · " + d + "/" + n : L("start")} →</em></span></a>`; }).join("")}</div>
     <div class="hx-cards hx-one"><a class="hx-card hx-err" href="#errors"><span class="hx-art" aria-hidden="true"><span class="hx-target"><i></i><i></i><i></i></span><span class="hx-words"><s>a elephant</s><b>an elephant</b></span></span>
       <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
@@ -10109,12 +10109,14 @@ if (SAFI) { VIEWS.home = root => { Router.go("app-" + (lsGet("mv-goal", null) ? 
 /* realistic cover photos (one sprite, 4x5 tiles of 480x360) replace the flat SVG art of these stories everywhere WART is used */
 const PHOTO_SPRITE = "https://d2ol7oe51mr4n9.cloudfront.net/user_3LU1bTNxf2Kpq8N85or2hRXYLmA/ba91d37b-a85b-4759-8f90-7c3f10d72563.jpg";
 const PHOTO_KEYS = ["cafe", "kids", "firstweek", "tapes", "travel", "movie", "business", "debate", "ielts", "heist", "camp", "roommates", "trial", "podcast", "editor", "interview", "client", "call", "contract"];
+/* only these keep the photo (owner's choice); all other stories use their original art */
+const PHOTO_KEEP = ["heist", "debate", "podcast"];
 function photoArt(k) {
   const i = PHOTO_KEYS.indexOf(k), x = (i % 4) * 480, y = Math.floor(i / 4) * 360;
   /* SVG "slice" = cover-fit that works in every browser (old iPhones too) */
   return `<div class="gw-svg gw-ph gw-ph-${k}"><svg viewBox="${x} ${y} 480 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="${PHOTO_SPRITE}" xlink:href="${PHOTO_SPRITE}" x="0" y="0" width="1920" height="1800"/></svg></div>`;
 }
-if (typeof WART !== "undefined") PHOTO_KEYS.filter(k => k !== "tapes").forEach(k => { WART[k] = () => photoArt(k); });  /* Tape Club keeps its original shelf art */
+if (typeof WART !== "undefined") PHOTO_KEYS.filter(k => PHOTO_KEEP.includes(k)).forEach(k => { WART[k] = () => photoArt(k); });  /* Tape Club keeps its original shelf art */
 
 /* ===== Little Explorers: living scenes =====
    Animated, tappable scene for every chapter (free, drawn in code) + live Aylin & Murad + Pixel the talking cat.

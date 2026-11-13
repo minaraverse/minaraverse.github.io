@@ -8,7 +8,7 @@ VIEWS.home = root => {
     { id: "movie", art: () => `<div class="mini-gw">${WART.movie()}<b class="mg-t mg-movie">NOW SHOWING</b></div>` },
     { id: "kids", art: () => `<div class="mini-gw">${WART.kids()}</div>` },
     ...["cafe", "firstweek", "roommates", "camp", "business", "debate", "ielts", "heist", "trial", "podcast", "editor"].filter(k => STORIES[k]).map(k => ({ id: k, art: () => `<div class="mini-gw">${WART[k]()}</div>` })),
-    { id: "travel", art: () => `<div class="mini-gw">${WART.travel()}</div>` }
+    { id: "travel", art: () => `<div class="mini-travel"><div class="mt-route">${ART.route()}</div><div class="mt-glass"><span class="mt-type"></span><i class="mt-btn">PLAN MY TRIP</i></div></div>` }
   ];
   const descs = { tapes: "tapesD", voyage: "voyageD", wild: "wildD", travel: "travelD", mystery: "mysteryD", movie: "movieD", kids: "kidsD", cafe: "cafeD", business: "businessD", debate: "debateD", ielts: "ieltsD", heist: "heistD", camp: "campD", firstweek: "firstweekD", roommates: "roommatesD", trial: "trialD", podcast: "podcastD", editor: "editorD" };
   const WORLDS = WORLD_ORDER, NCH = WORLDS.reduce((a, k) => a + STORIES[k].units.length, 0), NQ = WORLDS.reduce((a, k) => a + STORIES[k].units.reduce((b, u) => b + u.qs.length, 0), 0);
@@ -82,7 +82,7 @@ VIEWS.home = root => {
   <p class="h-next" aria-hidden="false"><span>${L("nx5")}</span><i>↓</i></p>
   <section class="h-exam" id="h-exam"><div class="h-sh h-sh-big"><div class="h-count biz"><b>${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).length}</b><span>${L("bizK")}</span></div><div><p class="h-k">💼 ${L("bizK")} · ${typeof SERIES !== "undefined" ? (SERIES.bluesail.name[LANG] || SERIES.bluesail.name.en) : ""}</p><h2 class="h-h2">${L("bizH")}</h2></div></div>
     <div class="hx-cases">${["interview", "client", "contract", "call", "business"].filter(k => STORIES[k]).map((k, i) => { const S = STORIES[k], n = S.units.length, d = doneCount(k);
-      return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${WART[k]()}</span>
+      return `<a class="hx-card hx-case ${k === "contract" ? "hx-biz" : ""}" href="#${k}" style="--i:${i}"><span class="hx-art">${k === "contract" ? `<span class="hx-doc"><i></i><i></i><i></i><i></i><b>MISSING</b></span><span class="hx-clock">17:00</span>` : WART[k]()}</span>
         <span class="hx-t"><small>${courseEmoji(k)} ${S.level} · ${n} ${{ en: "steps", az: "addım", ru: "шагов" }[LANG]}</small><b>${esc(S.title)}</b>${typeof epBadge === "function" ? epBadge(k) : ""}<span>${L(k + "D")}</span><span class="hx-bar"><i style="width:${d / n * 100}%"></i></span><em>${d === n ? "✓ " + L("complete") : d ? L("cont") + " · " + d + "/" + n : L("start")} →</em></span></a>`; }).join("")}</div>
     <div class="hx-cards hx-one"><a class="hx-card hx-err" href="#errors"><span class="hx-art" aria-hidden="true"><span class="hx-target"><i></i><i></i><i></i></span><span class="hx-words"><s>a elephant</s><b>an elephant</b></span></span>
       <span class="hx-t"><small>${STORIES.errors.units.length} ${{ en: "games", az: "oyun", ru: "игр" }[LANG]} · A1–C2</small><b>${esc(STORIES.errors.title)}</b><span>${L("errorsD")}</span><em>${L("exStart")} →</em></span></a></div></section>
