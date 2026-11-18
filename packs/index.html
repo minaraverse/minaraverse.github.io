@@ -37,7 +37,14 @@ details[open] .tag{background:var(--wine);color:#fff}
 .in li{font-size:15px;font-weight:500;padding:5px 0 5px 22px;position:relative;line-height:1.3}
 .in li:before{content:"✦";position:absolute;left:0;color:var(--gold);font-size:13px;top:6px}
 .in li small{display:block;font-size:13px;font-weight:400;color:var(--wine)}
-.res{margin-top:12px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:20px;color:var(--wine);line-height:1.2}
+.hl{font-family:"Tenor Sans",sans-serif;font-size:10.5px;letter-spacing:3px;color:var(--gold);margin-top:16px}
+.st{margin:8px 0 0;padding:0;list-style:none;counter-reset:s}
+.st li{counter-increment:s;position:relative;padding:7px 0 7px 38px;font-size:15px;line-height:1.3;font-weight:500}
+.st li:before{content:counter(s);position:absolute;left:0;top:6px;width:26px;height:26px;border-radius:50%;background:var(--wine);color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.st small{display:block;font-size:13px;font-weight:400;color:var(--wine)}
+.in ul{margin:8px 0 0}
+.in li b,.st li b{font-weight:600}
+.res{margin-top:14px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:20px;color:var(--wine);line-height:1.2}
 .btns{display:flex;gap:10px;margin-top:14px}
 .btns a{flex:1;text-align:center;text-decoration:none;font-weight:600;font-size:14.5px;padding:13px 8px;border-radius:999px}
 .wa{background:var(--wine);color:#fff}
@@ -63,10 +70,22 @@ details[open] .tag{background:var(--wine);color:#fff}
   <div class="n">14</div>
   <div class="t"><b>START</b><span>14 gün · 2 film</span><i>14 дней · 2 фильма</i></div>
   <div class="tag">Məlumat<br>Подробнее</div></summary>
-  <div class="in"><ul>
-    <li>2 film səhnə-səhnə<small>2 фильма по сценам</small></li>
-    <li>30 ifadə + 5 B1 keçid ifadəsi (izahlı)<small>30 фраз + 5 фраз-переходов на B1 с объяснением</small></li>
-    <li>Hər günə hazır plan və tapşırıq + mini test<small>Готовый план и задание на каждый день + мини-тест</small></li>
+  <div class="in"><div class="hl">HƏR GÜN NECƏ KEÇİR · КАК ПРОХОДИТ ДЕНЬ</div>
+  <ol class="st">
+    <li><b>Filmdən 1 səhnə</b><small>Одна сцена из фильма: коротко, о чём она</small></li>
+    <li><b>3 canlı ifadə</b> — tərcümə və nümunə ilə<small>3 живые фразы с переводом и примером</small></li>
+    <li><b>Ucadan tapşırıq</b> — ifadələri öz həyatına tətbiq edirsən<small>Задание вслух: применяешь фразы к своей жизни</small></li>
+    <li><b>Oyunla məşq</b> — Minaraverse hekayəsi və ya Safiverse dərsi<small>Практика в игре: история в Minaraverse или урок в Safiverse</small></li>
+  </ol>
+  <div class="hl">PAKETDƏ · В ПАКЕТЕ</div>
+  <ul>
+    <li><b>2 film səhnə-səhnə:</b> Paddington 2 və The Devil Wears Prada<small>2 фильма по сценам: «Паддингтон 2» и «Дьявол носит Prada»</small></li>
+    <li><b>30 ifadə</b> — hər gün 3 ifadə, 10 səhnə<small>30 фраз: по 3 в день, 10 сцен</small></li>
+    <li><b>5 B1 keçid ifadəsi</b> izahla: Although…, That's why…, As far as I know… və s.<small>5 фраз-переходов на B1 с объяснением, когда и зачем их говорить</small></li>
+    <li><b>Mövzular:</b> alış-veriş, üzr istəmək, təşəkkür, iş müsahibəsi, ofis, qərar vermək<small>Темы: покупки, извинения, благодарность, собеседование, офис, решения</small></li>
+    <li><b>2 test:</b> 7-ci gün mini test, 14-cü gün final test — nəticə dərhal görünür<small>2 теста: мини-тест на 7-й день и финальный на 14-й, результат сразу</small></li>
+    <li><b>14-cü gün:</b> öyrəndiyin ifadələrlə öz hekayəni danışırsan<small>На 14-й день рассказываешь свою историю выученными фразами</small></li>
+    <li>Hər şey əvvəlcədən hazırdır: bütün günlər birdən açılır, öz tempinlə keçirsən<small>Всё готово заранее: все дни открыты сразу, идёшь в своём темпе</small></li>
   </ul>
   <div class="res">14 günə danışıq baryerini aşmağa başlayırsan</div>
   <div class="btns"><a class="wa" target="_blank" rel="noopener" href="https://wa.me/994109996236?text=Salam!%20START%20(14%20g%C3%BCn)%20paketi%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m.">WhatsApp-da yaz</a><a class="dm" target="_blank" rel="noopener" href="https://ig.me/m/minaraverse">Direktə yaz</a></div>
@@ -77,11 +96,21 @@ details[open] .tag{background:var(--wine);color:#fff}
   <div class="n">21</div>
   <div class="t"><b>PRO</b><span>21 gün · 4 film · 10 idiom</span><i>21 день · 4 фильма · 10 идиом</i></div>
   <div class="tag">Məlumat<br>Подробнее</div></summary>
-  <div class="in"><ul>
-    <li>4 film səhnə-səhnə<small>4 фильма по сценам</small></li>
-    <li>60 ifadə + 10 B1 keçid ifadəsi (izahlı)<small>60 фраз + 10 фраз-переходов на B1 с объяснением</small></li>
-    <li>10 idiom<small>10 идиом</small></li>
-    <li>Hər günə hazır plan və tapşırıq + hər həftə test<small>Готовый план и задание на каждый день + тест каждую неделю</small></li>
+  <div class="in"><div class="hl">HƏR GÜN NECƏ KEÇİR · КАК ПРОХОДИТ ДЕНЬ</div>
+  <ol class="st">
+    <li><b>Filmdən 1 səhnə</b><small>Одна сцена из фильма: коротко, о чём она</small></li>
+    <li><b>3 canlı ifadə</b> — tərcümə və nümunə ilə<small>3 живые фразы с переводом и примером</small></li>
+    <li><b>Ucadan tapşırıq</b> — ifadələri öz həyatına tətbiq edirsən<small>Задание вслух: применяешь фразы к своей жизни</small></li>
+    <li><b>Oyunla məşq</b> — Minaraverse hekayəsi və ya Safiverse dərsi<small>Практика в игре: история в Minaraverse или урок в Safiverse</small></li>
+  </ol>
+  <div class="hl">PAKETDƏ · В ПАКЕТЕ</div>
+  <ul>
+    <li><b>4 film səhnə-səhnə</b> — 20 səhnə<small>4 фильма по сценам: 20 сцен</small></li>
+    <li><b>60 ifadə</b> — hər gün 3 ifadə, tərcümə və nümunə ilə<small>60 фраз: по 3 в день, с переводом и примером</small></li>
+    <li><b>10 B1 keçid ifadəsi</b> izahla<small>10 фраз-переходов на B1 с объяснением</small></li>
+    <li><b>10 idiom</b> — real situasiyada necə işlədilir<small>10 идиом: как их говорят в живой ситуации</small></li>
+    <li><b>Hər həftə test</b> — 3 test, nəticə dərhal görünür<small>Тест каждую неделю: 3 теста, результат сразу</small></li>
+    <li>Hər şey əvvəlcədən hazırdır: bütün günlər birdən açılır, öz tempinlə keçirsən<small>Всё готово заранее: все дни открыты сразу, идёшь в своём темпе</small></li>
   </ul>
   <div class="res">21 günə daha rahat danışmağa və başa düşməyə başlayırsan</div>
   <div class="btns"><a class="wa" target="_blank" rel="noopener" href="https://wa.me/994109996236?text=Salam!%20PRO%20(21%20g%C3%BCn)%20paketi%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m.">WhatsApp-da yaz</a><a class="dm" target="_blank" rel="noopener" href="https://ig.me/m/minaraverse">Direktə yaz</a></div>
@@ -92,11 +121,22 @@ details[open] .tag{background:var(--wine);color:#fff}
   <div class="n">28</div>
   <div class="t"><b>MAX</b><span>28 gün · 6 film · 20 idiom</span><i>28 дней · 6 фильмов · 20 идиом</i></div>
   <div class="tag">Məlumat<br>Подробнее</div></summary>
-  <div class="in"><ul>
-    <li>6 film səhnə-səhnə<small>6 фильмов по сценам</small></li>
-    <li>90 ifadə + 15 B1 keçid ifadəsi (izahlı)<small>90 фраз + 15 фраз-переходов на B1 с объяснением</small></li>
-    <li>20 idiom + mini detektiv oyunu<small>20 идиом + мини-детектив</small></li>
-    <li>Hər günə hazır plan və tapşırıq + final test<small>Готовый план и задание на каждый день + финальный тест</small></li>
+  <div class="in"><div class="hl">HƏR GÜN NECƏ KEÇİR · КАК ПРОХОДИТ ДЕНЬ</div>
+  <ol class="st">
+    <li><b>Filmdən 1 səhnə</b><small>Одна сцена из фильма: коротко, о чём она</small></li>
+    <li><b>3 canlı ifadə</b> — tərcümə və nümunə ilə<small>3 живые фразы с переводом и примером</small></li>
+    <li><b>Ucadan tapşırıq</b> — ifadələri öz həyatına tətbiq edirsən<small>Задание вслух: применяешь фразы к своей жизни</small></li>
+    <li><b>Oyunla məşq</b> — Minaraverse hekayəsi və ya Safiverse dərsi<small>Практика в игре: история в Minaraverse или урок в Safiverse</small></li>
+  </ol>
+  <div class="hl">PAKETDƏ · В ПАКЕТЕ</div>
+  <ul>
+    <li><b>6 film səhnə-səhnə</b> — 30 səhnə<small>6 фильмов по сценам: 30 сцен</small></li>
+    <li><b>90 ifadə</b> — hər gün 3 ifadə, tərcümə və nümunə ilə<small>90 фраз: по 3 в день, с переводом и примером</small></li>
+    <li><b>15 B1 keçid ifadəsi</b> izahla<small>15 фраз-переходов на B1 с объяснением</small></li>
+    <li><b>20 idiom</b> — real situasiyada necə işlədilir<small>20 идиом: как их говорят в живой ситуации</small></li>
+    <li><b>Mini detektiv oyunu</b> — ifadələrlə işi özün açırsan<small>Мини-детектив: раскрываешь дело с помощью фраз</small></li>
+    <li><b>Final test</b> — 28 günün yekunu<small>Финальный тест: итог 28 дней</small></li>
+    <li>Hər şey əvvəlcədən hazırdır: bütün günlər birdən açılır, öz tempinlə keçirsən<small>Всё готово заранее: все дни открыты сразу, идёшь в своём темпе</small></li>
   </ul>
   <div class="res">28 günə öz fikrini ingiliscə qurmağa başlayırsan</div>
   <div class="btns"><a class="wa" target="_blank" rel="noopener" href="https://wa.me/994109996236?text=Salam!%20MAX%20(28%20g%C3%BCn)%20paketi%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m.">WhatsApp-da yaz</a><a class="dm" target="_blank" rel="noopener" href="https://ig.me/m/minaraverse">Direktə yaz</a></div>
