@@ -4,7 +4,7 @@
  * If it is missing, the script owner's own Google email is used. Paste, save, Deploy → New deployment → Web app →
  * Execute as: Me, Who has access: Anyone → Deploy, and send the /exec link.
  * Sheets are created automatically: "Tələbələr" (students) and "Liqa" (weekly leagues).
- * Sign-up: a 6-digit code goes to the email once; the student also picks a username and a personal code (4–6 digits).
+ * Sign-up: a 6-digit code goes to the email once (and, if SV_TG_TOKEN is set, to Telegram from the "Safiverse" bot); the student also picks a username and a personal code (4–6 digits).
  * Later sign-in: username + personal code on any phone (email code stays as "forgot my code"). Only hashes are stored.
  */
 const P = PropertiesService.getScriptProperties();
@@ -39,15 +39,47 @@ function send_(p) {
   const k = "otp_" + hash_(email), old = JSON.parse(P.getProperty(k) || "{}");
   if (old.at && Date.now() - old.at < 60000) return { ok: false, err: "wait" };
   const code = String(Math.floor(100000 + Math.random() * 900000));
-  P.setProperty(k, JSON.stringify({ h: hash_(code), at: Date.now(), tries: 0 }));
+  const n = tgOn_() ? Utilities.getUuid().replace(/-/g, "").slice(0, 24) : "";
+  if (old.n) P.deleteProperty("tgc_" + old.n);
+  P.setProperty(k, JSON.stringify({ h: hash_(code), at: Date.now(), tries: 0, n: n }));
+  let tgSent = false;
+  if (n) { P.setProperty("tgc_" + n, JSON.stringify({ c: code, e: email, at: Date.now() }));
+    const chat = P.getProperty("tgu_" + hash_(email)); if (chat) tgSent = tgCode_(chat, code); }
   MailApp.sendEmail({ to: email, name: "Safiverse", subject: "Safiverse: " + code, body: "Your Safiverse code / Safiverse kodun / Твой код Safiverse: " + code + "\n\nValid for 10 minutes. 10 dəqiqə etibarlıdır. Действует 10 минут.\n\nIf you did not ask for it, ignore this email." });
-  return { ok: true };
+  return n ? { ok: true, tg: "https://t.me/" + tgBot_() + "?start=" + n, tgn: n, tgSent: tgSent } : { ok: true };
 }
+/* ---------- the same code in Telegram, from the "Safiverse" bot (never from a phone number) ----------
+   Setup once: in Telegram open @BotFather → /newbot → name "Safiverse" → copy the token →
+   Project Settings → Script properties → SV_TG_TOKEN = <token>. Without it, codes simply go by email only.
+   The app shows "Get the code in Telegram"; the student taps Start in the bot and the bot sends the code.
+   After that, the bot remembers this email's chat and sends every new code there by itself. */
+const TG_ = () => String(P.getProperty("SV_TG_TOKEN") || "").trim();
+const tgOn_ = () => !!TG_() && !!tgBot_();
+function tgApi_(m, body) { try { const r = UrlFetchApp.fetch("https://api.telegram.org/bot" + TG_() + "/" + m, { method: "post", contentType: "application/json", payload: JSON.stringify(body || {}), muteHttpExceptions: true });
+  return JSON.parse(r.getContentText()); } catch (e) { return { ok: false }; } }
+function tgBot_() { if (!TG_()) return ""; const c = P.getProperty("SV_TG_BOT"), ct = P.getProperty("SV_TG_BOT_T");
+  if (c && ct === TG_().slice(-8)) return c;
+  const r = tgApi_("getMe"); if (!r.ok || !r.result) return ""; P.setProperty("SV_TG_BOT", r.result.username); P.setProperty("SV_TG_BOT_T", TG_().slice(-8)); return r.result.username; }
+function tgCode_(chat, code) { const r = tgApi_("sendMessage", { chat_id: chat, parse_mode: "HTML",
+  text: "🌟 <b>Safiverse</b>\n\nKodun · Твой код · Your code:\n\n<code>" + code + "</code>\n\n⏱ 10 dəqiqə etibarlıdır · Действует 10 минут · Valid for 10 minutes.\nBu kodu heç kimə vermə · Никому не сообщай · Don't share it." });
+  return !!(r && r.ok); }
+const TG_HELP = "🌟 <b>Safiverse</b>\n\nBu bot yalnız Safiverse kodlarını göndərir. Tətbiqdə «Kodu Telegram-da al» düyməsinə bas.\nЭтот бот только присылает коды Safiverse. Нажми в приложении «Получить код в Telegram».\nThis bot only sends Safiverse codes. Tap \"Get the code in Telegram\" in the app.";
+/* reads new messages to the bot (no webhook needed); called while the app waits on the code screen */
+function tgPoll_() { if (!TG_()) return; const lock = LockService.getScriptLock(); if (!lock.tryLock(4000)) return;
+  try { const off = Number(P.getProperty("SV_TG_OFF") || 0), r = tgApi_("getUpdates", { offset: off, timeout: 0, allowed_updates: ["message"] });
+    if (!r.ok || !r.result) return;
+    r.result.forEach(u => { P.setProperty("SV_TG_OFF", String(u.update_id + 1)); const m = u.message; if (!m || !m.chat || m.chat.type !== "private") return;
+      const t = String(m.text || ""), mm = t.match(/^\/start\s+([a-f0-9]{24})$/), x = mm ? JSON.parse(P.getProperty("tgc_" + mm[1]) || "null") : null;
+      if (x && Date.now() - x.at < 600000) { P.setProperty("tgu_" + hash_(x.e), String(m.chat.id)); if (tgCode_(m.chat.id, x.c)) P.setProperty("tgd_" + mm[1], "1"); return; }
+      tgApi_("sendMessage", { chat_id: m.chat.id, parse_mode: "HTML", text: mm ? "⏱ Bu kodun vaxtı keçib — tətbiqdə yenidən «Kodu Telegram-da al» bas.\nКод устарел — нажми кнопку в приложении ещё раз.\nThis code has expired — tap the button in the app again." : TG_HELP }); });
+  } finally { lock.releaseLock(); } }
+function tgWait_(p) { const n = String(p.n || ""); if (!/^[a-f0-9]{24}$/.test(n)) return { ok: false };
+  if (!P.getProperty("tgd_" + n)) tgPoll_(); return { ok: true, got: !!P.getProperty("tgd_" + n) }; }
 function verify_(p) {
   const email = String(p.email || "").trim().toLowerCase(), k = "otp_" + hash_(email), o = JSON.parse(P.getProperty(k) || "{}");
   if (!o.h || Date.now() - o.at > 600000 || o.tries >= 5) return { ok: false, err: "expired" };
   if (hash_(String(p.code || "")) !== o.h) { o.tries++; P.setProperty(k, JSON.stringify(o)); return { ok: false, err: "code" }; }
-  P.deleteProperty(k);
+  P.deleteProperty(k); if (o.n) { P.deleteProperty("tgc_" + o.n); P.deleteProperty("tgd_" + o.n); }
   const sh = students_(), f = find_(sh, email), token = Utilities.getUuid().replace(/-/g, "") + Utilities.getUuid().replace(/-/g, "");
   const user = normUser(p.user), withCred = okUser(user) && okPin(p.pin), other = withCred ? findUser_(sh, user) : null;
   if (f && stOf_(f.v) === "blocked") return { ok: false, err: "blocked" };
@@ -480,6 +512,7 @@ function delMe_(p) {
   purge(repSh_(), r => (user && String(r[2]).toLowerCase() === user) || String(r[2]).toLowerCase() === email);
   purge(lgSheet_(), r => r[0] === lgId);
   ["Dostlar", "Duellər", "Hədiyyələr", "Lent"].forEach(n => purge(ss_().getSheetByName(n), mine));
+  P.deleteProperty("tgu_" + hash_(email));
   const sh = students_(), f = find_(sh, email); if (f) sh.deleteRow(f.row);
   return { ok: true };
 }
@@ -489,6 +522,7 @@ function handle_(p) {
   try {
     if (p.a === "send") return send_(p);
     if (p.a === "verify") return verify_(p);
+    if (p.a === "tg_wait") return tgWait_(p);
     if (p.a === "login") return login_(p);
     if (p.a === "st") return st_(p);
     if (p.a === "ucheck") return ucheck_(p);
