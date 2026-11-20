@@ -18,7 +18,7 @@ fonts = ("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@
          "&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IM+Fell+English:ital@0;1&family=Special+Elite&family=Great+Vibes&family=Nunito:wght@500;600;700;800;900&family=Condiment&display=swap")
 def page(js, css=css):
   return f"""<title>Minaraverse 2.0</title>
-<meta name="description" content="Minaraverse: English through stories. Five story worlds, a daily word, a level test and DİM exam practice. EN · AZ · RU.">
+<meta name="description" content="Minaraverse: English through stories. 22 story worlds from A1 to C2, Business English, IELTS, an Escape Room, Mistake Hunters, a daily word and a level test. EN · AZ · RU.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{fonts}" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="{fonts}"></noscript>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -42,7 +42,7 @@ print(len(html))
 import shutil
 D = R / "dist"; (D / "img").mkdir(parents=True, exist_ok=True)
 (D / "index.html").write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
-  '<meta property="og:title" content="Minaraverse — English through stories"><meta property="og:description" content="Five story worlds, a daily word, a level test and DİM exam practice. EN · AZ · RU.">'
+  '<meta property="og:title" content="Minaraverse — English through stories"><meta property="og:description" content="22 story worlds from A1 to C2, Business English, IELTS, an Escape Room, Mistake Hunters, a daily word and a level test. EN · AZ · RU.">'
   '<link rel="icon" href="favicon.png">'
   '<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#17161B"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Minaraverse"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">'
   '<script>/* move to minaraverse.com and carry the saved progress along */(function(){var H="minaraverse.com",ON=true;try{if(location.hostname==="minaraverse.github.io"&&ON){var d={},n=0;for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k){d[k]=localStorage.getItem(k);n++}}var p=n?btoa(unescape(encodeURIComponent(JSON.stringify(d)))):"";location.replace("https://"+H+location.pathname+location.search+(p?"#carry="+p+"~"+location.hash.slice(1):location.hash));document.documentElement.style.display="none"}else if(location.hash.indexOf("#carry=")===0){var s=location.hash.slice(7),j=s.indexOf("~"),b=j<0?s:s.slice(0,j),r=j<0?"":s.slice(j+1),o=JSON.parse(decodeURIComponent(escape(atob(b))));for(var q in o)if(localStorage.getItem(q)===null)localStorage.setItem(q,o[q]);history.replaceState(null,"",location.pathname+location.search+(r?"#"+r:""))}}catch(e){}})()</script>'
@@ -67,7 +67,7 @@ try:
 except Exception as e:
     print("safiverse: NOT minified", e)
 sv_html = _re.sub(r'''(["'(`])img/''', r'\1../img/', page(js_sv, css_sv)).replace("<title>Minaraverse 2.0</title>", "<title>Safiverse</title>")
-sv_html = sv_html.replace('<meta name="description" content="Minaraverse: English through stories. Five story worlds, a daily word, a level test and DİM exam practice. EN · AZ · RU.">',
+sv_html = sv_html.replace('<meta name="description" content="Minaraverse: English through stories. 22 story worlds from A1 to C2, Business English, IELTS, an Escape Room, Mistake Hunters, a daily word and a level test. EN · AZ · RU.">',
   '<meta name="description" content="Safiverse: learn English step by step — short lessons, sounds, stars, quests and leagues. EN · AZ · RU.">')
 (S / "index.html").write_text('<!doctype html><html lang="en" class="ap-mode"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
   '<meta property="og:title" content="Safiverse — English step by step"><link rel="icon" href="favicon.png">'
