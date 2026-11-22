@@ -13,3 +13,6 @@ document.addEventListener("click", e => {
   if (t.closest("[data-world], [data-so-duel], [data-so-play], [data-so-gift], [data-so-gt], [data-so-cheer], .so-opt, .dr-node, [data-kid], [data-racer], [data-chest]")) return; /* have their own sounds */
   if (t.closest(".ap-item, .ap-flag, .dr-course, .ap-course, [data-go], [data-cert], [data-share], [data-copy], [data-so-goal], .sv-new-b, .sv-guest-b, .sv-main-b")) sfx("open");
 }, true);
+
+/* app hidden (screen locked, another app) → the audio engine pauses; back → it wakes, with nothing waiting in a queue */
+document.addEventListener("visibilitychange", () => { try { if (typeof SAC === "undefined" || !SAC) return; if (document.hidden) SAC.suspend(); else SAC.resume(); } catch (e) {} });

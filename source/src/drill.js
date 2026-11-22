@@ -121,10 +121,16 @@ function setHearts(n) { const h = lsGet("mv-hearts", { n: HMAX, t: Date.now() })
 
 /* ---------- sounds (WebAudio synth, playful feel, no files) ---------- */
 let SAC = null;
+/* sounds never pile up: while the phone's audio engine is asleep (screen locked, app in background, iPhone silent start)
+   nothing is queued — otherwise every tap made meanwhile would play at once later, like a stuck clicker.
+   The same sound never repeats faster than every 60 ms. */
+let SFX_LAST = { k: "", t: 0 };
 function sfx(kind) {
-  if (!soundOn()) return;
-  try { SAC = SAC || new (window.AudioContext || window.webkitAudioContext)(); if (SAC.state === "suspended") SAC.resume(); } catch (e) { return; }
-  const ac = SAC, t0 = ac.currentTime + .01, out = ac.createGain(); out.gain.value = adultOn() ? .4 : .9; out.connect(ac.destination);
+  if (!soundOn() || document.hidden) return;
+  try { SAC = SAC || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+  if (SAC.state !== "running") { try { const r = SAC.resume(); if (r && r.catch) r.catch(() => {}); } catch (e) {} return; }
+  const now = performance.now(); if (SFX_LAST.k === kind && now - SFX_LAST.t < 60) return; SFX_LAST = { k: kind, t: now };
+  const ac = SAC, t0 = ac.currentTime + .01, out = ac.createGain(); out.gain.value = adultOn() ? .4 : .9; out.connect(ac.destination); setTimeout(() => { try { out.disconnect(); } catch (e) {} }, 3500);
   const tone = (f, at, dur, { type = "sine", vol = .14, to = null, attack = .006, lp = 0 } = {}) => {
     const o = ac.createOscillator(), g = ac.createGain(); o.type = type; o.frequency.setValueAtTime(f, t0 + at);
     if (to) o.frequency.exponentialRampToValueAtTime(to, t0 + at + dur * .9);
