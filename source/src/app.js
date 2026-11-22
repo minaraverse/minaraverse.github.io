@@ -196,8 +196,8 @@ function mascot(say, k) {
 
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 /* ---------- Milingo opens only from its button: the home-screen app always starts on Minaraverse ---------- */
-if (!SAFI && STANDALONE && /^#(app|lesson|drill|goal|talk|tell|fleet)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
-addEventListener("hashchange", () => { if (!/^#(app|lesson|drill|goal|talk|tell|fleet)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
+if (!SAFI && STANDALONE && /^#(app|lesson|drill|goal|talk|tell|fleet|place)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+addEventListener("hashchange", () => { if (!/^#(app|lesson|drill|goal|talk|tell|fleet|place)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
 
 /* Safiverse: the app itself is the home page */
 if (SAFI) { VIEWS.home = root => { Router.go("app-" + (lsGet("mv-goal", null) ? "learn" : "goal")); return {}; };

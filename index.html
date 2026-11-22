@@ -3086,6 +3086,24 @@ img.kw-pop{transform-origin:50% 100%}
 .dr-golv{display:inline-flex;margin-top:10px;padding:9px 16px;border-radius:999px;border:0;background:var(--acc,#FFC94D);color:#1b1530;font:800 14px var(--bf,inherit);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.25)}
 .dr-pop .dr-pgo2{margin-top:6px;background:transparent;border:2px solid currentColor}
 .dr-pop button.dr-pgo{border:0;cursor:pointer;font:inherit;width:100%}
+/* ===== find my level ===== */
+.pl-main{max-width:560px;margin:0 auto}
+.pl-card{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:10px 4px}
+.pl-ic{font-size:64px}.pl-lvls{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.pl-lvls span{padding:6px 12px;border-radius:999px;border:2px solid var(--line);font:800 14px var(--bf,inherit)}
+.pl-top{display:flex;align-items:center;gap:10px;margin:6px 0 18px}.pl-top small{font:700 13px var(--bf,inherit);opacity:.75}
+.pl-lv{flex:none;padding:6px 12px;border-radius:12px;background:var(--acc,#FFC94D);color:#1b1530;font:900 15px var(--bf,inherit)}
+.pl-bar{flex:1;display:flex;gap:4px}.pl-bar i{flex:1;height:8px;border-radius:99px;background:var(--line)}.pl-bar i.ok{background:#6fcf8e}.pl-bar i.on{background:var(--acc,#FFC94D)}
+.pl-q{padding:18px;border-radius:20px;border:2px solid var(--line);background:var(--card);margin-bottom:16px}.pl-q p{margin:0;font:600 20px/1.5 "Bricolage Grotesque",var(--bf,sans-serif)}
+.pl-opts{display:flex;flex-direction:column;gap:10px}
+.pl-o{padding:14px 16px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:inherit;font:700 16px var(--bf,inherit);text-align:left;cursor:pointer}
+.pl-o.picked{border-color:var(--acc,#FFC94D);background:rgba(255,201,77,.14)}.pl-dk{opacity:.8;border-style:dashed}
+.pl-big{font:900 72px/1 var(--bf,inherit);color:var(--acc,#FFC94D);text-shadow:0 6px 30px rgba(255,201,77,.35)}.pl-name{margin:0;font:800 18px var(--bf,inherit)}
+.pl-note{margin-top:8px;font:600 13px/1.45 var(--bf,inherit);opacity:.75}
+.pl-pick{display:flex;flex-direction:column;gap:10px;margin:12px 0 6px}
+.pl-big-b{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;border:2px solid var(--line);background:var(--card2,var(--card));color:inherit;text-align:left;text-decoration:none;cursor:pointer;font:inherit}
+.pl-big-b.main{border-color:var(--acc,#FFC94D);box-shadow:0 0 0 4px rgba(255,201,77,.12)}
+.pl-big-b>span:first-child{font-size:30px}.pl-big-b b{display:block;font:800 16px var(--bf,inherit)}.pl-big-b small{font:600 13px var(--bf,inherit);opacity:.8}
+.pl-know{margin:10px 2px 6px;font:800 13px var(--bf,inherit);opacity:.75;text-transform:uppercase;letter-spacing:.04em}
 
 </style>
 <div id="view"></div>
@@ -10100,8 +10118,8 @@ function mascot(say, k) {
 
 const STANDALONE = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 /* ---------- Milingo opens only from its button: the home-screen app always starts on Minaraverse ---------- */
-if (!SAFI && STANDALONE && /^#(app|lesson|drill|goal|talk|tell|fleet)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
-addEventListener("hashchange", () => { if (!/^#(app|lesson|drill|goal|talk|tell|fleet)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
+if (!SAFI && STANDALONE && /^#(app|lesson|drill|goal|talk|tell|fleet|place)/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+addEventListener("hashchange", () => { if (!/^#(app|lesson|drill|goal|talk|tell|fleet|place)/.test(location.hash)) document.documentElement.classList.remove("ap-mode"); });
 
 /* Safiverse: the app itself is the home page */
 if (SAFI) { VIEWS.home = root => { Router.go("app-" + (lsGet("mv-goal", null) ? "learn" : "goal")); return {}; };
@@ -15767,12 +15785,15 @@ const lvT3 = o => o[LANG] || o.en;
 function levelSheet(after) {
   if (document.querySelector(".lv-sheet")) return; const cur = myLevel();
   const sh = document.createElement("div"); sh.className = "inv-sheet lv-sheet";
-  sh.innerHTML = `<div class="inv-card lv-card" role="dialog" aria-modal="true"><h2>${L("lvT")}</h2><p>${L("lvP")}</p><div class="lv-list">${LV_LIST.map(([k, e, n, d]) =>
+  sh.innerHTML = `<div class="inv-card lv-card" role="dialog" aria-modal="true"><h2>${L("lvT")}</h2><p>${L("lvP")}</p>${typeof VIEWS.place === "function" ? `<div class="pl-pick">
+    <button class="pl-big-b" data-lvzero><span>🌱</span><span><b>${L("plScratch")}</b><small>${L("plScratchS")}</small></span></button>
+    <a class="pl-big-b main" href="#place" data-lvplace><span>🧭</span><span><b>${L("plFind")}</b><small>${L("plFindS")}</small></span></a></div><p class="pl-know">${L("plKnow")}</p>` : ""}<div class="lv-list">${LV_LIST.map(([k, e, n, d]) =>
     `<button class="lv-it ${cur === k ? "on" : ""}" data-lv="${k}" aria-pressed="${cur === k}"><span class="lv-e">${e}</span><span class="lv-tx"><b>${k} · ${lvT3(n)}</b><small>${lvT3(d)}</small></span>${cur === k ? "<i>✓</i>" : ""}</button>`).join("")}</div>
-    <a class="lv-test" href="#level" data-lvtest>❓ ${L("lvTest")}</a></div>`;
+    ${typeof VIEWS.place === "function" ? "" : `<a class="lv-test" href="#level" data-lvtest>❓ ${L("lvTest")}</a>`}</div>`;
   document.body.appendChild(sh);
   sh.onclick = e => { if (e.target === sh) { sh.remove(); if (after) after(); return; }
-    if (e.target.closest("[data-lvtest]")) { sh.remove(); return; }
+    if (e.target.closest("[data-lvtest], [data-lvplace]")) { sh.remove(); return; }
+    if (e.target.closest("[data-lvzero]")) { const o = lsGet("mv-level", null) || {}; lsSet("mv-level", Object.assign({}, o, { lvl: "A1", src: "zero", at: Date.now() })); sh.remove(); sfx("unlock"); if (typeof pushSync === "function") pushSync(); if (after) after(); else { Router.go("app-learn"); Router.remount(); } return; }
     const b = e.target.closest("[data-lv]"); if (!b) return; const old = lsGet("mv-level", null) || {};
     lsSet("mv-level", Object.assign({}, old, { lvl: b.dataset.lv, src: "pick", at: Date.now() })); sfx("unlock"); toast("🎯 " + L("lvSet") + ": " + b.dataset.lv, "gold"); sh.remove();
     if (typeof pushSync === "function") pushSync(); if (after) after(); else { Router.go("app-learn"); Router.remount(); } };
@@ -15782,6 +15803,42 @@ const levelItem = () => { const l = myLevel(), it = LV_LIST.find(x => x[0] === l
 /* level chip on the course card: its own button inside the card */
 const levelChip = () => { const l = myLevel(); return `<span class="dr-lv ${l ? "" : "none"}" data-lvpick role="button" tabindex="0" aria-label="${L("lvMine")}: ${l || "—"}"><small>${L("lvShort")}</small><b>🎯 ${l || L("lvPick")} ▾</b></span>`; };
 document.addEventListener("click", e => { if (!e.target.closest("[data-lvpick]")) return; e.preventDefault(); e.stopPropagation(); if (typeof sfx === "function") sfx("open"); levelSheet(); }, true);
+
+/* ===== "Find my level": a short adaptive placement test inside the app (Duolingo-style) =====
+   Starts easy; 3 questions per level, 2 right → the next level, otherwise it stops. "I don't know" is allowed (no guessing).
+   Result → "Start from B1" (or one level lower). Uses the 30 graded questions in LEVELQ (option 0 is the right one). */
+Object.assign(UI.en, { plT: "Find my level", plP: "3–5 minutes. Questions get harder while you answer correctly.", plGo: "Start", plDk: "I don't know", plQ: "Question", plRes: "Your level", plStart: "Start from {l}", plLower: "Start a bit easier: {l}",
+  plAgain: "Take the test again", plScratch: "I'm starting from zero", plScratchS: "Start with the very first words", plFind: "Find my level", plFindS: "A short test, 3–5 minutes", plKnow: "I know my level:", plNote: "This is a quick check. You can always jump ahead on the map with a short test." });
+Object.assign(UI.az, { plT: "Səviyyəmi tap", plP: "3–5 dəqiqə. Düz cavab verdikcə suallar çətinləşir.", plGo: "Başla", plDk: "Bilmirəm", plQ: "Sual", plRes: "Sənin səviyyən", plStart: "{l} səviyyəsindən başla", plLower: "Bir az asandan başla: {l}",
+  plAgain: "Testi yenidən keç", plScratch: "Sıfırdan başlayıram", plScratchS: "Ən ilk sözlərdən başla", plFind: "Səviyyəmi tap", plFindS: "Qısa test, 3–5 dəqiqə", plKnow: "Səviyyəmi bilirəm:", plNote: "Bu, qısa yoxlamadır. Xəritədə qısa testlə həmişə irəli keçə bilərsən." });
+Object.assign(UI.ru, { plT: "Найти мой уровень", plP: "3–5 минут. Пока отвечаешь правильно, вопросы становятся сложнее.", plGo: "Начать", plDk: "Не знаю", plQ: "Вопрос", plRes: "Твой уровень", plStart: "Начать с {l}", plLower: "Начать чуть проще: {l}",
+  plAgain: "Пройти тест ещё раз", plScratch: "Начинаю с нуля", plScratchS: "С самых первых слов", plFind: "Найти мой уровень", plFindS: "Короткий тест, 3–5 минут", plKnow: "Я знаю свой уровень:", plNote: "Это быстрая проверка. На карте всегда можно перепрыгнуть вперёд через короткий тест." });
+
+function placeSet(lvl) { const old = lsGet("mv-level", null) || {}; lsSet("mv-level", Object.assign({}, old, { lvl, src: "place", at: Date.now() }));
+  if (!lsGet("mv-onb", null)) lsSet("mv-onb", 1); if (typeof pushSync === "function") pushSync(); sfx("unlock"); Router.go("app-learn"); Router.remount(); }
+VIEWS.place = root => {
+  document.documentElement.classList.add("ap-mode");
+  const LV = ["A1", "A2", "B1", "B2", "C1", "C2"], bank = l => shuffle(LEVELQ.filter(q => q[0] === l)).slice(0, 3);
+  const st = { li: 0, qs: bank("A1"), k: 0, ok: 0, passed: -1, n: 0, lock: false };
+  const shell = inner => { root.innerHTML = `<div class="ap pl"><div class="ap-hud slim">${apBack()}${brandHTML()}</div><main class="ap-main pl-main">${inner}</main></div>`; };
+  const intro = () => { shell(`<div class="pl-card"><div class="pl-ic">🧭</div><h1 class="ap-h">${L("plT")}</h1><p class="ap-p">${L("plP")}</p><div class="pl-lvls">${LV.map(l => `<span>${l}</span>`).join("")}</div>
+    <button class="ap-cta" data-go>${L("plGo")} →</button></div>`); root.querySelector("[data-go]").onclick = () => { sfx("tap"); q(); }; };
+  const q = () => { const [lv, text, opts] = st.qs[st.k], order = shuffle([0, 1, 2, 3]); st.lock = false;
+    shell(`<div class="pl-top"><span class="pl-lv">${lv}</span><div class="pl-bar">${LV.map((l, i) => `<i class="${i < st.li ? "ok" : i === st.li ? "on" : ""}"></i>`).join("")}</div><small>${L("plQ")} ${st.n + 1}</small></div>
+      <div class="pl-q"><p>${esc(text).replace(/_{2,}/, `<i class="dx-gap">&nbsp;</i>`)}</p></div>
+      <div class="pl-opts">${order.map(i => `<button class="pl-o" data-o="${i}">${esc(opts[i])}</button>`).join("")}<button class="pl-o pl-dk" data-o="-1">🤷 ${L("plDk")}</button></div>`);
+    root.querySelector(".pl-opts").onclick = e => { const b = e.target.closest("[data-o]"); if (!b || st.lock) return; st.lock = true; const right = +b.dataset.o === 0;
+      sfx(right ? "tap" : "miss"); b.classList.add("picked"); st.n++; if (right) st.ok++; st.k++;
+      setTimeout(() => { if (st.k < st.qs.length) return q();
+        if (st.ok >= 2) { st.passed = st.li; st.li++; } else return result();
+        if (st.li >= LV.length) return result(); st.qs = bank(LV[st.li]); st.k = 0; st.ok = 0; q(); }, 260); }; };
+  const result = () => { const lvl = LV[Math.max(0, st.passed)], low = LV[Math.max(0, LV.indexOf(lvl) - 1)], it = typeof LV_LIST !== "undefined" ? LV_LIST.find(x => x[0] === lvl) : null;
+    sfx("win"); shell(`<div class="pl-card res"><small class="ap-p">${L("plRes")}</small><div class="pl-big">${lvl}</div>${it ? `<p class="pl-name">${it[1]} ${esc(lvT3(it[2]))}</p><p class="ap-p">${esc(lvT3(it[3]))}</p>` : ""}
+      <button class="ap-cta" data-set="${lvl}">🚀 ${L("plStart").replace("{l}", lvl)}</button>${low !== lvl ? `<button class="dr-link" data-set="${low}">${L("plLower").replace("{l}", low)}</button>` : ""}
+      <button class="dr-link" data-again>↺ ${L("plAgain")}</button><p class="pl-note">💡 ${L("plNote")}</p></div>`);
+    root.onclick = e => { const s = e.target.closest("[data-set]"); if (s) return placeSet(s.dataset.set); if (e.target.closest("[data-again]")) { Object.assign(st, { li: 0, qs: bank("A1"), k: 0, ok: 0, passed: -1, n: 0 }); q(); } }; };
+  intro(); return {};
+};
 
 /* ===== League: teacher card on top (not ranked) + "Beat the teacher's target" weekly challenge ===== */
 Object.assign(UI.en, { tcK: "Teacher", tcGoal: n => `Teacher's target this week: ${n} XP`, tcBeat: "Beat it and get a ⭐ badge!", tcDone: "⭐ You beat the teacher's target!", tcLeft: n => `${n} XP to go`, tcMe: "Your students see this card. Set the target in Admin.", tcGot: "⭐ You beat the teacher's target this week!", tcBadge: "Beat the teacher" });

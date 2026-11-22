@@ -13,12 +13,15 @@ const lvT3 = o => o[LANG] || o.en;
 function levelSheet(after) {
   if (document.querySelector(".lv-sheet")) return; const cur = myLevel();
   const sh = document.createElement("div"); sh.className = "inv-sheet lv-sheet";
-  sh.innerHTML = `<div class="inv-card lv-card" role="dialog" aria-modal="true"><h2>${L("lvT")}</h2><p>${L("lvP")}</p><div class="lv-list">${LV_LIST.map(([k, e, n, d]) =>
+  sh.innerHTML = `<div class="inv-card lv-card" role="dialog" aria-modal="true"><h2>${L("lvT")}</h2><p>${L("lvP")}</p>${typeof VIEWS.place === "function" ? `<div class="pl-pick">
+    <button class="pl-big-b" data-lvzero><span>🌱</span><span><b>${L("plScratch")}</b><small>${L("plScratchS")}</small></span></button>
+    <a class="pl-big-b main" href="#place" data-lvplace><span>🧭</span><span><b>${L("plFind")}</b><small>${L("plFindS")}</small></span></a></div><p class="pl-know">${L("plKnow")}</p>` : ""}<div class="lv-list">${LV_LIST.map(([k, e, n, d]) =>
     `<button class="lv-it ${cur === k ? "on" : ""}" data-lv="${k}" aria-pressed="${cur === k}"><span class="lv-e">${e}</span><span class="lv-tx"><b>${k} · ${lvT3(n)}</b><small>${lvT3(d)}</small></span>${cur === k ? "<i>✓</i>" : ""}</button>`).join("")}</div>
-    <a class="lv-test" href="#level" data-lvtest>❓ ${L("lvTest")}</a></div>`;
+    ${typeof VIEWS.place === "function" ? "" : `<a class="lv-test" href="#level" data-lvtest>❓ ${L("lvTest")}</a>`}</div>`;
   document.body.appendChild(sh);
   sh.onclick = e => { if (e.target === sh) { sh.remove(); if (after) after(); return; }
-    if (e.target.closest("[data-lvtest]")) { sh.remove(); return; }
+    if (e.target.closest("[data-lvtest], [data-lvplace]")) { sh.remove(); return; }
+    if (e.target.closest("[data-lvzero]")) { const o = lsGet("mv-level", null) || {}; lsSet("mv-level", Object.assign({}, o, { lvl: "A1", src: "zero", at: Date.now() })); sh.remove(); sfx("unlock"); if (typeof pushSync === "function") pushSync(); if (after) after(); else { Router.go("app-learn"); Router.remount(); } return; }
     const b = e.target.closest("[data-lv]"); if (!b) return; const old = lsGet("mv-level", null) || {};
     lsSet("mv-level", Object.assign({}, old, { lvl: b.dataset.lv, src: "pick", at: Date.now() })); sfx("unlock"); toast("🎯 " + L("lvSet") + ": " + b.dataset.lv, "gold"); sh.remove();
     if (typeof pushSync === "function") pushSync(); if (after) after(); else { Router.go("app-learn"); Router.remount(); } };
