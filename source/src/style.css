@@ -3101,3 +3101,6 @@ img.kw-pop{transform-origin:50% 100%}
 .pl-k{margin:0 0 10px;font:800 15px var(--bf,inherit);opacity:.85}
 .pl-play{display:block;margin:6px auto;width:96px;height:96px;border:0;border-radius:24px;background:var(--acc,#FFC94D);font-size:40px;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.25)}
 .pl-unit{margin:4px 0 6px;font:700 15px/1.4 var(--bf,inherit)}
+/* welcome screen: nothing wider than the phone (long button labels wrap instead of pushing the column out) */
+.sv-main{min-width:0;grid-template-columns:minmax(0,1fr)}.sv-main>*{max-width:100%;min-width:0;box-sizing:border-box}
+.sv-btns{width:100%}.sv-btns>*{max-width:100%;min-width:0;white-space:normal;overflow-wrap:anywhere;box-sizing:border-box}
