@@ -3104,3 +3104,35 @@ img.kw-pop{transform-origin:50% 100%}
 /* welcome screen: nothing wider than the phone (long button labels wrap instead of pushing the column out) */
 .sv-main{min-width:0;grid-template-columns:minmax(0,1fr)}.sv-main>*{max-width:100%;min-width:0;box-sizing:border-box}
 .sv-btns{width:100%}.sv-btns>*{max-width:100%;min-width:0;white-space:normal;overflow-wrap:anywhere;box-sizing:border-box}
+
+/* ===== The Khan's Palace: live scene (you are the palace) ===== */
+.gw-palace .gw-art.pl-host{aspect-ratio:16/10;box-shadow:0 30px 60px -30px #000}
+.gw-palace .gw-band.pl-host{height:auto;overflow:visible;border-radius:0}.gw-palace .gw-band.pl-host::after{display:none}
+.gw-palace .gw-band.pl-host .gw-bt{position:static;margin-top:14px;background:none;padding:0;backdrop-filter:none}
+.pl-scene{position:relative;width:100%;aspect-ratio:16/9;max-height:64vh;border-radius:22px;overflow:hidden;background:#05060c;touch-action:pan-y;cursor:crosshair;user-select:none;-webkit-user-select:none;--x:50%;--y:60%}
+.gw-art .pl-scene{height:100%;aspect-ratio:auto}
+.pl-svg{position:absolute;inset:0;width:100%;height:100%;display:block;transition:filter 2.6s ease}
+.pl-scene.sun .pl-svg{filter:brightness(1.55) saturate(1.15)}
+.pl-dark{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--x) var(--y),rgba(4,6,14,0) 0,rgba(4,6,14,.04) 20%,rgba(4,6,14,.5) 44%,rgba(4,6,14,.84) 80%);transition:opacity 2.6s ease}
+.pl-sunl{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 26%,rgba(255,214,130,.6),rgba(255,170,80,.22) 45%,rgba(255,170,80,0) 75%);mix-blend-mode:screen;transition:opacity 2.6s ease}
+.pl-scene.sun .pl-dark{opacity:.06}.pl-scene.sun .pl-sunl{opacity:1}.pl-scene.sun .pl-cells{filter:brightness(1.35) saturate(1.2)}.pl-scene.sun .pl-glow{opacity:.95}
+.pl-cells rect{cursor:pointer;transition:filter .3s}.pl-cells{transition:filter 2.6s}
+.pl-cells rect.lit{animation:plLit 1.6s ease-out}@keyframes plLit{0%{filter:brightness(2.6) drop-shadow(0 0 14px #fff)}100%{filter:none}}
+.pl-glow{animation:plGlow 4.5s ease-in-out infinite}@keyframes plGlow{0%,100%{opacity:.38}45%{opacity:.7}60%{opacity:.5}}
+.pl-m5 .pl-pulse{animation:plPulse 1.4s ease-in-out infinite}@keyframes plPulse{0%,100%{opacity:0}50%{opacity:1}}.pl-scene.sun .pl-pulse{animation:none;opacity:0}
+.pl-leaf{transform-box:fill-box;transition:transform 1.3s cubic-bezier(.4,0,.2,1)}.pl-ll{transform-origin:0 50%}.pl-lr{transform-origin:100% 50%}
+.pl-door{cursor:pointer;outline:none}.pl-door.open .pl-leaf{transform:scaleX(.16)}
+.pl-m1 .pl-door:not(.open){animation:plKnock 2.2s ease-in-out infinite}@keyframes plKnock{0%,100%{filter:none}50%{filter:brightness(1.5)}}
+.pl-lamp{cursor:pointer;outline:none;transform-origin:800px 0;transform-box:view-box;animation:plSway 6s ease-in-out infinite}
+@keyframes plSway{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
+.pl-lamp.sw{animation:plSwing 3.6s ease-out}@keyframes plSwing{0%{transform:rotate(0)}12%{transform:rotate(15deg)}30%{transform:rotate(-12deg)}48%{transform:rotate(8deg)}66%{transform:rotate(-5deg)}84%{transform:rotate(2deg)}100%{transform:rotate(0)}}
+.pl-m3 .pl-lg{animation:plPulse2 1.2s ease-in-out infinite}@keyframes plPulse2{0%,100%{opacity:.6}50%{opacity:1}}
+.pl-her{transition:opacity .6s}.pl-her.walk .pl-body{animation:plBob .52s ease-in-out infinite}@keyframes plBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.pl-red{transition:opacity .8s}
+.pl-dust{opacity:0;animation:plDust var(--t) linear infinite;animation-delay:var(--d)}@keyframes plDust{0%{opacity:0;transform:translate(0,0)}20%{opacity:.7}80%{opacity:.5}100%{opacity:0;transform:translate(26px,-90px)}}
+.pl-hint{position:absolute;left:14px;right:14px;bottom:10px;margin:0;font:600 13px/1.35 "Bricolage Grotesque",system-ui,sans-serif;color:#fff3d6;text-shadow:0 1px 8px #000,0 0 2px #000;pointer-events:none;text-align:center}
+.pl-say{position:absolute;left:0;right:0;top:12px;margin:0;text-align:center;font:italic 400 clamp(16px,3.4vw,24px)/1.2 "Fraunces",Georgia,serif;color:#ffe9a8;text-shadow:0 2px 12px #000;opacity:0;transform:translateY(-6px);transition:opacity .4s,transform .4s;pointer-events:none}
+.pl-say.on{opacity:1;transform:none}
+.pl-win.shake{animation:plShake .4s}@keyframes plShake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (max-width:700px){.pl-scene{aspect-ratio:4/3;border-radius:16px}.gw-palace .gw-art.pl-host{aspect-ratio:4/3}.pl-hint{font-size:12px}}
+@media (prefers-reduced-motion:reduce){.pl-lamp,.pl-glow,.pl-dust,.pl-her.walk .pl-body{animation:none}}

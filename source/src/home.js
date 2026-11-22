@@ -7,13 +7,13 @@ VIEWS.home = root => {
     { id: "mystery", art: () => `<div class="mini-myst"><img src="img/m-library.jpg" alt=""><i class="mm-light"></i><span class="mm-stamp">CASE № 7</span><b class="mm-t">THE SECRET OF ICHERISHEHER</b></div>` },
     { id: "movie", art: () => `<div class="mini-gw">${WART.movie()}<b class="mg-t mg-movie">NOW SHOWING</b></div>` },
     { id: "kids", art: () => `<div class="mini-gw">${WART.kids()}</div>` },
-    ...["cafe", "firstweek", "roommates", "camp", "business", "debate", "ielts", "heist", "trial", "podcast", "editor"].filter(k => STORIES[k]).map(k => ({ id: k, art: () => `<div class="mini-gw">${WART[k]()}</div>` })),
+    ...["cafe", "firstweek", "roommates", "camp", "business", "debate", "ielts", "heist", "trial", "podcast", "editor", "palace"].filter(k => STORIES[k]).map(k => ({ id: k, art: () => `<div class="mini-gw">${WART[k]()}</div>` })),
     { id: "travel", art: () => `<div class="mini-travel"><div class="mt-route">${ART.route()}</div><div class="mt-glass"><span class="mt-type"></span><i class="mt-btn">PLAN MY TRIP</i></div></div>` }
   ];
-  const descs = { tapes: "tapesD", voyage: "voyageD", wild: "wildD", travel: "travelD", mystery: "mysteryD", movie: "movieD", kids: "kidsD", cafe: "cafeD", business: "businessD", debate: "debateD", ielts: "ieltsD", heist: "heistD", camp: "campD", firstweek: "firstweekD", roommates: "roommatesD", trial: "trialD", podcast: "podcastD", editor: "editorD" };
+  const descs = { tapes: "tapesD", voyage: "voyageD", wild: "wildD", travel: "travelD", mystery: "mysteryD", movie: "movieD", kids: "kidsD", cafe: "cafeD", business: "businessD", debate: "debateD", ielts: "ieltsD", heist: "heistD", camp: "campD", firstweek: "firstweekD", roommates: "roommatesD", trial: "trialD", podcast: "podcastD", editor: "editorD", palace: "palaceD" };
   const WORLDS = WORLD_ORDER, NCH = WORLDS.reduce((a, k) => a + STORIES[k].units.length, 0), NQ = WORLDS.reduce((a, k) => a + STORIES[k].units.reduce((b, u) => b + u.qs.length, 0), 0);
   const due = dueKeys().length, sk = streak(), dS = dailyState(), lvl = lsGet("mv-level", null);
-  const TINT = { tapes: "#3a1a22", voyage: "#132a44", wild: "#2e2414", travel: "#2c2346", mystery: "#2a1c10", movie: "#3a0c12", kids: "#123c44", cafe: "#2b1d16", business: "#0e2238", debate: "#151a2e", ielts: "#1e2a36", heist: "#141220", camp: "#0f3a52", firstweek: "#2a1a44", roommates: "#3a2820", trial: "#2a2018", podcast: "#1c1230", editor: "#26323e" };
+  const TINT = { tapes: "#3a1a22", voyage: "#132a44", wild: "#2e2414", travel: "#2c2346", mystery: "#2a1c10", movie: "#3a0c12", kids: "#123c44", cafe: "#2b1d16", business: "#0e2238", debate: "#151a2e", ielts: "#1e2a36", heist: "#141220", camp: "#0f3a52", firstweek: "#2a1a44", roommates: "#3a2820", trial: "#2a2018", podcast: "#1c1230", editor: "#26323e", palace: "#141a36" };
   const LV = myLevel(); let FILTER = LV;
   /* faded cards: tell whether they are the next step up or an easier level */
   const lvIdx = l => LVLS.indexOf(String(l || "").slice(0, 2));
