@@ -104,7 +104,9 @@ function dpMigrate(p) {
 }
 const DP = () => { const p = lsGet("mv-drill", {}); if (p.v === 2 || !A1_NEW) return p; const q = Object.keys(p).length ? dpMigrate(p) : { v: 2 }; lsSet("mv-drill", q); return q; };
 const uDone = i => DP()["u" + i] || 0;
-const startUnit = () => { const l = myLevel(), i = SECTIONS.findIndex(s => s.lv === l); return i > 0 ? SECTIONS[i].from : 0; };
+/* where the path starts: the chosen level — or the exact unit inside it that "Find my level" found (units before it open, nothing is marked done) */
+const startUnit = () => { const o = lsGet("mv-level", null) || {}, i = SECTIONS.findIndex(s => s.lv === o.lvl); if (i < 0) return 0; const S = SECTIONS[i];
+  return typeof o.unit === "number" && o.unit >= S.from && o.unit < S.to ? o.unit : S.from; };
 /* a new A1 stage (and A2 after A1) opens after its stage exam — unless the learner starts higher up */
 const stageGate = i => { if (!A1_NEW || i <= startUnit() || i % 10 || i < 10 || i > A1_NEW) return true; return !!DP()["x" + (i / 10 - 1)]; };
 const unitOpen = i => i === 0 || i <= startUnit() || (uDone(i - 1) >= LPU && stageGate(i)) || (DP().jump || 0) >= i;
