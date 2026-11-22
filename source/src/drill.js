@@ -37,12 +37,24 @@ Object.assign(UI.ru, { dWrite: "Напиши по-английски", dHard: "�
 const UCOLS = [["#FFC94D", "#B49CFF", "#FF9EC4", "#7CC8FF", "#FFB27A"], ["#FF6FB5", "#C77DFF", "#F2A65A", "#FF9E7A", "#B388FF"], ["#7CF6FF", "#B724FF", "#FFD166", "#EFF4FF", "#9DB0FF"],
   ["#4FC3F7", "#29B6F6", "#81D4FA", "#4DD0E1", "#80DEEA"], ["#FFB74D", "#FF8A65", "#FFD54F", "#F06292", "#FFAB91"], ["#E1BEE7", "#CE93D8", "#FFD700", "#B39DDB", "#F8BBD0"]];
 const UNITS = [];
+/* A1 follows the new programme (a1plan.js): 30 units in 3 stages instead of the old 10 — the old A1 is replaced, every later unit keeps its content */
+const A1_NEW = typeof A1_PLAN !== "undefined" && A1_PLAN.length ? A1_PLAN.length : 0, A1_OLD = 10;
+if (A1_NEW) COURSE_SECTIONS[0] = Object.assign({}, COURSE_SECTIONS[0], { units: A1_PLAN.map(u => ({ e: u.e, t: u.t, g: u.g, w: "", s: "", f: u.f, x: u.x, plan: u })) });
 const SECTIONS = COURSE_SECTIONS.map((sec, si) => { const from = UNITS.length;
   sec.units.forEach(u => { const rows = s => String(s || "").trim().split("\n").map(x => x.trim()).filter(Boolean).map(x => x.split("|").map(y => y.trim()));
-    UNITS.push({ e: u.e, t: u.t, g: u.g, sec: si, c: UCOLS[si][(UNITS.length - from) % 5], n: UNITS.length,
+    UNITS.push({ e: u.e, t: u.t, g: u.g, sec: si, c: UCOLS[si][(UNITS.length - from) % 5], n: UNITS.length, plan: u.plan || null, v2: u.plan ? 1 : 0, stage: u.plan ? Math.floor((UNITS.length - from) / 10) : -1,
       W: rows(u.w).map(([en, az, ru, e]) => ({ en, az, ru, e })), S: rows(u.s).map(([en, az, ru]) => ({ en, az, ru })),
-      F: rows(u.f).map(([q, a, w, e]) => ({ q, a, w: (w || "").split(",").map(x => x.trim()).filter(Boolean), e: e || "" })) }); });
+      F: rows(u.f).map(([q, a, w, e]) => ({ q, a, w: (w || "").split(",").map(x => x.trim()).filter(Boolean), e: e || "" })) });
+    /* 30 more words per unit (vocab*.js): each brings its own example sentence (a new sentence task) and a gap in that sentence */
+    const U = UNITS[UNITS.length - 1], X = u.x || (typeof VOCAB_X !== "undefined" && si > 0 && VOCAB_X[U.n - (A1_NEW ? A1_NEW - A1_OLD : 0)]);
+    if (X) rows(X).forEach(([en, az, ru, e, ex, exAz, exRu]) => { if (!en || U.W.some(w => w.en.toLowerCase() === en.toLowerCase())) return;
+      const w = { en, az, ru, e: e || "", nw: u.x ? 0 : 1 }; U.W.push(w);
+      const m = String(ex || "").match(/\*([^*]+)\*/); if (!m) return;
+      const sen = ex.replace(/\*/g, ""); w.xs = { en: sen, az: exAz, ru: exRu, xw: w }; U.S.push(w.xs);
+      w.gf = { q: ex.replace(/\*[^*]+\*/, "___"), a: m[1], w: [], e: "", tw: w }; U.F.push(w.gf); }); });
   return { lv: sec.lv, t: sec.t, from, to: UNITS.length }; });
+/* decoy answers for the example-sentence gaps: similar words from the same unit */
+UNITS.forEach(U => U.F.forEach(f => { if (f.tw && !f.w.length) f.w = simW(f.tw, U, 3).map(w => w.en); }));
 const T3 = a => LANG === "az" ? a[1] : LANG === "ru" ? a[2] : a[0];
 const NATK = () => LANG === "ru" ? "ru" : "az";
 const nat = o => o[NATK()];
@@ -74,11 +86,30 @@ const toks = s => String(s).split(/\s+/).map(t => t.replace(/^[“"(«]+|[.,!?;:
 const LPU = 5; /* lessons per unit (last = unit review) */
 
 /* ---------- progress ---------- */
-const DP = () => lsGet("mv-drill", {});
+/* progress format v2: A1 grew from 10 to 30 units. Saved progress from before is moved once, so nobody loses a step:
+   old A1 finished → new A1 finished (all stage exams passed) · old unit k (A2+) → k + 20 · inside old A1 → the same share of the new A1 */
+function dpMigrate(p) {
+  if (!A1_NEW || p.v === 2) return p;
+  const sh = A1_NEW - A1_OLD, q = { v: 2 }, num = k => { const m = k.match(/^([a-z]+)(\d+)$/); return m ? [m[1], +m[2]] : null; };
+  let oldA1 = 0; while (oldA1 < A1_OLD && (p["u" + oldA1] || 0) >= LPU) oldA1++;
+  Object.keys(p).forEach(k => { const m = num(k); if (k === "v") return;
+    if (m && ["u", "p", "pf", "cb", "ss"].includes(m[0])) { if (m[1] >= A1_OLD) q[m[0] + (m[1] + sh)] = p[k]; return; }
+    if (k === "chest") { q.chest = (p.chest || []).filter(u => u >= A1_OLD).map(u => u + sh); return; }
+    if (k === "jump") { q.jump = p.jump >= A1_OLD ? p.jump + sh : Math.round(p.jump * A1_NEW / A1_OLD); return; }
+    q[k] = p[k]; });
+  const doneNew = oldA1 >= A1_OLD || Object.keys(p).some(k => { const m = num(k); return m && m[0] === "u" && m[1] >= A1_OLD && p[k] > 0; }) ? A1_NEW : Math.round(oldA1 * A1_NEW / A1_OLD);
+  for (let i = 0; i < doneNew; i++) q["u" + i] = LPU;
+  for (let s = 0; s < 3; s++) if (doneNew >= (s + 1) * 10) q["x" + s] = 1;
+  return q;
+}
+const DP = () => { const p = lsGet("mv-drill", {}); if (p.v === 2 || !A1_NEW) return p; const q = Object.keys(p).length ? dpMigrate(p) : { v: 2 }; lsSet("mv-drill", q); return q; };
 const uDone = i => DP()["u" + i] || 0;
 const startUnit = () => { const l = myLevel(), i = SECTIONS.findIndex(s => s.lv === l); return i > 0 ? SECTIONS[i].from : 0; };
-const unitOpen = i => i === 0 || i <= startUnit() || uDone(i - 1) >= LPU || (DP().jump || 0) >= i;
-const curUnit = () => { for (let i = startUnit(); i < UNITS.length; i++) if (unitOpen(i) && uDone(i) < LPU) return i; for (let i = 0; i < UNITS.length; i++) if (unitOpen(i) && uDone(i) < LPU) return i; return UNITS.length - 1; }; /* start where the chosen level starts */
+/* a new A1 stage (and A2 after A1) opens after its stage exam — unless the learner starts higher up */
+const stageGate = i => { if (!A1_NEW || i <= startUnit() || i % 10 || i < 10 || i > A1_NEW) return true; return !!DP()["x" + (i / 10 - 1)]; };
+const unitOpen = i => i === 0 || i <= startUnit() || (uDone(i - 1) >= LPU && stageGate(i)) || (DP().jump || 0) >= i;
+/* the current unit; a finished stage waiting for its exam stays current, so the exam card is right there */
+const curUnit = () => { for (let i = startUnit(); i < UNITS.length; i++) { if (unitOpen(i) && uDone(i) < LPU) return i; if (i > 0 && !unitOpen(i) && uDone(i - 1) >= LPU && !stageGate(i)) return i - 1; } for (let i = 0; i < UNITS.length; i++) if (unitOpen(i) && uDone(i) < LPU) return i; return UNITS.length - 1; }; /* start where the chosen level starts */
 const drillLessons = () => UNITS.reduce((a, u) => a + uDone(u.n), 0);
 
 /* ---------- hearts ---------- */
@@ -146,16 +177,22 @@ function morph(x, to) {
 const hardMode = () => { const a = typeof ACCT === "function" && ACCT(); return !!(a && a.hard); };
 function makeEx(kind, U, ref, ctx) {
   const W = U.W, S = U.S, F = U.F, rnd = a => a[(Math.random() * a.length) | 0];
-  const half = Math.max(1, Math.ceil(W.length / 2)), word = r => r === "r" ? rnd(W) : r[0] === "a" ? W[+r.slice(1) % half] : r[0] === "b" ? W[half + (+r.slice(1) % Math.max(1, W.length - half))] || rnd(W) : rnd(W);
-  const sent = r => { if (r === "R") { ctx.sq = ctx.sq && ctx.sq.length ? ctx.sq : shuffle(S); return ctx.sq.pop(); } return S[+r.slice(1) % S.length]; };
-  const fill = r => r === "F" ? rnd(F) : F[+r.slice(1) % F.length];
-  const words = r => r === "A" ? pickN(W.slice(0, Math.max(5, Math.ceil(W.length / 2))), 5) : r === "B" ? pickN(W.length >= 10 ? W.slice(Math.ceil(W.length / 2)) : W.slice(-5), 5) : pickN(W, 5);
+  const W0 = W.filter(w => !w.nw), half = Math.max(1, Math.ceil(W0.length / 2));
+  /* a0/b0 = the unit's first words (old lessons), w12 = word no. 12 of the unit (each lesson brings its own new words), r = any word */
+  const word = r => r === "r" ? rnd(W) : r[0] === "w" ? W[+r.slice(1) % W.length] : r[0] === "a" ? W0[+r.slice(1) % half] : r[0] === "b" ? W0[half + (+r.slice(1) % Math.max(1, W0.length - half))] || rnd(W) : rnd(W);
+  const sent = r => { if (r[0] === "x") { const w = W[+r.slice(1) % W.length]; if (w && w.xs) return w.xs; r = "R"; }
+    if (r === "R") { ctx.sq = ctx.sq && ctx.sq.length ? ctx.sq : shuffle(S); return ctx.sq.pop(); } return S[+r.slice(1) % S.length]; };
+  const gapW = f => { if (f && f.tw && !f.w.length) f.w = simW(f.tw, U, 3).map(w => w.en); return f; };
+  const fill = r => { if (r[0] === "g") { const w = W[+r.slice(1) % W.length]; if (w && w.gf) return gapW(w.gf); r = "F"; } return gapW(r === "F" ? rnd(F) : F[+r.slice(1) % F.length]); };
+  const words = r => { if (r[0] === "Z") { const [a, b] = r.slice(1).split("_").map(Number), set = W.slice(a, b); return pickN(set.length >= 4 ? set : W.slice(Math.max(0, b - 5), Math.max(5, b)), 5); }
+    return r === "A" ? pickN(W0.slice(0, Math.max(5, Math.ceil(W0.length / 2))), 5) : r === "B" ? pickN(W0.length >= 10 ? W0.slice(Math.ceil(W0.length / 2)) : W0.slice(-5), 5) : pickN(W, 5); };
   const distract = (s, key, n) => { const have = new Set(toks(s[key]).map(x => x.toLowerCase()));
     const pool = [...new Set(S.filter(x => x !== s).flatMap(x => toks(x[key])).map(x => x === "I" ? x : x.toLowerCase()))].filter(x => !have.has(x.toLowerCase()));
     return pickN(pool, n); };
-  const tiles = (s, key) => { const ans = toks(s[key]); return { ans, bank: shuffle([...ans, ...distract(s, key, Math.min(4, Math.max(2, 7 - ans.length)))]) }; };
+  /* more decoy tiles as the level grows: A1–A2 2–4 · B1 3–5 · B2+ 4–6 */
+  const tiles = (s, key) => { const ans = toks(s[key]), lv = typeof exLv === "function" ? exLv(U) : 0; return { ans, bank: shuffle([...ans, ...distract(s, key, Math.min(4 + (lv >= 2) + (lv >= 3), Math.max(2 + (lv >= 2) + (lv >= 3), 7 - ans.length)))]) }; };
   switch (kind) {
-    case "img": case "mean": case "rmean": case "hearw": { const w = word(ref); return { k: kind, w, opts: shuffle([w, ...simW(w, U, 3)]) }; }
+    case "img": case "mean": case "rmean": case "hearw": { const w = word(ref), k = kind === "img" && !w.e ? "mean" : kind; return { k, w, opts: shuffle([w, ...(k === "img" ? simW(w, U, 6).filter(o => o.e).slice(0, 3) : simW(w, U, 3))]) }; }
     case "writew": return { k: kind, w: word(ref) };
     case "typew": return { k: kind, w: word(ref) };
     case "pairs": return { k: kind, ws: words(ref) };
@@ -179,8 +216,8 @@ const NODE_PARTS = [
   ["fill:f1 build:s4 writew:r listen:s4 buildr:s3 ans:Q", "fill:f3 build:s5 anag:r listen:s5 spot:s4 fill:f2", "build:s6 writew:r listen:s6 buildr:s5 dlg:D fill:f0"],
   /* trophy · unit review */
   ["build:R listen:R fill:f0 writew:r dlg:D afill:f3 build:R fill:f1 say:R listen:R ans:Q spot:R fill:f2 build:R"]];
-const partsOf = j => NODE_PARTS[j].length;
-const partDone = (u, j) => uDone(u) > j ? partsOf(j) : uDone(u) === j ? Math.min(partsOf(j) - 1, DP()["p" + u] || 0) : 0;
+const partsOf = (j, u) => UNITS[u] && UNITS[u].v2 ? 1 : NODE_PARTS[j].length;
+const partDone = (u, j) => uDone(u) > j ? partsOf(j, u) : uDone(u) === j ? Math.min(partsOf(j, u) - 1, DP()["p" + u] || 0) : 0;
 const MIXED = "build:R fill:F listen:R mean:r anag:r spot:R pairs:M dlg:D smean:R say:R";
 const JUMPR = "build:R fill:F listen:R smean:R build:R fill:F buildr:R listen:R build:R fill:F";
 function buildQueue(recipe, unitsPick) { const ctx = {};
@@ -229,7 +266,7 @@ function exHTML(x) {
     case "listen": return T("dListen") + bigSay(x.s.en, true) + tileRow(x.bank, false);
     case "afill": return T("dAfill") + `<div class="dx-say">${pixMini(x.f.q.replace("___", x.f.a))}<div class="dx-bub"><b>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</b></div></div><div class="dx-opts col">${x.opts.map((o, i) => `<button class="dx-opt dx-aud" data-i="${i}" data-en="${esc(o)}" style="--k:${i}"><kbd>${i + 1}</kbd><span>🔊</span><span class="dx-wave">${Array.from({ length: 22 }, (_, j) => `<i style="--h:${(25 + Math.abs(Math.sin(j * 1.7 + i * 2 + o.length)) * 75).toFixed(0)}%;--j:${j}"></i>`).join("")}</span></button>`).join("")}</div>`;
     default: return typeof EX2 === "object" && EX2[x.k] ? EX2[x.k].html(x, T, opts) : "";
-    case "fill": return T("dFill") + `<div class="dx-fill">${x.f.e ? `<span class="dx-hint">${x.f.e}</span>` : ""}<p>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</p></div>` + opts(x.opts, o => esc(o), "row");
+    case "fill": return T("dFill") + `<div class="dx-fill">${x.f.e ? `<span class="dx-hint">${x.f.e}</span>` : x.f.tw ? `<span class="dx-hint dx-tw">${esc(nat(x.f.tw))}</span>` : ""}<p>${esc(x.f.q).replace("___", `<i class="dx-gap">&nbsp;</i>`)}</p></div>` + opts(x.opts, o => esc(o), "row");
   }
 }
 const answerOf = x => typeof EX2 === "object" && EX2[x.k] ? EX2[x.k].ans(x) : ({ img: () => x.w.en, mean: () => nat(x.w), rmean: () => x.w.en, hearw: () => x.w.en, typew: () => x.w.en, writew: () => x.w.en, smean: () => nat(x.s),
@@ -241,19 +278,22 @@ const lev = (a, b) => { const m = a.length, n = b.length, d = Array.from({ lengt
 VIEWS.drill = root => {
   document.documentElement.classList.add("ap-mode");
   if (typeof safiGate === "function" && safiGate(root)) return {};
-  const h = location.hash, mP = /^#drill-p/.test(h), mR = h.match(/^#drill-m-(\d+)(?:-(\d+))?/), mJ = h.match(/^#drill-j-(\d+)/), mL = h.match(/^#drill-(\d+)-(\d+)/);
-  const mode = mP ? "practice" : mR ? "review" : mJ ? "jump" : mL ? "lesson" : null;
-  const ui = mR ? +mR[1] : mJ ? +mJ[1] : mL ? +mL[1] : 0, li = mR ? +(mR[2] || 0) : mL ? +mL[2] : 0;
-  if (!mode || ((mode === "lesson" || mode === "review") && (!UNITS[ui] || !unitOpen(ui) || li > uDone(ui) || li >= LPU)) || (mode === "jump" && (!UNITS[ui] || unitOpen(ui)))) { Router.go("app-learn"); return {}; }
+  const h = location.hash, mP = /^#drill-p/.test(h), mR = h.match(/^#drill-m-(\d+)(?:-(\d+))?/), mJ = h.match(/^#drill-j-(\d+)/), mX = h.match(/^#drill-x-(\d+)/), mW = h.match(/^#drill-w-(\d+)/), mL = h.match(/^#drill-(\d+)-(\d+)/);
+  const mode = mP ? "practice" : mR ? "review" : mJ ? "jump" : mX ? "exam" : mW ? "weak" : mL ? "lesson" : null;
+  const xs = mX ? +mX[1] : -1, ui = mR ? +mR[1] : mJ ? +mJ[1] : mX ? xs * 10 : mW ? +mW[1] : mL ? +mL[1] : 0, li = mR ? +(mR[2] || 0) : mL ? +mL[2] : 0;
+  if (!mode || ((mode === "lesson" || mode === "review") && (!UNITS[ui] || !unitOpen(ui) || li > uDone(ui) || li >= LPU)) || (mode === "jump" && (!UNITS[ui] || unitOpen(ui)))
+    || (mode === "exam" && !(typeof examOpen === "function" && examOpen(xs))) || (mode === "weak" && !(typeof weakOf === "function" && weakOf(ui).length))) { Router.go("app-learn"); return {}; }
+  /* the learner's weak words come back for a short review before a new unit starts */
+  if (mode === "lesson" && UNITS[ui].v2 && li === 0 && !uDone(ui) && typeof weakOf === "function" && weakOf(ui).length && !sessionStorage.getItem("mv-weakok" + ui)) { Router.go("drill-w-" + ui); return {}; }
   if (mode === "lesson" && hearts() <= 0) { noHearts(root, ui, li); return {}; }
   const U = UNITS[ui]; LESSON_CHAR = "p" + (mode === "lesson" || mode === "review" ? ui : (Math.random() * PEOPLE.length) | 0); LESSON_ANIMAL = animalOf(mode === "lesson" || mode === "review" ? ui : (Math.random() * ANIMALS.length) | 0); if ((LESSON_ANIMAL && /^kid-/.test(LESSON_ANIMAL.k)) || adultOn()) LESSON_ANIMAL = null; apTheme(mode === "lesson" || mode === "jump" || mode === "review" ? U.sec : UNITS[curUnit()].sec); const done = UNITS.filter(u => unitOpen(u.n) && uDone(u.n) > 0);
-  const pool = mode === "practice" ? (done.length ? done : [UNITS[curUnit()]]) : mode === "jump" ? UNITS.slice(Math.max(0, ui - 3), ui) : [U];
+  const pool = mode === "practice" ? (done.length ? done : [UNITS[curUnit()]]) : mode === "jump" ? UNITS.slice(Math.max(0, ui - 3), ui) : mode === "exam" ? examUnits(xs) : [U];
   pool.forEach(u => u.ctx = {});
-  const pi = mode === "lesson" ? (li < uDone(ui) ? (Math.random() * partsOf(li)) | 0 : partDone(ui, li)) : 0;
+  const pi = mode === "lesson" ? (li < uDone(ui) ? (Math.random() * partsOf(li, ui)) | 0 : partDone(ui, li)) : 0;
   /* review: the mistakes from this unit first (fresh order), then a few mixed questions — every 2 right answers win a heart back */
-  const queue = mode === "review" ? dMissQueue(ui, buildQueue(REVIEWR, () => U)) : buildQueue(mode === "lesson" ? (typeof nodeRecipe === "function" ? nodeRecipe(U, li, pi) : NODE_PARTS[li][pi]) : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
+  const queue = mode === "exam" ? examQueue(xs) : mode === "weak" ? weakQueue(ui) : mode === "review" ? dMissQueue(ui, buildQueue(REVIEWR, () => U)) : buildQueue(mode === "lesson" ? (typeof nodeRecipe === "function" ? nodeRecipe(U, li, pi) : NODE_PARTS[li][pi]) : mode === "jump" ? JUMPR : MIXED, () => pool[(Math.random() * pool.length) | 0]);
   const st = { won: 0, revOk: 0, total: queue.length, solved: 0, ok: 0, miss: 0, combo: 0, maxCombo: 0, lives: 3, start: Date.now(), wasToday: playedToday(), cur: null, phase: "answer" };
-  const heartsBox = () => mode === "jump" ? `<span class="dr-h">${"❤️".repeat(st.lives)}${"🤍".repeat(3 - st.lives)}</span>` : mode === "lesson" ? `<span class="dr-h">❤️ <b>${hearts()}</b></span>` : mode === "review" ? `<span class="dr-h rev">❤️ <b>${hearts()}</b></span>` : `<span class="dr-h inf">❤️ ∞</span>`;
+  const heartsBox = () => mode === "exam" ? `<span class="dr-h inf">🎓 ${typeof examName === "function" ? examName(xs) : ""}</span>` : mode === "weak" ? `<span class="dr-h inf">🧠</span>` : mode === "jump" ? `<span class="dr-h">${"❤️".repeat(st.lives)}${"🤍".repeat(3 - st.lives)}</span>` : mode === "lesson" ? `<span class="dr-h">❤️ <b>${hearts()}</b></span>` : mode === "review" ? `<span class="dr-h rev">❤️ <b>${hearts()}</b></span>` : `<span class="dr-h inf">❤️ ∞</span>`;
   root.innerHTML = `<div class="ap ap-les dr" style="--uc:${U.c}"><header class="ap-lh"><a href="#app-learn" class="ap-x dr-x" aria-label="Close">✕</a>${lhBrand()}<div class="dr-bar"><i></i><em class="dr-cb"></em></div>${heartsBox()}</header>
     <main class="dr-main"><div class="dx"></div></main>
     <button class="dr-skip" hidden>${L("dSkip")}</button><footer class="dr-foot"><div class="dr-fb"><span class="dr-ic"></span><div><b></b><p></p></div><button class="dr-rep" type="button" aria-label="${L("rpT")}" title="${L("rpT")}">🚩</button></div><button class="dr-go" disabled>${L("dCheck")}</button></footer></div>`;
@@ -333,8 +373,8 @@ VIEWS.drill = root => {
       ico.innerHTML = safiSVG("sad"); tb.textContent = r.title || L("dWrongT"); const E = typeof EX2 === "object" && EX2[x.k], why = E && E.why ? E.why(x) : whyOf(x, given); tp.innerHTML = `${r.noAns ? "" : `<span class="dr-ans">${esc(answerOf(x))}</span>`}${["build", "listen", "fill", "gapt", "spot", "say"].includes(x.k) ? sayBtn(answerOf(x)) : ""}${r.note || ""}${why ? `<span class="dr-why"><b>💡 ${L("whyT")}</b> ${why}</span>` : ""}`;
       dMissAdd(x);
       foot.className = "dr-foot show no"; joy(false);
-      if (mode !== "jump" && !(x.prev && (x.k === "say" || x.k === "ans"))) queue.push({ ...x, prev: true, bank: x.bank && shuffle(x.bank), opts: x.opts && shuffle(x.opts) });
-      if (mode === "lesson" && x.k !== "say" && x.k !== "ans") { setHearts(hearts() - 1); const hb = hbox(); if (hb) { hb.innerHTML = `❤️ <b>${hearts()}</b>`; hb.classList.remove("hurt"); void hb.offsetWidth; hb.classList.add("hurt"); setTimeout(() => sfx("heart"), 280); } }
+      if (mode !== "jump" && mode !== "exam" && x.k !== "boss" && !(x.prev && (x.k === "say" || x.k === "ans"))) queue.push({ ...x, prev: true, bank: x.bank && shuffle(x.bank), opts: x.opts && shuffle(x.opts) });
+      if (mode === "lesson" && x.k !== "say" && x.k !== "ans" && x.k !== "boss") { setHearts(hearts() - 1); const hb = hbox(); if (hb) { hb.innerHTML = `❤️ <b>${hearts()}</b>`; hb.classList.remove("hurt"); void hb.offsetWidth; hb.classList.add("hurt"); setTimeout(() => sfx("heart"), 280); } }
       if (mode === "jump") { st.lives--; const hb = hbox(); hb.innerHTML = "❤️".repeat(Math.max(0, st.lives)) + "🤍".repeat(3 - Math.max(0, st.lives)); hb.classList.remove("hurt"); void hb.offsetWidth; hb.classList.add("hurt"); setTimeout(() => sfx("heart"), 280); }
     }
     setBar(); go.textContent = L("dCont"); ready(true); go.focus({ preventScroll: true });
@@ -364,10 +404,14 @@ VIEWS.drill = root => {
     removeEventListener("keydown", onKey);
     const acc = Math.round(st.ok / Math.max(1, st.ok + st.miss + (st.pairMiss || 0)) * 100), sec = Math.round((Date.now() - st.start) / 1000);
     if (!passed) { sfx("fail"); return failScreen(root, L("dFailed")); }
+    /* new programme: a lesson counts from 80% · the exams too (the app then says which units to repeat) */
+    if (mode === "exam") return examFinish(root, xs, acc, st);
+    if (mode === "weak") { weakClear(ui); sessionStorage.setItem("mv-weakok" + ui, 1); }
+    if (mode === "lesson" && U.v2 && acc < 80 && li >= uDone(ui)) { sfx("fail"); return redoScreen(root, ui, li, acc); }
     let xp = mode === "jump" ? 15 : 10; if (st.miss === 0) xp += 5; xp += Math.floor(st.maxCombo / 5) * 2;
     const p = DP();
     if (mode === "lesson" && li >= (p["u" + ui] || 0)) { const pp = (p["p" + ui] || 0) + 1;
-      if (pp >= partsOf(li)) { p["u" + ui] = li + 1; p["p" + ui] = 0; sessionStorage.setItem("mv-dnew", li + 1 >= LPU ? ui + 1 : ui); } else { p["p" + ui] = pp; sessionStorage.setItem("mv-dpart", 1); } }
+      if (pp >= partsOf(li, ui)) { p["u" + ui] = li + 1; p["p" + ui] = 0; sessionStorage.setItem("mv-dnew", li + 1 >= LPU ? ui + 1 : ui); } else { p["p" + ui] = pp; sessionStorage.setItem("mv-dpart", 1); } }
     if (mode === "jump") { p.jump = Math.max(p.jump || 0, ui); for (let k = 0; k < ui; k++) p["u" + k] = LPU; sessionStorage.setItem("mv-dnew", ui); }
     if (mode === "lesson") { if (st.miss === 0) p["pf" + ui] = 1; if (st.maxCombo >= 5) p["cb" + ui] = 1; }
     lsSet("mv-drill", p);
@@ -378,10 +422,11 @@ VIEWS.drill = root => {
     qAdd(q => { q.les++; if (st.miss === 0) q.per++; q.sec += sec; q.cmb = Math.max(q.cmb, st.maxCombo); q.lis += st.lisOk || 0; });
     addXp(xp);
     if (typeof safiAfterLesson === "function") safiAfterLesson(mode);
+    if (typeof v2AfterLesson === "function") v2AfterLesson(mode, ui, li, acc);
     const b = lsGet("mv-badges", {}); if (!b.first) b.first = dayStr(new Date()); if (st.miss === 0) b.perfect = (b.perfect || 0) + 1; if (streak() >= 7) b.week = true;
-    if (XP().total >= 500) b.xp500 = true; if (XP().total >= 2000) b.xp2000 = true; SECTIONS.forEach((s, i) => { if (UNITS.slice(s.from, s.to).every(u => uDone(u.n) >= LPU)) b["sec" + i] = true; }); lsSet("mv-badges", b);
+    if (XP().total >= 500) b.xp500 = true; if (XP().total >= 2000) b.xp2000 = true; SECTIONS.forEach((s, i) => { if (UNITS.slice(s.from, s.to).every(u => uDone(u.n) >= LPU) && (!UNITS[s.from].v2 || DP().x2)) b["sec" + i] = true; }); lsSet("mv-badges", b);
     const showDone = () => dDoneScreen(root, { xp, acc, sec, perfect: st.miss === 0, heart: mode === "review" ? st.won : heartWon, title: mode === "jump" ? L("dPassed") : L("apDone"),
-      back: mode === "review" && hearts() > 0 ? `drill-${ui}-${li}` : "app-learn", unit: mode === "lesson" ? ui : null });
+      back: mode === "review" && hearts() > 0 ? `drill-${ui}-${li}` : mode === "weak" ? `drill-${ui}-0` : "app-learn", unit: mode === "lesson" ? ui : null, li: mode === "lesson" ? li : null });
     if (!st.wasToday && playedToday()) streakScreen(root, showDone); else showDone();
   }
   render(); setBar();
@@ -390,12 +435,12 @@ VIEWS.drill = root => {
 };
 
 function countUp(el, to, ms = 900) { if (REDUCED) { el.textContent = to; return; } const t0 = performance.now(); const f = t => { const p = Math.min(1, (t - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
-function dDoneScreen(root, { xp, acc, sec, perfect, heart, title, back = "app-learn", unit = null }) {
+function dDoneScreen(root, { xp, acc, sec, perfect, heart, title, back = "app-learn", unit = null, li = null }) {
   document.querySelectorAll(".dr-ov, .inv-sheet").forEach(o => o.remove());
   sfx("win"); buzz([60, 50, 60, 50, 160]);
   title = title === L("apDone") ? L("dWin")[(Math.random() * L("dWin").length) | 0] : title;
   root.innerHTML = `<div class="ap dr-end"><div class="ap-cf">${Array.from({ length: adultOn() ? 0 : 46 }, (_, j) => `<i style="left:${Math.random() * 100}%;--d:${(Math.random() * .8).toFixed(2)}s;--c:${["#ffcf5a", "#9ff0c0", "#9DB0FF", "#ff9fb0", "#c9a7ff"][j % 5]}"></i>`).join("")}</div>
-    <div class="dr-endpix">${safiSay(perfect ? "👑" : "🎉", "happy")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>${heart ? `<p class="dr-heart">❤️ +${heart === true ? 1 : heart} · ${heart === true ? L("dHeartWon") : L("rvWon")}</p>` : ""}
+    <div class="dr-endpix">${safiSay(perfect ? "👑" : "🎉", "happy")}</div><h1>${esc(title)}</h1><p class="dr-sub">${perfect ? "✨ " + L("dPerfect") : L("dWinP")}</p>${typeof v2DoneHTML === "function" ? v2DoneHTML(unit, li) : ""}${heart ? `<p class="dr-heart">❤️ +${heart === true ? 1 : heart} · ${heart === true ? L("dHeartWon") : L("rvWon")}</p>` : ""}
     <div class="ap-res"><div class="y" style="--k:0"><small>${L("apEarned")}</small><b>⚡ <span data-n="${xp}">0</span></b></div><div class="g" style="--k:1"><small>${acc >= 90 ? L("dAccA") : acc >= 70 ? L("dAccB") : L("apAccuracy")}</small><b>🎯 <span data-n="${acc}">0</span>%</b></div><div class="b" style="--k:2"><small>${sec < 150 ? L("dFast") : L("apTime")}</small><b>⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}</b></div></div>
     <div class="ap-goalbar"><span>${L("apGoal")}</span><div><i style="width:${Math.min(100, xpToday() / goal() * 100)}%"></i></div><b>${xpToday()}/${goal()}</b></div>
     <a class="ap-cta dr-cont" href="#${back}">${/^drill-/.test(back) ? L("rvBack") : L("dCont")}</a>${unit != null && typeof tellOK === "function" && tellOK() ? `<a class="dr-link dr-tell" href="#tell-${unit}">🎙 ${L("tlBtn")}</a>` : ""}</div>`;
@@ -421,7 +466,7 @@ function noHearts(root, ui = curUnit(), li = 0) {
 }
 
 /* ---------- the path (Learn tab) ---------- */
-const NODE_IC = ["⭐", "⭐", "🎧", "✍️", "🏆"];
+const NODE_IC = ["⭐", "⭐", "🎧", "✍️", "🏆"], NODE_IC2 = ["⭐", "⭐", "⭐", "💬", "👑"];
 const ringSVG = (n, k) => { const C = 2 * Math.PI * 46, seg = C / n, gap = n > 1 ? 9 : 0;
   return `<svg class="dr-ring" viewBox="0 0 104 104" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<circle cx="52" cy="52" r="46" class="${i < k ? "on" : ""}" stroke-dasharray="${(seg - gap).toFixed(1)} ${C.toFixed(1)}" stroke-dashoffset="${(-(i * seg) - gap / 2).toFixed(1)}"/>`).join("")}</svg>`; };
 /* jump node: a little rocket with a flickering flame and twinkling sparkles */
@@ -430,17 +475,18 @@ function drillPathHTML() {
   const cu = curUnit(), side = [[0, -46, -70, -46, 0], [0, 46, 70, 46, 0]], CU = UNITS[cu];
   const firstLocked = UNITS.findIndex(u => !unitOpen(u.n));
   return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🇬🇧 ${L("skEnglish")}</b></span>${typeof levelChip === "function" ? levelChip() : ""}<span class="dr-lv dr-lang" role="button" aria-label="${L("lvLang")}"><small>${L("lvLang")}</small><b>🇬🇧 EN ▾</b></span></button>
-  <a class="dr-pall" href="#drill-p"><span>💪</span><b>${L("dPracticeAll")}</b><small>${L("dPracticeAllP")}</small><i>❤️ ${hearts()}</i></a>
+  <a class="dr-pall" href="#drill-p"><span>💪</span><b>${L("dPracticeAll")}</b><small>${L("dPracticeAllP")}</small><i>❤️ ${hearts()}</i></a>${typeof wordsPill === "function" ? wordsPill() : ""}
   <header class="dr-ub dr-top" style="--uc:${CU.c}"><div><small>${L("dSection")} ${CU.sec + 1}, ${L("dUnit")} ${CU.n + 1}</small><b>${CU.e} ${esc(T3(CU.t))}</b></div><span class="dr-gbs"><button class="dr-gb dr-units" data-units aria-label="${L("upT")}">🗺<span>${L("upT")}</span></button><button class="dr-gb" data-guide="${CU.n}" aria-label="${L("dGuide")}">📖<span>${L("dGuide")}</span></button></span></header>${typeof tchkHTML === "function" ? tchkHTML() : ""}` +
   SECTIONS.map((S, si) => `<div class="dr-sb" data-th="${si}"><div class="dr-sec"><span>${L("dSection")} ${si + 1} · ${S.lv}</span><b>${esc(T3(S.t))}</b></div>` + UNITS.slice(S.from, S.to).map(U => {
-    const open = unitOpen(U.n), d = uDone(U.n), offs = side[U.n % 2], jumpHere = U.n === firstLocked;
-    const nodes = Array.from({ length: LPU }, (_, j) => { const isDone = d > j, isCur = open && j === d && U.n === cu, can = open && j <= d, jump = !open && j === 0;
+    const open = unitOpen(U.n), d = uDone(U.n), offs = side[U.n % 2], jumpHere = U.n === firstLocked && !U.v2 && !(A1_NEW && U.n === A1_NEW);
+    const nodes = Array.from({ length: LPU }, (_, j) => { const isDone = d > j, isCur = open && j === d && U.n === cu, can = open && j <= d, jump = !open && j === 0 && !U.v2 && !(A1_NEW && U.n === A1_NEW);
       return `<div class="dr-nw" style="--x:${offs[j]}px;--i:${j}">${isCur ? `<span class="ap-start">${U.n === 0 && j === 0 && !drillLessons() ? L("dFirst") : L("apStart")}</span>` : jump && jumpHere ? `<span class="ap-start dr-jumpb">${L("dJumpHere")}</span>` : ""}
-        <button class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${jump ? "jump" : ""} ${j === LPU - 1 ? "trophy" : ""}" data-u="${U.n}" data-l="${j}" aria-label="${esc(T3(U.t))} ${j + 1}">${isCur ? ringSVG(partsOf(j), partDone(U.n, j)) : ""}${jump ? JUMP_ICON : `<span>${can || isDone ? NODE_IC[j] : "🔒"}</span>`}${isDone && j < LPU - 1 ? `<em>✓</em>` : ""}</button></div>`
+        <button class="dr-node ${isDone ? "done" : ""} ${isCur ? "now" : ""} ${can ? "" : "lock"} ${jump ? "jump" : ""} ${j === LPU - 1 ? "trophy" : ""}" data-u="${U.n}" data-l="${j}" aria-label="${esc(T3(U.t))} ${j + 1}">${isCur ? ringSVG(partsOf(j, U.n), partDone(U.n, j)) : ""}${jump ? JUMP_ICON : `<span>${can || isDone ? (U.v2 ? NODE_IC2[j] : NODE_IC[j]) : "🔒"}</span>`}${isDone && j < LPU - 1 ? `<em>✓</em>` : ""}</button></div>`
         + (j === 2 ? `<div class="dr-nw" style="--x:${-offs[2] * .9}px;--i:2.5"><button class="dr-chest ${d >= 3 ? "ready" : ""} ${(DP().chest || []).includes(U.n) ? "open" : ""}" data-chest="${U.n}" aria-label="Chest">${(DP().chest || []).includes(U.n) ? "📭" : "🎁"}</button></div>` : ""); }).join("");
-    return `<section class="dr-unit ${open ? "" : "locked"}" style="--uc:${U.c}" id="u${U.n}" data-u="${U.n}">
+    const fold = U.v2 && typeof stageFold === "function" ? stageFold(U.stage) : "";
+    return `${U.v2 && U.n % 10 === 0 && typeof stageHead === "function" ? stageHead(U.stage) : ""}<section class="dr-unit ${open ? "" : "locked"} ${fold}" style="--uc:${U.c}" id="u${U.n}" data-u="${U.n}" ${U.v2 ? `data-st="${U.stage}"` : ""}>
       <button class="dr-div" data-guide="${U.n}"><i></i><b>${U.e} ${esc(T3(U.t))}</b><i></i></button>
-      <div class="dr-path">${nodes}${sideHTML(U, open)}</div></section>`;
+      <div class="dr-path">${nodes}${sideHTML(U, open)}</div>${U.v2 && typeof canLine === "function" ? canLine(U) : ""}</section>${U.v2 && U.n % 10 === 9 && typeof examCard === "function" ? examCard(U.stage) : ""}`;
   }).join("") + `</div>`).join("") + `<button class="dr-tocur" aria-label="Current lesson">↑</button>`;
 }
 function wireDrillPath(root) {
@@ -473,10 +519,10 @@ function wireDrillPath(root) {
     if (!n) { if (!e.target.closest(".dr-pop")) closePop(); return; }
     const u = +n.dataset.u, l = +n.dataset.l, U = UNITS[u], can = !n.classList.contains("lock"); closePop(); sfx("tap");
     pop = document.createElement("div"); pop.className = "dr-pop" + (can ? "" : " lk"); pop.style.setProperty("--uc", U.c);
-    const done = uDone(u) > l, pd = partDone(u, l), np = partsOf(l);
-    pop.innerHTML = can ? `<b>${esc(L("dNode")[l])}</b><small>${U.e} ${esc(T3(U.t))}</small><small class="dr-pn">${done ? "✓ " + L("dNodeDone") : L("dLessonOf").replace("{a}", pd + 1).replace("{b}", np)}</small>
+    const done = uDone(u) > l, pd = partDone(u, l), np = partsOf(l, u);
+    pop.innerHTML = can ? `<b>${esc((U.v2 ? L("v2Node") : L("dNode"))[l])}</b><small>${U.e} ${esc(T3(U.t))}</small><small class="dr-pn">${done ? "✓ " + L("dNodeDone") : L("dLessonOf").replace("{a}", pd + 1).replace("{b}", np)}</small>
         <a class="dr-pgo" href="#drill-${u}-${l}">${done ? "↺ " + L("dPracticeXp") : L("dStartXp")}</a>`
-      : n.classList.contains("jump") ? `<b>${L("dJump")}</b><small>${L("dJumpP")}</small><a class="dr-pgo" href="#drill-j-${u}">⏩ ${L("dJumpGo")}</a>` : `<b>${esc(L("dNode")[l])}</b><small>${L("dLocked")}</small>`;
+      : n.classList.contains("jump") ? `<b>${L("dJump")}</b><small>${L("dJumpP")}</small><a class="dr-pgo" href="#drill-j-${u}">⏩ ${L("dJumpGo")}</a>` : `<b>${esc((U.v2 ? L("v2Node") : L("dNode"))[l])}</b><small>${L("dLocked")}</small>`;
     n.parentNode.appendChild(pop); if (!can && !n.classList.contains("jump")) flash(n, "shake");
   };
   const newStars = root.querySelectorAll(".dr-st3 i.new");

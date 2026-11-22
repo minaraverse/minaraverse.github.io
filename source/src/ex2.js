@@ -182,7 +182,8 @@ Object.assign(WHY, { irr: ["Some nouns have a special plural: child → children
 const capLike = (src, w) => /^[A-Z]/.test(src) ? w[0].toUpperCase() + w.slice(1) : w;
 function spotMake(U, ref, lvl) {
   const S = U.S, start = /^s\d+$/.test(ref) ? +ref.slice(1) % S.length : (Math.random() * S.length) | 0, order = S.map((_, i) => S[(start + i) % S.length]);
-  if (lvl >= 3) order.sort((a, b) => b.en.length - a.en.length);
+  if (lvl >= 3) { const med = S.map(x => x.en.length).sort((a, b) => a - b)[S.length >> 1] || 0; order.splice(0, order.length, ...shuffle(order.filter(x => x.en.length >= med)), ...order.filter(x => x.en.length < med)); }
+  if (/^x\d+$/.test(ref)) { const w = U.W[+ref.slice(1) % U.W.length]; if (w && w.xs) order.unshift(w.xs); }
   for (const s of order) { const toks = s.en.split(/\s+/), cands = [];
     toks.forEach((t, i) => { const core = t.replace(/^[^\w']+|[^\w']+$/g, ""), lw = core.toLowerCase().replace(/’/g, "'");
       if (SPOT_IRR[lw] && lvl >= 1) cands.push({ i, core, bad: SPOT_IRR[lw][0], rule: SPOT_IRR[lw][1], alts: [lw, SPOT_IRR[lw][0]] });
@@ -198,7 +199,7 @@ function spotMake(U, ref, lvl) {
 /* ---------- 🔤 letters ---------- */
 function anagMake(U, ref, lvl) {
   const ok = w => /^[a-z]+$/i.test(w.en) && w.en.length >= [3, 4, 5, 6, 7][lvl] && w.en.length <= [6, 8, 10, 14, 16][lvl];
-  let w = /^a\d+$/.test(ref) ? U.W[+ref.slice(1) % Math.min(6, U.W.length)] : /^b\d+$/.test(ref) ? U.W[5 + (+ref.slice(1) % Math.max(1, U.W.length - 5))] : null;
+  let w = /^w\d+$/.test(ref) ? U.W[+ref.slice(1) % U.W.length] : /^a\d+$/.test(ref) ? U.W[+ref.slice(1) % Math.min(6, U.W.length)] : /^b\d+$/.test(ref) ? U.W[5 + (+ref.slice(1) % Math.max(1, U.W.length - 5))] : null;
   if (!w || !ok(w)) { const pool = U.W.filter(ok); w = pool.length ? pool[(Math.random() * pool.length) | 0] : U.W.find(x => /^[a-z]{3,}$/i.test(x.en)); }
   if (!w) return null;
   const word = w.en.toLowerCase(), fixed = lvl === 0 ? word[0] : "", rest = [...word.slice(fixed.length)], extra = lvl >= 2 ? Array.from({ length: lvl - 1 }, () => "aeiorstnl"[(Math.random() * 9) | 0]) : [];
@@ -313,14 +314,14 @@ const EX2 = {
   },
   gapt: {
     html(x, T) { const a = x.f.a, hint = x.lvl === 2 ? esc(a[0]) + "<i>" + "_".repeat(Math.max(1, a.length - 1)).split("").join(" ") + "</i>" : "&nbsp;";
-      return T("e2Gapt") + `<div class="dx-fill">${x.f.e ? `<span class="dx-hint">${x.f.e}</span>` : ""}<p>${esc(x.f.q).replace("___", `<i class="dx-gap dx-gaph">${hint}</i>`)}</p></div><input class="dx-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${L("dTypeHere")}">`; },
+      return T("e2Gapt") + `<div class="dx-fill">${x.f.e ? `<span class="dx-hint">${x.f.e}</span>` : x.f.tw ? `<span class="dx-hint dx-tw">${esc(nat(x.f.tw))}</span>` : ""}<p>${esc(x.f.q).replace("___", `<i class="dx-gap dx-gaph">${hint}</i>`)}</p></div><input class="dx-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${L("dTypeHere")}">`; },
     wire(x, box, ready) { const inp = box.querySelector(".dx-in"); inp.oninput = () => ready(inp.value.trim().length > 0); setTimeout(() => inp.focus(), 400); },
     judge(x, box) { const r = dTyped(box.querySelector(".dx-in").value, x.f.a); return { ok: r.ok, note: r.ok && r.typo ? `${L("dTypo")} <u>${esc(x.f.a)}</u>` : "" }; },
     given: (x, box) => (box.querySelector(".dx-in") || {}).value || "",
     ans: x => x.f.q.replace("___", x.f.a)
   },
   say: {
-    make(U, ref, ctx) { const S = U.S, lvl = exLv(U); let s = /^s\d+$/.test(ref) ? S[+ref.slice(1) % S.length] : null;
+    make(U, ref, ctx) { const S = U.S, lvl = exLv(U); let s = /^s\d+$/.test(ref) ? S[+ref.slice(1) % S.length] : /^x\d+$/.test(ref) ? (U.W[+ref.slice(1) % U.W.length] || {}).xs || null : null;
       if (!s) { ctx.sq2 = ctx.sq2 && ctx.sq2.length ? ctx.sq2 : shuffle(S.slice()); s = ctx.sq2.pop(); }
       if (lvl === 0 && tokN(s.en).length > 7) s = S.slice().sort((a, b) => a.en.length - b.en.length)[(Math.random() * Math.min(4, S.length)) | 0];
       return { k: "say", s, lvl, need: [.6, .7, .8, .85, .9][lvl] }; },
@@ -472,8 +473,8 @@ const PART_N = [5, 8, 11, 15, 20, 20], REVIEW_N = [7, 10, 14, 18, 20, 20];
 const lv6 = U => Math.max(0, ["A1", "A2", "B1", "B2", "C1", "C2"].indexOf((SECTIONS[U.sec] || {}).lv));
 /* exercise families and the levels where each type lives [type, from, to] — simple types fade out, new ones appear */
 const E2TY = {
-  W: [["img", 0, 0], ["mean", 0, 2], ["rmean", 0, 3], ["hearw", 0, 2], ["pairs", 0, 5], ["anag", 0, 4], ["writew", 1, 5], ["typew", 2, 5]],
-  S: [["smean", 0, 1], ["build", 0, 4], ["buildr", 1, 3], ["listen", 1, 5]],
+  W: [["img", 0, 0], ["mean", 0, 1], ["rmean", 0, 2], ["hearw", 0, 1], ["pairs", 0, 3], ["anag", 0, 3], ["writew", 1, 5], ["typew", 2, 5]],
+  S: [["smean", 0, 1], ["build", 0, 5], ["buildr", 1, 3], ["listen", 1, 5]],
   G: [["afill", 0, 1], ["fill", 0, 5], ["spot", 1, 5], ["coll", 2, 5], ["wform", 3, 5]],
   L: [["dlg", 0, 5], ["listen", 0, 5], ["hearw", 0, 1], ["typew", 2, 5]],
   P: [["say", 0, 5], ["ans", 0, 5]],
@@ -482,13 +483,19 @@ const E2TY = {
 /* what each star practises: 1 new words · 2 recognise & recall · 3 listen & build · 4 grammar, writing, speaking · trophy = everything */
 const NODE_W = [{ W: 70, S: 10, L: 10, P: 10 }, { W: 40, S: 20, L: 15, G: 15, P: 10 }, { S: 30, L: 30, G: 15, P: 15, W: 10 }, { G: 35, P: 20, S: 15, L: 10, X: 20 }, { W: 12, S: 18, G: 20, L: 20, P: 15, X: 15 }];
 function nodeRecipe(U, j, p) {
+  if (U.v2 && typeof v2Recipe === "function") return v2Recipe(U, j);
   const L = lv6(U), n = j === 4 ? REVIEW_N[L] : PART_N[L], want = { ...NODE_W[j] };
+  if (L >= 2) { want.W = Math.round((want.W || 0) * .7); want.G = (want.G || 0) + 10; }   /* B1+: less word-picking, more gaps and sentences */
   if (L >= 3) { want.W = Math.round((want.W || 0) / 2); want.X = (want.X || 0) + 15; }   /* B2+: fewer single-word drills, more real English */
   if (L >= 4) { want.X += 10; want.L = (want.L || 0) + 5; }
   const avail = c => E2TY[c].filter(t => L >= t[1] && L <= t[2]).map(t => t[0]);
   const fams = Object.keys(want).filter(c => want[c] > 0 && avail(c).length), tot = fams.reduce((a, c) => a + want[c], 0);
   const cap = { pairs: 1, read: 1, dlg: Math.max(1, Math.ceil(n / 7)), ans: Math.max(1, Math.ceil(n / 8)), say: Math.max(1, Math.ceil(n / 7)) }, cnt = {};
-  const out = []; let wi = 0, si = p * 3, fi = p, last = "";
+  /* every lesson has its own words: stars 1–2 bring the unit's words in order (about 5 new ones per lesson), stars 3–4 practise all of them in turn */
+  const N = U.W.length, wl = j < 2 ? j * 4 + p : j < 4 ? (j - 2) * 3 + p : -1, slots = j < 2 ? 8 : 6;
+  const win = wl < 0 ? [] : (() => { const sz = Math.ceil(N / slots), a = Math.min(N - 1, wl * sz), b = Math.min(N, a + sz); return Array.from({ length: Math.max(1, b - a) }, (_, i) => a + i); })();
+  const wx = win.filter(i => U.W[i] && U.W[i].xs), wo = shuffle(win), xo = shuffle(wx);
+  const out = []; let wi = 0, xi = 0, gi = 0, si = p * 3, fi = p, last = "";
   for (let i = 0; i < n; i++) {
     let fam = j === 0 && i < 2 ? "W" : null;
     if (!fam || !avail(fam).length) { let r = Math.random() * tot; fam = fams.find(c => (r -= want[c]) < 0) || fams[0]; }
@@ -496,7 +503,13 @@ function nodeRecipe(U, j, p) {
     if (!types.length) types = Object.values(E2TY).flat().filter(t => L >= t[1] && L <= t[2] && t[0] !== last && (cnt[t[0]] || 0) < (cap[t[0]] || 99)).map(t => t[0]);
     const t = types[(Math.random() * types.length) | 0]; cnt[t] = (cnt[t] || 0) + 1; last = t;
     const isW = ["img", "mean", "rmean", "hearw", "anag", "writew", "typew"].includes(t), isS = ["smean", "build", "buildr", "listen", "say", "spot"].includes(t);
-    const ref = isW ? (j === 0 ? "a" + (wi++) : j === 1 ? "b" + (wi++) : "r") : isS ? (j >= 2 && j < 4 ? "s" + (si++) : "R") : t === "fill" || t === "afill" ? (j < 4 ? "f" + (fi++) : "F") : t === "pairs" ? (j === 0 ? "A" : j === 1 ? "B" : "M") : "X";
+    let ref;
+    if (win.length) {
+      ref = isW ? "w" + wo[wi++ % wo.length]
+        : isS ? (xo.length && (j < 2 || Math.random() < .7) ? "x" + xo[xi++ % xo.length] : j >= 2 ? "s" + (si++) : "R")
+        : t === "fill" || t === "afill" ? (xo.length && Math.random() < .75 ? "g" + xo[gi++ % xo.length] : "f" + (fi++))
+        : t === "pairs" ? "Z" + Math.max(0, win[0] - (win.length < 5 ? 5 - win.length : 0)) + "_" + (win[win.length - 1] + 1) : "X";
+    } else ref = isW ? "r" : isS ? "R" : t === "fill" || t === "afill" ? "F" : t === "pairs" ? "M" : "X";
     out.push(t + ":" + ref); }
   return out.join(" ");
 }
