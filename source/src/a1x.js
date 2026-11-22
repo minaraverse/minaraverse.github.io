@@ -5,19 +5,19 @@ Object.assign(UI.en, { v2Node: ["New words · 1", "New words · 2", "New words �
   v2Stage: "Stage", v2Left: "{n} planets left to {s}", v2LeftL: "{n} planets left to the A1 exam", v2StDone: "Stage passed ✓", v2StLock: "10 planets · opens after the exam", v2Exam: "Stage exam", v2ExamL: "A1 level exam",
   v2ExamP: "80% opens the next stage", v2ExamPL: "80% = A1 certificate", v2ExamEarly: "Feeling strong? Take it now and skip the stage", v2ExamGo: "Start the exam", v2ExamLock: "Finish the stage first", v2ExamOk: "Exam passed!",
   v2ExamFail: "Not yet: {n}%. You need 80%.", v2ExamRep: "Repeat these units, then try again:", v2ExamWait: "Repeat one lesson from the units below — then the exam opens again", v2Know: "I know {n} words", v2New: "+{n} new words",
-  v2Can: "Now you can:", v2Nat: "Say it like a native:", v2Weak: "Your weak words — a quick review before the new unit" });
+  v2Can: "Now you can:", v2Nat: "Say it like a native:", v2Weak: "Your weak words — a quick review before the new unit", goLv: "Start from {l}", goLvOk: "Level {l} is open — start here!" });
 Object.assign(UI.az, { v2Node: ["Yeni sözlər · 1", "Yeni sözlər · 2", "Yeni sözlər · 3", "Real həyat", "Boss"], v2Chat: "Çatda cavab ver", v2Emo: "Emojilərdən sözü tap", v2Odd: "Hansı söz artıqdır?",
   v2Boss: "Boss · özün cavab ver, ipucu yoxdur", v2BossW: "Tam deyil. Belə demək olar:", v2Redo: "Keçmək üçün 80% lazımdır", v2RedoP: "Nəticən: {n}%. Bu dərsi yenidən keç — suallar yeni olacaq, sözlər eyni.", v2Retry: "Yenidən cəhd et",
   v2Stage: "Pillə", v2Left: "{s} pilləsinə {n} planet qalıb", v2LeftL: "A1 imtahanına {n} planet qalıb", v2StDone: "Pillə keçildi ✓", v2StLock: "10 planet · imtahandan sonra açılır", v2Exam: "Pillə imtahanı", v2ExamL: "A1 səviyyə imtahanı",
   v2ExamP: "80% növbəti pilləni açır", v2ExamPL: "80% = A1 sertifikatı", v2ExamEarly: "Güclüsən? İndi ver və pilləni keç", v2ExamGo: "İmtahana başla", v2ExamLock: "Əvvəlcə pilləni bitir", v2ExamOk: "İmtahan keçildi!",
   v2ExamFail: "Hələ yox: {n}%. 80% lazımdır.", v2ExamRep: "Bu bölmələri təkrarla, sonra yenidən cəhd et:", v2ExamWait: "Aşağıdakı bölmələrdən bir dərs təkrarla — sonra imtahan yenidən açılacaq", v2Know: "{n} söz bilirəm", v2New: "+{n} yeni söz",
-  v2Can: "İndi bacarırsan:", v2Nat: "Doğma danışan kimi de:", v2Weak: "Zəif sözlərin — yeni bölmədən əvvəl qısa təkrar" });
+  v2Can: "İndi bacarırsan:", v2Nat: "Doğma danışan kimi de:", v2Weak: "Zəif sözlərin — yeni bölmədən əvvəl qısa təkrar", goLv: "{l} səviyyəsindən başla", goLvOk: "{l} səviyyəsi açıldı — buradan başla!" });
 Object.assign(UI.ru, { v2Node: ["Новые слова · 1", "Новые слова · 2", "Новые слова · 3", "Реальная жизнь", "Босс"], v2Chat: "Ответь в чате", v2Emo: "Угадай слово по эмодзи", v2Odd: "Какое слово лишнее?",
   v2Boss: "Босс · отвечай сам, без подсказок", v2BossW: "Не совсем. Можно сказать так:", v2Redo: "Чтобы пройти, нужно 80%", v2RedoP: "Твой результат: {n}%. Пройди урок ещё раз — вопросы будут другие, слова те же.", v2Retry: "Ещё раз",
   v2Stage: "Ступень", v2Left: "до {s} осталось {n} планет", v2LeftL: "до экзамена A1 осталось {n} планет", v2StDone: "Ступень пройдена ✓", v2StLock: "10 планет · откроется после экзамена", v2Exam: "Экзамен ступени", v2ExamL: "Экзамен уровня A1",
   v2ExamP: "80% открывают следующую ступень", v2ExamPL: "80% = сертификат A1", v2ExamEarly: "Чувствуешь силу? Сдай сейчас и перепрыгни ступень", v2ExamGo: "Начать экзамен", v2ExamLock: "Сначала пройди ступень", v2ExamOk: "Экзамен сдан!",
   v2ExamFail: "Пока нет: {n}%. Нужно 80%.", v2ExamRep: "Повтори эти юниты и попробуй снова:", v2ExamWait: "Повтори один урок из юнитов ниже — и экзамен снова откроется", v2Know: "Я знаю {n} слов", v2New: "+{n} новых слов",
-  v2Can: "Теперь ты можешь:", v2Nat: "Скажи как носитель:", v2Weak: "Твои слабые слова — короткое повторение перед новым юнитом" });
+  v2Can: "Теперь ты можешь:", v2Nat: "Скажи как носитель:", v2Weak: "Твои слабые слова — короткое повторение перед новым юнитом", goLv: "Начать с {l}", goLvOk: "Уровень {l} открыт — начинай отсюда!" });
 
 /* ---------- lessons: 1–3 new words (a third of the list each) · 4 real life · 5 boss ---------- */
 function v2Recipe(U, j) {
@@ -140,3 +140,10 @@ dMissAdd = function (x) { dMissAdd0(x); if (!x || !x.U) return; V2_MISSU.push(x.
   const w = x.w || (x.f && x.f.tw) || (x.s && x.s.xw); if (!w || !w.en) return; const L0 = weakAll().filter(v => !(v[0] === x.U.n && v[1] === w.en)); L0.push([x.U.n, w.en]); lsSet("mv-weak", L0.slice(-30)); };
 /* a lesson replayed in a unit the exam asked to repeat → the exam opens again */
 function v2AfterLesson(mode, ui) { if (mode !== "lesson" || !UNITS[ui] || !UNITS[ui].v2) return; const r = lsGet("mv-xrep", {}); r[ui] = Date.now(); lsSet("mv-xrep", r); }
+
+/* "Start from B1 / C1…": one tap opens that level (it becomes "My level"); earlier progress stays as it is */
+document.addEventListener("click", e => { const b = e.target.closest("[data-golv]"); if (!b) return; e.preventDefault(); e.stopPropagation();
+  const lv = b.dataset.golv, old = lsGet("mv-level", null) || {}; lsSet("mv-level", Object.assign({}, old, { lvl: lv, src: "map", at: Date.now() }));
+  if (typeof pushSync === "function") pushSync(); sfx("unlock"); toast("🚀 " + L("goLvOk").replace("{l}", lv), "gold");
+  const S = SECTIONS.find(x => x.lv === lv); document.querySelectorAll(".dr-pop").forEach(x => x.remove());
+  if (location.hash !== "#app-learn") Router.go("app-learn"); Router.remount(); setTimeout(() => { const u = document.getElementById("u" + (S ? S.from : 0)); u && u.scrollIntoView({ block: "center", behavior: "smooth" }); }, 350); }, true);

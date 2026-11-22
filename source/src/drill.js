@@ -483,7 +483,7 @@ function drillPathHTML() {
   return `<button class="ap-unit dr-course" data-go="course"><span><small>${L("apCourse")}</small><b>🇬🇧 ${L("skEnglish")}</b></span>${typeof levelChip === "function" ? levelChip() : ""}<span class="dr-lv dr-lang" role="button" aria-label="${L("lvLang")}"><small>${L("lvLang")}</small><b>🇬🇧 EN ▾</b></span></button>
   <a class="dr-pall" href="#drill-p"><span>💪</span><b>${L("dPracticeAll")}</b><small>${L("dPracticeAllP")}</small><i>❤️ ${hearts()}</i></a>${typeof wordsPill === "function" ? wordsPill() : ""}
   <header class="dr-ub dr-top" style="--uc:${CU.c}"><div><small>${L("dSection")} ${CU.sec + 1}, ${L("dUnit")} ${CU.n + 1}</small><b>${CU.e} ${esc(T3(CU.t))}</b></div><span class="dr-gbs"><button class="dr-gb dr-units" data-units aria-label="${L("upT")}">🗺<span>${L("upT")}</span></button><button class="dr-gb" data-guide="${CU.n}" aria-label="${L("dGuide")}">📖<span>${L("dGuide")}</span></button></span></header>${typeof tchkHTML === "function" ? tchkHTML() : ""}` +
-  SECTIONS.map((S, si) => `<div class="dr-sb" data-th="${si}"><div class="dr-sec"><span>${L("dSection")} ${si + 1} · ${S.lv}</span><b>${esc(T3(S.t))}</b></div>` + UNITS.slice(S.from, S.to).map(U => {
+  SECTIONS.map((S, si) => `<div class="dr-sb" data-th="${si}"><div class="dr-sec"><span>${L("dSection")} ${si + 1} · ${S.lv}</span><b>${esc(T3(S.t))}</b>${si > 0 && !unitOpen(S.from) ? `<button class="dr-golv" data-golv="${S.lv}">🚀 ${L("goLv").replace("{l}", S.lv)}</button>` : ""}</div>` + UNITS.slice(S.from, S.to).map(U => {
     const open = unitOpen(U.n), d = uDone(U.n), offs = side[U.n % 2], jumpHere = U.n === firstLocked && !U.v2 && !(A1_NEW && U.n === A1_NEW);
     const nodes = Array.from({ length: LPU }, (_, j) => { const isDone = d > j, isCur = open && j === d && U.n === cu, can = open && j <= d, jump = !open && j === 0 && !U.v2 && !(A1_NEW && U.n === A1_NEW);
       return `<div class="dr-nw" style="--x:${offs[j]}px;--i:${j}">${isCur ? `<span class="ap-start">${U.n === 0 && j === 0 && !drillLessons() ? L("dFirst") : L("apStart")}</span>` : jump && jumpHere ? `<span class="ap-start dr-jumpb">${L("dJumpHere")}</span>` : ""}
@@ -528,7 +528,10 @@ function wireDrillPath(root) {
     const done = uDone(u) > l, pd = partDone(u, l), np = partsOf(l, u);
     pop.innerHTML = can ? `<b>${esc((U.v2 ? L("v2Node") : L("dNode"))[l])}</b><small>${U.e} ${esc(T3(U.t))}</small><small class="dr-pn">${done ? "✓ " + L("dNodeDone") : L("dLessonOf").replace("{a}", pd + 1).replace("{b}", np)}</small>
         <a class="dr-pgo" href="#drill-${u}-${l}">${done ? "↺ " + L("dPracticeXp") : L("dStartXp")}</a>`
-      : n.classList.contains("jump") ? `<b>${L("dJump")}</b><small>${L("dJumpP")}</small><a class="dr-pgo" href="#drill-j-${u}">⏩ ${L("dJumpGo")}</a>` : `<b>${esc((U.v2 ? L("v2Node") : L("dNode"))[l])}</b><small>${L("dLocked")}</small>`;
+      : n.classList.contains("jump") ? `<b>${L("dJump")}</b><small>${L("dJumpP")}</small>${U.sec > 0 && !unitOpen(SECTIONS[U.sec].from) ? `<button class="dr-pgo" data-golv="${SECTIONS[U.sec].lv}">🚀 ${L("goLv").replace("{l}", SECTIONS[U.sec].lv)}</button>` : ""}<a class="dr-pgo ${U.sec > 0 && !unitOpen(SECTIONS[U.sec].from) ? "dr-pgo2" : ""}" href="#drill-j-${u}">⏩ ${L("dJumpGo")}</a>`
+      : (() => { const S = SECTIONS[U.sec], lvOpen = unitOpen(S.from);
+          /* a locked lesson never just says "no": start from that level, or pass a short test and jump straight to this unit */
+          return `<b>${esc((U.v2 ? L("v2Node") : L("dNode"))[l])}</b><small>${L("dJumpP")}</small>${!lvOpen && U.sec > 0 ? `<button class="dr-pgo" data-golv="${S.lv}">🚀 ${L("goLv").replace("{l}", S.lv)}</button>` : ""}<a class="dr-pgo dr-pgo2" href="#drill-j-${u}">⏩ ${L("dJumpGo")}</a>`; })();
     n.parentNode.appendChild(pop); if (!can && !n.classList.contains("jump")) flash(n, "shake");
   };
   const newStars = root.querySelectorAll(".dr-st3 i.new");
