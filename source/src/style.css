@@ -3136,3 +3136,6 @@ img.kw-pop{transform-origin:50% 100%}
 .pl-win.shake{animation:plShake .4s}@keyframes plShake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @media (max-width:700px){.pl-scene{aspect-ratio:4/3;border-radius:16px}.gw-palace .gw-art.pl-host{aspect-ratio:4/3}.pl-hint{font-size:12px}}
 @media (prefers-reduced-motion:reduce){.pl-lamp,.pl-glow,.pl-dust,.pl-her.walk .pl-body{animation:none}}
+.sv-nomail{display:flex;flex-direction:column;gap:4px;margin:12px 0 2px;padding:12px 14px;border-radius:16px;border:1.5px dashed var(--line);text-align:left}
+.sv-nomail b{font:800 14px var(--bf,inherit)}.sv-nomail small{font:600 13px/1.45 var(--bf,inherit);opacity:.85}.sv-nomail .dr-link{align-self:flex-start;padding:4px 0;margin:2px 0 0}
+.sv-fix{display:block;width:100%;margin:2px 0 8px;padding:10px 14px;border-radius:14px;border:1.5px solid #ffb27a;background:rgba(255,178,122,.12);color:inherit;font:700 14px/1.4 var(--bf,inherit);cursor:pointer}
