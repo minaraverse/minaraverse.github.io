@@ -3139,3 +3139,4 @@ img.kw-pop{transform-origin:50% 100%}
 .sv-nomail{display:flex;flex-direction:column;gap:4px;margin:12px 0 2px;padding:12px 14px;border-radius:16px;border:1.5px dashed var(--line);text-align:left}
 .sv-nomail b{font:800 14px var(--bf,inherit)}.sv-nomail small{font:600 13px/1.45 var(--bf,inherit);opacity:.85}.sv-nomail .dr-link{align-self:flex-start;padding:4px 0;margin:2px 0 0}
 .sv-fix{display:block;width:100%;margin:2px 0 8px;padding:10px 14px;border-radius:14px;border:1.5px solid #ffb27a;background:rgba(255,178,122,.12);color:inherit;font:700 14px/1.4 var(--bf,inherit);cursor:pointer}
+.sv-spam{margin:2px 0 10px;padding:11px 14px;border-radius:14px;background:rgba(255,201,77,.16);border:1.5px solid rgba(255,201,77,.55);font:700 14px/1.45 var(--bf,inherit);text-align:left}
